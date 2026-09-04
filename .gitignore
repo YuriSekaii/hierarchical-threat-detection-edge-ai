@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch Checkpoints and Heavy Weights (>100MB)
+*.pt
+*.pth
+*.bin
+*.tar.zst
+*.7z
+*.zip
+
+# Datasets and Media Recordings
+*.mp4
+*.avi
+*.mkv
+*.jpg
+*.png
+!assets/*.png
+!assets/*.jpg
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Output Logs
+runs/
+logs/
+*.log
