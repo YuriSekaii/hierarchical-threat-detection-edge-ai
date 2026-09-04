@@ -105,6 +105,15 @@ python src/inference_realtime.py
 
 ---
 
+
+---
+
+## 📊 Dataset & Privacy Notice
+The experimental dataset was recorded in a controlled laboratory environment for **Proof-of-Concept (PoC) feasibility validation**. 
+
+* **Privacy & Governance:** Due to human subject privacy protections and institutional data governance regulations, raw video recordings and facial imagery are withheld from the public repository.
+* **Reproducibility:** Pre-trained model weights are provided directly in the [`weights/`](weights/) directory to enable full out-of-the-box pipeline evaluation and live webcam inference.
+
 ## 🔍 Engineering Insights & Failure Mode Analysis
 
 During extensive offline and live deployment evaluations, key machine learning challenges were identified and addressed:
