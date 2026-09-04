@@ -3,13 +3,15 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# PyTorch Checkpoints and Heavy Weights (>100MB)
-*.pt
-*.pth
-*.bin
+# Exclude random heavy checkpoint dumps, but allow bundled release weights
 *.tar.zst
 *.7z
 *.zip
+*.bin
+
+# Allow weights folder
+!weights/*.pt
+!weights/*.pth
 
 # Datasets and Media Recordings
 *.mp4

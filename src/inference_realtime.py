@@ -175,5 +175,17 @@ class HierarchicalThreatDetector:
 
 
 if __name__ == '__main__':
-    # Demonstration entry point
-    print("Hierarchical Threat Detection Engine initialized.")
+    # Default bundled weights
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    weapon_weights = os.path.join(base_dir, 'weights', 'yolo_weapon_p2.pt')
+    pose_weights = os.path.join(base_dir, 'weights', 'yolo26s-pose.pt')
+    action_weights = os.path.join(base_dir, 'weights', 'stgcn_violence_fold2.pth')
+    ref_weights = os.path.join(base_dir, 'weights', 'reference_data_knn.pt')
+
+    detector = HierarchicalThreatDetector(
+        weapon_model_path=weapon_weights,
+        pose_model_path=pose_weights,
+        action_model_path=action_weights,
+        ref_data_path=ref_weights
+    )
+    print("System ready. To start live inference with webcam, call detector.run(source=0)")

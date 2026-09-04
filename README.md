@@ -56,7 +56,8 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 * **OOD Discrimination:** Distinguishes between:
   * 🟢 **Normal Scanning:** No weapon present.
   * 🟠 **Passive Threat ("WEAPON SEEN, SAFE"):** Weapon visible, but kinematic trajectories deviate from violent attack patterns.
-  * 🔴 **Active Threat ("VIOLENCE DETECTED"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold $ightarrow$ Alarm triggered.
+  * 🔴 **Active Threat ("VIOLENCE DETECTED"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold $
+ightarrow$ Alarm triggered.
 
 ---
 
@@ -66,6 +67,11 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 ├── assets/
 │   ├── inference_pipeline.png    # 2-stage hierarchical architecture diagram
 │   └── stgcn_loss_curve.png      # Cross-validation training curves
+├── weights/
+│   ├── yolo_weapon_p2.pt         # Distilled YOLO26s with custom P2 head (23 MB)
+│   ├── yolo26s-pose.pt           # 17-keypoint skeletal pose estimation (23 MB)
+│   ├── stgcn_violence_fold2.pth  # Trained ST-GCN action recognition model (12 MB)
+│   └── reference_data_knn.pt     # OOD reference feature embeddings (0.3 MB)
 ├── models/
 │   ├── stgcn.py                  # PyTorch ST-GCN implementation (Spatial + Temporal Conv)
 │   └── yolo_p2_custom.yaml       # Custom YOLO P2-layer architecture configuration
