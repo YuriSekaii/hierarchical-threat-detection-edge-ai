@@ -1,4 +1,4 @@
-﻿# Hierarchical Edge-AI Threat & Violence Detection System
+# Hierarchical Edge-AI Threat & Violence Detection System
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg)](https://pytorch.org/)
@@ -115,14 +115,16 @@ ightarrow$ Alarm triggered.
 
 To prevent false alarms from ordinary bodily movements while wielding everyday objects, multiple anomaly detection paradigms were trained and benchmarked on skeletal graph representations:
 
-| Evaluation Level | Paradigm / Method | Precision | Recall | F1-Score | Accuracy | Characteristics & Role |
-| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Full Video-Level Pipeline** | **Mahalanobis Distance** | **1.00 (100.0%)** | **0.86 (86.0%)** | 窶・| **0.87 (87.0%)** | **Zero False Alarms (12/12 non-violent videos rejected).** Calibrated with 91.86% harmonic OOD score. |
-| **Clip-Level Micro-Average** | **Mahalanobis Distance** | **96.97%** | **96.97%** | **96.97%** | **96.15%** | Evaluated on clean validation clips (`validation_results_micro.csv`). |
-| **Clip-Level Challenge Set** | **Deep k-NN (Champion)** | **83.33%** | **75.76%** | **79.37%** | **83.12%** | **Non-Parametric Feature Gating.** Superior on challenging edge-cases including false-detection clips. |
-| Exploratory Baselines | Deep SVDD / Autoencoder | 窶・| 窶・| 窶・| 窶・| Prone to boundary collapse or high false alarms on complex skeletal articulations. |
+| Evaluation Scope | Paradigm / Method | Precision | Recall | Specificity | F1-Score | Accuracy | Characteristics & Role |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Comprehensive Test (148 Clips)** | **Deep k-NN (Champion)** | **94.95%** | **90.38%** | **88.64%** | **92.61%** | **89.86%** | **Non-Parametric Manifold Gating.** Adapts across multi-modal attack trajectories (`Cut_Down`, `Stab`, `Thrust`), achieving 90.38% threat recall. |
+| **Comprehensive Test (148 Clips)** | **Mahalanobis Distance** | **96.70%** | **84.62%** | **93.18%** | **90.26%** | **87.16%** | **Parametric Covariance Distance.** Lowest false alarm rate (3 vs. 5), but lower recall on diverse clothing. |
+| Single-Action Baseline (52 Clips) | Mahalanobis Distance | 96.97% | 96.97% | 94.74% | 96.97% | 96.15% | Historical baseline on unimodal `Cut-Down` clips only (`validation_results_micro.csv`). |
+| Exploratory Baselines | Deep SVDD / Autoencoder | — | — | — | — | — | Prone to boundary collapse or high false alarms on fast skeletal articulations. |
 
-The **Deep k-NN Feature Gating on ST-GCN embeddings** was deployed as the active runtime model (`weights/stgcn_violence_fold2.pth` + `weights/reference_data_knn.pt`), with the **Mahalanobis Distance reference** (`weights/reference_data_mahalanobis.json`) preserved as the parametric baseline.
+> Detailed mathematical derivation, dataset breakdown, and script documentation are provided in [`BENCHMARK_EXPLANATION.md`](BENCHMARK_EXPLANATION.md). The evaluation runner is available at [`src/eval_live_head_to_head.py`](src/eval_live_head_to_head.py).
+
+The **Deep k-NN Feature Gating on ST-GCN embeddings** is deployed as the active runtime model (`weights/stgcn_violence_fold2.pth` + `weights/reference_data_knn.pt`), with the **Mahalanobis Distance reference** (`weights/reference_data_mahalanobis.json`) preserved as an alternative low-footprint baseline.
 
 ## 笞呻ｸ・Installation & Quickstart
 
