@@ -1,4 +1,4 @@
-﻿"""
+"""
 Hierarchical Real-Time Threat Detection System.
 Multi-threaded architecture:
 - Thread 1: Ingests 30 FPS video into a 60-frame thread-safe deque.
@@ -100,8 +100,8 @@ class HierarchicalThreatDetector:
                     frame_copy = self.frame_buffer[-1].frame.copy()
 
             if frame_copy is not None:
-                # Run lightweight weapon detection
-                results = self.weapon_model(frame_copy, conf=0.5, verbose=False)
+                # Run lightweight weapon detection (Production calibrated threshold: Conf = 0.45)
+                results = self.weapon_model(frame_copy, conf=0.45, verbose=False)
                 has_weapon = len(results[0].boxes) > 0
 
                 if has_weapon:
