@@ -71,7 +71,8 @@ ightarrow$ Alarm triggered.
 │   ├── yolo_weapon_p2.pt         # Distilled YOLO26s with custom P2 head (23 MB)
 │   ├── yolo26s-pose.pt           # 17-keypoint skeletal pose estimation (23 MB)
 │   ├── stgcn_violence_fold2.pth  # Trained ST-GCN action recognition model (12 MB)
-│   └── reference_data_knn.pt     # Deep k-NN reference feature embeddings (0.3 MB)
+│   └── reference_data_mahalanobis.json # Mahalanobis mean, inv-cov & threshold (1.3 MB)
+│   └── reference_data_knn.pt         # Optional: k-NN reference feature embeddings (0.3 MB)
 ├── models/
 │   ├── stgcn.py                  # PyTorch ST-GCN implementation (Spatial + Temporal GCN)
 │   └── yolo_p2_custom.yaml       # Custom YOLO P2-layer architecture configuration
@@ -109,7 +110,7 @@ To prevent false alarms from ordinary bodily movements while wielding everyday o
 | **Joint Autoencoder** | Reconstruction Error | Spatial-Temporal AE | High reconstruction error on complex multi-joint motion; higher false alarm rate. |
 | **Binary Classification** | Supervised Cross-Entropy | Standard Linear Classifier | Overfits to background features and actor silhouettes; poor zero-shot OOD generalization. |
 
-The **Deep k-NN (ICML 2022) with Triplet Margin Loss on ST-GCN embeddings** was selected as the champion model (`Train_Violence_STGCN_fold2.pth` + `reference_data_knn.pt`) for real-time live gating.
+The **Mahalanobis Distance with Triplet Margin Loss on ST-GCN embeddings** was selected as the primary production model (`Train_Violence_STGCN_fold2.pth` + `reference_data_mahalanobis.json`, threshold = 7.60) for real-time live gating.
 
 ## ⚙️ Installation & Quickstart
 

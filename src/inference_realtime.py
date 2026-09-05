@@ -20,7 +20,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.stgcn import STGCNModel
 from src.skeleton_utils import interpolate_missing_joints, smooth_kinematics, normalize_skeleton_clip
-from src.ood_metrics import compute_knn_distance
+from src.ood_metrics import compute_mahalanobis_distance
 
 
 class FrameItem:
@@ -46,9 +46,18 @@ class HierarchicalThreatDetector:
         self.action_model.load_state_dict(state_dict, strict=False)
         self.action_model.eval()
 
-        # Load reference feature bank
-        self.ref_data = torch.load(ref_data_path, map_location=self.device)
-        self.ref_features = self.ref_data['features'] if 'features' in self.ref_data else self.ref_data
+        # Load Mahalanobis reference parameters (mean, inv_cov, threshold)
+        import json
+        if ref_data_path.endswith('.json'):
+            with open(ref_data_path, 'r') as f:
+                ref_json = json.load(f)
+            self.maha_mean = np.array(ref_json['mean'], dtype=np.float32)
+            self.maha_inv_cov = np.array(ref_json['inv_cov'], dtype=np.float32)
+            self.maha_threshold = float(ref_json.get('threshold', 7.60))
+        else:
+            self.maha_mean = None
+            self.maha_inv_cov = None
+            self.maha_threshold = 7.60
 
         # Threading and buffers
         self.frame_buffer = deque(maxlen=60)
@@ -59,7 +68,6 @@ class HierarchicalThreatDetector:
         self.stage2_active = False
         self.status_text = "SCANNING (IDLE)"
         self.status_color = (0, 255, 0)  # Green
-        self.knn_threshold = 0.45
 
     def weapon_scanner_loop(self):
         """Thread 2: 3 FPS lightweight gating loop."""
@@ -124,10 +132,14 @@ class HierarchicalThreatDetector:
             with torch.no_grad():
                 _, features = self.action_model(clip_tensor, return_features=True)
 
-            # Step 4: Out-of-Distribution / Threat Verification
-            dist = compute_knn_distance(features, self.ref_features, k=5)
+            # Step 4: Out-of-Distribution / Threat Verification (Mahalanobis Distance)
+            feat_np = features[0].cpu().numpy()
+            if self.maha_mean is not None and self.maha_inv_cov is not None:
+                dist = compute_mahalanobis_distance(feat_np, self.maha_mean, self.maha_inv_cov)
+            else:
+                dist = float(np.linalg.norm(feat_np))
 
-            if dist < self.knn_threshold:
+            if dist < self.maha_threshold:
                 self.status_text = "ALERT: VIOLENT ACTION CONFIRMED!"
                 self.status_color = (0, 0, 255)  # Red
             else:
@@ -180,7 +192,7 @@ if __name__ == '__main__':
     weapon_weights = os.path.join(base_dir, 'weights', 'yolo_weapon_p2.pt')
     pose_weights = os.path.join(base_dir, 'weights', 'yolo26s-pose.pt')
     action_weights = os.path.join(base_dir, 'weights', 'stgcn_violence_fold2.pth')
-    ref_weights = os.path.join(base_dir, 'weights', 'reference_data_knn.pt')
+    ref_weights = os.path.join(base_dir, 'weights', 'reference_data_mahalanobis.json')
 
     detector = HierarchicalThreatDetector(
         weapon_model_path=weapon_weights,

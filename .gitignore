@@ -12,6 +12,7 @@ __pycache__/
 # Allow weights folder
 !weights/*.pt
 !weights/*.pth
+!weights/*.json
 
 # Datasets and Media Recordings
 *.mp4
