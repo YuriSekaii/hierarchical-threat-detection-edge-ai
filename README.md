@@ -123,8 +123,8 @@ pip install -r requirements.txt
 
 ### 2. Run Live Real-Time Detection
 ```bash
-# Run real-time detection on webcam (source 0) or pass a video file path
-python src/inference_realtime.py --source 0
+# Connect webcam and run real-time inference
+python src/inference_realtime.py
 ```
 
 ---

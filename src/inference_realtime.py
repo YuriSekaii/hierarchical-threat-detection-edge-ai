@@ -218,20 +218,14 @@ class HierarchicalThreatDetector:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Hierarchical Edge-AI Threat & Violence Detection")
-    parser.add_argument('--source', type=str, default='0', help='Camera index (0) or video file path')
-    parser.add_argument('--ood-method', type=str, choices=['knn', 'mahalanobis'], default='knn',
-                        help='OOD evaluation method: "knn" (tested in Real_Time.py) or "mahalanobis"')
+    parser.add_argument('--camera-id', type=int, default=0, help='Webcam device ID (default: 0)')
     args = parser.parse_args()
 
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     weapon_weights = os.path.join(base_dir, 'weights', 'yolo_weapon_p2.pt')
     pose_weights = os.path.join(base_dir, 'weights', 'yolo26s-pose.pt')
     action_weights = os.path.join(base_dir, 'weights', 'stgcn_violence_fold2.pth')
-    
-    if args.ood_method == 'knn':
-        ref_weights = os.path.join(base_dir, 'weights', 'reference_data_knn.pt')
-    else:
-        ref_weights = os.path.join(base_dir, 'weights', 'reference_data_mahalanobis.json')
+    ref_weights = os.path.join(base_dir, 'weights', 'reference_data_knn.pt')
 
     detector = HierarchicalThreatDetector(
         weapon_model_path=weapon_weights,
@@ -239,6 +233,4 @@ if __name__ == '__main__':
         action_model_path=action_weights,
         ref_data_path=ref_weights
     )
-    
-    src = int(args.source) if args.source.isdigit() else args.source
-    print(f"Ready. To run real-time inference with camera {src}, calling detector.run(source={src})...")
+    detector.run(source=args.camera_id)
