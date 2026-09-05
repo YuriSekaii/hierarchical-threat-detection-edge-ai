@@ -446,9 +446,7 @@ def train_one_fold(data_folder, output_prefix, action_folders, fold_num, train_i
     return save_path, early_stopping.best_score
 
 # =======================================================================
-# 4. k-NN OOD FUNCTIONS (Replaces Mahalanobis Distance)
-#    Based on: "Out-of-Distribution Detection with Deep Nearest Neighbors"
-#    Sun et al., ICML 2022
+# 4. k-NN OOD FUNCTIONS (Deep Metric Feature Gating)
 # =======================================================================
 
 def knn_score(query_features, feature_bank, k):
@@ -609,7 +607,7 @@ def validate_category(category_name, folder_paths, model, feature_bank, threshol
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Running on: {device}")
-    print(f"OOD Method: k-NN (Sun et al., ICML 2022)")
+    print(f"OOD Method: Deep k-NN Feature Gating")
     print(f"Hyperparameters: k={KNN_K}, percentile={KNN_PERCENTILE}")
     
     # 1. TRAIN 3 FOLDS (Identical to Maha version)
