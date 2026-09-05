@@ -42,7 +42,7 @@ class HierarchicalThreatDetector:
         print(f"[INIT] Initializing Hierarchical Detector on {self.device}...")
 
         # 1. Load Object & Pose Models
-        print(f"  [1/4] Loading YOLO P2 Weapon Detector: {os.path.basename(weapon_model_path)}")
+        print(f"  [1/4] Loading Distilled YOLO Weapon Detector: {os.path.basename(weapon_model_path)}")
         self.weapon_model = YOLO(weapon_model_path)
 
         print(f"  [2/4] Loading YOLOv8s Pose Estimator: {os.path.basename(pose_model_path)}")
@@ -222,7 +222,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    weapon_weights = os.path.join(base_dir, 'weights', 'yolo_weapon_p2.pt')
+    weapon_weights = os.path.join(base_dir, 'weights', 'yolo_weapon_distilled.pt')
     pose_weights = os.path.join(base_dir, 'weights', 'yolo26s-pose.pt')
     action_weights = os.path.join(base_dir, 'weights', 'stgcn_violence_fold2.pth')
     ref_weights = os.path.join(base_dir, 'weights', 'reference_data_knn.pt')

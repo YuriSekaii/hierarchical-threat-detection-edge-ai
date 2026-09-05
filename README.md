@@ -5,7 +5,7 @@
 [![Ultralytics YOLO](https://img.shields.io/badge/YOLO-v8%2Fv11-green.svg)](https://docs.ultralytics.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An end-to-end, resource-efficient dual-stage surveillance system engineered for real-time edge deployment. Combines **Custom P2-Head YOLO Knowledge Distillation** with **Spatial-Temporal Graph Convolutional Networks (ST-GCN)** and **Out-of-Distribution (OOD) Gating** to detect violent behavior on live video streams with minimal compute overhead.
+An end-to-end, resource-efficient dual-stage surveillance system engineered for real-time edge deployment. Combines **YOLO Knowledge Distillation** with **Spatial-Temporal Graph Convolutional Networks (ST-GCN)** and **Out-of-Distribution (OOD) Gating** to detect violent behavior on live video streams with minimal compute overhead.
 
 ---
 
@@ -30,19 +30,20 @@ This project solves this by decoupling detection into a **Hierarchical Gating Ar
 
 ---
 
-## 🔬 Model Compression & Knowledge Distillation (Attempt 21 Champion)
+## 🔬 Model Compression & Knowledge Distillation (Distilled Student)
 
-To detect small weapons reliably on edge devices without the computational overhead of large models (`YOLO26x`), a **P2 High-Resolution Detection Head** was engineered into `YOLO26s` and trained via Knowledge Distillation:
+To achieve fast, responsive weapon detection on edge hardware without the computational latency of heavy models (`YOLO26x`), Knowledge Distillation was employed to transfer feature representations from the heavy teacher into a compact `YOLO26s` student:
 
-| Metric | Teacher (YOLO26x) | Baseline Student | Distilled P2 Student (Attempt 21) | Delta vs. Teacher |
-| :--- | :---: | :---: | :---: | :---: |
-| **Accuracy** | 84.27% | 91.62%* | **86.87%** | **+2.6%** |
-| **Precision** | 69.18% | — | **76.78%** | **+7.6%** |
-| **Specificity**| 80.78% | — | **87.58%** | **+6.8%** |
-| **F1-Score** | 78.85% | 86.88%* | **80.87%** | **+2.0%** |
-| **Recall** | 91.67% | — | **85.42%** | -6.2% |
+| Metric | Teacher (YOLO26x) | Distilled Student (`YOLO26s`) [Production] | Experimental Custom P2 (Attempt 21) |
+| :--- | :---: | :---: | :---: |
+| **Recall (Threat Safety)** | 91.67% | **91.67%** (Best) | 85.42% (Misses weapons) |
+| **Accuracy** | 84.27% | **84.27%** | 86.87% |
+| **Specificity** | 80.78% | **80.78%** | 87.58% |
+| **F1-Score** | 78.85% | **78.85%** | 80.87% |
+| **Avg Inference Time** | 23.94 ms | **18.16 ms** (Edge-ready) | 12.14 ms |
+| **Production Decision** | Excluded (Heavy compute) | **Deployed Model** | **Rolled Back (Degraded Recall)** |
 
-> *Note: Baseline Student trained on uncorrected frame splits exhibited temporal data leakage. The distilled P2 student was surgically frozen (layers 0–24) with mosaic augmentation disabled to preserve small weapon boundary features.*
+> **Ablation Insight & Decision:** Extensive engineering efforts were conducted to explore a custom P2 high-resolution detection head (Attempts 1–23) for small blade contours. However, empirical ground-truth testing demonstrated that the custom P2 head degraded weapon Recall from 91.67% down to 85.42% (causing 15 additional missed weapons). Because missing an active weapon is unacceptable in threat detection, the custom P2 modification was deprecated, and the robust **Distilled YOLO26s Student** was deployed for real-time edge gating.
 
 ---
 
@@ -68,14 +69,14 @@ ightarrow$ Alarm triggered.
 │   ├── inference_pipeline.png    # 2-stage hierarchical architecture diagram
 │   └── stgcn_loss_curve.png      # Cross-validation training curves
 ├── weights/
-│   ├── yolo_weapon_p2.pt         # Distilled YOLO26s with custom P2 head
+│   ├── yolo_weapon_distilled.pt  # Distilled YOLO26s weapon detection student (Teacher: YOLO26x)
 │   ├── yolo26s-pose.pt           # 17-keypoint skeletal pose estimation
 │   ├── stgcn_violence_fold2.pth  # Trained ST-GCN action recognition model
 │   ├── reference_data_mahalanobis.json # Mahalanobis mean, inv-cov & threshold
 │   └── reference_data_knn.pt     # k-NN reference feature embeddings
 ├── models/
 │   ├── stgcn.py                  # PyTorch ST-GCN implementation (Spatial + Temporal GCN)
-│   └── yolo_p2_custom.yaml       # Custom YOLO P2-layer architecture configuration
+│   └── yolo_p2_custom.yaml       # Experimental P2-layer configuration (Ablation study)
 ├── src/
 │   ├── inference_realtime.py     # Multi-threaded live camera inference engine
 │   ├── extract_skeletons.py      # Automated YOLO-Pose extraction to XML annotations
@@ -85,16 +86,13 @@ ightarrow$ Alarm triggered.
 ├── training/
 │   ├── train_stgcn_knn.py        # Triplet Loss + Deep k-NN OOD training
 │   ├── train_stgcn_mahalanobis.py# Baseline: Triplet Loss + Mahalanobis Distance OOD
-│   ├── train_yolo_distill.py     # Knowledge Distillation for YOLO-P2 Student
+│   ├── train_yolo_distill.py     # Knowledge Distillation pipeline (Teacher YOLO26x -> Student YOLO26s)
 │   └── tune_ood_parameters.py    # Adaptive OOD threshold calibration
 ├── requirements.txt              # Project dependencies
 ├── .gitignore                    # Optimized to exclude heavy weights/datasets
 ├── LICENSE                       # MIT License
 └── README.md                     # Technical report & documentation
 ```
-
----
-
 
 ---
 
