@@ -38,7 +38,10 @@ env/
 Thumbs.db
 desktop.ini
 
-# Output Logs
+# Output Logs & Previews
 runs/
 logs/
 *.log
+preview_*.html
+preview_*.bat
+*.html
