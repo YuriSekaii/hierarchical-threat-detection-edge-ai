@@ -22,6 +22,8 @@ __pycache__/
 *.png
 !assets/*.png
 !assets/*.jpg
+!results/**/*.png
+!results/**/*.jpg
 
 # Virtual Environments
 .venv/

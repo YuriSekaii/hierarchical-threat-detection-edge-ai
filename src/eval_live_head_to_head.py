@@ -202,21 +202,32 @@ class ActionDataset(Dataset):
             if pts.shape[0] > 0: c_np[t][m] = pts - np.mean(pts, axis=0)
         return torch.from_numpy(c_np).float().permute(2, 0, 1).unsqueeze(-1), 1, s['src']
 
+REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+repo_weights = os.path.join(REPO_DIR, "weights")
+
 # Load Model
-model_path = os.path.join(CLEAN_DIR, "trained_models", "Train_Violence_STGCN_fold2.pth")
+model_path = os.path.join(repo_weights, "stgcn_violence_fold2.pth")
+if not os.path.exists(model_path):
+    model_path = os.path.join(CLEAN_DIR, "trained_models", "Train_Violence_STGCN_fold2.pth")
 model = STGCNModel(num_classes=1).to(DEVICE)
 model.load_state_dict(torch.load(model_path, map_location=DEVICE, weights_only=True), strict=False)
 model.eval()
 
 # Load Maha
-with open(os.path.join(CLEAN_DIR, "results", "reference_data.json")) as f:
+maha_path = os.path.join(repo_weights, "reference_data_mahalanobis.json")
+if not os.path.exists(maha_path):
+    maha_path = os.path.join(CLEAN_DIR, "results", "reference_data.json")
+with open(maha_path) as f:
     m_info = json.load(f)
 maha_mean = torch.tensor(m_info["mean"], dtype=torch.float32)
 maha_inv_cov = torch.tensor(m_info["inv_cov"], dtype=torch.float32)
 maha_thresh = float(m_info["threshold"])
 
 # Load k-NN
-k_info = torch.load(os.path.join(CLEAN_DIR, "results", "reference_data_knn.pt"), map_location='cpu', weights_only=False)
+knn_path = os.path.join(repo_weights, "reference_data_knn.pt")
+if not os.path.exists(knn_path):
+    knn_path = os.path.join(CLEAN_DIR, "results", "reference_data_knn.pt")
+k_info = torch.load(knn_path, map_location='cpu', weights_only=False)
 knn_bank = k_info["feature_bank"].float()
 knn_thresh = float(k_info["threshold"])
 knn_k = int(k_info.get("k", 2))
@@ -338,9 +349,11 @@ for cat in ["OOD", "False_Detected", "With_Coat", "Without_Coat"]:
     print("%-18s | %-5d | %-22s | %-22s" % (cat, len(yt), m_info_str, k_info_str))
 print("=" * 65)
 
-# Save Results to CSV and TXT
-out_csv = os.path.join(CLEAN_DIR, "results", "live_head_to_head_benchmark.csv")
-out_txt = os.path.join(CLEAN_DIR, "results", "live_head_to_head_benchmark.txt")
+# Save Results to CSV and TXT in repository
+repo_results = os.path.join(REPO_DIR, "results", "action_recognition_benchmark")
+os.makedirs(repo_results, exist_ok=True)
+out_csv = os.path.join(repo_results, "live_head_to_head_benchmark.csv")
+out_txt = os.path.join(repo_results, "live_head_to_head_benchmark.txt")
 
 import csv
 

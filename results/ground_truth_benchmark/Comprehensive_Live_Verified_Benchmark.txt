@@ -1,0 +1,23 @@
+﻿====================================================================================================
+COMPREHENSIVE LIVE VERIFIED BENCHMARK (Evaluated on Ground Truth Dataset: 715 images, IoU: 0.20)
+Run Date: 2026-09-06 | Script: run_live_benchmark_check.py
+====================================================================================================
+Model                  | Conf  | Accuracy  | Precision | Recall    | Specificity | F1-Score  | TP/FP/FN/TN      | Avg Latency
+----------------------------------------------------------------------------------------------------
+Teacher_YOLO26x        | 0.20  | 77.43   % | 59.50   % | 88.75   % | 72.22     % | 71.24   % | 213/145/27/377   | 77.70 ms
+Teacher_YOLO26x        | 0.45  | 82.33   % | 71.10   % | 77.92   % | 84.49     % | 74.35   % | 187/76/53/414    | 81.91 ms
+Distilled_YOLO26s      | 0.20  | 84.27   % | 69.18   % | 91.67   % | 80.78     % | 78.85   % | 220/98/20/412    | 13.91 ms
+Distilled_YOLO26s      | 0.45  | 91.62   % | 89.78   % | 84.17   % | 95.29     % | 86.88   % | 202/23/38/465    | 11.18 ms
+Attempt21_P2_Lite      | 0.20  | 86.87   % | 76.78   % | 85.42   % | 87.58     % | 80.87   % | 205/62/35/437    | 19.01 ms
+Attempt21_P2_Lite      | 0.45  | 88.23   % | 88.94   % | 73.75   % | 95.44     % | 80.64   % | 177/22/63/460    | 19.34 ms
+====================================================================================================
+
+EXPLANATION OF THE HISTORICAL REPORTS:
+1. Report 2026-01-27_02-59-15.txt (Conf = 0.45):
+   - Compares: Model 1 = Teacher_YOLO26x (labeled 'Teacher') vs Model 2 = Distilled_YOLO26s (labeled 'Student')
+   - Distilled_YOLO26s at Conf=0.45 achieved: Acc 91.62%, Prec 89.78%, Rec 84.17%, Spec 95.29%, F1 86.88%.
+
+2. Report 2026-02-02_15-17-28.txt (Conf = 0.20):
+   - Compares: Model 1 = Distilled_YOLO26s (labeled 'Teacher'!) vs Model 2 = Attempt21_P2_Lite (labeled 'Student'!)
+   - Distilled_YOLO26s at Conf=0.20 achieved: Acc 84.27%, Prec 69.18%, Rec 91.67%, Spec 80.78%, F1 78.85%.
+   - Attempt21_P2_Lite at Conf=0.20 achieved: Acc 86.87%, Prec 76.78%, Rec 85.42%, Spec 87.58%, F1 80.87%.

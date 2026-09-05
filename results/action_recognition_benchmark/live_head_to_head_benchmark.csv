@@ -1,0 +1,13 @@
+Scope,Pipeline,Clips,Accuracy,Precision,Recall,Specificity,F1_Score,TP,FP,FN,TN
+Clean_Set,Mahalanobis,143,87.41,97.78,84.62,94.87,90.72,88,2,16,37
+Clean_Set,Deep_kNN,143,90.91,96.91,90.38,92.31,93.53,94,3,10,36
+Challenge_Set,Mahalanobis,148,87.16,96.70,84.62,93.18,90.26,88,3,16,41
+Challenge_Set,Deep_kNN,148,89.86,94.95,90.38,88.64,92.61,94,5,10,39
+Cat_OOD,Mahalanobis,39,94.87,0.00,0.00,94.87,0.00,0,2,0,37
+Cat_OOD,Deep_kNN,39,92.31,0.00,0.00,92.31,0.00,0,3,0,36
+Cat_False_Detected,Mahalanobis,5,80.00,0.00,0.00,80.00,0.00,0,1,0,4
+Cat_False_Detected,Deep_kNN,5,60.00,0.00,0.00,60.00,0.00,0,2,0,3
+Cat_With_Coat,Mahalanobis,48,81.25,100.00,81.25,0.00,89.66,39,0,9,0
+Cat_With_Coat,Deep_kNN,48,93.75,100.00,93.75,0.00,96.77,45,0,3,0
+Cat_Without_Coat,Mahalanobis,56,87.50,100.00,87.50,0.00,93.33,49,0,7,0
+Cat_Without_Coat,Deep_kNN,56,87.50,100.00,87.50,0.00,93.33,49,0,7,0

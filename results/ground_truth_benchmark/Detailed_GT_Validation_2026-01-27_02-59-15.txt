@@ -1,0 +1,109 @@
+==========================================================================================
+                    DETAILED GROUND TRUTH VALIDATION REPORT (With TN)                     
+==========================================================================================
+Date: 2026-01-27 03:00:04.889477
+IoU Threshold: 20.0% | Conf Threshold: 0.45
+Key: Specificity = TN / (TN + FP) -> How good at ignoring non-weapons?
+------------------------------------------------------------------------------------------
+MODEL: teacher_run_yolo26x
+========================================
+   Category: OOD            
+     TP: 0    | TN: 111  | FP: 8    | FN: 0   
+     -----------------------------------
+     Precision   : 0.0000
+     Recall      : 0.0000
+     Specificity : 0.9328  <-- (Crucial for OOD)
+     F1-Score    : 0.0000
+     ACCURACY    : 0.9328
+     Avg Time    : 19.55 ms
+   ------------------------------
+   Category: With_Coat      
+     TP: 117  | TN: 174  | FP: 35   | FN: 34  
+     -----------------------------------
+     Precision   : 0.7697
+     Recall      : 0.7748
+     Specificity : 0.8325  <-- (Crucial for OOD)
+     F1-Score    : 0.7723
+     ACCURACY    : 0.8083
+     Avg Time    : 18.77 ms
+   ------------------------------
+   Category: Without_Coat   
+     TP: 70   | TN: 129  | FP: 33   | FN: 19  
+     -----------------------------------
+     Precision   : 0.6796
+     Recall      : 0.7865
+     Specificity : 0.7963  <-- (Crucial for OOD)
+     F1-Score    : 0.7292
+     ACCURACY    : 0.7928
+     Avg Time    : 18.58 ms
+   ------------------------------
+   >>> OVERALL AVERAGE (Teacher) <<<
+   Category: COMBINED       
+     TP: 187  | TN: 414  | FP: 76   | FN: 53  
+     -----------------------------------
+     Precision   : 0.7110
+     Recall      : 0.7792
+     Specificity : 0.8449  <-- (Crucial for OOD)
+     F1-Score    : 0.7435
+     ACCURACY    : 0.8233
+     Avg Time    : 18.83 ms
+   ------------------------------
+
+
+MODEL: distilled_yolo26s_from_yolo26x
+========================================
+   Category: OOD            
+     TP: 0    | TN: 107  | FP: 14   | FN: 0   
+     -----------------------------------
+     Precision   : 0.0000
+     Recall      : 0.0000
+     Specificity : 0.8843  <-- (Crucial for OOD)
+     F1-Score    : 0.0000
+     ACCURACY    : 0.8843
+     Avg Time    : 10.69 ms
+   ------------------------------
+   Category: With_Coat      
+     TP: 136  | TN: 202  | FP: 6    | FN: 15  
+     -----------------------------------
+     Precision   : 0.9577
+     Recall      : 0.9007
+     Specificity : 0.9712  <-- (Crucial for OOD)
+     F1-Score    : 0.9283
+     ACCURACY    : 0.9415
+     Avg Time    : 12.83 ms
+   ------------------------------
+   Category: Without_Coat   
+     TP: 66   | TN: 156  | FP: 3    | FN: 23  
+     -----------------------------------
+     Precision   : 0.9565
+     Recall      : 0.7416
+     Specificity : 0.9811  <-- (Crucial for OOD)
+     F1-Score    : 0.8354
+     ACCURACY    : 0.8952
+     Avg Time    : 13.69 ms
+   ------------------------------
+   >>> OVERALL AVERAGE (Student) <<<
+   Category: COMBINED       
+     TP: 202  | TN: 465  | FP: 23   | FN: 38  
+     -----------------------------------
+     Precision   : 0.8978
+     Recall      : 0.8417
+     Specificity : 0.9529  <-- (Crucial for OOD)
+     F1-Score    : 0.8688
+     ACCURACY    : 0.9162
+     Avg Time    : 12.77 ms
+   ------------------------------
+
+
+==========================================================================================
+                       FINAL COMPARISON (Based on Overall Average)                        
+==========================================================================================
+Metric          | Teacher         | Student         | Diff
+----------------------------------------------------------------------
+Accuracy        | 0.8233          | 0.9162          | +0.0929
+F1-Score        | 0.7435          | 0.8688          | +0.1253
+Specificity     | 0.8449          | 0.9529          | +0.1080
+Precision       | 0.7110          | 0.8978          | +0.1868
+Recall          | 0.7792          | 0.8417          | +0.0625
+----------------------------------------------------------------------
+Speedup: Student is 1.48x faster than Teacher.
