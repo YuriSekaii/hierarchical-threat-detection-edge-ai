@@ -53,7 +53,7 @@ To determine the optimal architecture, we investigated three distinct paradigms:
 Evaluated on 715 annotated surveillance test frames containing challenging edge cases (OOD civilian handheld items, concealed weapons under coats, and direct attacks).
 
 #### A. Calibrated Production Operating Point (`Conf = 0.45`, `IoU = 0.20`)
-*Source Data: [`results/ground_truth_benchmark/Detailed_GT_Validation_2026-01-27_02-59-15.txt`](results/ground_truth_benchmark/Detailed_GT_Validation_2026-01-27_02-59-15.txt) & [`results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt`](results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt)*
+*Source Data: [`results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt`](results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt)*
 
 | Metric | Teacher (`YOLO26x`) | Distilled Student (`YOLO26s`) [Production] | Custom P2 Head (`YOLO26s-P2`) | Production Decision Rationale |
 | :--- | :---: | :---: | :---: | :--- |
@@ -66,7 +66,7 @@ Evaluated on 715 annotated surveillance test frames containing challenging edge 
 | **Deployment Verdict** | Too Heavy for Edge | **Deployed Champion Model** | Architectural Baseline | P2 missed 25 weapons and suffered +73% higher latency. |
 
 #### B. High-Sensitivity Operating Point (`Conf = 0.20`, `IoU = 0.20`)
-*Source Data: [`results/ground_truth_benchmark/Detailed_GT_Validation_2026-02-02_15-17-28.txt`](results/ground_truth_benchmark/Detailed_GT_Validation_2026-02-02_15-17-28.txt)*
+*Source Data: [`results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt`](results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt)*
 *Evaluates maximum sensitivity when screening for potential threats under heavy occlusion:*
 
 | Model Architecture | Accuracy | Precision | Recall | Specificity | F1-Score | Avg Latency |
@@ -133,10 +133,10 @@ Evaluated across the full 148-clip validation suite (39 OOD civilian clips, 5 we
 #### Detailed Category Performance:
 | Evaluation Category | Total Clips | Ground Truth Class | Deep k-NN Accuracy & Confusion | Mahalanobis Accuracy & Confusion |
 | :--- | :---: | :---: | :--- | :--- |
-| **Out-Of-Distribution (`OOD`)** | 39 | Negative ($y=0$) | **92.3%** (36 TN, 3 FP) | **94.9%** (37 TN, 2 FP) |
-| **Webcam Glitches (`False_Detected`)** | 5 | Negative ($y=0$) | **60.0%** (3 TN, 2 FP) | **80.0%** (4 TN, 1 FP) |
-| **With Coat (Concealed Attacks)** | 48 | Positive ($y=1$) | **93.8%** (45 TP, 3 FN) | **81.2%** (39 TP, 9 FN) |
-| **Without Coat (Open Attacks)** | 56 | Positive ($y=1$) | **87.5%** (49 TP, 7 FN) | **87.5%** (49 TP, 7 FN) |
+| **Out-Of-Distribution (`OOD`)** | 39 | Negative | **92.3%** (36 TN, 3 FP) | **94.9%** (37 TN, 2 FP) |
+| **Webcam Glitches (`False_Detected`)** | 5 | Negative | **60.0%** (3 TN, 2 FP) | **80.0%** (4 TN, 1 FP) |
+| **With Coat (Concealed Attacks)** | 48 | Positive | **93.8%** (45 TP, 3 FN) | **81.2%** (39 TP, 9 FN) |
+| **Without Coat (Open Attacks)** | 56 | Positive | **87.5%** (49 TP, 7 FN) | **87.5%** (49 TP, 7 FN) |
 
 > Detailed mathematical derivation, distance metrics, and covariance regularization analysis are documented in [`BENCHMARK_EXPLANATION.md`](BENCHMARK_EXPLANATION.md). The benchmark evaluation script is available at [`src/eval_live_head_to_head.py`](src/eval_live_head_to_head.py).
 

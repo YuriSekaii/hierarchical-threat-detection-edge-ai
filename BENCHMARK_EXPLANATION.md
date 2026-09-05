@@ -25,10 +25,10 @@ The evaluation was conducted on every single validation XML annotation file acro
 
 | Dataset Category | Action Subsets Included | Number of Clips | True Class Label | Purpose |
 | :--- | :--- | :---: | :---: | :--- |
-| **Out-Of-Distribution (`OOD`)** | Everyday civilian activities (walking, gesturing, stretching) | **39** | Negative ($y=0$) | Evaluates civilian false alarm rejection |
-| **False Detected (`False_Detected`)** | Webcam sensor glitches, occluded detections, broken skeleton trees | **5** | Negative ($y=0$) | Evaluates robustness against camera/tracking glitches |
-| **With Coat (`With_Coat`)** | `Cut_Down` (16), `Stab` (14), `Thrust` (18) | **48** | Positive ($y=1$) | Evaluates violence detection under heavy clothing / obscured joints |
-| **Without Coat (`Without_Coat`)** | `Cut_Down` (17), `Stab` (18), `Thrust` (21) | **56** | Positive ($y=1$) | Evaluates violence detection under standard clothing |
+| **Out-Of-Distribution (`OOD`)** | Everyday civilian activities (walking, gesturing, stretching) | **39** | Negative | Evaluates civilian false alarm rejection |
+| **False Detected (`False_Detected`)** | Webcam sensor glitches, occluded detections, broken skeleton trees | **5** | Negative | Evaluates robustness against camera/tracking glitches |
+| **With Coat (`With_Coat`)** | `Cut_Down` (16), `Stab` (14), `Thrust` (18) | **48** | Positive | Evaluates violence detection under heavy clothing / obscured joints |
+| **Without Coat (`Without_Coat`)** | `Cut_Down` (17), `Stab` (18), `Thrust` (21) | **56** | Positive | Evaluates violence detection under standard clothing |
 | **Total Validation Set** | | **148** | | |
 
 ---
