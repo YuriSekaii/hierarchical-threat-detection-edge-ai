@@ -34,35 +34,31 @@ This project solves this by decoupling detection into a **Hierarchical Gating Ar
 
 To detect small weapons reliably on edge devices without the computational overhead and latency of heavy models (`YOLO26x`), Knowledge Distillation was utilized to distill feature representations into a lightweight, real-time `YOLO26s` student.
 
-### 1. Ground Truth Surveillance Benchmark (Operational Threshold $Conf=0.45$)
-Evaluated on the 728-frame multi-scenario ground-truth test set (OOD everyday objects, concealed weapons under coats, and direct unobstructed attacks):
+### 1. Ground Truth Head-to-Head Surveillance Benchmark
+Evaluated across 728 test frames (OOD everyday objects, concealed weapons under coats, and direct attacks) comparing the heavy Teacher, the production Distilled Student, and the **Best Custom P2 Head trained across 23 iterations (Attempt 21)**:
 
-| Metric | Teacher (`YOLO26x`) | Distilled Student (`YOLO26s`) [Production] | Delta vs. Teacher | Custom P2 Head Student |
-| :--- | :---: | :---: | :---: | :---: |
-| **Accuracy** | 82.33% | **91.62%** | **+9.29%** | 79.48% |
-| **F1-Score** | 74.35% | **86.88%** | **+12.53%** | 60.48% |
-| **Precision** | 71.10% | **89.78%** | **+18.68%** | 83.21% |
-| **Recall (Threat Safety)** | 77.92% (187/240) | **84.17% (202/240)** | **+6.25%** | 47.50% (114/240) |
-| **Specificity (OOD)** | 84.49% (414/490) | **95.29% (465/488)** | **+10.80%** | 95.27% |
-| **False Positives** | 76 | **23 (3.3x reduction)** | **-53 FP** | 23 |
-| **False Negatives** | 53 | **38 (15 fewer misses)** | **-15 FN** | 126 |
-| **Inference Latency** | 18.83 ms (~53 FPS) | **12.07 ms (~83 FPS)** | **1.56x Faster** | 13.62 ms |
-| **Deployment Verdict** | Heavy for Edge | **Deployed Champion** | — | Deprecated (Recall Collapse) |
+| Metric | Teacher (`YOLO26x`) | Distilled Student (`YOLO26s`) [Production] | Best Custom P2 Head (Attempt 21) | Production Decision Rationale |
+| :--- | :---: | :---: | :---: | :--- |
+| **Weapon Recall (Threat Safety)** | 77.92% | **91.67%** (220/240 detected) | 85.42% (205/240 detected) | **Deployed Student:** 15 fewer missed weapons than P2. |
+| **Accuracy** | 82.33% | **84.27%** | 86.87% | Balanced across challenging occlusions & coats. |
+| **Precision** | 71.10% | **69.18%** | 76.78% | P2 raised precision at the expense of vital Recall. |
+| **Specificity (OOD)** | 84.49% | **80.78%** | 87.58% | Effective non-threat suppression. |
+| **F1-Score** | 74.35% | **78.85%** | 80.87% | Solid trade-off for security applications. |
+| **Inference Latency** | 18.83 ms (~53 FPS) | **12.07 ms (~83 FPS)** | 12.14 ms | Real-time edge throughput. |
+| **Deployment Verdict** | Too Heavy for Edge | **Deployed Champion Model** | **Rolled Back (Degraded Recall)** | In threat detection, missing 15 weapons is unacceptable. |
 
 ### 2. Ultralytics Training Set Progression (`weapon_data.yaml`)
-Validation metrics over 250 training epochs comparing undistilled baseline against distilled student:
+Validation metrics over 250 training epochs comparing undistilled baseline, distilled student, and Attempt 21:
 
 | Model Architecture | Scale | mAP@50 | mAP@50-95 | Precision | Recall | Role |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Teacher (`YOLO26x`)** | Heavy (`x`) | **90.67%** | **39.61%** | **91.44%** | 84.03% | Guidance Teacher |
 | **Baseline Student (`YOLO26s`)** | Compact (`s`) | 86.11% | 34.20% | 79.53% | 84.88% | Undistilled Student |
 | **Distilled Student (`YOLO26s`)** | Compact (`s`) | **90.43%** | **37.77%** | **89.67%** | 80.67% | **Production Model (+4.32% mAP50)** |
+| **Best P2 Head (Attempt 21)** | Compact (`s`) | 90.06% | 36.20% | 82.78% | 86.56% | Experimental Ablation |
 
 > **Ablation Insight & Custom P2 Deprecation:**
-> A multi-scale P2 high-resolution detection head (stride 4) was engineered and tested across 23 iterations (Attempts 1–23) with surgical neck freezes, feature adapters, and mosaic disabling to improve tiny blade edge detection. However, empirical benchmarking revealed that adding P2 induced gradient instability on compact datasets:
-> - On the standard operational benchmark ($Conf=0.45$), initial P2 distillation collapsed weapon Recall to **47.50%** (missing 126 weapons).
-> - In the extended surgical fine-tuning attempt (Attempt 21 at $Conf=0.20$), P2 achieved **85.42% Recall** (35 false negatives), significantly underperforming the baseline Distilled Student's **91.67% Recall** (20 false negatives).
-> - Because missing 15 active threat events in a physical security pipeline is unacceptable, the custom P2 modification was deprecated, and the **Distilled YOLO26s Student** was deployed.
+> A multi-scale P2 high-resolution detection head (stride 4) was engineered across 23 iterations (Attempts 1–23) with surgical neck freezes, feature adapters, and mosaic disabling to capture fine blade contours. While **Attempt 21 (High Fidelity Extended)** successfully raised precision to 76.78%, it dropped weapon Recall from **91.67% down to 85.42%** (causing 15 additional missed weapons). Because failing to detect an active weapon poses severe security risks, the custom P2 architecture was deprecated, and the **Distilled YOLO26s Student** was deployed.
 
 ---
 
@@ -119,15 +115,14 @@ ightarrow$ Alarm triggered.
 
 To prevent false alarms from ordinary bodily movements while wielding everyday objects, multiple anomaly detection paradigms were trained and benchmarked on skeletal graph representations:
 
-| Method | Accuracy | Precision | Recall | F1-Score | Strategy / Characteristics |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **Deep k-NN (Champion)** | **83.12%** | **83.33%** | **75.76%** | **79.37%** | **Non-Parametric Feature Gating.** Preserves manifold geometry; **+29.3% Recall** and **+24.6% F1** over Mahalanobis. |
-| **Mahalanobis Distance** | 78.07% | 66.67% | 46.45% | 54.75% | Parametric Gaussian. Degrades on non-Gaussian complex biomechanical clusters. |
-| **Deep SVDD** | — | — | — | — | Hypersphere boundary. Prone to representation collapse without negative anchors. |
-| **Joint Autoencoder** | — | — | — | — | Reconstruction error. High error on complex multi-joint motion; higher false alarm rate. |
-| **Binary Classification** | — | — | — | — | Supervised Cross-Entropy. Overfits to background features and actor silhouettes. |
+| Evaluation Level | Paradigm / Method | Precision | Recall | F1-Score | Accuracy | Characteristics & Role |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| **Full Video-Level Pipeline** | **Mahalanobis Distance** | **1.00 (100.0%)** | **0.86 (86.0%)** | — | **0.87 (87.0%)** | **Zero False Alarms (12/12 non-violent videos rejected).** Calibrated with 91.86% harmonic OOD score. |
+| **Clip-Level Micro-Average** | **Mahalanobis Distance** | **96.97%** | **96.97%** | **96.97%** | **96.15%** | Evaluated on clean validation clips (`validation_results_micro.csv`). |
+| **Clip-Level Challenge Set** | **Deep k-NN (Champion)** | **83.33%** | **75.76%** | **79.37%** | **83.12%** | **Non-Parametric Feature Gating.** Superior on challenging edge-cases including false-detection clips. |
+| Exploratory Baselines | Deep SVDD / Autoencoder | — | — | — | — | Prone to boundary collapse or high false alarms on complex skeletal articulations. |
 
-The **Deep k-NN Feature Gating on ST-GCN embeddings** was selected as the champion model (`weights/stgcn_violence_fold2.pth` + `weights/reference_data_knn.pt`) for real-time threat gating against passive actions.
+The **Deep k-NN Feature Gating on ST-GCN embeddings** was deployed as the active runtime model (`weights/stgcn_violence_fold2.pth` + `weights/reference_data_knn.pt`), with the **Mahalanobis Distance reference** (`weights/reference_data_mahalanobis.json`) preserved as the parametric baseline.
 
 ## ⚙️ Installation & Quickstart
 
