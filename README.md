@@ -2,7 +2,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg)](https://pytorch.org/)
-[![Ultralytics YOLO](https://img.shields.io/badge/YOLO-v8%2Fv11-green.svg)](https://docs.ultralytics.com/)
+[![Ultralytics YOLO](https://img.shields.io/badge/YOLO-26-green.svg)](https://docs.ultralytics.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An end-to-end, resource-efficient dual-stage surveillance framework engineered for real-time edge deployment. Combines **Response-Based YOLO Knowledge Distillation** with **Spatial-Temporal Graph Convolutional Networks (ST-GCN)** and **Non-Parametric Manifold Gating** to detect active violent threats on live camera streams with minimal computational overhead.

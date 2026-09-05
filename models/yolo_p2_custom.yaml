@@ -1,4 +1,4 @@
-# Custom YOLOv8/v11 with P2 High-Resolution Head for Small Weapon Detection
+# Custom YOLO26 with P2 High-Resolution Head for Small Weapon Detection
 # Parameters
 nc: 1          # number of classes (weapon/knife)
 scales:

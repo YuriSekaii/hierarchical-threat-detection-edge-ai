@@ -45,7 +45,7 @@ class HierarchicalThreatDetector:
         print(f"  [1/4] Loading Distilled YOLO Weapon Detector: {os.path.basename(weapon_model_path)}")
         self.weapon_model = YOLO(weapon_model_path)
 
-        print(f"  [2/4] Loading YOLOv8s Pose Estimator: {os.path.basename(pose_model_path)}")
+        print(f"  [2/4] Loading YOLO26s Pose Estimator: {os.path.basename(pose_model_path)}")
         self.pose_model = YOLO(pose_model_path)
         
         # 2. Load ST-GCN Action Model
