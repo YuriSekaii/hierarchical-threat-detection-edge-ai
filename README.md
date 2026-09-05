@@ -26,7 +26,7 @@ This project solves this by decoupling detection into a **Hierarchical Gating Ar
 * **Kinematic Extraction:** Upon Stage 1 trigger, a 60-frame analysis window is activated. YOLO-Pose extracts 17 COCO skeletal joint coordinates.
 * **Kinematic Preprocessing:** Implements **1D Gaussian temporal smoothing** ($\sigma=1.0$) and linear interpolation to resolve dropped joints, followed by **centroid normalization** to achieve scale and position invariance.
 * **ST-GCN Feature Extraction:** Feeds normalized skeleton graphs through an 8-block Spatial-Temporal Graph Convolutional Network.
-* **OOD Distance Gating:** Measures deep feature embeddings against a baseline threat manifold using **Mahalanobis / k-NN distance**, filtering out passive actions (e.g., calmly holding a knife) from aggressive striking motions.
+* **OOD Distance Gating:** Measures deep feature embeddings against a baseline threat manifold using **Deep k-NN distance**, filtering out passive actions (e.g., calmly holding a knife) from aggressive striking motions.
 
 ---
 
@@ -110,9 +110,7 @@ To prevent false alarms from ordinary bodily movements while wielding everyday o
 | **Joint Autoencoder** | Reconstruction Error | Spatial-Temporal AE | High reconstruction error on complex multi-joint motion; higher false alarm rate. |
 | **Binary Classification** | Supervised Cross-Entropy | Standard Linear Classifier | Overfits to background features and actor silhouettes; poor zero-shot OOD generalization. |
 
-The framework provides unified support for both OOD discrimination modes:
-1. **Deep k-NN Mode (Default, tested in `Real_Time.py`):** Uses the non-parametric feature bank (`weights/reference_data_knn.pt`) with Euclidean $k$-th neighbor gating.
-2. **Mahalanobis Distance Mode:** Uses the class mean and inverse covariance matrix (`weights/reference_data_mahalanobis.json`) with parametric Gaussian thresholding ($D_M < 7.60$).
+The **Deep k-NN Feature Gating on ST-GCN embeddings** was selected as the champion model (`Train_Violence_STGCN_fold2.pth` + `reference_data_knn.pt`) for real-time threat gating against passive actions.
 
 ## ⚙️ Installation & Quickstart
 
@@ -125,11 +123,8 @@ pip install -r requirements.txt
 
 ### 2. Run Live Real-Time Detection
 ```bash
-# Option A: Run with Deep k-NN (Default, exact configuration tested in real-time camera testing)
-python src/inference_realtime.py --ood-method knn --source 0
-
-# Option B: Run with Mahalanobis Distance (Matches the architectural flow diagram)
-python src/inference_realtime.py --ood-method mahalanobis --source 0
+# Run real-time detection on webcam (source 0) or pass a video file path
+python src/inference_realtime.py --source 0
 ```
 
 ---
