@@ -71,23 +71,45 @@ ightarrow$ Alarm triggered.
 │   ├── yolo_weapon_p2.pt         # Distilled YOLO26s with custom P2 head (23 MB)
 │   ├── yolo26s-pose.pt           # 17-keypoint skeletal pose estimation (23 MB)
 │   ├── stgcn_violence_fold2.pth  # Trained ST-GCN action recognition model (12 MB)
-│   └── reference_data_knn.pt     # OOD reference feature embeddings (0.3 MB)
+│   └── reference_data_knn.pt     # Deep k-NN reference feature embeddings (0.3 MB)
 ├── models/
-│   ├── stgcn.py                  # PyTorch ST-GCN implementation (Spatial + Temporal Conv)
+│   ├── stgcn.py                  # PyTorch ST-GCN implementation (Spatial + Temporal GCN)
 │   └── yolo_p2_custom.yaml       # Custom YOLO P2-layer architecture configuration
 ├── src/
-│   ├── inference_realtime.py     # Multi-threaded live camera inference engine
-│   ├── skeleton_utils.py         # Kinematic interpolation, Gaussian filter & normalization
-│   └── ood_metrics.py            # Mahalanobis and k-NN distance calculation
+│   ├── inference_realtime.py     # Multi-threaded live camera engine (3 FPS gate -> ST-GCN)
+│   ├── extract_skeletons.py      # Automated YOLO-Pose extraction to XML annotations
+│   ├── evaluate_knn_benchmark.py # Comprehensive k-NN OOD evaluation & confusion matrix
+│   ├── skeleton_utils.py         # Gaussian filter, interpolation & normalization
+│   └── ood_metrics.py            # Deep k-NN and Mahalanobis distance calculation
 ├── training/
-│   ├── train_stgcn_triplet.py    # ST-GCN Triplet Margin Loss training script
-│   └── train_yolo_distill.py     # Decoupled box/class Knowledge Distillation trainer
+│   ├── train_stgcn_knn.py        # Champion: Triplet Loss + Deep k-NN OOD (Sun et al., ICML 2022)
+│   ├── train_stgcn_mahalanobis.py# Baseline: Triplet Loss + Mahalanobis Distance OOD
+│   ├── train_yolo_distill.py     # Knowledge Distillation for YOLO-P2 Student
+│   └── tune_ood_parameters.py    # Adaptive OOD threshold calibration
 ├── requirements.txt              # Project dependencies
 ├── .gitignore                    # Optimized to exclude heavy weights/datasets
+├── LICENSE                       # MIT License
 └── README.md                     # Technical report & documentation
 ```
 
 ---
+
+
+---
+
+## 🔬 Out-of-Distribution (OOD) Threat Verification Benchmark
+
+To prevent false alarms from ordinary bodily movements while wielding everyday objects, multiple anomaly detection paradigms were trained and benchmarked on skeletal graph representations:
+
+| Method | Paradigm | Reference / Strategy | Verdict & Characteristics |
+| :--- | :--- | :--- | :--- |
+| **Deep k-NN (Champion)** | **Metric Distance** | **Sun et al., ICML 2022** | **Best Generalization.** Preserves feature magnitude; cleanly discriminates knife attacks from gestures. |
+| **Mahalanobis Distance** | Parametric Gaussian | Covariance Matrix Estimation | Strong baseline, but sensitive to non-Gaussian kinematic cluster shapes. |
+| **Deep SVDD** | Hypersphere Boundary | One-Class Support Vector | Good boundary enclosure; prone to representation collapse without negative anchors. |
+| **Joint Autoencoder** | Reconstruction Error | Spatial-Temporal AE | High reconstruction error on complex multi-joint motion; higher false alarm rate. |
+| **Binary Classification** | Supervised Cross-Entropy | Standard Linear Classifier | Overfits to background features and actor silhouettes; poor zero-shot OOD generalization. |
+
+The **Deep k-NN (ICML 2022) with Triplet Margin Loss on ST-GCN embeddings** was selected as the champion model (`Train_Violence_STGCN_fold2.pth` + `reference_data_knn.pt`) for real-time live gating.
 
 ## ⚙️ Installation & Quickstart
 
