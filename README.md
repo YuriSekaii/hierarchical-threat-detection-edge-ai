@@ -118,7 +118,7 @@ The framework provides unified support for both OOD discrimination modes:
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/<your-username>/hierarchical-threat-detection-edge-ai.git
+git clone https://github.com/YuriSekaii/hierarchical-threat-detection-edge-ai.git
 cd hierarchical-threat-detection-edge-ai
 pip install -r requirements.txt
 ```
