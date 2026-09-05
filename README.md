@@ -150,9 +150,7 @@ assets/
 ├── weapon_distill_training_curves.png  # Ultralytics distillation training curves
 └── stgcn_loss_curve.png                # ST-GCN cross-validation loss curve
 results/
-├── ground_truth_benchmark/             # Raw ground-truth validation reports (715 frames)
-│   ├── Detailed_GT_Validation_2026-01-27_02-59-15.txt
-│   ├── Detailed_GT_Validation_2026-02-02_15-17-28.txt
+├── ground_truth_benchmark/             # Master ground-truth surveillance benchmark (715 frames)
 │   └── Comprehensive_Live_Verified_Benchmark.txt
 ├── action_recognition_benchmark/       # Live 148-clip evaluation outputs & logs
 │   ├── live_head_to_head_benchmark.csv
