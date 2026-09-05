@@ -1,4 +1,4 @@
-# Hierarchical Edge-AI Threat & Violence Detection System
+﻿# Hierarchical Edge-AI Threat & Violence Detection System
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange.svg)](https://pytorch.org/)
@@ -9,7 +9,7 @@ An end-to-end, resource-efficient dual-stage surveillance system engineered for 
 
 ---
 
-## 📌 System Architecture
+## 東 System Architecture
 
 Traditional surveillance pipelines run continuous deep neural networks on every frame, resulting in high thermal dissipation and compute exhaustion on edge devices. 
 
@@ -30,7 +30,7 @@ This project solves this by decoupling detection into a **Hierarchical Gating Ar
 
 ---
 
-## 🔬 Model Compression & Knowledge Distillation Benchmark
+## 溌 Model Compression & Knowledge Distillation Benchmark
 
 To detect small weapons reliably on edge devices without the computational overhead and latency of heavy models (`YOLO26x`), Knowledge Distillation was utilized to distill feature representations into a lightweight, real-time `YOLO26s` student.
 
@@ -58,11 +58,11 @@ Validation metrics over 250 training epochs comparing undistilled baseline, dist
 | **Best P2 Head (Attempt 21)** | Compact (`s`) | 90.06% | 36.20% | 82.78% | 86.56% | Experimental Ablation |
 
 > **Ablation Insight & Custom P2 Deprecation:**
-> A multi-scale P2 high-resolution detection head (stride 4) was engineered across 23 iterations (Attempts 1–23) with surgical neck freezes, feature adapters, and mosaic disabling to capture fine blade contours. While **Attempt 21 (High Fidelity Extended)** successfully raised precision to 76.78%, it dropped weapon Recall from **91.67% down to 85.42%** (causing 15 additional missed weapons). Because failing to detect an active weapon poses severe security risks, the custom P2 architecture was deprecated, and the **Distilled YOLO26s Student** was deployed.
+> A multi-scale P2 high-resolution detection head (stride 4) was engineered across 23 iterations (Attempts 1窶・3) with surgical neck freezes, feature adapters, and mosaic disabling to capture fine blade contours. While **Attempt 21 (High Fidelity Extended)** successfully raised precision to 76.78%, it dropped weapon Recall from **91.67% down to 85.42%** (causing 15 additional missed weapons). Because failing to detect an active weapon poses severe security risks, the custom P2 architecture was deprecated, and the **Distilled YOLO26s Student** was deployed.
 
 ---
 
-## 📈 ST-GCN Action Recognition & Convergence
+## 嶋 ST-GCN Action Recognition & Convergence
 
 The ST-GCN model was trained on 17-node skeleton trajectories across 3 action categories (`Cut-Down`, `Stab`, `Thrust`) using 3-fold cross-validation with Triplet Margin Loss:
 
@@ -70,61 +70,61 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 
 * **Cross-Validation Result:** Fold 2 converged with optimal validation loss ($L_{val} = 0.0177$) at epoch 19.
 * **OOD Discrimination:** Distinguishes between:
-  * 🟢 **Normal Scanning:** No weapon present.
-  * 🟠 **Passive Threat ("WEAPON SEEN, SAFE"):** Weapon visible, but kinematic trajectories deviate from violent attack patterns.
-  * 🔴 **Active Threat ("VIOLENCE DETECTED"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold $
+  * 泙 **Normal Scanning:** No weapon present.
+  * 泛 **Passive Threat ("WEAPON SEEN, SAFE"):** Weapon visible, but kinematic trajectories deviate from violent attack patterns.
+  * 閥 **Active Threat ("VIOLENCE DETECTED"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold $
 ightarrow$ Alarm triggered.
 
 ---
 
-## 📂 Repository Structure
+## 唐 Repository Structure
 
 ```
-├── assets/
-│   ├── inference_pipeline.png    # 2-stage hierarchical architecture diagram
-│   └── stgcn_loss_curve.png      # Cross-validation training curves
-├── weights/
-│   ├── yolo_weapon_distilled.pt  # Distilled YOLO26s weapon detection student (Teacher: YOLO26x)
-│   ├── yolo26s-pose.pt           # 17-keypoint skeletal pose estimation
-│   ├── stgcn_violence_fold2.pth  # Trained ST-GCN action recognition model
-│   ├── reference_data_mahalanobis.json # Mahalanobis mean, inv-cov & threshold
-│   └── reference_data_knn.pt     # k-NN reference feature embeddings
-├── models/
-│   ├── stgcn.py                  # PyTorch ST-GCN implementation (Spatial + Temporal GCN)
-│   └── yolo_p2_custom.yaml       # Experimental P2-layer configuration (Ablation study)
-├── src/
-│   ├── inference_realtime.py     # Multi-threaded live camera inference engine
-│   ├── extract_skeletons.py      # Automated YOLO-Pose extraction to XML annotations
-│   ├── evaluate_knn_benchmark.py # Comprehensive k-NN OOD evaluation & confusion matrix
-│   ├── skeleton_utils.py         # Gaussian filter, interpolation & normalization
-│   └── ood_metrics.py            # Deep k-NN and Mahalanobis distance calculation
-├── training/
-│   ├── train_stgcn_knn.py        # Triplet Loss + Deep k-NN OOD training
-│   ├── train_stgcn_mahalanobis.py# Baseline: Triplet Loss + Mahalanobis Distance OOD
-│   ├── train_yolo_distill.py     # Knowledge Distillation pipeline (Teacher YOLO26x -> Student YOLO26s)
-│   └── tune_ood_parameters.py    # Adaptive OOD threshold calibration
-├── requirements.txt              # Project dependencies
-├── .gitignore                    # Optimized to exclude heavy weights/datasets
-├── LICENSE                       # MIT License
-└── README.md                     # Technical report & documentation
+笏懌楳笏 assets/
+笏・  笏懌楳笏 inference_pipeline.png    # 2-stage hierarchical architecture diagram
+笏・  笏披楳笏 stgcn_loss_curve.png      # Cross-validation training curves
+笏懌楳笏 weights/
+笏・  笏懌楳笏 yolo_weapon_distilled.pt  # Distilled YOLO26s weapon detection student (Teacher: YOLO26x)
+笏・  笏懌楳笏 yolo26s-pose.pt           # 17-keypoint skeletal pose estimation
+笏・  笏懌楳笏 stgcn_violence_fold2.pth  # Trained ST-GCN action recognition model
+笏・  笏懌楳笏 reference_data_mahalanobis.json # Mahalanobis mean, inv-cov & threshold
+笏・  笏披楳笏 reference_data_knn.pt     # k-NN reference feature embeddings
+笏懌楳笏 models/
+笏・  笏懌楳笏 stgcn.py                  # PyTorch ST-GCN implementation (Spatial + Temporal GCN)
+笏・  笏披楳笏 yolo_p2_custom.yaml       # Experimental P2-layer configuration (Ablation study)
+笏懌楳笏 src/
+笏・  笏懌楳笏 inference_realtime.py     # Multi-threaded live camera inference engine
+笏・  笏懌楳笏 extract_skeletons.py      # Automated YOLO-Pose extraction to XML annotations
+笏・  笏懌楳笏 evaluate_knn_benchmark.py # Comprehensive k-NN OOD evaluation & confusion matrix
+笏・  笏懌楳笏 skeleton_utils.py         # Gaussian filter, interpolation & normalization
+笏・  笏披楳笏 ood_metrics.py            # Deep k-NN and Mahalanobis distance calculation
+笏懌楳笏 training/
+笏・  笏懌楳笏 train_stgcn_knn.py        # Triplet Loss + Deep k-NN OOD training
+笏・  笏懌楳笏 train_stgcn_mahalanobis.py# Baseline: Triplet Loss + Mahalanobis Distance OOD
+笏・  笏懌楳笏 train_yolo_distill.py     # Knowledge Distillation pipeline (Teacher YOLO26x -> Student YOLO26s)
+笏・  笏披楳笏 tune_ood_parameters.py    # Adaptive OOD threshold calibration
+笏懌楳笏 requirements.txt              # Project dependencies
+笏懌楳笏 .gitignore                    # Optimized to exclude heavy weights/datasets
+笏懌楳笏 LICENSE                       # MIT License
+笏披楳笏 README.md                     # Technical report & documentation
 ```
 
 ---
 
-## 🔬 Out-of-Distribution (OOD) Threat Verification Benchmark
+## 溌 Out-of-Distribution (OOD) Threat Verification Benchmark
 
 To prevent false alarms from ordinary bodily movements while wielding everyday objects, multiple anomaly detection paradigms were trained and benchmarked on skeletal graph representations:
 
 | Evaluation Level | Paradigm / Method | Precision | Recall | F1-Score | Accuracy | Characteristics & Role |
 | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Full Video-Level Pipeline** | **Mahalanobis Distance** | **1.00 (100.0%)** | **0.86 (86.0%)** | — | **0.87 (87.0%)** | **Zero False Alarms (12/12 non-violent videos rejected).** Calibrated with 91.86% harmonic OOD score. |
+| **Full Video-Level Pipeline** | **Mahalanobis Distance** | **1.00 (100.0%)** | **0.86 (86.0%)** | 窶・| **0.87 (87.0%)** | **Zero False Alarms (12/12 non-violent videos rejected).** Calibrated with 91.86% harmonic OOD score. |
 | **Clip-Level Micro-Average** | **Mahalanobis Distance** | **96.97%** | **96.97%** | **96.97%** | **96.15%** | Evaluated on clean validation clips (`validation_results_micro.csv`). |
 | **Clip-Level Challenge Set** | **Deep k-NN (Champion)** | **83.33%** | **75.76%** | **79.37%** | **83.12%** | **Non-Parametric Feature Gating.** Superior on challenging edge-cases including false-detection clips. |
-| Exploratory Baselines | Deep SVDD / Autoencoder | — | — | — | — | Prone to boundary collapse or high false alarms on complex skeletal articulations. |
+| Exploratory Baselines | Deep SVDD / Autoencoder | 窶・| 窶・| 窶・| 窶・| Prone to boundary collapse or high false alarms on complex skeletal articulations. |
 
 The **Deep k-NN Feature Gating on ST-GCN embeddings** was deployed as the active runtime model (`weights/stgcn_violence_fold2.pth` + `weights/reference_data_knn.pt`), with the **Mahalanobis Distance reference** (`weights/reference_data_mahalanobis.json`) preserved as the parametric baseline.
 
-## ⚙️ Installation & Quickstart
+## 笞呻ｸ・Installation & Quickstart
 
 ### 1. Clone & Install Dependencies
 ```bash
@@ -144,13 +144,13 @@ python src/inference_realtime.py
 
 ---
 
-## 📊 Dataset & Privacy Notice
+## 投 Dataset & Privacy Notice
 The experimental dataset was recorded in a controlled laboratory environment for **Proof-of-Concept (PoC) feasibility validation**. 
 
 * **Privacy & Governance:** Due to human subject privacy protections and institutional data governance regulations, raw video recordings and facial imagery are withheld from the public repository.
 * **Reproducibility:** Pre-trained model weights are provided directly in the [`weights/`](weights/) directory to enable full out-of-the-box pipeline evaluation and live webcam inference.
 
-## 🔍 Engineering Insights & Failure Mode Analysis
+## 剥 Engineering Insights & Failure Mode Analysis
 
 During extensive offline and live deployment evaluations, key machine learning challenges were identified and addressed:
 
@@ -160,7 +160,7 @@ During extensive offline and live deployment evaluations, key machine learning c
 
 2. **Decoupling Distillation Loss:**
    * *Problem:* Standard logit distillation applying BCE loss across all channels corrupts bounding box coordinate regression.
-   * *Solution:* Separated coordinates (channels 0–3, optimized via Smooth L1) from classification logits (channel 4, optimized via BCEWithLogitsLoss).
+   * *Solution:* Separated coordinates (channels 0窶・, optimized via Smooth L1) from classification logits (channel 4, optimized via BCEWithLogitsLoss).
 
 3. **Hand-Weapon Visual Correlation:**
    * *Problem:* In small datasets, models falsely learn that clenched fists indicate weapons.
@@ -168,5 +168,6 @@ During extensive offline and live deployment evaluations, key machine learning c
 
 ---
 
-## 📜 License
+## 糖 License
 This project is licensed under the [MIT License](LICENSE).
+

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Hierarchical Real-Time Threat Detection System.
 Multi-threaded architecture:
 - Thread 1: Ingests 30 FPS video into a 60-frame thread-safe deque.
@@ -124,7 +124,7 @@ class HierarchicalThreatDetector:
             window = []
             with self.buffer_lock:
                 if len(self.frame_buffer) >= 30:
-                    window = list(self.frame_buffer)[-30:]
+                    window = list(self.frame_buffer)[-50:]
 
             if len(window) < 30:
                 time.sleep(0.05)
@@ -234,3 +234,4 @@ if __name__ == '__main__':
         ref_data_path=ref_weights
     )
     detector.run(source=args.camera_id)
+
