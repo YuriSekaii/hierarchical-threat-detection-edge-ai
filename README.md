@@ -110,7 +110,9 @@ To prevent false alarms from ordinary bodily movements while wielding everyday o
 | **Joint Autoencoder** | Reconstruction Error | Spatial-Temporal AE | High reconstruction error on complex multi-joint motion; higher false alarm rate. |
 | **Binary Classification** | Supervised Cross-Entropy | Standard Linear Classifier | Overfits to background features and actor silhouettes; poor zero-shot OOD generalization. |
 
-The **Mahalanobis Distance with Triplet Margin Loss on ST-GCN embeddings** was selected as the primary production model (`Train_Violence_STGCN_fold2.pth` + `reference_data_mahalanobis.json`, threshold = 7.60) for real-time live gating.
+The framework provides unified support for both OOD discrimination modes:
+1. **Deep k-NN Mode (Default, tested in `Real_Time.py`):** Uses the non-parametric feature bank (`weights/reference_data_knn.pt`) with Euclidean $k$-th neighbor gating.
+2. **Mahalanobis Distance Mode:** Uses the class mean and inverse covariance matrix (`weights/reference_data_mahalanobis.json`) with parametric Gaussian thresholding ($D_M < 7.60$).
 
 ## ⚙️ Installation & Quickstart
 
@@ -123,7 +125,11 @@ pip install -r requirements.txt
 
 ### 2. Run Live Real-Time Detection
 ```bash
-python src/inference_realtime.py
+# Option A: Run with Deep k-NN (Default, exact configuration tested in real-time camera testing)
+python src/inference_realtime.py --ood-method knn --source 0
+
+# Option B: Run with Mahalanobis Distance (Matches the architectural flow diagram)
+python src/inference_realtime.py --ood-method mahalanobis --source 0
 ```
 
 ---
