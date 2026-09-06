@@ -56,14 +56,23 @@ To determine the optimal architecture, we investigated three distinct paradigms:
 Evaluated on 715 annotated surveillance test frames containing challenging edge cases (OOD civilian handheld items, concealed weapons under coats, and direct attacks).
 
 > [!NOTE]
-> **Benchmarking Hardware Specification:**
-> All latency and frame-rate figures are empirically measured under standardized hardware conditions:
-> * **CPU:** AMD Ryzen 5 5600X (6 Cores, 12 Threads @ 3.70 GHz base, up to 4.60 GHz Boost)
-> * **GPU:** NVIDIA GeForce GTX 1060 3GB (Pascal architecture, 1,152 CUDA Cores)
-> * **Memory:** 16 GB DDR4 (2667 MHz, Dual-Channel)
-> * **Motherboard:** Micro-Star International (MSI) B450M-A PRO MAX II (MS-7C52)
-> * **Storage Subsystem:** Operating system, Python runtime, and active repository on primary **KLEVV NEO N400 240GB SATA III SSD** (`C:`); training datasets and experiment archives stored on secondary **Western Digital Blue 1TB HDD (WDC WD10EZEX-08WN4A0, 7200 RPM)** (`D:`).
-> * **Latency Profiling Isolation:** Reported inference latencies represent pure GPU neural network forward-pass computation (`res[0].speed['inference']`), strictly isolating model execution speed from storage disk I/O and preprocessing pipelines.
+> **Cross-Platform Benchmarking Hardware Specifications:**
+> All latency and frame-rate figures are empirically measured across two distinct computing tiers to evaluate multi-platform scalability:
+> 
+> | Specification | Tier 1: High-Performance Lab Workstation | Tier 2: Consumer / Edge Host Prototype |
+> | :--- | :--- | :--- |
+> | **Target Role** | Heavy Model Training & Guidance Baseline | Practical Real-Time Edge Surveillance |
+> | **CPU** | Intel Core i9-10900X (10 Cores, 20 Threads @ 3.70 GHz, Cascade Lake-X) | AMD Ryzen 5 5600X (6 Cores, 12 Threads @ 3.70 GHz base, Zen 3) |
+> | **GPU** | Dual NVIDIA GeForce RTX 3090 24GB (Ampere, 10,496 CUDA Cores, 35.6 TFLOPS) | NVIDIA GeForce GTX 1060 3GB (Pascal, 1,152 CUDA Cores, 4.4 TFLOPS) |
+> | **System RAM** | 32 GB DDR4 (2666 MHz, Quad-Channel) | 16 GB DDR4 (2667 MHz, Dual-Channel) |
+> | **Motherboard** | Gigabyte Technology X299X AORUS MASTER | Micro-Star International (MSI) B450M-A PRO MAX II (MS-7C52) |
+> | **Storage Subsystem** | 1TB Gigabyte GP-AG70S1TB (PCIe 4.0 NVMe SSD) | 240GB KLEVV NEO N400 SATA SSD (`C:`) + 1TB WD Blue 7200 RPM HDD (`D:`) |
+> 
+> **Key Architecture & Profiling Takeaways:**
+> 1. **Detection Metric Invariance:** Classification accuracy (91.62%), F1-score (86.88%), precision (89.78%), and recall (84.17%) are **100.00% identical** between the RTX 3090 and GTX 1060. Neural network forward inference with frozen weights and deterministic ops yields identical floating-point predictions across architectures.
+> 2. **Student Latency Parity (~11–12 ms):** For compact models (`YOLO26s`, ~9.4M params) at `batch=1`, execution is **CPU dispatch-bound** (PyTorch CUDA kernel launch overhead). The higher single-thread IPC of the AMD Zen 3 architecture allows the Ryzen 5 5600X to match or slightly edge out the Intel i9-10900X (11.18 ms vs. 12.77 ms).
+> 3. **Teacher Latency Divergence (18.83 ms vs. 81.91 ms):** For large models (`YOLO26x`, ~60M params), execution is strictly **GPU compute-bound**. The 10,496 CUDA cores of the RTX 3090 chew through the tensor graph in 18.83 ms (~53 FPS), whereas the 1,152 CUDA cores of the GTX 1060 bottleneck at 81.91 ms (~12 FPS) — empirically proving why Knowledge Distillation is mandatory for edge deployment.
+> 4. **Storage I/O Isolation:** Reported inference latencies isolate pure GPU tensor computation (`res[0].speed['inference']`). Disk read speeds (NVMe SSD vs. SATA SSD vs. HDD) affect only initial image loading into RAM, exerting zero influence on on-chip GPU inference timing.
 
 #### A. Calibrated Production Operating Point (`Conf = 0.45`, `IoU = 0.20`)
 *Source Data: [`results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt`](results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt)*
@@ -75,14 +84,15 @@ Evaluated on 715 annotated surveillance test frames containing challenging edge 
 | **Precision** | 71.10% | **89.78%** | 88.94% | **Student leads (+18.68% vs. Teacher, +0.84% vs. P2)** |
 | **Weapon Recall (Threat Safety)** | 77.92% (187/240) | **84.17% (202/240)** | 73.75% (177/240) | **Student detects 25 more weapons than P2 Head** |
 | **Specificity (OOD)** | 84.49% | **95.29%** | 95.44% | **High non-threat civilian suppression (>95%)** |
-| **Inference Latency** | 81.91 ms (~12 FPS) | **11.18 ms (~89 FPS)** | 19.34 ms (~51 FPS) | **Student is 42% faster than P2 and 7.3× faster (86% latency reduction) than Teacher** |
+| **Edge Latency (GTX 1060 3GB)** | 81.91 ms (~12 FPS) | **11.18 ms (~89 FPS)** | 19.34 ms (~51 FPS) | **Student is 7.3× faster (86% latency cut); Teacher fails real-time** |
+| **Lab Latency (Dual RTX 3090)** | 18.83 ms (~53 FPS) | **12.77 ms (~78 FPS)** | N/A | **Student is 1.48× faster; Teacher requires 350W workstation GPU** |
 | **Deployment Verdict** | Too Heavy for Edge | **Deployed Champion Model** | Architectural Baseline | P2 missed 25 weapons and suffered +73% higher latency. |
 
 #### B. High-Sensitivity Operating Point (`Conf = 0.20`, `IoU = 0.20`)
 *Source Data: [`results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt`](results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt)*
 *Evaluates maximum sensitivity when screening for potential threats under heavy occlusion:*
 
-| Model Architecture | Accuracy | Precision | Recall | Specificity | F1-Score | Avg Latency |
+| Model Architecture | Accuracy | Precision | Recall | Specificity | F1-Score | Edge Latency (GTX 1060) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Distilled Student (`YOLO26s`)** | 84.27% | 69.18% | **91.67% (220/240)** | 80.78% | 78.85% | **13.91 ms (~72 FPS)** |
 | **Custom P2 Head (`YOLO26s-P2`)** | 86.87% | 76.78% | 85.42% (205/240) | 87.58% | 80.87% | 19.01 ms (~53 FPS) |
