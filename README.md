@@ -17,16 +17,19 @@ This project addresses this bottleneck by decoupling threat detection into a **H
 
 ![Inference Pipeline](assets/inference_pipeline.png)
 
-### 1. Stage 1: Continuous Lightweight Scanning (Always-On Loop)
-* **Ingestion:** Ingests live video at 30 FPS into a rolling 60-frame thread-safe buffer.
+### 1. Stage 1: Continuous Lightweight Scanning & Tier 1 Security Warning (Always-On Loop)
+* **Ingestion:** Ingests live video at 30 FPS into an expanded **1200-frame (~40s) thread-safe circular buffer**.
 * **Low-Power Gating:** Subsamples **1 frame per 10 (effective rate: 3 FPS)** for weapon detection using a compact, distilled YOLO student model.
 * **Compute Savings:** Reduces continuous idle inference workloads by **~90%**, reserving GPU/NPU compute until an object of interest is verified (`Conf > 0.45`).
+* **Tier 1 Security Warning:** Immediately alerts local on-site security guards when a weapon is drawn or brandished in public/restricted areas, providing early tactical warning before an attack begins.
 
-### 2. Stage 2: On-Demand Biomechanical Action Analysis (Triggered Engine)
-* **Kinematic Extraction:** Upon Stage 1 trigger, the rolling 60-frame video buffer is queried to extract a 50-frame kinematic analysis window. YOLO-Pose extracts 17 COCO skeletal joint coordinates.
+### 2. Stage 2: Zero-Drop Biomechanical Action Auditing & Emergency Escalation (Triggered Engine)
+* **Zero-Drop Gapless Auditing:** Upon Stage 1 trigger, an on-demand worker executes a **contiguous sliding-window audit (50 frames, 10-frame stride)** over the video buffer. With keypoint pose caching, 100% of incident motion frames are analyzed without skipping or frame loss, smoothly catching up to real-time.
+* **Kinematic Extraction:** YOLO-Pose extracts 17 COCO skeletal joint coordinates.
 * **Kinematic Preprocessing:** Implements **1D Gaussian temporal smoothing** ($\sigma = 1.0$) and linear interpolation to resolve dropped joints, followed by **centroid normalization** to achieve scale and position invariance.
 * **ST-GCN Feature Extraction:** Feeds normalized skeleton graphs through a **9-block Spatial-Temporal Graph Convolutional Network** with joint-weighted spatial attention (5× weight on arm joints).
 * **OOD Distance Gating:** Measures deep feature embeddings against a baseline threat manifold using **Deep k-NN distance**, distinguishing passive holding actions from aggressive striking motions.
+* **Tier 2 Emergency Escalation:** When violent assault trajectories (`Cut-Down`, `Stab`, `Thrust`) are confirmed, the system immediately escalates to **Tier 2: dispatching emergency services (Police / EMS)** and locking timestamped video clips for forensic evidence.
 
 ---
 
