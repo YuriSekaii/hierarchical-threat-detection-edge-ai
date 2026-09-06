@@ -293,7 +293,7 @@ While the local pipeline currently triggers real-time visual alerts and executes
 * **Multi-View & Environmental Diversity:** Broaden training and OOD evaluation distributions across variable surveillance topologies (elevated dome cameras, body-worn cameras), variable lighting (low-light IR, heavy glare), and dense crowd occlusions.
 
 ### 3. In-Memory JPEG Buffer Compression (`Quality = 85`)
-* **Memory Footprint Optimization:** In the current prototype, storing 1,200 uncompressed raw NumPy frames ($640 \times 480 \times 3$) requires $\sim 1.1\text{ GB}$ of host RAM.
+* **Memory Footprint Optimization:** In the current prototype, storing 1,200 uncompressed raw NumPy frames $(640 \times 480 \times 3)$ requires $\sim 1.1\text{ GB}$ of host RAM.
 * **Proposed Implementation:** Compress incoming frames into JPEG byte buffers in memory using OpenCV SIMD:
   ```python
   _, enc_frame = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
