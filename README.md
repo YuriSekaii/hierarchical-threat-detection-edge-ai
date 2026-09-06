@@ -276,7 +276,6 @@ While the local pipeline currently triggers real-time visual alerts and executes
   * Long-bladed weapon strikes (wide slashing arcs, overhead chops, and two-handed swings with machetes or swords).
   * Blunt impact weapon strikes (heavy rotational swings and overhead strikes with bats or pipes).
   * Firearm aiming and pointing postures (one-handed extension, two-handed tactical shooting stances).
-  * Armed struggles (two or more individuals actively grappling over control of a weapon).
 * **Multi-View & Environmental Diversity:** Broaden training and OOD evaluation distributions across variable surveillance topologies (elevated dome cameras, body-worn cameras), variable lighting (low-light IR, heavy glare), and dense crowd occlusions.
 
 ### 3. In-Memory JPEG Buffer Compression (`Quality = 85`)
