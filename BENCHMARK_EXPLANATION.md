@@ -16,6 +16,12 @@ This document provides a comprehensive technical breakdown of the live head-to-h
 $env:PYTHONPATH = "C:\Users\Admin\Desktop\Code\Python\Intern\Weapon_Detection_SingleGPU\.venv\Lib\site-packages"
 C:\Users\Admin\AppData\Local\Programs\Python\Python311\python.exe src/eval_live_head_to_head.py
 ```
+- **Benchmarking Host Hardware:**
+  - **CPU:** AMD Ryzen 5 5600X (6 Cores, 12 Threads @ 3.70 GHz base, up to 4.60 GHz Boost)
+  - **GPU:** NVIDIA GeForce GTX 1060 3GB (1,152 CUDA Cores)
+  - **RAM:** 16 GB DDR4 (2667 MHz)
+  - **Motherboard:** MSI B450M-A PRO MAX II (MS-7C52)
+  - **Storage:** OS & Python environment on primary SSD (`C:`, KLEVV NEO N400 240GB); datasets and raw runs on secondary HDD (`D:`, WDC WD10EZEX-08WN4A0 1TB). Inference metrics isolate GPU forward compute time.
 
 ---
 

@@ -55,6 +55,16 @@ To determine the optimal architecture, we investigated three distinct paradigms:
 
 Evaluated on 715 annotated surveillance test frames containing challenging edge cases (OOD civilian handheld items, concealed weapons under coats, and direct attacks).
 
+> [!NOTE]
+> **Benchmarking Hardware Specification:**
+> All latency and frame-rate figures are empirically measured under standardized hardware conditions:
+> * **CPU:** AMD Ryzen 5 5600X (6 Cores, 12 Threads @ 3.70 GHz base, up to 4.60 GHz Boost)
+> * **GPU:** NVIDIA GeForce GTX 1060 3GB (Pascal architecture, 1,152 CUDA Cores)
+> * **Memory:** 16 GB DDR4 (2667 MHz, Dual-Channel)
+> * **Motherboard:** Micro-Star International (MSI) B450M-A PRO MAX II (MS-7C52)
+> * **Storage Subsystem:** Operating system, Python runtime, and active repository on primary **KLEVV NEO N400 240GB SATA III SSD** (`C:`); training datasets and experiment archives stored on secondary **Western Digital Blue 1TB HDD (WDC WD10EZEX-08WN4A0, 7200 RPM)** (`D:`).
+> * **Latency Profiling Isolation:** Reported inference latencies represent pure GPU neural network forward-pass computation (`res[0].speed['inference']`), strictly isolating model execution speed from storage disk I/O and preprocessing pipelines.
+
 #### A. Calibrated Production Operating Point (`Conf = 0.45`, `IoU = 0.20`)
 *Source Data: [`results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt`](results/ground_truth_benchmark/Comprehensive_Live_Verified_Benchmark.txt)*
 
