@@ -9,7 +9,7 @@ An end-to-end, resource-efficient dual-stage surveillance framework engineered f
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 Traditional surveillance pipelines run continuous, deep neural networks on every high-resolution frame, leading to thermal throttling, severe compute exhaustion, and dropped frames on edge accelerators.
 
@@ -33,7 +33,7 @@ This project addresses this bottleneck by decoupling threat detection into a **H
 
 ---
 
-## 📊 Stage 1: Weapon Detection & Model Compression Study
+## Stage 1: Weapon Detection & Model Compression Study
 
 ### Technical Rationale: Why Compare These 3 Models?
 Weapon detection in public surveillance faces an acute engineering tradeoff: small, handheld weapons (knives, blades) occupy very few pixels and are frequently occluded during motion, while inference latency must remain under 15 ms to support real-time multi-stream edge cameras.
@@ -116,7 +116,7 @@ Evaluated on 715 annotated surveillance test frames containing challenging edge 
 
 ---
 
-## 📈 Stage 2: ST-GCN Action Recognition & Convergence
+## Stage 2: ST-GCN Action Recognition & Convergence
 
 The ST-GCN model was trained on 17-node skeleton trajectories across 3 action categories (`Cut-Down`, `Stab`, `Thrust`) using 3-fold cross-validation with Triplet Margin Loss:
 
@@ -130,7 +130,7 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 
 ---
 
-## 🎯 Negative Control & Out-of-Distribution (OOD) Threat Verification
+## Negative Control & Out-of-Distribution (OOD) Threat Verification
 
 ### Understanding Out-of-Distribution (OOD) Negative Control Clips
 In practical computer vision surveillance, the primary failure mode is **false alert fatigue** caused by false positive classifications on mundane civilian behaviors. 
@@ -165,7 +165,7 @@ Evaluated across the full 148-clip validation suite (39 OOD civilian clips, 5 we
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 assets/
@@ -225,7 +225,7 @@ README.md                               # Project documentation & benchmark repo
 
 ---
 
-## ⚙️ Installation & Quickstart
+## Installation & Quickstart
 
 ### 1. Clone & Install Dependencies
 ```bash
@@ -259,7 +259,7 @@ Where `<path_to_dataset>` adheres to the following directory structure:
 
 ---
 
-## 🔒 Dataset & Privacy Notice
+## Dataset & Privacy Notice
 The experimental dataset was recorded in a controlled laboratory environment for **Proof-of-Concept (PoC) feasibility validation**. 
 
 * **Privacy & Governance:** Due to human subject privacy protections and institutional data governance regulations, raw video recordings and facial imagery are withheld from the public repository.
@@ -268,7 +268,7 @@ The experimental dataset was recorded in a controlled laboratory environment for
 
 ---
 
-## 🚀 Future Work & Edge Deployment Roadmap
+## Future Work & Edge Deployment Roadmap
 
 To bridge this Proof-of-Concept system toward commercial physical security infrastructure and ultra-low-power embedded appliances, several architectural and deployment enhancements are roadmap-prioritized:
 
@@ -314,5 +314,5 @@ The combination of the above optimization suite specifically targets turning the
 
 ---
 
-## 📄 License
+## License
 This project is licensed under the [MIT License](LICENSE).
