@@ -124,9 +124,9 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 
 * **Cross-Validation Result:** Fold 2 converged with optimal validation loss ($L_{\text{val}} = 0.0063$) at epoch 20 ($L_{\text{val}} = 0.0112$ at epoch 16).
 * **OOD Discrimination:** Distinguishes between:
-  * 🟢 **Normal Scanning:** No weapon present.
-  * 🟡 **Passive Threat ("WEAPON SEEN, SAFE"):** Weapon visible, but kinematic trajectories deviate from violent attack patterns.
-  * 🔴 **Active Threat ("VIOLENCE DETECTED"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold $\rightarrow$ Classified as active violence.
+  * 🟢 **Normal Scanning ("SCANNING (IDLE)"):** No weapon present.
+  * 🟠 **Weapon Present ("WEAPON DETECTED"):** Weapon visible, but kinematic trajectories deviate from violent attack patterns.
+  * 🔴 **Active Violence ("VIOLENCE DETECTED!"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold.
 
 ---
 

@@ -110,7 +110,7 @@ class HierarchicalThreatDetector:
                     # Hold threat monitoring window for 3.0 seconds after last weapon sighting
                     self.weapon_active_until = time.time() + 3.0
                     if not self.is_violent_alert:
-                        self.status_text = "WEAPON DETECTED - AUDITING MOTION..."
+                        self.status_text = "WEAPON DETECTED"
                         self.status_color = (0, 165, 255)  # Orange
 
             elapsed = time.time() - start_t
@@ -199,9 +199,9 @@ class HierarchicalThreatDetector:
                 print(f"[ACTION] !!! VIOLENCE DETECTED ({detail_str}) !!!")
             else:
                 if not self.is_violent_alert:
-                    self.status_text = f"PASSIVE MOTION: WEAPON DRAWN, NO STRIKE ({detail_str})"
+                    self.status_text = "WEAPON DETECTED"
                     self.status_color = (0, 165, 255)  # Orange
-                    print(f"[ACTION] Passive motion verified ({detail_str})")
+                    print(f"[ACTION] Non-violent motion verified ({detail_str})")
 
     def run(self, source=0):
         """Main thread: Ingestion loop and UI display."""
