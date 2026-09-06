@@ -258,10 +258,16 @@ During offline training and live deployment testing, three critical computer vis
 
 To bridge this Proof-of-Concept system toward commercial physical security infrastructure and ultra-low-power embedded appliances, several architectural and deployment enhancements are roadmap-prioritized:
 
-### 1. Tactical Security Dispatch & Tiered Escalation Architecture
-* **Operational Security Hypothesis:** In public surveillance, weapon assaults are bounded, acute bursts (typically lasting $1.5 - 4.0\text{ seconds}$). System utility splits across two operational objectives:
-  * **Pre-Attack Threat Deterrence (Tier 1):** In public facilities (banks, transit hubs, schools), an individual brandishing a weapon for $>2$ seconds triggers zero-lag notifications to on-site security guards and automated access-control locks *before* an assault begins.
-  * **Emergency Dispatch & Evidence Preservation (Tier 2):** Even if motion auditing runs a few seconds behind real-time, 100% gapless frame coverage ensures no violent strike is missed. Verified attack trajectories immediately escalate to emergency service dispatch (Police / Ambulance EMS) while locking timestamped video clips for forensic prosecution.
+### 1. Automated Authority Notification & Prolonged Threat Handling
+While the local pipeline currently triggers real-time visual alerts and executes zero-drop kinematic auditing upon weapon detection, commercial physical security deployment will integrate dedicated enterprise dispatch backends:
+* **Automated Multi-Agency Dispatch (Police & EMS):**
+  When the ST-GCN + Deep $k\text{-NN}$ classifier confirms an active assault trajectory (`Cut-Down`, `Stab`, `Thrust`), the system immediately triggers automated webhook and telecommunication APIs to dispatch local law enforcement and emergency medical services (EMS).
+* **Forensic Evidence Locking & Archival:**
+  Upon confirmed violence, automatically extract, timestamp, and cryptographically lock the contiguous 1,200-frame incident recording (including pre-attack context from the circular buffer) to secure storage, preserving tamper-evident video evidence to identify and prosecute attackers.
+* **Prolonged Brandishing Handling (Standoff Protocol):**
+  In scenarios where an armed individual brandishes a weapon for an extended duration (e.g., $>15\text{ seconds}$) without launching an immediate strike, continuous frame generation may cause the sliding-window action worker to accumulate a temporal processing backlog. To maintain complete situational awareness:
+  * The system implements a **Prolonged Threat Standoff Alert**: persistent weapon presence past a calibrated temporal limit immediately flags the scene as an active armed standoff.
+  * This prioritizes direct, real-time video feed dispatch to human security operators, ensuring continuous monitoring while the kinematic action recognition queue methodically completes its frame-by-frame audit in the background.
 
 ### 2. In-Memory JPEG Buffer Compression (`Quality = 85`)
 * **Memory Footprint Optimization:** In the current prototype, storing 1,200 uncompressed raw NumPy frames ($640 \times 480 \times 3$) requires $\sim 1.1\text{ GB}$ of host RAM.
