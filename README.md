@@ -268,24 +268,6 @@ The experimental dataset was recorded in a controlled laboratory environment for
 
 ---
 
-## 💡 Engineering Insights & Failure Mode Analysis
-
-During offline training and live deployment testing, three critical computer vision challenges were identified and addressed:
-
-1. **Temporal Video Data Leakage:**
-   * *Problem:* Randomly splitting frames from continuous video sequences causes synthetic score inflation (91%+) due to identical background and subject features appearing in both train and validation sets.
-   * *Solution:* Enforced strict **scene-level / video-level dataset splitting**, ensuring that all test clips originate from previously unseen recording sessions.
-
-2. **Decoupled Distillation Loss:**
-   * *Problem:* Applying uniform distillation loss across classification and regression channels degrades bounding box boundary precision.
-   * *Solution:* Decoupled bounding box regression (optimized via Smooth L1) from classification logits (optimized via BCEWithLogitsLoss).
-
-3. **Hand-Weapon Spatial Correlation:**
-   * *Problem:* Detectors trained only on weapon-wielding hands frequently misclassify clenched empty fists as knives.
-   * *Solution:* Hard-negative mining by adding empty-hand gestures and common handheld items (smartphones, pens, cups) into the training distribution.
-
----
-
 ## 🚀 Future Work & Edge Deployment Roadmap
 
 To bridge this Proof-of-Concept system toward commercial physical security infrastructure and ultra-low-power embedded appliances, several architectural and deployment enhancements are roadmap-prioritized:
