@@ -214,6 +214,8 @@ training/
 ├── train_stgcn_mahalanobis.py          # Baseline: Triplet Loss + Mahalanobis Distance OOD
 ├── train_yolo_distill.py               # Knowledge Distillation pipeline (Teacher YOLO26x -> Student YOLO26s)
 └── tune_ood_parameters.py              # Adaptive OOD threshold calibration
+scripts/
+└── generate_pipeline_diagram.py        # Programmatic architecture diagram generator
 BENCHMARK_EXPLANATION.md                # Comprehensive mathematical breakdown & empirical documentation
 requirements.txt                        # Project dependencies
 .gitignore                              # Optimized to exclude heavy weights/datasets
