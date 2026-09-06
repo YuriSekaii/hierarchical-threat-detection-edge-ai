@@ -7,7 +7,7 @@ import numpy as np
 import torch
 
 
-def compute_knn_distance(query_embedding, feature_bank, k=5, mode='kth'):
+def compute_knn_distance(query_embedding, feature_bank, k=2, mode='kth'):
     """
     Calculates the k-Nearest Neighbor Euclidean distance between query embedding
     and the reference feature bank.
@@ -15,7 +15,7 @@ def compute_knn_distance(query_embedding, feature_bank, k=5, mode='kth'):
     Args:
         query_embedding (torch.Tensor): Shape (1, D) or (B, D)
         feature_bank (torch.Tensor): Shape (N, D)
-        k (int): k value for nearest neighbor search
+        k (int): k value for nearest neighbor search (production default: k=2)
         mode (str): 'kth' for distance to the k-th nearest neighbor (matches Real_Time.py),
                     'mean' for average distance across top-k neighbors.
     Returns:

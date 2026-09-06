@@ -64,7 +64,7 @@ class HierarchicalThreatDetector:
             ref_data = torch.load(ref_data_path, map_location='cpu', weights_only=False)
             self.knn_feature_bank = ref_data['feature_bank'].float().cpu()
             self.knn_threshold = float(ref_data['threshold'])
-            self.knn_k = int(ref_data.get('k', 5))
+            self.knn_k = int(ref_data.get('k', 2))
             print(f"        -> Mode: Deep k-NN (k={self.knn_k}, threshold={self.knn_threshold:.4f}, bank={self.knn_feature_bank.shape})")
         elif ref_data_path.endswith('.json'):
             # Mahalanobis Distance Mode
@@ -120,13 +120,13 @@ class HierarchicalThreatDetector:
                 time.sleep(0.05)
                 continue
 
-            # Extract window from buffer (30 frames)
+            # Extract window from buffer (50 frames for kinematic action analysis)
             window = []
             with self.buffer_lock:
-                if len(self.frame_buffer) >= 30:
+                if len(self.frame_buffer) >= 50:
                     window = list(self.frame_buffer)[-50:]
 
-            if len(window) < 30:
+            if len(window) < 50:
                 time.sleep(0.05)
                 continue
 

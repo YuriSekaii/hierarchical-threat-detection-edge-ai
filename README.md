@@ -38,7 +38,7 @@ Weapon detection in public surveillance faces an acute engineering tradeoff: sma
 To determine the optimal architecture, we investigated three distinct paradigms:
 1. **High-Capacity Baseline / Guidance Teacher (`YOLO26x`)**:
    - *Hypothesis:* Maximizing backbone depth and parameter capacity will maximize detection accuracy and recall on occluded weapons.
-   - *Empirical Finding:* Provides strong semantic feature representations, but its heavy computational footprint (18.83 ms desktop latency, >80 ms on edge embedded hardware) renders it impractical for continuous edge scanning.
+   - *Empirical Finding:* Provides strong semantic feature representations, but its heavy computational footprint (81.91 ms desktop latency, >120 ms on edge embedded hardware) renders it impractical for continuous edge scanning.
 2. **Architectural Exploration: Custom High-Resolution P2 Feature Head (`YOLO26s-P2`)**:
    - *Hypothesis:* Small weapon detection is bottlenecked by feature downsampling. Standard YOLO networks start detection heads at stride 8 (P3), discarding fine knife contours. Adding a custom high-resolution **P2 feature map (stride 4, $160 \times 160$)** directly to a compact backbone should capture micro-object contours without requiring an oversized backbone.
    - *Empirical Finding:* While the P2 head enhanced localized edge gradients at low confidence thresholds, it added **+73% latency overhead (19.34 ms vs. 11.18 ms)**. Crucially, gradient dilution across 4 multi-scale heads on specialized surveillance datasets degraded recall at calibrated production thresholds (**73.75% vs. 84.17%** — missing 25 weapons).
@@ -62,7 +62,7 @@ Evaluated on 715 annotated surveillance test frames containing challenging edge 
 | **Precision** | 71.10% | **89.78%** | 88.94% | **Student leads (+18.68% vs. Teacher, +0.84% vs. P2)** |
 | **Weapon Recall (Threat Safety)** | 77.92% (187/240) | **84.17% (202/240)** | 73.75% (177/240) | **Student detects 25 more weapons than P2 Head** |
 | **Specificity (OOD)** | 84.49% | **95.29%** | 95.44% | **High non-threat civilian suppression (>95%)** |
-| **Inference Latency** | 18.83 ms (~53 FPS) | **11.18 ms (~89 FPS)** | 19.34 ms (~51 FPS) | **Student is 42% faster than P2 and 41% faster than Teacher** |
+| **Inference Latency** | 81.91 ms (~12 FPS) | **11.18 ms (~89 FPS)** | 19.34 ms (~51 FPS) | **Student is 42% faster than P2 and 7.3× faster (86% latency reduction) than Teacher** |
 | **Deployment Verdict** | Too Heavy for Edge | **Deployed Champion Model** | Architectural Baseline | P2 missed 25 weapons and suffered +73% higher latency. |
 
 #### B. High-Sensitivity Operating Point (`Conf = 0.20`, `IoU = 0.20`)
@@ -78,10 +78,10 @@ Evaluated on 715 annotated surveillance test frames containing challenging edge 
 ---
 
 ### 2. Ultralytics Training Set Progression & Convergence
-*Source Data: [`results/weapon_training_results/results.csv`](results/weapon_training_results/results.csv)*
+*Source Data: All 4 training logs are preserved in [`results/weapon_training_results/`](results/weapon_training_results/): [`results_distilled_student_yolo26s.csv`](results/weapon_training_results/results_distilled_student_yolo26s.csv) (Champion), [`results_teacher_yolo26x.csv`](results/weapon_training_results/results_teacher_yolo26x.csv) (Teacher), [`results_baseline_student_yolo26s.csv`](results/weapon_training_results/results_baseline_student_yolo26s.csv) (Undistilled), and [`results_custom_p2_yolo26s.csv`](results/weapon_training_results/results_custom_p2_yolo26s.csv) (P2 ablation).*
 
 | Model Architecture | Scale | mAP@50 | mAP@50-95 | Precision | Recall | Role |
-| :--- | :---: | :---: | :---: | :---: | :--- | :--- |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Teacher (`YOLO26x`)** | Heavy (`x`) | **90.67%** | **39.61%** | **91.44%** | 84.03% | Guidance Teacher |
 | **Baseline Student (`YOLO26s`)** | Compact (`s`) | 86.11% | 34.20% | 79.53% | 84.88% | Undistilled Student |
 | **Distilled Student (`YOLO26s`)** | Compact (`s`) | **90.43%** | **37.77%** | **89.67%** | 80.67% | **Production Model (+4.32% mAP50)** |
@@ -89,7 +89,7 @@ Evaluated on 715 annotated surveillance test frames containing challenging edge 
 
 #### Weapon Distillation Training Curves:
 ![Weapon Distillation Training Curves](assets/weapon_distill_training_curves.png)
-*Progression of training losses (box, class, dfl) and validation metrics (Precision, Recall, mAP50, mAP50-95) across 250 distillation epochs.*
+*Progression of training losses (box, class, dfl) and validation metrics (Precision, Recall, mAP50, mAP50-95) across 127 distillation epochs (early-stopped from 250 with patience 30; peak validation mAP@50 reached at epoch 98).*
 
 ---
 
@@ -99,7 +99,7 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 
 ![ST-GCN Loss Curve](assets/stgcn_loss_curve.png)
 
-* **Cross-Validation Result:** Fold 2 converged with optimal validation loss ($L_{\text{val}} = 0.0177$) at epoch 19.
+* **Cross-Validation Result:** Fold 2 converged with optimal validation loss ($L_{\text{val}} = 0.0063$) at epoch 20 ($L_{\text{val}} = 0.0112$ at epoch 16).
 * **OOD Discrimination:** Distinguishes between:
   * 🟢 **Normal Scanning:** No weapon present.
   * 🟡 **Passive Threat ("WEAPON SEEN, SAFE"):** Weapon visible, but kinematic trajectories deviate from violent attack patterns.
@@ -157,11 +157,19 @@ results/
 │   ├── live_head_to_head_benchmark.txt
 │   ├── validation_results_knn.csv
 │   ├── validation_results_micro.csv
-│   └── training_log_fold2.csv
-└── weapon_training_results/            # Ultralytics distillation logs & confusion matrix
-    ├── results.csv
-    ├── args.yaml
-    └── confusion_matrix.png
+│   ├── training_log_fold2.csv
+│   ├── ood_tuning_coarse_fold2.csv
+│   └── ood_tuning_fine_fold2.csv
+└── weapon_training_results/            # Ultralytics training logs, ablation benchmarks & curves
+    ├── results.csv                     # Distilled student run metrics log (distilled_yolo26s_from_yolo26x)
+    ├── results_teacher_yolo26x.csv     # Guidance teacher baseline run metrics log (teacher_run_yolo26x)
+    ├── results_baseline_student_yolo26s.csv # Undistilled student run metrics log (teacher_run_yolo26s)
+    ├── results_custom_p2_yolo26s.csv   # High-resolution P2 architectural ablation log
+    ├── results_distilled_student_yolo26s.csv # Named mirror of champion distillation log
+    ├── args.yaml                       # Ultralytics training hyperparameters
+    ├── confusion_matrix.png            # Champion validation confusion matrix
+    ├── BoxF1_curve.png                 # Champion F1-confidence trade-off curve
+    └── BoxPR_curve.png                 # Champion Precision-Recall curve
 weights/
 ├── yolo_weapon_distilled.pt            # Distilled YOLO26s weapon student (Teacher: YOLO26x)
 ├── yolo26s-pose.pt                     # 17-keypoint skeletal pose estimation
@@ -210,7 +218,8 @@ python src/inference_realtime.py
 ### 3. Run Benchmark Head-to-Head Verification
 ```bash
 # Evaluate Mahalanobis vs. Deep k-NN across all 148 clips
-python src/eval_live_head_to_head.py
+# Note: Requires local private dataset directory; pre-computed verified benchmarks are preserved in results/
+python src/eval_live_head_to_head.py --data-dir <path_to_dataset>
 ```
 
 ---

@@ -8,8 +8,8 @@ This document provides a comprehensive technical breakdown of the live head-to-h
 ### 1. Benchmark Execution Script
 - **Script Location:** `src/eval_live_head_to_head.py`
 - **Output Files:**
-  - CSV Summary: `results/live_head_to_head_benchmark.csv`
-  - Text Report: `results/live_head_to_head_benchmark.txt`
+  - CSV Summary: `results/action_recognition_benchmark/live_head_to_head_benchmark.csv`
+  - Text Report: `results/action_recognition_benchmark/live_head_to_head_benchmark.txt`
 - **Backbone Model Weights:** `weights/stgcn_violence_fold2.pth` (12,142,947 bytes)
 - **Execution Command:**
 ```powershell
@@ -94,7 +94,7 @@ The evaluation was conducted on every single validation XML annotation file acro
 
 ### 6. Why Historical Benchmarks Showed Confusing Numbers
 
-A common source of confusion in the project's historical files was why Mahalanobis had a recorded score of **96.15%** in `results/validation_results_micro.csv`, while k-NN recorded **83.12%** in `results/validation_results_knn.csv`.
+A common source of confusion in the project's historical files was why Mahalanobis had a recorded score of **96.15%** in `results/action_recognition_benchmark/validation_results_micro.csv`, while k-NN recorded **83.12%** in `results/action_recognition_benchmark/validation_results_knn.csv`.
 
 1. **Single Action vs. Multi-Action Distribution:**
    - The historical 96.15% score evaluated **only 1 action category: `Cut-Down`** (16 with coat, 17 without coat, 19 OOD = 52 clips total).

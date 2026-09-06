@@ -8,8 +8,14 @@ from collections import defaultdict
 import xml.etree.ElementTree as ET
 from scipy.ndimage import gaussian_filter1d
 from torch.utils.data import Dataset
+import argparse
 
-BASE_DIR = r"C:\Users\Admin\Desktop\Code\Python\Intern\Train_Action_Recognition_STGCN_Model"
+parser = argparse.ArgumentParser(description="Live Head-to-Head Benchmark: Mahalanobis vs. Deep k-NN")
+parser.add_argument("--data-dir", type=str, default=r"C:\Users\Admin\Desktop\Code\Python\Intern\Train_Action_Recognition_STGCN_Model",
+                    help="Path to action recognition dataset directory containing 'Validate' and 'False Detected Clip'")
+args, _ = parser.parse_known_args()
+
+BASE_DIR = args.data_dir
 CLEAN_DIR = r"C:\Users\Admin\Desktop\Code\Python\Intern\Train_Action_Recognition_STGCN_Model_Clean"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -271,6 +277,13 @@ def validate_category(paths, is_ood=False):
 
 val_root = os.path.join(BASE_DIR, "Validate")
 false_root = os.path.join(BASE_DIR, "False Detected Clip")
+
+if not os.path.exists(val_root):
+    print(f"\n[ERROR] Dataset directory not found: {val_root}")
+    print("[NOTE] As stated in the README, raw video recordings and XML annotations are withheld from the repository for privacy compliance.")
+    print("       To evaluate your own dataset, supply the path: python src/eval_live_head_to_head.py --data-dir <path>")
+    print("       Pre-evaluated benchmark tables are preserved under 'results/action_recognition_benchmark/'.")
+    exit(0)
 
 categories = {
     "OOD": ([os.path.join(val_root, "OOD")], True),
