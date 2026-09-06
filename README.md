@@ -272,11 +272,11 @@ While the local pipeline currently triggers real-time visual alerts and executes
 ### 2. Scaling to Multi-Weapon & Multi-Action Threat Manifolds (Beyond PoC)
 * **Current Feasibility Scope:** This project successfully validates the hierarchical Threat Detection Proof-of-Concept (PoC) using bladed weapon kinematics on controlled surveillance benchmarks.
 * **Multi-Class Weapon Expansion:** Scale Stage 1 detection to multi-class hazardous objects, including handguns, shotguns/rifles, and improvised blunt impact weapons (bats, crowbars, pipes).
-* **Expanded Violence Kinematics:** Expand the Stage 2 spatial-temporal graph topology beyond directional knife attacks to encompass broader physical altercation dynamics:
-  * Unarmed interpersonal violence (punching, kicking, shoving).
-  * Weapon drawing and unholstering mechanics.
-  * Firearm aiming postures (one-handed, two-handed isosceles/Weaver stance).
-  * Close-quarters grappling and wrestling maneuvers.
+* **Expanded Armed Violence Kinematics:** Expand the Stage 2 spatial-temporal graph topology beyond directional knife attacks to encompass diverse armed assault dynamics:
+  * Blunt weapon strikes (overhead swings, horizontal pipe swings, bat strikes).
+  * Rapid weapon drawing and unholstering kinematics from concealed pockets or waistbands.
+  * Firearm aiming and discharge kinematics (one-handed and two-handed tactical shooting stances).
+  * Armed struggle and weapon retention altercations.
 * **Multi-View & Environmental Diversity:** Broaden training and OOD evaluation distributions across variable surveillance topologies (elevated dome cameras, body-worn cameras), variable lighting (low-light IR, heavy glare), and dense crowd occlusions.
 
 ### 3. In-Memory JPEG Buffer Compression (`Quality = 85`)
