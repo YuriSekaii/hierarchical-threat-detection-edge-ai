@@ -8,8 +8,9 @@ from ultralytics import YOLO
 from tqdm import tqdm
 
 # Configuration
-MODEL_PATH = "trained_models/yolo26s-pose.pt"
-DATA_DIR = "./data"  # Root directory
+REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+MODEL_PATH = os.path.join(REPO_DIR, "weights", "yolo26s-pose.pt")
+DATA_DIR = os.path.join(REPO_DIR, "data")  # Root directory
 TARGET_FOLDERS = ["Validate"] # Folders to search for videos
 OUTPUT_ANNOTATION_DIR_NAME = "annotations_yolo26s-pose"
 CONF_THRESHOLD = 0.5

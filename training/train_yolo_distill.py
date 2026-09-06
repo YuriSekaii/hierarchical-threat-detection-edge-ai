@@ -13,7 +13,7 @@ from pathlib import Path
 # ==========================================
 # RESEARCH CONTROLLER
 # ==========================================
-TRAIN_TEACHER = False   # Set to True to train Teacher (yolo26x.pt) from scratch
+TRAIN_TEACHER = True    # Set to True to train Teacher (yolo26x.pt) or reuse if already trained
 TRAIN_STUDENT = True    # Set to True to run Student Distillation (yolo26s.pt)
 
 # Configs
@@ -145,32 +145,35 @@ if __name__ == '__main__':
     path_to_best_teacher = os.path.join(YOLO_PROJECT_DIR, TEACHER_RUN_NAME, 'weights', 'best.pt')
 
     if TRAIN_TEACHER:
-        if abs_path is None:
-            print("[ERROR] Cannot train Teacher without dataset. Exiting.")
-            exit()
-        print(f"\n[STAGE 1] Initialize STANDARD Architecture (Non-P2)...")
-        teacher_model = YOLO(TEACHER_WEIGHTS) 
+        if os.path.exists(path_to_best_teacher):
+            print(f"\n[STAGE 1] Existing Teacher found at {path_to_best_teacher}. Reusing trained Teacher weights.")
+        else:
+            if abs_path is None:
+                print("[ERROR] Cannot train Teacher without dataset. Exiting.")
+                exit()
+            print(f"\n[STAGE 1] Initialize STANDARD Architecture (Non-P2)...")
+            teacher_model = YOLO(TEACHER_WEIGHTS) 
 
-        print(f"[STAGE 1] Starting Teacher Training (Batch: {TEACHER_BATCH})...")
-        teacher_model.train(
-            data=yaml_full,
-            epochs=200,             
-            patience=20,            
-            imgsz=640,
-            batch=TEACHER_BATCH,
-            nbs=64,
-            workers=WORKERS,
-            device=GPU_ID,
-            degrees=15.0,
-            mosaic=1.0,
-            mixup=0.1,
-            fliplr=0.5,
-            project=YOLO_PROJECT_DIR,
-            name=TEACHER_RUN_NAME,
-            exist_ok=True,
-            plots=True
-        )
-        print(f"[STAGE 1] Complete. Teacher saved at {path_to_best_teacher}")
+            print(f"[STAGE 1] Starting Teacher Training (Batch: {TEACHER_BATCH})...")
+            teacher_model.train(
+                data=yaml_full,
+                epochs=200,             
+                patience=20,            
+                imgsz=640,
+                batch=TEACHER_BATCH,
+                nbs=64,
+                workers=WORKERS,
+                device=GPU_ID,
+                degrees=15.0,
+                mosaic=1.0,
+                mixup=0.1,
+                fliplr=0.5,
+                project=YOLO_PROJECT_DIR,
+                name=TEACHER_RUN_NAME,
+                exist_ok=True,
+                plots=True
+            )
+            print(f"[STAGE 1] Complete. Teacher saved at {path_to_best_teacher}")
     else:
         print(f"[STAGE 1] Skipped. Using existing Teacher at {path_to_best_teacher}")
 

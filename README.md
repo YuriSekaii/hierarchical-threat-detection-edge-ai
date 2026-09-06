@@ -245,6 +245,16 @@ python src/inference_realtime.py
 python src/eval_live_head_to_head.py --data-dir <path_to_dataset>
 ```
 
+Where `<path_to_dataset>` adheres to the following directory structure:
+```text
+<path_to_dataset>/
+├── Validate/
+│   ├── OOD/                     # Negative control civilian clips
+│   ├── With_Coat/               # Concealed attack trajectories (Cut-Down, Stab, Thrust)
+│   └── Without_Coat/            # Open attack trajectories (Cut-Down, Stab, Thrust)
+└── False Detected Clip/         # Camera sensor noise & keypoint glitch sequences
+```
+
 ---
 
 ## 🔒 Dataset & Privacy Notice
@@ -309,8 +319,8 @@ While the local pipeline currently triggers real-time visual alerts and executes
 ### 4. Full-Pipeline Hardware Acceleration via NVIDIA TensorRT
 To maximize edge throughput, compile all neural network components across the entire pipeline into optimized **TensorRT FP16 / INT8 `.engine` binaries**:
 * **Stage 1 (Distilled Weapon Detector):** TensorRT engine execution slashes YOLO inference latency from $\sim 45\text{ ms}$ down to $\mathbf{\sim 12 - 15\text{ ms}}$ on edge GPUs.
-* **Stage 2 (YOLO-Pose Keypoint Extractor):** Fuses `Conv2D + BatchNorm + SiLU` operators into single CUDA kernels, accelerating pose estimation from $\sim 70 - 180\text{ ms}$ down to $\mathbf{\sim 8 - 35\text{ ms}}$.
-* **Stage 3 (ST-GCN Action Classifier):** Compiles spatial-temporal graph convolutions into optimized static graph kernels executing in under **$1\text{ ms}$**.
+* **Stage 2a (YOLO-Pose Keypoint Extractor):** Fuses `Conv2D + BatchNorm + SiLU` operators into single CUDA kernels, accelerating pose estimation from $\sim 70 - 180\text{ ms}$ down to $\mathbf{\sim 8 - 35\text{ ms}}$.
+* **Stage 2b (ST-GCN Action Classifier):** Compiles spatial-temporal graph convolutions into optimized static graph kernels executing in under **$1\text{ ms}$**.
 
 ### 5. Enabling Real-Time Deployment on Ultra-Budget Hardware (NVIDIA Jetson Nano)
 The combination of the above optimization suite specifically targets turning the ultra-lightweight, budget **NVIDIA Jetson Nano (4GB Maxwell)** into a fully autonomous, production-viable edge threat detection appliance:

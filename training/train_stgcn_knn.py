@@ -611,15 +611,16 @@ def main():
     print(f"Hyperparameters: k={KNN_K}, percentile={KNN_PERCENTILE}")
     
     # 1. TRAIN 3 FOLDS (Identical to Maha version)
-    train_data_dir = "./data/data"
+    REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    train_data_dir = os.path.join(REPO_DIR, "data", "data")
     actions = ["Cut-Down", "Stab", "Thrust"]
     output_prefix = "Train_Violence_STGCN"
     
     # Output config
-    model_output_dir = "trained_models"
+    model_output_dir = os.path.join(REPO_DIR, "weights")
     os.makedirs(model_output_dir, exist_ok=True)
     
-    log_output_dir = "results"
+    log_output_dir = os.path.join(REPO_DIR, "results", "action_recognition_benchmark")
     os.makedirs(log_output_dir, exist_ok=True)
     
     full_dataset = TripletActionDataset(train_data_dir, actions)
@@ -682,7 +683,7 @@ def main():
     print(f"OOD Method: k-NN | k={effective_k} | Threshold={threshold_val:.6f}")
     print("="*40)
     
-    validate_root = "./data/Validate"
+    validate_root = os.path.join(REPO_DIR, "data", "Validate")
     categories = {
         "OOD": [os.path.join(validate_root, "OOD")],
         "With_Coat": [os.path.join(validate_root, "With_Coat")],

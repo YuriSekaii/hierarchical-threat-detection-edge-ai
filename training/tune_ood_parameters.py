@@ -447,20 +447,26 @@ def main():
     print(f"Running Optimization Tuning on: {device}")
     
     # Paths
-    train_data_dir = "./data/data"
+    REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    train_data_dir = os.path.join(REPO_DIR, "data", "data")
     actions = ["Cut-Down", "Stab", "Thrust"]
-    model_path = "./data/trained_models/Train_Violence_STGCN_fold2.pth"
-    log_output_dir = "./data/results"
-    validate_root = "./data/Validate"
+    model_path = os.path.join(REPO_DIR, "weights", "stgcn_violence_fold2.pth")
+    log_output_dir = os.path.join(REPO_DIR, "results", "action_recognition_benchmark")
+    validate_root = os.path.join(REPO_DIR, "data", "Validate")
     
     # 1. Load Data & Model
     print(f">> Loading Triplet Dataset from {train_data_dir}...")
     full_dataset = TripletActionDataset(train_data_dir, actions)
     
     print(f">> Loading Best Model: {model_path}")
+    if not os.path.exists(model_path):
+        print(f"[ERROR] Model not found: {model_path}")
+        return
     model = STGCNModel(num_classes=1).to(device)
-    state_dict = torch.load(model_path)
-    model.load_state_dict(state_dict)
+    state_dict = torch.load(model_path, map_location=device, weights_only=True)
+    if 'model' in state_dict:
+        state_dict = state_dict['model']
+    model.load_state_dict(state_dict, strict=False)
     model.eval()
     
     # 2. Extract Features (Cache)

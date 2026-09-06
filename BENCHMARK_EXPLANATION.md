@@ -12,9 +12,8 @@ This document provides a comprehensive technical breakdown of the live head-to-h
   - Text Report: `results/action_recognition_benchmark/live_head_to_head_benchmark.txt`
 - **Backbone Model Weights:** `weights/stgcn_violence_fold2.pth` (12,142,947 bytes)
 - **Execution Command:**
-```powershell
-$env:PYTHONPATH = "C:\Users\Admin\Desktop\Code\Python\Intern\Weapon_Detection_SingleGPU\.venv\Lib\site-packages"
-C:\Users\Admin\AppData\Local\Programs\Python\Python311\python.exe src/eval_live_head_to_head.py
+```bash
+python src/eval_live_head_to_head.py --data-dir <path_to_dataset>
 ```
 - **Benchmarking Host Hardware:**
   - **CPU:** AMD Ryzen 5 5600X (6 Cores, 12 Threads @ 3.70 GHz base, up to 4.60 GHz Boost)
@@ -59,7 +58,7 @@ The evaluation was conducted on every single validation XML annotation file acro
 ### 4. Mathematical Comparison of the Two OOD Pipelines
 
 #### Pipeline A: Parametric Mahalanobis Distance
-- **Training Data:** 297 violence action clips from `Train_Action_Recognition_STGCN_Model/data`.
+- **Training Data:** 297 violence action clips from the training dataset.
 - **Centroid:** Sample mean vector $\boldsymbol{\mu} \in \mathbb{R}^{256}$.
 - **Covariance Matrix with Shrinkage Regularization:**
   $$\boldsymbol{\Sigma}_{\text{reg}} = \boldsymbol{\Sigma} + \lambda \mathbf{I}_{256}, \quad \text{where } \lambda = 0.0008$$

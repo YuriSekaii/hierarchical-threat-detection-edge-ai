@@ -373,22 +373,24 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Running k-NN Validation on: {device}")
     
+    REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    
     # 1. LOAD BEST MODEL (Fold 2)
-    model_path = os.path.join("trained_models", "Train_Violence_STGCN_fold2.pth")
+    model_path = os.path.join(REPO_DIR, "weights", "stgcn_violence_fold2.pth")
     if not os.path.exists(model_path):
         print(f"Model not found: {model_path}")
         return
              
     print(f"Loading Model: {model_path}")
     model = STGCNModel(num_classes=1).to(device)
-    model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True))
+    model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True), strict=False)
     model.eval()
     
     # 2. BUILD k-NN FEATURE BANK
     print(f"\n--- 1. BUILDING k-NN FEATURE BANK ---")
     print(f"Using Hyperparameters: k={BEST_KNN_K}, percentile={BEST_KNN_PERCENTILE}")
     
-    train_data_dir = "./data/data"
+    train_data_dir = os.path.join(REPO_DIR, "data", "data")
     actions = ["Cut-Down", "Stab", "Thrust"]
     train_dataset = ActionDataset(train_data_dir, actions)
     
@@ -407,15 +409,15 @@ def main():
         'percentile': BEST_KNN_PERCENTILE, # int
         'ood_method': 'knn',               # string identifier
     }
-    ref_path = os.path.join("results", "reference_data_knn.pt")
-    os.makedirs("results", exist_ok=True)
+    ref_path = os.path.join(REPO_DIR, "weights", "reference_data_knn.pt")
+    os.makedirs(os.path.dirname(ref_path), exist_ok=True)
     torch.save(ref_data, ref_path)
     print(f"Saved k-NN reference data to '{ref_path}'.")
     
     # 3. VALIDATE
     print(f"\n--- 2. FINAL VALIDATION (MICRO-AVERAGE) ---")
-    validate_root = "./data/Validate"
-    false_detected_root = "./data/False Detected Clip"
+    validate_root = os.path.join(REPO_DIR, "data", "Validate")
+    false_detected_root = os.path.join(REPO_DIR, "data", "False Detected Clip")
     categories = {
         "OOD": [os.path.join(validate_root, "OOD")],
         "False_Detected": [false_detected_root],
@@ -456,7 +458,7 @@ def main():
     })
     
     df = pd.DataFrame(results)
-    csv_path = os.path.join("results", "validation_results_knn.csv")
+    csv_path = os.path.join(REPO_DIR, "results", "action_recognition_benchmark", "validation_results_knn.csv")
     df.to_csv(csv_path, index=False)
     print(f"Saved '{csv_path}'.")
 

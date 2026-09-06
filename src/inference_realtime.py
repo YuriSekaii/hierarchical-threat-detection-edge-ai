@@ -13,15 +13,13 @@ Zero-Drop Multi-Threaded Pipeline:
 - Thread 3 (Action Worker): Gapless sliding-window evaluator (50-frame window, 10-frame stride)
   with keypoint pose caching, processing contiguous temporal motion without frame loss.
 
-Supports dual OOD modes:
-1. Deep k-NN (Default, production calibrated threshold: k=2, tau=3.4794)
-2. Mahalanobis Distance (Matched covariance matrix, tau=8.2194)
+OOD Threat Discrimination:
+- Deep k-NN Non-Parametric Manifold Gating (Calibrated threshold: k=2, tau=3.4794)
 """
 
 import os
 import sys
 import time
-import json
 import argparse
 import threading
 from collections import deque
@@ -34,7 +32,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.stgcn import STGCNModel
 from src.skeleton_utils import interpolate_missing_joints, smooth_kinematics, normalize_skeleton_clip
-from src.ood_metrics import compute_knn_distance, compute_mahalanobis_distance
+from src.ood_metrics import compute_knn_distance
 
 
 class FrameItem:
@@ -65,25 +63,13 @@ class HierarchicalThreatDetector:
         self.action_model.load_state_dict(state_dict, strict=False)
         self.action_model.eval()
 
-        # 3. Load OOD Reference Data (Auto-detects k-NN .pt or Mahalanobis .json)
-        print(f"  [4/4] Loading OOD Reference Weights: {os.path.basename(ref_data_path)}")
-        if ref_data_path.endswith('.pt'):
-            self.ood_mode = 'knn'
-            ref_data = torch.load(ref_data_path, map_location='cpu', weights_only=False)
-            self.knn_feature_bank = ref_data['feature_bank'].float().cpu()
-            self.knn_threshold = float(ref_data['threshold'])
-            self.knn_k = int(ref_data.get('k', 2))
-            print(f"        -> Mode: Deep k-NN (k={self.knn_k}, threshold={self.knn_threshold:.4f}, bank={self.knn_feature_bank.shape})")
-        elif ref_data_path.endswith('.json'):
-            self.ood_mode = 'mahalanobis'
-            with open(ref_data_path, 'r') as f:
-                ref_json = json.load(f)
-            self.maha_mean = np.array(ref_json['mean'], dtype=np.float32)
-            self.maha_inv_cov = np.array(ref_json['inv_cov'], dtype=np.float32)
-            self.maha_threshold = float(ref_json.get('threshold', 7.60))
-            print(f"        -> Mode: Mahalanobis Distance (threshold={self.maha_threshold:.2f}, dim={len(self.maha_mean)})")
-        else:
-            raise ValueError(f"Unsupported reference data format: {ref_data_path}. Expected .pt or .json")
+        # 3. Load Deep k-NN Reference Bank
+        print(f"  [4/4] Loading Deep k-NN Reference Weights: {os.path.basename(ref_data_path)}")
+        ref_data = torch.load(ref_data_path, map_location='cpu', weights_only=False)
+        self.knn_feature_bank = ref_data['feature_bank'].float().cpu()
+        self.knn_threshold = float(ref_data['threshold'])
+        self.knn_k = int(ref_data.get('k', 2))
+        print(f"        -> Deep k-NN Initialized: k={self.knn_k}, threshold={self.knn_threshold:.4f}, bank={self.knn_feature_bank.shape}")
 
         # 4. Zero-Drop Buffer Architecture (20x expanded: 1200 frames ~ 40s at 30 FPS)
         self.buffer_size = 1200
@@ -200,17 +186,11 @@ class HierarchicalThreatDetector:
             with torch.no_grad():
                 _, features = self.action_model(clip_tensor, return_features=True)
 
-            # Step 4: Out-of-Distribution / Threat Discrimination
-            if self.ood_mode == 'knn':
-                feats = features.cpu()
-                dist = compute_knn_distance(feats, self.knn_feature_bank, k=self.knn_k, mode='kth')
-                is_violence = (dist <= self.knn_threshold)
-                detail_str = f"kNN Dist: {dist:.3f} (Thresh: {self.knn_threshold:.3f})"
-            else:
-                feat_np = features[0].cpu().numpy()
-                dist = compute_mahalanobis_distance(feat_np, self.maha_mean, self.maha_inv_cov)
-                is_violence = (dist < self.maha_threshold)
-                detail_str = f"Maha Dist: {dist:.2f} (Thresh: {self.maha_threshold:.2f})"
+            # Step 4: Out-of-Distribution Threat Discrimination (Deep k-NN)
+            feats = features.cpu()
+            dist = compute_knn_distance(feats, self.knn_feature_bank, k=self.knn_k, mode='kth')
+            is_violence = (dist <= self.knn_threshold)
+            detail_str = f"kNN Dist: {dist:.3f} (Thresh: {self.knn_threshold:.3f})"
 
             if is_violence:
                 self.is_violent_alert = True

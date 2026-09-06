@@ -10,13 +10,14 @@ from scipy.ndimage import gaussian_filter1d
 from torch.utils.data import Dataset
 import argparse
 
+REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 parser = argparse.ArgumentParser(description="Live Head-to-Head Benchmark: Mahalanobis vs. Deep k-NN")
-parser.add_argument("--data-dir", type=str, default=r"C:\Users\Admin\Desktop\Code\Python\Intern\Train_Action_Recognition_STGCN_Model",
-                    help="Path to action recognition dataset directory containing 'Validate' and 'False Detected Clip'")
+parser.add_argument("--data-dir", type=str, default=None,
+                    help="Path to action recognition dataset directory containing 'Validate' and 'False Detected Clip' (default: ./data)")
 args, _ = parser.parse_known_args()
 
-BASE_DIR = args.data_dir
-CLEAN_DIR = r"C:\Users\Admin\Desktop\Code\Python\Intern\Train_Action_Recognition_STGCN_Model_Clean"
+BASE_DIR = os.path.abspath(args.data_dir) if args.data_dir else os.path.join(REPO_DIR, "data")
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def normalize_adjacency(A):
@@ -214,7 +215,7 @@ repo_weights = os.path.join(REPO_DIR, "weights")
 # Load Model
 model_path = os.path.join(repo_weights, "stgcn_violence_fold2.pth")
 if not os.path.exists(model_path):
-    model_path = os.path.join(CLEAN_DIR, "trained_models", "Train_Violence_STGCN_fold2.pth")
+    raise FileNotFoundError(f"Model weights not found at: {model_path}. Ensure release weights exist in 'weights/'.")
 model = STGCNModel(num_classes=1).to(DEVICE)
 model.load_state_dict(torch.load(model_path, map_location=DEVICE, weights_only=True), strict=False)
 model.eval()
@@ -222,7 +223,7 @@ model.eval()
 # Load Maha
 maha_path = os.path.join(repo_weights, "reference_data_mahalanobis.json")
 if not os.path.exists(maha_path):
-    maha_path = os.path.join(CLEAN_DIR, "results", "reference_data.json")
+    raise FileNotFoundError(f"Mahalanobis reference data not found at: {maha_path}.")
 with open(maha_path) as f:
     m_info = json.load(f)
 maha_mean = torch.tensor(m_info["mean"], dtype=torch.float32)
@@ -232,7 +233,7 @@ maha_thresh = float(m_info["threshold"])
 # Load k-NN
 knn_path = os.path.join(repo_weights, "reference_data_knn.pt")
 if not os.path.exists(knn_path):
-    knn_path = os.path.join(CLEAN_DIR, "results", "reference_data_knn.pt")
+    raise FileNotFoundError(f"k-NN reference data not found at: {knn_path}.")
 k_info = torch.load(knn_path, map_location='cpu', weights_only=False)
 knn_bank = k_info["feature_bank"].float()
 knn_thresh = float(k_info["threshold"])
