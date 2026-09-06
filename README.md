@@ -17,19 +17,19 @@ This project addresses this bottleneck by decoupling threat detection into a **H
 
 ![Inference Pipeline](assets/inference_pipeline.png)
 
-### 1. Stage 1: Continuous Lightweight Scanning & Tier 1 Security Warning (Always-On Loop)
+### 1. Stage 1: Continuous Lightweight Weapon Scanning (Always-On Loop)
 * **Ingestion:** Ingests live video at 30 FPS into an expanded **1200-frame (~40s) thread-safe circular buffer**.
 * **Low-Power Gating:** Subsamples **1 frame per 10 (effective rate: 3 FPS)** for weapon detection using a compact, distilled YOLO student model.
 * **Compute Savings:** Reduces continuous idle inference workloads by **~90%**, reserving GPU/NPU compute until an object of interest is verified (`Conf > 0.45`).
-* **Tier 1 Security Warning:** Immediately alerts local on-site security guards when a weapon is drawn or brandished in public/restricted areas, providing early tactical warning before an attack begins.
+* **Threat Screening Alert:** Immediately flags when a weapon is drawn or brandished in public/restricted areas, initiating Stage 2 action verification.
 
-### 2. Stage 2: Zero-Drop Biomechanical Action Auditing & Emergency Escalation (Triggered Engine)
+### 2. Stage 2: Zero-Drop Biomechanical Action Auditing (Triggered Engine)
 * **Zero-Drop Gapless Auditing:** Upon Stage 1 trigger, an on-demand worker executes a **contiguous sliding-window audit (50 frames, 10-frame stride)** over the 1,200-frame circular buffer.
 * **Skeletal Pose Keypoint Caching:** To avoid redundant computation on overlapping sliding windows (80% frame overlap), each frame's 17 keypoint coordinates are cached in `FrameItem.skeleton`. When advancing by 10 frames, **40 of the 50 frames are instantly retrieved from cache** without re-running pose estimation. Only the 10 newly introduced frames undergo YOLO-Pose inference ($\sim 100\text{ ms}$ GPU latency vs. $333\text{ ms}$ real time), enabling the action worker to audit at **$\sim 3.3\times$ faster than real-time** and catch up with zero dropped frames.
 * **Kinematic Preprocessing:** Implements **1D Gaussian temporal smoothing** ($\sigma = 1.0$) and linear interpolation to resolve occluded joints, followed by **centroid normalization** to achieve scale and position invariance.
 * **ST-GCN Feature Extraction:** Feeds normalized skeleton graphs through a **9-block Spatial-Temporal Graph Convolutional Network** with joint-weighted spatial attention (5× weight on arm joints).
 * **OOD Distance Gating:** Measures deep feature embeddings against a baseline threat manifold using **Deep k-NN distance**, distinguishing passive holding actions from aggressive striking motions.
-* **Tier 2 Emergency Escalation:** When violent assault trajectories (`Cut-Down`, `Stab`, `Thrust`) are confirmed, the system immediately escalates to **Tier 2: dispatching emergency services (Police / EMS)** and locking timestamped video clips for forensic evidence.
+* **Violence Classification:** When violent assault trajectories (`Cut-Down`, `Stab`, `Thrust`) are confirmed, the system classifies the action as active **"Violence"**, distinguishing aggressive attacks from passive object holding.
 
 ---
 
@@ -126,19 +126,19 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 * **OOD Discrimination:** Distinguishes between:
   * 🟢 **Normal Scanning:** No weapon present.
   * 🟡 **Passive Threat ("WEAPON SEEN, SAFE"):** Weapon visible, but kinematic trajectories deviate from violent attack patterns.
-  * 🔴 **Active Threat ("VIOLENCE DETECTED"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold $\rightarrow$ Alarm triggered.
+  * 🔴 **Active Threat ("VIOLENCE DETECTED"):** Kinematic velocity, acceleration, and joint angle vectors match violent attack manifold $\rightarrow$ Classified as active violence.
 
 ---
 
 ## 🎯 Negative Control & Out-of-Distribution (OOD) Threat Verification
 
 ### Understanding Out-of-Distribution (OOD) Negative Control Clips
-In practical computer vision surveillance, the primary failure mode is **alarm fatigue** caused by false positive alerts on mundane civilian behaviors. 
+In practical computer vision surveillance, the primary failure mode is **false alert fatigue** caused by false positive classifications on mundane civilian behaviors. 
 
 To rigorously quantify system reliability, the evaluation framework incorporates **Out-of-Distribution (OOD) Negative Control Sequences**:
 * **Definition:** Negative control clips containing human actors performing everyday actions and carrying everyday objects that visually or kinematically resemble threats, but do **not** involve violent striking motions or actual weapons.
 * **Stage 1 Negative Controls:** Civilians holding everyday objects (smartphones, water bottles, pens, umbrellas, or wallets). A successful Stage 1 detector must suppress these civilian items (`Conf < 0.45`).
-* **Stage 2 Negative Controls:** Civilians executing fast or animated body movements (jogging, stretching, waving, rapid pointing, reaching into coat pockets, wiping surfaces). Even if an item is erroneously flagged in Stage 1, Stage 2 kinematic manifold gating ensures that non-violent trajectories are dismissed without sounding an alarm.
+* **Stage 2 Negative Controls:** Civilians executing fast or animated body movements (jogging, stretching, waving, rapid pointing, reaching into coat pockets, wiping surfaces). Even if an item is erroneously flagged in Stage 1, Stage 2 kinematic manifold gating ensures that non-violent trajectories are dismissed without false violence alerts.
 * **Camera Glitches:** Additional edge-case clips featuring webcam sensor compression artifacts, severe lighting changes, and fragmented pose keypoints to verify pipeline robustness under hardware degradation.
 
 ---

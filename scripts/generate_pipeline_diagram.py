@@ -1,13 +1,12 @@
 ﻿import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, Polygon, FancyArrowPatch, Rectangle
+from matplotlib.patches import Polygon, FancyArrowPatch, Rectangle
 from matplotlib.lines import Line2D
 import os
 
 def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200):
     output_path = os.path.normpath(os.path.abspath(output_path))
-    # Dimensions: 17.8 x 9.4 inches at 200 DPI = 3560 x 1880 px (ultra crisp)
     fig = plt.figure(figsize=(17.8, 9.4), dpi=dpi, facecolor='#ffffff')
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 142.4)
@@ -26,11 +25,12 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     C_NOTE_TEXT = '#1e3c47'        # Subtitle / note text
     C_ARROW = '#1b4350'            # Arrow and routing lines
     
-    # Alarm / Dismiss highlights
-    C_ALARM_BG = '#fee2e2'         # Soft red fill for alarm
-    C_ALARM_BORDER = '#b91c1c'     # Crimson border
-    C_ALARM_TEXT = '#7f1d1d'       # Crimson text
+    # Violence classification box styling
+    C_VIOLENCE_BG = '#fee2e2'      # Soft red fill for violence classification
+    C_VIOLENCE_BORDER = '#b91c1c'  # Crimson border
+    C_VIOLENCE_TEXT = '#7f1d1d'    # Crimson text
     
+    # Non-threat dismissal styling
     C_DISMISS_BG = '#f0fdf4'       # Soft mint/green fill for non-threat
     C_DISMISS_BORDER = '#15803d'   # Muted green border
     C_DISMISS_TEXT = '#14532d'     # Dark green text
@@ -39,8 +39,8 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     ax.add_patch(Rectangle((0, 0), 142.4, 75.2, facecolor=C_OUTSIDE_BG, edgecolor='none', zorder=0))
 
     def draw_box(x, y, w, h, title_text, box_type='standard'):
-        if box_type == 'alarm':
-            fc, ec, tc, lw = C_ALARM_BG, C_ALARM_BORDER, C_ALARM_TEXT, 2.2
+        if box_type == 'violence':
+            fc, ec, tc, lw = C_VIOLENCE_BG, C_VIOLENCE_BORDER, C_VIOLENCE_TEXT, 2.2
         elif box_type == 'dismiss':
             fc, ec, tc, lw = C_DISMISS_BG, C_DISMISS_BORDER, C_DISMISS_TEXT, 1.8
         else:
@@ -134,7 +134,6 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     # =========================================================================
     # STAGE 1 TO STAGE 2 CONNECTING ARROW
     # =========================================================================
-    # Routing passes cleanly through the inter-stage channel at y = 37.0
     draw_polyline_arrow([(91.5, 46.0 - 8.2/2), (91.5, 36.8), (11.5, 36.8), (11.5, 24.2 + 9.5/2)])
 
     # =========================================================================
@@ -179,7 +178,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     w_d2, h_d2 = 16.5, 12.8
     draw_diamond(105.0, y_s2, w_d2, h_d2, "<Any Clip's\nDistance <= tau?\n(tau = 3.48)>", font_sz=10.2)
 
-    # Diamond 2 -> NO (Dismiss)
+    # Diamond 2 -> NO (Dismiss as Non-Threat)
     draw_arrow(105.0 + w_d2/2, y_s2, 128.0 - 17.5/2, y_s2)
     ax.text(115.5, y_s2 + 1.2, "NO", ha='center', va='bottom', fontsize=11, fontweight='bold',
             family='sans-serif', color='#0f242c', zorder=4)
@@ -189,17 +188,17 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
             ha='center', va='center', fontsize=9.8, family='sans-serif',
             color=C_NOTE_TEXT, linespacing=1.2, zorder=3)
 
-    # Diamond 2 -> YES (Violence Alert)
-    y_alarm = 8.2
-    h_alarm = 8.5
-    draw_arrow(105.0, y_s2 - h_d2/2, 105.0, y_alarm + h_alarm/2)
-    ax.text(105.0, 15.0, "YES", ha='center', va='center', fontsize=11, fontweight='bold',
+    # Diamond 2 -> YES (Violence Classification - Pipeline Ends Here)
+    y_violence = 8.5
+    h_violence = 8.5
+    draw_arrow(105.0, y_s2 - h_d2/2, 105.0, y_violence + h_violence/2)
+    ax.text(105.0, 15.2, "YES", ha='center', va='center', fontsize=11, fontweight='bold',
             family='sans-serif', color='#0f242c', zorder=4)
 
-    draw_box(105.0, y_alarm, 19.0, h_alarm, "[Classify Event as\n\"Violence\"]", box_type='alarm')
-    draw_arrow(105.0 + 19.0/2, y_alarm, 128.0 - 17.5/2, y_alarm)
-
-    draw_box(128.0, y_alarm, 17.5, h_alarm, "[TRIGGER TIER 2\nEMERGENCY ALARM]", box_type='alarm')
+    draw_box(105.0, y_violence, 21.0, h_violence, "[Classify Event as\n\"Violence\"]", box_type='violence')
+    ax.text(105.0, 2.7, "(Active Threat Verified; Process ends)",
+            ha='center', va='center', fontsize=9.5, family='sans-serif',
+            color=C_NOTE_TEXT, zorder=3)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path, dpi=dpi, facecolor='#ffffff', edgecolor='none')

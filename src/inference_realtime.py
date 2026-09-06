@@ -1,11 +1,10 @@
 """
 Hierarchical Real-Time Threat Detection System.
-Two-Tiered Surveillance Architecture:
-- Tier 1 (Early Warning): Lightweight 3 FPS YOLO weapon detector immediately
-  flags weapon brandishing for on-site security guards.
-- Tier 2 (Kinematic Escalation): Triggered on-demand ST-GCN + YOLO-Pose + OOD gating
-  exhaustively audits movement trajectories with zero dropped frames to verify violent assault
-  and trigger emergency response (Police / EMS dispatch).
+Dual-Stage Surveillance Architecture:
+- Stage 1 (Screening): Lightweight 3 FPS YOLO weapon detector immediately
+  flags weapon presence.
+- Stage 2 (Kinematic Verification): Triggered on-demand ST-GCN + YOLO-Pose + OOD gating
+  exhaustively audits movement trajectories with zero dropped frames to verify violent assault.
 
 Zero-Drop Multi-Threaded Pipeline:
 - Thread 1: Continuous webcam ingestion into an expanded 1200-frame (~40s) thread-safe circular buffer.
@@ -111,7 +110,7 @@ class HierarchicalThreatDetector:
                     # Hold threat monitoring window for 3.0 seconds after last weapon sighting
                     self.weapon_active_until = time.time() + 3.0
                     if not self.is_violent_alert:
-                        self.status_text = "TIER 1 WARNING: WEAPON BRANDISHED - AUDITING MOTION..."
+                        self.status_text = "WEAPON DETECTED - AUDITING MOTION..."
                         self.status_color = (0, 165, 255)  # Orange
 
             elapsed = time.time() - start_t
@@ -194,10 +193,10 @@ class HierarchicalThreatDetector:
 
             if is_violence:
                 self.is_violent_alert = True
-                self.alert_until = time.time() + 5.0  # Hold alarm for 5s
-                self.status_text = f"TIER 2 CRITICAL: VIOLENCE CONFIRMED! [DISPATCH EMERGENCY] ({detail_str})"
+                self.alert_until = time.time() + 5.0  # Hold alert display for 5s
+                self.status_text = f"VIOLENCE DETECTED! ({detail_str})"
                 self.status_color = (0, 0, 255)  # Red
-                print(f"[ACTION] !!! VIOLENCE CONFIRMED ({detail_str}) - EMERGENCY SERVICES DISPATCHED !!!")
+                print(f"[ACTION] !!! VIOLENCE DETECTED ({detail_str}) !!!")
             else:
                 if not self.is_violent_alert:
                     self.status_text = f"PASSIVE MOTION: WEAPON DRAWN, NO STRIKE ({detail_str})"
