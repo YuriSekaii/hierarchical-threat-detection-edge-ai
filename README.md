@@ -271,12 +271,12 @@ While the local pipeline currently triggers real-time visual alerts and executes
 
 ### 2. Scaling to Multi-Weapon & Multi-Action Threat Manifolds (Beyond PoC)
 * **Current Feasibility Scope:** This project successfully validates the hierarchical Threat Detection Proof-of-Concept (PoC) using bladed weapon kinematics on controlled surveillance benchmarks.
-* **Multi-Class Weapon Expansion:** Scale Stage 1 detection to multi-class hazardous objects, including handguns, shotguns/rifles, and improvised blunt impact weapons (bats, crowbars, pipes).
-* **Expanded Armed Violence Kinematics:** Expand the Stage 2 spatial-temporal graph topology beyond directional knife attacks to encompass diverse armed assault dynamics:
-  * Blunt weapon strikes (overhead swings, horizontal pipe swings, bat strikes).
-  * Rapid weapon drawing and unholstering kinematics from concealed pockets or waistbands.
-  * Firearm aiming and discharge kinematics (one-handed and two-handed tactical shooting stances).
-  * Armed struggle and weapon retention altercations.
+* **Multi-Class Weapon Expansion:** Scale Stage 1 detection across broader weapon categories, including long edged weapons (machetes, swords, meat cleavers), blunt impact instruments (baseball bats, iron pipes, crowbars), and firearms (handguns, long guns).
+* **Expanded Armed Violence Kinematics:** Expand the Stage 2 spatial-temporal graph topology beyond compact knife thrusts to encompass diverse armed attack mechanics:
+  * Long-bladed weapon strikes (wide slashing arcs, overhead chops, and two-handed swings with machetes or swords).
+  * Blunt impact weapon strikes (heavy rotational swings and overhead strikes with bats or pipes).
+  * Firearm aiming and pointing postures (one-handed extension, two-handed tactical shooting stances).
+  * Armed struggles (two or more individuals actively grappling over control of a weapon).
 * **Multi-View & Environmental Diversity:** Broaden training and OOD evaluation distributions across variable surveillance topologies (elevated dome cameras, body-worn cameras), variable lighting (low-light IR, heavy glare), and dense crowd occlusions.
 
 ### 3. In-Memory JPEG Buffer Compression (`Quality = 85`)
