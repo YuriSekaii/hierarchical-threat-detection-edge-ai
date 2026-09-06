@@ -1,4 +1,4 @@
-﻿import matplotlib
+import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, FancyArrowPatch, Rectangle
@@ -167,7 +167,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_arrow(47.5 + 15.5/2, y_s2, 65.5 - 15.0/2, y_s2)
 
     # 4. ST-GCN Feature Extraction
-    draw_box(65.5, y_s2, 15.0, h_s2, "[ST-GCN\nFeature\nExtraction\n(128-d Vector)]")
+    draw_box(65.5, y_s2, 15.0, h_s2, "[ST-GCN\nFeature\nExtraction]")
     draw_arrow(65.5 + 15.0/2, y_s2, 84.5 - 17.0/2, y_s2)
 
     # 5. Deep k-NN Distance
