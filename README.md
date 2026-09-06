@@ -261,7 +261,7 @@ To bridge this Proof-of-Concept system toward commercial physical security infra
 ### 1. Automated Authority Notification & Prolonged Threat Handling
 While the local pipeline currently triggers real-time visual alerts and executes zero-drop kinematic auditing upon weapon detection, commercial physical security deployment will integrate dedicated enterprise dispatch backends:
 * **Automated Multi-Agency Dispatch (Police & EMS):**
-  When the ST-GCN + Deep $k\text{-NN}$ classifier confirms an active assault trajectory (`Cut-Down`, `Stab`, `Thrust`), the system immediately triggers automated webhook and telecommunication APIs to dispatch local law enforcement and emergency medical services (EMS).
+  When the ST-GCN + Deep $k\text{-NN}$ classifier confirms an active assault trajectory, the system immediately triggers automated webhook and telecommunication APIs to dispatch local law enforcement and emergency medical services (EMS).
 * **Forensic Evidence Locking & Archival:**
   Upon confirmed violence, automatically extract, timestamp, and cryptographically lock the contiguous 1,200-frame incident recording (including pre-attack context from the circular buffer) to secure storage, preserving tamper-evident video evidence to identify and prosecute attackers.
 * **Prolonged Brandishing Handling (Standoff Protocol):**
@@ -269,7 +269,17 @@ While the local pipeline currently triggers real-time visual alerts and executes
   * The system implements a **Prolonged Threat Standoff Alert**: persistent weapon presence past a calibrated temporal limit immediately flags the scene as an active armed standoff.
   * This prioritizes direct, real-time video feed dispatch to human security operators, ensuring continuous monitoring while the kinematic action recognition queue methodically completes its frame-by-frame audit in the background.
 
-### 2. In-Memory JPEG Buffer Compression (`Quality = 85`)
+### 2. Scaling to Multi-Weapon & Multi-Action Threat Manifolds (Beyond PoC)
+* **Current Feasibility Scope:** This project successfully validates the hierarchical Threat Detection Proof-of-Concept (PoC) using bladed weapon kinematics on controlled surveillance benchmarks.
+* **Multi-Class Weapon Expansion:** Scale Stage 1 detection to multi-class hazardous objects, including handguns, shotguns/rifles, and improvised blunt impact weapons (bats, crowbars, pipes).
+* **Expanded Violence Kinematics:** Expand the Stage 2 spatial-temporal graph topology beyond directional knife attacks to encompass broader physical altercation dynamics:
+  * Unarmed interpersonal violence (punching, kicking, shoving).
+  * Weapon drawing and unholstering mechanics.
+  * Firearm aiming postures (one-handed, two-handed isosceles/Weaver stance).
+  * Close-quarters grappling and wrestling maneuvers.
+* **Multi-View & Environmental Diversity:** Broaden training and OOD evaluation distributions across variable surveillance topologies (elevated dome cameras, body-worn cameras), variable lighting (low-light IR, heavy glare), and dense crowd occlusions.
+
+### 3. In-Memory JPEG Buffer Compression (`Quality = 85`)
 * **Memory Footprint Optimization:** In the current prototype, storing 1,200 uncompressed raw NumPy frames ($640 \times 480 \times 3$) requires $\sim 1.1\text{ GB}$ of host RAM.
 * **Proposed Implementation:** Compress incoming frames into JPEG byte buffers in memory using OpenCV SIMD:
   ```python
@@ -277,16 +287,17 @@ While the local pipeline currently triggers real-time visual alerts and executes
   ```
 * **Impact:** Shrinks individual frame size from $921\text{ KB}$ down to $\sim 38\text{ KB}$, reducing total 1,200-frame buffer memory from **$1.1\text{ GB}$ down to just $\mathbf{45.6\text{ MB}}$ ($24\times$ memory reduction)** with less than $0.5\%$ mAP degradation on YOLO detection and keypoint extraction, leaving 98% of RAM free for model execution.
 
-### 3. Hardware-Accelerated Compilation via NVIDIA TensorRT
-* **Inference Optimization:** The current implementation executes PyTorch native `.pt` model weights.
-* **Proposed Implementation:** Export YOLO weapon, YOLO-Pose, and ST-GCN backbones into optimized **TensorRT FP16 / INT8 `.engine` binaries**:
-  * Fuses `Conv2D + BatchNorm + SiLU` operators into single fused CUDA kernels.
-  * Auto-tunes kernel launch parameters specifically for target NVIDIA edge silicon.
-* **Expected Impact:** Accelerates YOLO-Pose latency from $\sim 70\text{ ms}$ down to $\mathbf{\sim 8\text{ ms}}$ on Jetson Orin Nano, enabling sustained multi-camera real-time processing.
+### 4. Full-Pipeline Hardware Acceleration via NVIDIA TensorRT
+To maximize edge throughput, compile all neural network components across the entire pipeline into optimized **TensorRT FP16 / INT8 `.engine` binaries**:
+* **Stage 1 (Distilled Weapon Detector):** TensorRT engine execution slashes YOLO inference latency from $\sim 45\text{ ms}$ down to $\mathbf{\sim 12 - 15\text{ ms}}$ on edge GPUs.
+* **Stage 2 (YOLO-Pose Keypoint Extractor):** Fuses `Conv2D + BatchNorm + SiLU` operators into single CUDA kernels, accelerating pose estimation from $\sim 70 - 180\text{ ms}$ down to $\mathbf{\sim 8 - 35\text{ ms}}$.
+* **Stage 3 (ST-GCN Action Classifier):** Compiles spatial-temporal graph convolutions into optimized static graph kernels executing in under **$1\text{ ms}$**.
 
-### 4. Low-Power Embedded Edge Deployment (NVIDIA Jetson Series)
-* **Headless Linux Runtime:** Strip desktop display managers (GNOME/X11) by booting into headless mode (`sudo systemctl set-default multi-user.target`), reducing idle OS memory footprint from $\sim 1.0\text{ GB}$ down to $\mathbf{\sim 250\text{ MB}}$.
-* **Hardware Target Feasibility:** While legacy Jetson Nano (4GB Maxwell) requires JPEG compression and TensorRT to fit, modern **Jetson Orin Nano (8GB Ampere, 40 TOPS)** effortlessly accommodates the unquantized multi-model pipeline with full real-time responsiveness.
+### 5. Enabling Real-Time Deployment on Ultra-Budget Hardware (NVIDIA Jetson Nano)
+The combination of the above optimization suite specifically targets turning the ultra-lightweight, budget **NVIDIA Jetson Nano (4GB Maxwell)** into a fully autonomous, production-viable edge threat detection appliance:
+* **Headless Linux Runtime:** Booting into minimal headless mode (`sudo systemctl set-default multi-user.target`) removes the desktop GUI, reducing idle OS RAM consumption from $\sim 1.0\text{ GB}$ down to $\mathbf{\sim 250\text{ MB}}$.
+* **Resolution of Memory Constraints:** The 45 MB JPEG buffer leaves over $3.2\text{ GB}$ of free unified memory for model weights and CUDA buffers, completely eliminating out-of-memory (OOM) risks on 4GB hardware.
+* **Sustained Real-Time Processing:** Combined with sliding-window pose caching (computing keypoints only for 10 new frames per stride) and TensorRT FP16 execution, total window processing time drops well below real-time frame accumulation rates, allowing the low-cost Jetson Nano to comfortably sustain live threat detection without falling behind.
 
 ---
 
