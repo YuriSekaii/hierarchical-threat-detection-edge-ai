@@ -121,43 +121,39 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     y_s1 = 84.5
     h_s1 = 8.5
 
-    # 1. Live Video Stream (X=11.5, W=15)
-    draw_box(11.5, y_s1, 15.0, h_s1, "Live Surveillance\nStream (30 FPS)", subtext="RTSP / USB Camera")
-    draw_arrow(11.5 + 15.0/2, y_s1, 28.5 - 17.0/2, y_s1)
+    # 1. Live Video Stream (X=14.0, W=16)
+    draw_box(14.0, y_s1, 16.0, h_s1, "Live Surveillance\nStream (30 FPS)", subtext="RTSP / USB Camera")
+    draw_arrow(14.0 + 16.0/2, y_s1, 36.0 - 18.0/2, y_s1)
 
-    # 2. TurboJPEG Circular Buffer (X=28.5, W=17)
-    draw_box(28.5, y_s1, 17.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="47.3 MB")
-    draw_arrow(28.5 + 17.0/2, y_s1, 46.5 - 15.0/2, y_s1)
+    # 2. TurboJPEG Circular Buffer (X=36.0, W=18)
+    draw_box(36.0, y_s1, 18.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="47.3 MB")
+    draw_arrow(36.0 + 18.0/2, y_s1, 58.0 - 16.0/2, y_s1)
 
-    # 3. 3 FPS Subsampling (X=46.5, W=15)
-    draw_box(46.5, y_s1, 15.0, h_s1, "Subsample 1 in 10\n(Effective: 3 FPS)", subtext="Idle power saver")
-    draw_arrow(46.5 + 15.0/2, y_s1, 65.5 - 17.0/2, y_s1)
+    # 3. 3 FPS Subsampling (X=58.0, W=16)
+    draw_box(58.0, y_s1, 16.0, h_s1, "Subsample 1 in 10\n(Effective: 3 FPS)", subtext="Idle power saver")
+    draw_arrow(58.0 + 16.0/2, y_s1, 80.0 - 18.0/2, y_s1)
 
-    # 4. Distilled NMS-Free YOLO26s (X=65.5, W=17)
-    draw_box(65.5, y_s1, 17.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext=None)
-    draw_arrow(65.5 + 17.0/2, y_s1, 85.5 - 16.0/2, y_s1)
+    # 4. Distilled NMS-Free YOLO26s (X=80.0, W=18)
+    draw_box(80.0, y_s1, 18.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext=None)
+    draw_arrow(80.0 + 18.0/2, y_s1, 104.0 - 17.0/2, y_s1)
 
-    # 5. Weapon Detected? (X=85.5, W=16, H=11.5)
-    w_d1, h_d1 = 16.0, 11.5
-    draw_diamond(85.5, y_s1, w_d1, h_d1, "Weapon\nDetected?\n(Conf > 0.45)", font_sz=9.2)
+    # 5. Weapon Detected? (X=104.0, W=17, H=11.5)
+    w_d1, h_d1 = 17.0, 11.5
+    draw_diamond(104.0, y_s1, w_d1, h_d1, "Weapon\nDetected?\n(Conf > 0.45)", font_sz=9.2)
 
-    # Diamond 1 -> NO (Loopback)
-    draw_polyline_arrow([(85.5, y_s1 + h_d1/2), (85.5, 94.0), (46.5, 94.0), (46.5, y_s1 + h_s1/2)])
-    ax.text(87.2, 92.5, "NO (Idle)", ha='left', va='center', fontsize=9.2, fontweight='bold', color='#14532d', zorder=4)
+    # Diamond 1 -> NO (Loopback to 3 FPS Subsampling)
+    draw_polyline_arrow([(104.0, y_s1 + h_d1/2), (104.0, 94.0), (58.0, 94.0), (58.0, y_s1 + h_s1/2)])
+    ax.text(105.5, 92.5, "NO (Idle)", ha='left', va='center', fontsize=9.2, fontweight='bold', color='#14532d', zorder=4)
 
-    # Diamond 1 -> YES
-    draw_arrow(85.5 + w_d1/2, y_s1, 106.0 - 18.0/2, y_s1)
-    ax.text(95.5, y_s1 + 1.2, "YES", ha='center', va='bottom', fontsize=9.5, fontweight='bold', color='#0f172a', zorder=4)
+    # Diamond 1 -> YES (Direct Trigger to Stage 2)
+    draw_arrow(104.0 + w_d1/2, y_s1, 131.0 - 22.0/2, y_s1)
+    ax.text(116.25, y_s1 + 1.2, "YES", ha='center', va='bottom', fontsize=9.5, fontweight='bold', color='#0f172a', zorder=4)
 
-    # 6. Stage 1-Guard: Contact HOI (X=106.0, W=18)
-    draw_box(106.0, y_s1, 18.0, h_s1, "Stage 1-Guard: HOI\n(DINOv2 Grasp)", subtext="Arm proximity + Grasp affinity")
-    draw_arrow(106.0 + 18.0/2, y_s1, 127.5 - 18.0/2, y_s1)
-
-    # 7. Trigger Stage 2 (X=127.5, W=18)
-    draw_box(127.5, y_s1, 18.0, h_s1, "Lock Frame Index\n& Trigger Stage 2", subtext="Audit worker awakened", box_type='champ')
+    # 6. Trigger Stage 2 (X=131.0, W=22)
+    draw_box(131.0, y_s1, 22.0, h_s1, "Lock Frame Index\n& Trigger Stage 2", subtext="Audit worker awakened", box_type='champ')
 
     # Connecting Arrow from Stage 1 to Stage 2a
-    draw_polyline_arrow([(127.5, y_s1 - h_s1/2), (127.5, 68.8), (17.5, 68.8), (17.5, 59.5 + 8.5/2)], color='#2563eb', lw=2.0)
+    draw_polyline_arrow([(131.0, y_s1 - h_s1/2), (131.0, 69.8), (17.5, 69.8), (17.5, 57.5 + 8.5/2)], color='#2563eb', lw=2.0)
 
     # =========================================================================
     # STAGE 2A: MULTI-PERSON TRACKING & KINEMATICS
