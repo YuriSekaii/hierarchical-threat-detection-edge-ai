@@ -14,15 +14,15 @@ An end-to-end, resource-efficient dual-stage surveillance framework engineered f
 
 | Dimension | Baseline Architecture (CV / Phase 1) | Production Evolution (Latest / Phase 2–3) | Engineering Impact |
 | :--- | :--- | :--- | :--- |
-| **Stage 1 Detector** | Distilled YOLO26s (One-to-Many NMS) | **One-to-One Hungarian NMS-Free YOLO26s** | Slashes seam/zipper false alarms by **$>50\%$** (53 $\to$ 23 FP) |
-| **High-Sensitivity Guard** | None (Raw Confidence Screening) | **Contact-State HOI Transformer (DINOv2)** | Slashes civilian false alarms by **$-84.3\%$** at $\text{Conf}=0.20$ |
-| **Circular Buffer RAM** | $1,054.7\text{ MB}$ (1,200 Raw NumPy Frames) | **$47.3\text{ MB}$ (SIMD TurboJPEG, $Q=85$)** | **$95.5\%$ RAM reduction ($22.3\times$ compression)**; prevents Jetson OOM |
-| **Kinematic Normalization** | Centroid Mean Subtraction | **Torso-Length Scale Invariant ($L_{\text{torso}}$)** | Eliminates distance attenuation; cuts missed attacks from $24.2\% \to 6.1\%$ |
-| **Multi-Person Tracking** | Naive Bounding-Box Indexing | **ByteTrack Threat Actor Locking** | Slashes ID swaps from **$15 \to 0$**; prevents joint coordinate teleportation |
-| **Stage 2b Action Engine** | ST-GCN + Non-Parametric Deep $k\text{-NN}$ | **Staircase Cascade v5.10 (Champion 2)** | Sequential early exits (`pc3d_t3` $\to$ `pc3d_dt3` $\to$ `stgcn`) |
-| **Outerwear Robustness** | Deep $k\text{-NN}$ Euclidean Distance | **Cross-Paradigm Relational KD (`pc3d_dt3`)** | **$100\%$ Recall on heavy winter coats** ($16/16$ attacks caught) |
-| **Assault Detection (F1)** | **$0.9261\text{ F1}$** ($90.38\%$ Recall, $94.95\%$ Prec) | **$\mathbf{1.0000\text{ F1}}$ ($100.0\%\text{ Recall}$, $\mathbf{100.0\%\text{ Prec}}$)** | **$0\text{ Missed Attacks (0 FN)}$, $\mathbf{0\text{ False Alarms (0 FP / 44 videos)}}$** |
-| **Pipeline Throughput** | $38.9\text{ FPS}$ GPU / $6.4\text{ FPS}$ CPU | **$34.80\text{ FPS}$ sustained GPU ($37.7\text{ FPS}$ median)** | **$5.24\text{ ms}$ action latency**; $77.92\%$ traffic never runs heavy ST-GCN |
+| **Stage 1 Detector** | Distilled YOLO26s (One-to-Many NMS) | **One-to-One Hungarian NMS-Free YOLO26s** | Slashes seam/zipper false alarms by **>50%** (53 → 23 FP) |
+| **High-Sensitivity Guard** | None (Raw Confidence Screening) | **Contact-State HOI Transformer (DINOv2)** | Slashes civilian false alarms by **-84.3%** at Conf = 0.20 |
+| **Circular Buffer RAM** | 1,054.7 MB (1,200 Raw NumPy Frames) | **47.3 MB (SIMD TurboJPEG, Q=85)** | **95.5% RAM reduction (22.3× compression)**; prevents Jetson OOM |
+| **Kinematic Normalization** | Centroid Mean Subtraction | **Torso-Length Scale Invariant ($L_{\text{torso}}$)** | Eliminates distance attenuation; cuts missed attacks from 24.2% → 6.1% |
+| **Multi-Person Tracking** | Naive Bounding-Box Indexing | **ByteTrack Threat Actor Locking** | Slashes ID swaps from **15 → 0**; prevents joint coordinate teleportation |
+| **Stage 2b Action Engine** | ST-GCN + Non-Parametric Deep $k$-NN | **Staircase Cascade v5.10 (Champion 2)** | Sequential early exits (`pc3d_t3` → `pc3d_dt3` → `stgcn`) |
+| **Outerwear Robustness** | Deep $k$-NN Euclidean Distance | **Cross-Paradigm Relational KD (`pc3d_dt3`)** | **100% Recall on heavy winter coats** (16/16 attacks caught) |
+| **Assault Detection (F1)** | **0.9261 F1** (90.38% Recall, 94.95% Prec) | **1.0000 F1 (100.0% Recall, 100.0% Prec)** | **0 Missed Attacks (0 FN), 0 False Alarms (0 FP / 44 videos)** |
+| **Pipeline Throughput** | 38.9 FPS GPU / 6.4 FPS CPU | **34.80 FPS sustained GPU (37.7 FPS median)** | **5.24 ms action latency**; 77.92% traffic never runs heavy ST-GCN |
 
 ---
 
@@ -165,11 +165,11 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 ## B.1 Engineering Gaps of the Baseline & The Path Forward
 
 While the Phase 1 prototype achieved strong initial benchmarks, rigorous long-duration testing and edge hardware deployment exposed critical bottlenecks:
-1. **Host RAM Exhaustion:** The 1,200-frame circular buffer stored uncompressed raw NumPy arrays ($640 \times 480 \times 3$), consuming **$1,054.7\text{ MB}$**. On shared Unified Memory Architecture (UMA) hardware (NVIDIA Jetson Nano 4GB), this consumed $>25\%$ of total system RAM, triggering kernel swap paging, memory bus stalls, and OS out-of-memory panics.
-2. **Scale & Distance Attenuation:** Centroid normalization lacked physical distance scaling. As subjects moved further from the camera, motion vectors shrank by $50\% - 70\%$, causing ST-GCN to miss subtle thrusts ($24.2\%$ False Negative rate).
-3. **Multi-Person Coordinate Teleportation:** In multi-person scenes, naive confidence indexing (`keypoints[0]`) caused tracking to oscillate between attacker and bystander, creating artificial joint velocity spikes of $>300\text{ px/frame}$ ($15\text{ ID swaps}$).
-4. **Greedy NMS Anchor Clustering:** One-to-many anchor assignment caused adjacent grid cells to fire along coat seams, belts, and zippers. Because predicted boxes exhibited IoUs of $0.25 - 0.40$ (below the $0.45$ NMS threshold), Greedy NMS treated them as separate weapons ($+130.4\%$ false alarms).
-5. **Synchronous Ensemble Latency Bottlenecks:** Evaluating multi-model committees (`stgcn + ctrgcn + poseconv3d`) synchronously achieved $1.0000\text{ F1}$, but bloated pipeline latency to **$44.65\text{ ms}$ ($22.39\text{ FPS}$)**, violating the 30 FPS surveillance requirement.
+1. **Host RAM Exhaustion:** The 1,200-frame circular buffer stored uncompressed raw NumPy arrays ($640 \times 480 \times 3$), consuming **1,054.7 MB**. On shared Unified Memory Architecture (UMA) hardware (NVIDIA Jetson Nano 4GB), this consumed >25% of total system RAM, triggering kernel swap paging, memory bus stalls, and OS out-of-memory panics.
+2. **Scale & Distance Attenuation:** Centroid normalization lacked physical distance scaling. As subjects moved further from the camera, motion vectors shrank by 50% – 70%, causing ST-GCN to miss subtle thrusts (24.2% False Negative rate).
+3. **Multi-Person Coordinate Teleportation:** In multi-person scenes, naive confidence indexing (`keypoints[0]`) caused tracking to oscillate between attacker and bystander, creating artificial joint velocity spikes of >300 px/frame (15 ID swaps).
+4. **Greedy NMS Anchor Clustering:** One-to-many anchor assignment caused adjacent grid cells to fire along coat seams, belts, and zippers. Because predicted boxes exhibited IoUs of 0.25 – 0.40 (below the 0.45 NMS threshold), Greedy NMS treated them as separate weapons (+130.4% false alarms).
+5. **Synchronous Ensemble Latency Bottlenecks:** Evaluating multi-model committees (`stgcn + ctrgcn + poseconv3d`) synchronously achieved 1.0000 F1, but bloated pipeline latency to **44.65 ms (22.39 FPS)**, violating the 30 FPS surveillance requirement.
 
 ---
 
@@ -212,17 +212,17 @@ Incoming Video Frame (1080p / 720p @ 30 FPS)
 ```
 
 ### 1. One-to-One Hungarian Bipartite Matching (`end2end=True`)
-* **The Root Cause of False Alarms in Standard YOLO:** Standard one-to-many anchor assignment trains multiple adjacent grid cells to detect the same object. During inference, fabric folds and zippers produce multiple candidate boxes with IoU $< 0.45$. Greedy NMS cannot suppress them, resulting in duplicate false alarms ($53\text{ FP}$).
-* **Hungarian One-to-One Assignment:** Enforces mutual spatial competition during training, ensuring only the single most confident anchor activates. Total false alarms dropped from **$53\text{ down to } 23\text{ FP}$ ($-56.6\%$)** with zero NMS runtime overhead.
+* **The Root Cause of False Alarms in Standard YOLO:** Standard one-to-many anchor assignment trains multiple adjacent grid cells to detect the same object. During inference, fabric folds and zippers produce multiple candidate boxes with IoU < 0.45. Greedy NMS cannot suppress them, resulting in duplicate false alarms (53 FP).
+* **Hungarian One-to-One Assignment:** Enforces mutual spatial competition during training, ensuring only the single most confident anchor activates. Total false alarms dropped from **53 down to 23 FP (-56.6%)** with zero NMS runtime overhead.
 
 ### 2. High-Sensitivity Guard: Contact-State HOI Transformer (v4.30)
-* **Operational Goal:** In high-security environments, screening weapons at low confidence ($\text{Conf}=0.20$) captures **$91.67\%$ raw weapon recall**, but introduces $98\text{ false alarms}$.
+* **Operational Goal:** In high-security environments, screening weapons at low confidence (Conf = 0.20) captures **91.67% raw weapon recall**, but introduces 98 false alarms.
 * **The HOI Solution:** Evaluates physical human-object interaction (HOI) via a dual-stream guard:
   1. *Forearm-Scaled Spatial Proximity:* Calculates normalized Euclidean distance $d_{\text{norm}} = \frac{\|c_{\text{weapon}} - c_{\text{hand}}\|_2}{L_{\text{forearm}}}$. Proposals with $d_{\text{norm}} > 2.2$ are immediately pruned as unheld clothing seams.
-  2. *DINOv2 Grasp-Affinity Manifold:* Feeds hand-object crops through a frozen DINOv2-ViT-S/14 encoder ($f \in \mathbb{R}^{384}$). True weapon grips exhibit cosine similarity $S \ge 0.52$ against verified combat grasp prototypes ($0.775$ vs $0.379$ on empty hands).
-* **Impact:** Slashes civilian false alarms by **$-84.3\%$** ($51 \to 8\text{ FP}$ on OOD clips), retaining $85.83\%$ recall at $33.93\text{ ms}$ GPU latency.
+  2. *DINOv2 Grasp-Affinity Manifold:* Feeds hand-object crops through a frozen DINOv2-ViT-S/14 encoder ($f \in \mathbb{R}^{384}$). True weapon grips exhibit cosine similarity $S \ge 0.52$ against verified combat grasp prototypes (0.775 vs 0.379 on empty hands).
+* **Impact:** Slashes civilian false alarms by **-84.3%** (51 → 8 FP on OOD clips), retaining 85.83% recall at 33.93 ms GPU latency.
 
-#### Master Stage 1 Ground Truth Leaderboard (715 Surveillance Test Images, $\text{IoU}=0.20$):
+#### Master Stage 1 Ground Truth Leaderboard (715 Surveillance Test Images, IoU = 0.20):
 
 | Metric / Dimension | Distilled YOLO26s (NMS-Free Conf=0.45) [CHAMPION] | Distilled YOLO26s (Greedy NMS Conf=0.45) | Contact HOI Guard (v4.30, $\tau=0.52$) | Monocular Depth Filter (v4.40, Conf=0.30) | Sa2VA-7B MLLM (v4.10) | Grounding DINO 1.5 (v4.20, Box=0.25) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -244,20 +244,20 @@ Incoming Video Frame (1080p / 720p @ 30 FPS)
 ## B.3 Stage 2a: Systems Optimization & Kinematic Invariance
 
 1. **In-Memory TurboJPEG Buffer Compression (v1.01):**
-   - Storing 1,200 raw NumPy frames $(640 \times 480 \times 3)$ consumed **$1,054.7\text{ MB}$**.
-   - Integrated SIMD TurboJPEG encoding (`quality=85`). Buffer memory collapsed to **$47.30\text{ MB}$ ($95.5\%$ reduction / $22.3\times$ compression)**.
-   - Continuous ingestion encoding overhead: $+0.88\text{ ms}$ ($1,135\text{ FPS}$ throughput), consuming just **$2.93\%$ of a single CPU core**. Cosine similarity between latent embeddings extracted from raw vs compressed frames was **$1.00000$**, confirming zero loss in biomechanical action accuracy.
+   - Storing 1,200 raw NumPy frames $(640 \times 480 \times 3)$ consumed **1,054.7 MB**.
+   - Integrated SIMD TurboJPEG encoding (`quality=85`). Buffer memory collapsed to **47.30 MB (95.5% reduction / 22.3× compression)**.
+   - Continuous ingestion encoding overhead: +0.88 ms (1,135 FPS throughput), consuming just **2.93% of a single CPU core**. Cosine similarity between latent embeddings extracted from raw vs compressed frames was **1.00000**, confirming zero loss in biomechanical action accuracy.
 2. **Torso-Scale Normalization ($L_{\text{torso}}$, v1.02):**
    - Replaced centroid mean subtraction with physical anatomical distance scaling:
-     $$L_{\text{torso}} = \|\text{mid\_shoulder} - \text{mid\_hip}\|_2$$
-     with dynamic fallback to $0.5 \times \text{bbox\_diagonal}$ if hip/shoulder joints are occluded.
-   - Slashed missed attacks from **$24.2\% \to 6.1\%$ (only 2 missed attacks)**, making kinematic trajectories completely invariant to camera distance.
+     $$L_{\text{torso}} = \|\mathbf{p}_{\text{shoulder}} - \mathbf{p}_{\text{hip}}\|_2$$
+     with dynamic fallback to $0.5 \times d_{\text{bbox}}$ if hip/shoulder joints are occluded.
+   - Slashed missed attacks from **24.2% → 6.1% (only 2 missed attacks)**, making kinematic trajectories completely invariant to camera distance.
 3. **Dynamic Rectangular Inference ($384 \times 640$, v1.03):**
-   - Standard 16:9 widescreen streams ($1280 \times 720$, $1920 \times 1080$) letterboxed to square $640 \times 640$ tensors wasted $163,840\text{ pixels}$ ($40.0\%$ compute waste) on black padding.
-   - Dynamic nearest 32-stride rectangular inference ($384 \times 640$) reduced sliding-stride CPU execution time by **$-127.6\text{ ms}$**, maintaining $1.0000$ bounding-box IoU and $\text{MAE} = 0.00\text{ px}$.
+   - Standard 16:9 widescreen streams ($1280 \times 720$, $1920 \times 1080$) letterboxed to square $640 \times 640$ tensors wasted 163,840 pixels (40.0% compute waste) on black padding.
+   - Dynamic nearest 32-stride rectangular inference ($384 \times 640$) reduced sliding-stride CPU execution time by **-127.6 ms**, maintaining 1.0000 bounding-box IoU and MAE = 0.00 px.
 4. **ByteTrack Multi-Person Tracking Guard (v1.04):**
    - Integrated ByteTrack with automated Threat Actor Locking: the system locks tracking onto the individual nearest to the verified Stage 1 weapon bounding box.
-   - On crowded multi-person testbeds, actor ID swaps dropped from **15 swaps to 0 swaps (100% stable lock)**, eliminating joint coordinate teleportation spikes ($307.6\text{ px/frame} \to 1.0\text{ px/frame}$) with just $28.76\ \mu\text{s}$ tracking overhead.
+   - On crowded multi-person testbeds, actor ID swaps dropped from **15 swaps to 0 swaps (100% stable lock)**, eliminating joint coordinate teleportation spikes (307.6 px/frame → 1.0 px/frame) with just 28.76 μs tracking overhead.
 
 ---
 
@@ -274,40 +274,40 @@ To prevent false alarms on non-violent civilian motions (wood chopping, aerobics
 * **Relative Mahalanobis Distance (RMD, v1.08) [Standalone Champion]:**
   Formulates multi-modal class-conditional Gaussians $\mathcal{N}(\mu_c, \Sigma_c)$ and global background distribution $\mathcal{N}(\mu_0, \Sigma_0)$ with ridge shrinkage $\Sigma_{\text{reg}} = \Sigma + \epsilon I$ ($\epsilon = 0.005$):
   $$\text{Score}_{\text{RMD}}(z) = (z - \mu_0)^T \Sigma_0^{-1} (z - \mu_0) - \min_{c} (z - \mu_c)^T \Sigma_c^{-1} (z - \mu_c)$$
-  Background subtraction cancels out shared standing posture variances, achieving **$100.0\%\text{ Recall}$ ($33/33\text{ attacks caught}, 0\text{ FN}$)** and **$0.9167\text{ F1}$** standalone.
+  Background subtraction cancels out shared standing posture variances, achieving **100.0% Recall (33/33 attacks caught, 0 FN)** and **0.9167 F1** standalone.
 
 ---
 
 ### 2. Multi-Backbone Exploration & Capacity Scaling
 
 1. **2D Graph CNNs (`ST-GCN` vs `CTR-GCN`):**
-   - `ST-GCN` (3.01M params): Baseline topological bone graph ($0.9167\text{ F1}, 100\%\text{ Recall}, 6\text{ FP}$).
-   - `CTR-GCN Tier S` (352k params, downscaled): Dynamic channel topology with $5\times$ arm weighting. Downscaling channels stripped out memorized civilian gestures, achieving **$0.9206\text{ F1}$** and slashing false alarms from **$9 \to 1\text{ FP}$**.
+   - `ST-GCN` (3.01M params): Baseline topological bone graph (0.9167 F1, 100% Recall, 6 FP).
+   - `CTR-GCN Tier S` (352k params, downscaled): Dynamic channel topology with $5\times$ arm weighting. Downscaling channels stripped out memorized civilian gestures, achieving **0.9206 F1** and slashing false alarms from **9 → 1 FP**.
 2. **Spatio-Temporal Vision Transformers (`SkateFormer`, v2.20):**
-   - 447k parameters. Global self-attention across unconstrained joint tokens captured spurious temporal correlations on civilian gestures (`Volleyball_Strike`), producing $10\text{ FP}$ ($0.8400\text{ F1}$).
+   - 447k parameters. Global self-attention across unconstrained joint tokens captured spurious temporal correlations on civilian gestures (`Volleyball_Strike`), producing 10 FP (0.8400 F1).
 3. **3D Volumetric CNNs (`PoseConv3D`, v2.10):**
-   - Evaluates 3D heatmap volumes $(17 \times 50 \times 56 \times 56)$ via R(2+1)D convolutions ($765\text{k params}$). Achieved **$96.3\%\text{ Precision}$ and ONLY 1 False Positive**, but dropped recall to $78.79\%$ (7 missed attacks) due to spatial grid quantization blurring out fine knife flicks.
+   - Evaluates 3D heatmap volumes $(17 \times 50 \times 56 \times 56)$ via R(2+1)D convolutions (765k params). Achieved **96.3% Precision and ONLY 1 False Positive**, but dropped recall to 78.79% (7 missed attacks) due to spatial grid quantization blurring out fine knife flicks.
 
 ---
 
 ### 3. PoseConv3D Systematic Downscaling & Cross-Paradigm Knowledge Distillation
 
 * **Downscaling Pareto Frontier:** Downscaling PoseConv3D channels prevented civilian overfitting:
-  - **Tier 3 ($598\text{k params}$, `bc=12, fd=256`):** Standalone F1 jumped to **$0.8857$**, recall reached **$93.94\%$** (only 2 missed attacks), and CPU throughput accelerated to **$27.9\text{ FPS}$** ($3.9\times$ faster than ST-GCN).
-  - **Tier 5 ($132\text{k params}$, `bc=12, fd=96`):** **$100.0\%\text{ Precision}$ with ZERO False Positives ($0\text{ FP} / 44\text{ civilian clips}$)**, creating the ideal front-line screening filter.
-* **Cross-Paradigm Knowledge Distillation (ST-GCN $\to$ PoseConv3D Tier 3):**
-  - Continuous coordinate graph ST-GCN ($100\%$ recall, 0 FN) was used as a frozen teacher to train discrete volumetric PoseConv3D Tier 3 (`pc3d_dt3`) via **Relational Knowledge Distillation (RKD CVPR 2019)**:
+  - **Tier 3 (598k params, `bc=12, fd=256`):** Standalone F1 jumped to **0.8857**, recall reached **93.94%** (only 2 missed attacks), and CPU throughput accelerated to **27.9 FPS** (3.9× faster than ST-GCN).
+  - **Tier 5 (132k params, `bc=12, fd=96`):** **100.0% Precision with ZERO False Positives (0 FP / 44 civilian clips)**, creating the ideal front-line screening filter.
+* **Cross-Paradigm Knowledge Distillation (ST-GCN → PoseConv3D Tier 3):**
+  - Continuous coordinate graph ST-GCN (100% recall, 0 FN) was used as a frozen teacher to train discrete volumetric PoseConv3D Tier 3 (`pc3d_dt3`) via **Relational Knowledge Distillation (RKD CVPR 2019)**:
     $$\mathcal{L}_{\text{RKD}} = 1.0 \cdot \mathcal{L}_{\text{R-dist}} + 2.0 \cdot \mathcal{L}_{\text{R-angle}}$$
-  - **Outerwear Breakthrough:** Under Relational KD, `pc3d_dt3` achieved **$100.0\%\text{ Recall}$ on concealed winter coat attacks (`With_Coat`: 16/16, ZERO MISSES)**, proving that topological joint angular dynamics were successfully transferred through thick fabric.
+  - **Outerwear Breakthrough:** Under Relational KD, `pc3d_dt3` achieved **100.0% Recall on concealed winter coat attacks (`With_Coat`: 16/16, ZERO MISSES)**, proving that topological joint angular dynamics were successfully transferred through thick fabric.
 
 ---
 
 ## B.5 The Production Climax: Progressive Multi-Tier "Staircase" Cascade (v5.10)
 
 ### Why Synchronous Committees Failed
-Evaluating models synchronously in an ensemble committee achieved $1.0000\text{ F1}$ at $m=3$ (`stgcn + ctrgcn + pc3d_tier3`), but at an unacceptable latency penalty:
-- Every frame unconditionally ran all 3 models ($20.52\text{ ms}$ Stage 2b forward pass).
-- Combined with the fixed $23.49\text{ ms}$ upstream baseline (Stage 1 + Stage 2a), total pipeline latency surged to **$44.65\text{ ms}$ ($22.39\text{ FPS}$)** — failing the 30 FPS surveillance requirement.
+Evaluating models synchronously in an ensemble committee achieved 1.0000 F1 at $m=3$ (`stgcn + ctrgcn + pc3d_tier3`), but at an unacceptable latency penalty:
+- Every frame unconditionally ran all 3 models (20.52 ms Stage 2b forward pass).
+- Combined with the fixed 23.49 ms upstream baseline (Stage 1 + Stage 2a), total pipeline latency surged to **44.65 ms (22.39 FPS)** — failing the 30 FPS surveillance requirement.
 
 ---
 
@@ -316,8 +316,8 @@ Evaluating models synchronously in an ensemble committee achieved $1.0000\text{ 
 The **Progressive Multi-Tier "Staircase" Cascade (v5.10)** replaces synchronous execution with a sequential early-exit pipeline executing **one model per tier**:
 1. **Sequence-Level Temporal Max-Pooling:** Pre-attack walking frames exhibit benign probabilities ($P < 0.20$), whereas weapon strikes produce sharp spikes. Gating operates on sequence-level temporal max-pooling over 50-frame sliding clips ($c \in \{1, \dots, C\}$):
    $$P_{\text{tier},\max} = \max_{c \in \{1, \dots, C\}} P_{\text{tier}, c}$$
-   *(Post-Mortem: Independent clip gating previously suffered 5 False Negatives because walking pre-attack frames exited prematurely before the attack occurred. Temporal max-pooling restored $1.0000\text{ F1}$.)*
-2. **Zero-Copy GPU UMA Heatmap Memory Reuse:** Tiers 1 and 2 both operate on 3D volumetric heatmaps. The heatmap volume $(17, 50, 56, 56)$ is rasterized once in GPU VRAM ($0.62\text{ ms}$); Tier 2 reuses the identical memory buffer with **zero conversion or eviction overhead**.
+   *(Post-Mortem: Independent clip gating previously suffered 5 False Negatives because walking pre-attack frames exited prematurely before the attack occurred. Temporal max-pooling restored 1.0000 F1.)*
+2. **Zero-Copy GPU UMA Heatmap Memory Reuse:** Tiers 1 and 2 both operate on 3D volumetric heatmaps. The heatmap volume $(17, 50, 56, 56)$ is rasterized once in GPU VRAM (0.62 ms); Tier 2 reuses the identical memory buffer with **zero conversion or eviction overhead**.
 
 ```
                            [ 50-Frame Video Sequence ]
@@ -360,7 +360,7 @@ The **Progressive Multi-Tier "Staircase" Cascade (v5.10)** replaces synchronous 
 
 ### Production Champion 2 Decision Routing & Resolution Breakdown
 
-*Configuration: `pc3d_tier3` $\to$ `pc3d_dt3` $\to$ `stgcn`*
+*Configuration: `pc3d_tier3` → `pc3d_dt3` → `stgcn`*
 
 | Cascade Stage | Model Backbone | Parameters | Input Tensor Format | Decision Condition | Action Taken | Videos Resolved | Cumulative Traffic Filtered |
 | :--- | :--- | :---: | :--- | :--- | :--- | :---: | :---: |
@@ -368,7 +368,7 @@ The **Progressive Multi-Tier "Staircase" Cascade (v5.10)** replaces synchronous 
 | **Tier 2** | `pc3d_dt3` (Distilled) | 598,429 | Heatmap (Zero-Copy Reuse) | $P_{2,\max} < 0.35$<br>$P_{2,\max} \ge 0.95$<br>$0.35 \le P_{2,\max} < 0.95$ | **Fast Discard (Civilian)**<br>Fast Alarm (Threat)<br>**Escalate to Tier 3** | **18 / 77 (23.38%)**<br>0 (0 FP)<br>17 escalated (%ESC: 22.08%) | **77.92%** |
 | **Tier 3** | `stgcn` | 3,014,981 | Coordinates $(1, 3, 50, 17, 1)$ | $P_{3,\max} \ge 0.55$<br>$P_{3,\max} < 0.55$ | **Threat Alarm (Assault)**<br>Civilian Discard | **17 / 77 (22.08%)**<br>0 (0 FN) | **100.0%** |
 
-* **Traffic Offloaded:** **$77.92\%$ of all video streams never execute the heavy 3.01M parameter ST-GCN model**, reserving edge GPU/NPU compute for continuous monitoring.
+* **Traffic Offloaded:** **77.92% of all video streams never execute the heavy 3.01M parameter ST-GCN model**, reserving edge GPU/NPU compute for continuous monitoring.
 
 ---
 
@@ -378,15 +378,15 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 
 | Metric / Dimension | Champion 1 (`pc3d_t3 -> stgcn -> dt3`) | Champion 2 (`pc3d_t3 -> dt3 -> stgcn`) [PRODUCTION] | Hardware Variance ($\Delta$) | Impact on Low-Power UMA (Jetson Nano) |
 | :--- | :---: | :---: | :---: | :--- |
-| **Tier 1 Mean Latency** | $2.91\text{ ms}$ | $2.76\text{ ms}$ | $-0.15\text{ ms}$ | Baseline volumetric scan |
-| **Tier 2 Mean Latency (Escalated)** | **$8.35\text{ ms}$** (executes `stgcn`) | **$5.82\text{ ms}$** (executes `pc3d_dt3`) | **$-2.53\text{ ms}$ ($-30.3\%$)** | **Zero-copy pointer reuse** avoids buffer eviction |
-| **Tier 3 Mean Latency (Escalated)** | $12.53\text{ ms}$ (executes `pc3d_dt3`) | $10.76\text{ ms}$ (executes `stgcn`) | $-1.77\text{ ms}$ ($-14.1\%$) | Champion 2 executes Tier 3 faster |
-| **Overall Mean Action Latency** | $5.65\text{ ms}$ | **$5.24\text{ ms}$** | **$-0.41\text{ ms}$ ($-7.3\%$)** | Sustained real-time edge processing |
-| **Overall Median Action Latency** | $4.95\text{ ms}$ | **$3.07\text{ ms}$** | **$-1.88\text{ ms}$ ($-38.0\%$)** | **$1.61\times$ speedup on $50\%$ of typical traffic** |
-| **Clips Exposed to 3.01M Param Model** | **$45.45\%$** (35 videos) | **$22.08\%$** (17 videos) | **$-23.37\%$ exposure** | **$77.92\%$ of traffic never touches ST-GCN** |
-| **Final Classification Metrics** | **1.0000 F1** (33 TP, 0 FP, 0 FN) | **1.0000 F1** (33 TP, 0 FP, 0 FN) | Parity ($100\%$ accuracy) | Flawless safety and precision |
+| **Tier 1 Mean Latency** | 2.91 ms | 2.76 ms | -0.15 ms | Baseline volumetric scan |
+| **Tier 2 Mean Latency (Escalated)** | **8.35 ms** (executes `stgcn`) | **5.82 ms** (executes `pc3d_dt3`) | **-2.53 ms (-30.3%)** | **Zero-copy pointer reuse** avoids buffer eviction |
+| **Tier 3 Mean Latency (Escalated)** | 12.53 ms (executes `pc3d_dt3`) | 10.76 ms (executes `stgcn`) | -1.77 ms (-14.1%) | Champion 2 executes Tier 3 faster |
+| **Overall Mean Action Latency** | 5.65 ms | **5.24 ms** | **-0.41 ms (-7.3%)** | Sustained real-time edge processing |
+| **Overall Median Action Latency** | 4.95 ms | **3.07 ms** | **-1.88 ms (-38.0%)** | **1.61× speedup on 50% of typical traffic** |
+| **Clips Exposed to 3.01M Param Model** | **45.45%** (35 videos) | **22.08%** (17 videos) | **-23.37% exposure** | **77.92% of traffic never touches ST-GCN** |
+| **Final Classification Metrics** | **1.0000 F1** (33 TP, 0 FP, 0 FN) | **1.0000 F1** (33 TP, 0 FP, 0 FN) | Parity (100% accuracy) | Flawless safety and precision |
 
-* **Hardware Root Cause of the $2.53\text{ ms}$ Speedup:** In Champion 1, transitioning from Tier 1 (3D heatmap) to Tier 2 (2D coordinates) and back to Tier 3 (3D heatmap) causes tensor buffer eviction and cache misses. Champion 2 sequences 3D heatmaps contiguously across Tiers 1 and 2, operating on an identical VRAM address. On Jetson Nano's shared 64-bit memory bus ($25.6\text{ GB/s}$), this eliminates memory bus stalls and OS paging.
+* **Hardware Root Cause of the 2.53 ms Speedup:** In Champion 1, transitioning from Tier 1 (3D heatmap) to Tier 2 (2D coordinates) and back to Tier 3 (3D heatmap) causes tensor buffer eviction and cache misses. Champion 2 sequences 3D heatmaps contiguously across Tiers 1 and 2, operating on an identical VRAM address. On Jetson Nano's shared 64-bit memory bus (25.6 GB/s), this eliminates memory bus stalls and OS paging.
 
 ---
 
@@ -404,7 +404,7 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 | **Synchronous Ensemble $m=3$** | `stgcn + ctrgcn + pc3d_tier3` | 4.95M | **1.0000** | **100.0% (33/33)** | **100.0%** | **0 FP** | **0 FN** | 20.52 ms | **44.65 ms** | **22.39 FPS (Sub-30)** |
 | **Synchronous Ensemble $m=6$** | 6 Backbones Combined | 9.04M | **1.0000** | **100.0% (33/33)** | **100.0%** | **0 FP** | **0 FN** | 52.04 ms | **76.18 ms** | **13.13 FPS** |
 | **Synchronous Ensemble $m=9$** | All 9 Backbones | 10.22M | 0.9851 | **100.0% (33/33)** | 97.06% | 1 FP | **0 FN** | 70.21 ms | **94.35 ms** | **10.60 FPS** |
-| **Dual-Tier Consensus (v3.10)**| ST-GCN $\to$ Ensemble | 5.11M | 0.9706 | **100.0% (33/33)** | 94.29% | 2 FP | **0 FN** | 6.85 ms (eff) | 30.74 ms | 32.50 FPS |
+| **Dual-Tier Consensus (v3.10)**| ST-GCN → Ensemble | 5.11M | 0.9706 | **100.0% (33/33)** | 94.29% | 2 FP | **0 FN** | 6.85 ms (eff) | 30.74 ms | 32.50 FPS |
 | **★ Staircase Champion 2** | `pc3d_t3 -> dt3 -> stgcn` | **4.21M** | **1.0000** | **100.0% (33/33)** | **100.0%** | **0 FP** | **0 FN** | **5.24 ms (eff)** | **28.72 ms** | **34.80 FPS sustained** |
 
 ---
@@ -412,9 +412,9 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 ## B.6 Key Engineering Post-Mortems (Problem-Solving Showcase)
 
 1. **Clip-Level vs Sequence-Level Gating Mismatch (5 FN False Negatives):**
-   * *Issue:* When first deployed, clip-level independent gating dropped F1 from $1.0000 \to 0.9180$, missing 5 real attacks.
+   * *Issue:* When first deployed, clip-level independent gating dropped F1 from 1.0000 → 0.9180, missing 5 real attacks.
    * *Root Cause:* Violent assault videos often begin with 1–2 benign walking clips before the attack occurs. Evaluating clips independently caused Tier 1 to classify the benign walking clip as civilian and exit early.
-   * *Remediation:* Implemented sequence-level temporal max-pooling ($P_{\text{tier},\max} = \max_c P_{\text{tier},c}$), ensuring an assault in any sliding clip escalates the entire sequence to Tier 3. F1 was restored to $1.0000$.
+   * *Remediation:* Implemented sequence-level temporal max-pooling ($P_{\text{tier},\max} = \max_c P_{\text{tier},c}$), ensuring an assault in any sliding clip escalates the entire sequence to Tier 3. F1 was restored to 1.0000.
 2. **ByteDance Sa2VA 7B MLLM Infinite Exclamation Loop (`! ! !`):**
    * *Issue:* Sa2VA-7B operated on random noise and emitted endless `! ! !` tokens until KV-cache exhaustion.
    * *Root Cause:* Upstream weights used prefix `model.model.language_model.*`, but custom `Sa2VAChatModelQwen` defined `base_model_prefix = "language_model"`. HuggingFace silently rejected all 1,632 weight tensors under `strict=False`.
@@ -422,15 +422,15 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 3. **Dynamic Attention Quadratic OOM (25.66 GiB Single Allocation):**
    * *Issue:* Native dynamic resolution on $2560 \times 1600$ frames crashed the 24GB RTX 3090 with a 25.66 GiB allocation exception.
    * *Root Cause:* Quadratic scaled dot-product self-attention $[B, H, N, N]$ across tens of thousands of image patch tokens.
-   * *Remediation:* Capped `min_pixels = 256*28*28` and `max_pixels = 1024*28*28`, stabilizing active VRAM at $15.95\text{ GB}$.
+   * *Remediation:* Capped `min_pixels = 256*28*28` and `max_pixels = 1024*28*28`, stabilizing active VRAM at 15.95 GB.
 4. **Greedy NMS Duplicate Clustering Along Zippers & Seams:**
-   * *Issue:* One-to-many YOLO models generated $53\text{ false alarms}$ on jacket zippers and pocket seams.
-   * *Root Cause:* Adjacent grid cells fire simultaneously on long straight lines. Predicted boxes have IoUs of $0.25 - 0.40$ (below the $0.45$ NMS threshold), causing Greedy NMS to treat them as separate weapons.
-   * *Remediation:* Switched to One-to-One Hungarian Bipartite Matching (`end2end=True`), enforcing anchor competition during training and cutting false alarms by $>50\%$.
+   * *Issue:* One-to-many YOLO models generated 53 false alarms on jacket zippers and pocket seams.
+   * *Root Cause:* Adjacent grid cells fire simultaneously on long straight lines. Predicted boxes have IoUs of 0.25 – 0.40 (below the 0.45 NMS threshold), causing Greedy NMS to treat them as separate weapons.
+   * *Remediation:* Switched to One-to-One Hungarian Bipartite Matching (`end2end=True`), enforcing anchor competition during training and cutting false alarms by >50%.
 5. **GPU UMA Buffer Eviction Thrashing:**
    * *Issue:* Champion 1 (`pc3d_t3 -> stgcn -> dt3`) suffered unexpected latency spikes during live profiling.
-   * *Root Cause:* Bouncing from 3D heatmap ($10.7\text{ MB}$) $\to$ 2D coordinates ($20\text{ KB}$) $\to$ 3D heatmap ($10.7\text{ MB}$) evicted GPU L2 cache and triggered host-to-device memory allocation overhead.
-   * *Remediation:* Reordered models into Champion 2 (`pc3d_t3 -> pc3d_dt3 -> stgcn`), enabling zero-copy pointer reuse and accelerating Tier 2 execution by **$2.53\text{ ms}$ ($-30.3\%$)**.
+   * *Root Cause:* Bouncing from 3D heatmap (10.7 MB) → 2D coordinates (20 KB) → 3D heatmap (10.7 MB) evicted GPU L2 cache and triggered host-to-device memory allocation overhead.
+   * *Remediation:* Reordered models into Champion 2 (`pc3d_t3 -> pc3d_dt3 -> stgcn`), enabling zero-copy pointer reuse and accelerating Tier 2 execution by **2.53 ms (-30.3%)**.
 
 ---
 
@@ -443,10 +443,10 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 | **Hardware** | NVIDIA GeForce RTX 3090 (24GB) | NVIDIA GeForce GTX 1060 (3GB) | NVIDIA Jetson Nano (4GB LPDDR4 UMA) |
 | **Host CPU** | Intel Core i9-10900X (10C/20T @ 3.70 GHz) | AMD Ryzen 5 5600X (6C/12T @ 3.70 GHz) | Quad-core ARM Cortex-A57 @ 1.43 GHz |
 | **Stage 1 Detector** | Distilled YOLO26s (Hungarian NMS-Free) | Distilled YOLO26s (Hungarian NMS-Free) | Distilled YOLO26s (TensorRT FP16) |
-| **Stage 2a Buffer** | In-Memory TurboJPEG ($47.3\text{ MB}$) | In-Memory TurboJPEG ($47.3\text{ MB}$) | In-Memory TurboJPEG ($47.3\text{ MB}$) |
+| **Stage 2a Buffer** | In-Memory TurboJPEG (47.3 MB) | In-Memory TurboJPEG (47.3 MB) | In-Memory TurboJPEG (47.3 MB) |
 | **Stage 2b Engine** | **Staircase Cascade Champion 2** | **Staircase Cascade Champion 2** | **Staircase Cascade Champion 2** |
-| **Pipeline Latency** | **$28.72\text{ ms}$ ($34.80\text{ FPS}$ sustained)** | **$31.45\text{ ms}$ (~32 FPS sustained)** | $\approx 220\text{ ms}$ (Pose caching + TensorRT) |
-| **Classification F1**| **1.0000 F1** ($0\text{ FP}, 0\text{ FN}$) | **1.0000 F1** ($0\text{ FP}, 0\text{ FN}$) | **1.0000 F1** ($0\text{ FP}, 0\text{ FN}$) |
+| **Pipeline Latency** | **28.72 ms (34.80 FPS sustained)** | **31.45 ms (~32 FPS sustained)** | ≈ 220 ms (Pose caching + TensorRT) |
+| **Classification F1**| **1.0000 F1 (0 FP, 0 FN)** | **1.0000 F1 (0 FP, 0 FN)** | **1.0000 F1 (0 FP, 0 FN)** |
 
 ---
 

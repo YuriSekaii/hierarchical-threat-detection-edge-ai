@@ -271,8 +271,8 @@ In Version 1.00, the system maintained a 1,200-frame circular buffer of uncompre
 
 - **Failure Mode in v1.00/v1.01:** Coordinate normalization used centroid mean subtraction without physical distance scaling. As subjects moved away from the camera, motion vector amplitudes shrunk by $50\% - 70\%$, causing ST-GCN to miss 8 of 33 violent assaults ($24.2\%$ False Negative rate).
 - **Implementation:** Normalized skeletal joint coordinates by physical torso length:
-  $$L_{\text{torso}} = \|\text{mid\_shoulder} - \text{mid\_hip}\|_2$$
-  with dynamic fallback to $0.5 \times \text{bbox\_diagonal}$ if hip/shoulder joints are occluded.
+  $$L_{\text{torso}} = \|\mathbf{p}_{\text{shoulder}} - \mathbf{p}_{\text{hip}}\|_2$$
+  with dynamic fallback to $0.5 \times d_{\text{bbox}}$ if hip/shoulder joints are occluded.
 - **Profiling:** ST-GCN retrained with Triplet Margin Loss across 3 folds (Fold 2 converged to validation loss **$0.0171$**). Missed attacks dropped from $24.2\%$ down to **$6.1\%$ (2 missed attacks)**. Violence Recall surged to **$93.9\%$**.
 
 #### Torso Normalization Decision Threshold Sweep Table:
@@ -459,7 +459,7 @@ In Version 1.00, the system maintained a 1,200-frame circular buffer of uncompre
   $$G(x, y) = \exp\left(-\frac{(x - \mu_x)^2 + (y - \mu_y)^2}{2\sigma^2}\right), \quad \sigma = 1.5\text{ px}$$
   With $\sigma = 1.5$, the $3\sigma$ confidence ellipse covers $2 \times 3 \times 1.5 + 1 = 10\text{ px}$, and the effective discrete rasterization kernel extends across a **$7 \times 7$ pixel window** ($>99\%$ probability mass). High-frequency velocity vectors across consecutive frames are blended into diffuse spatial blobs.
 - **Canonical Torso Normalization Mapping (`src/poseconv3d_utils.py` lines 62-71):**
-  $$x_{\text{mapped}} = \text{clamp}\left(\frac{x_{\text{norm}} + \text{norm\_range}}{2 \cdot \text{norm\_range}}, 0.0, 1.0\right), \quad \text{norm\_range} = 3.0$$
+  $$x_{\text{mapped}} = \text{clamp}\left(\frac{x_{\text{norm}} + R_{\text{norm}}}{2 \cdot R_{\text{norm}}}, 0.0, 1.0\right), \quad R_{\text{norm}} = 3.0$$
   $$s^2 = 2.0 \cdot \left(\frac{\sigma}{W}\right)^2, \quad \text{dist}^2 = (x_{\text{grid}} - x_{\text{mapped}})^2 + (y_{\text{grid}} - y_{\text{mapped}})^2$$
 - **Parameter Upscaling Failure (Exp 1):**
   To test whether capacity under-allocation caused the baseline v2.10 recall deficit ($78.79\%$, 7 missed attacks), PoseConv3D channels were expanded to `[64, 128, 256, 512]` ($3,545,409\text{ parameters}$, $6.369\text{ GFLOPs}$, matching ST-GCN's $3.01\text{M}$):
