@@ -292,6 +292,8 @@ To prevent false alarms on non-violent civilian motions (wood chopping, aerobics
 
 ### 3. PoseConv3D Systematic Downscaling & Cross-Paradigm Knowledge Distillation
 
+![PoseConv3D Capacity Scaling Pareto Frontier](assets/poseconv3d_pareto_frontier.png)
+
 * **Downscaling Pareto Frontier:** Downscaling PoseConv3D channels prevented civilian overfitting:
   - **Tier 3 (598k params, `bc=12, fd=256`):** Standalone F1 jumped to **0.8857**, recall reached **93.94%** (only 2 missed attacks), and CPU throughput accelerated to **27.9 FPS** (3.9× faster than ST-GCN).
   - **Tier 5 (132k params, `bc=12, fd=96`):** **100.0% Precision with ZERO False Positives (0 FP / 44 civilian clips)**, creating the ideal front-line screening filter.
@@ -455,6 +457,7 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 ```
 ├── assets/                                 # Architectural diagrams & training curves
 │   ├── inference_pipeline.png              # Dual-stage hierarchical system diagram
+│   ├── poseconv3d_pareto_frontier.png      # Capacity scaling vs F1 & throughput Pareto frontier
 │   ├── weapon_distill_training_curves.png  # Ultralytics student distillation curves
 │   └── stgcn_loss_curve.png                # ST-GCN 3-fold cross-validation loss curve
 ├── models/                                 # Neural network backbone implementations
@@ -482,7 +485,8 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 │   ├── benchmark_super_ensemble.py         # Official CUDA event profiler for ensembles
 │   ├── benchmark_unified_fair_comparison.py# Standardized hardware throughput evaluation
 │   ├── validate_stage1_ground_truth.py     # Master 715-image ground truth validator
-│   └── generate_pipeline_diagram.py        # Automated vector generation of inference pipeline
+│   ├── generate_pipeline_diagram.py        # Automated vector generation of inference pipeline
+│   └── generate_pareto_chart.py            # Automated generation of PoseConv3D Pareto chart
 ├── weights/                                # Pretrained models & calibrated statistics
 │   ├── yolo_weapon_distilled.pt            # Distilled YOLO26s Hungarian NMS-Free (~18.8 MB)
 │   ├── yolo26s-pose.pt                     # 17-keypoint skeletal pose extractor (~19.6 MB)
