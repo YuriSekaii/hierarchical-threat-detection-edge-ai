@@ -232,11 +232,7 @@ def main():
     loaded_models_cpu = {}
     model_probs = {}
 
-    import importlib.util
-    spec_rmd = importlib.util.spec_from_file_location("ood_metrics_v1_08", os.path.join(REPO_DIR, "src", "ood_metrics_v1.08.py"))
-    rmd_mod = importlib.util.module_from_spec(spec_rmd)
-    spec_rmd.loader.exec_module(rmd_mod)
-    compute_rmd = rmd_mod.compute_relative_mahalanobis_distance
+    from src.ood_metrics import compute_relative_mahalanobis_distance as compute_rmd
 
     dummy_c_gpu = torch.randn(1, 2, 50, 17, device=device)
     dummy_h_gpu = torch.randn(1, 17, 50, 56, 56, device=device)

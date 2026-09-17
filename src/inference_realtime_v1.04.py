@@ -31,17 +31,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models.stgcn import STGCNModel
 from src.ood_metrics import compute_knn_distance
 
-# Import v1.02 scale-normalized skeleton utils
-import importlib.util
-skel_spec = importlib.util.spec_from_file_location(
-    "skeleton_utils_v1_02",
-    os.path.abspath(os.path.join(os.path.dirname(__file__), 'skeleton_utils_v1.02.py'))
+from src.skeleton_utils import (
+    interpolate_missing_joints,
+    smooth_kinematics,
+    normalize_skeleton_clip,
 )
-skel_mod = importlib.util.module_from_spec(skel_spec)
-skel_spec.loader.exec_module(skel_mod)
-interpolate_missing_joints = skel_mod.interpolate_missing_joints
-smooth_kinematics = skel_mod.smooth_kinematics
-normalize_skeleton_clip = skel_mod.normalize_skeleton_clip
 
 
 class FrameItem:

@@ -169,11 +169,7 @@ def main():
     N_videos = len(y_true)
 
     # 3. Precompute Model Probabilities for All 6 Backbones
-    import importlib.util
-    spec_rmd = importlib.util.spec_from_file_location("ood_metrics_v1_08", os.path.join(REPO_DIR, "src", "ood_metrics_v1.08.py"))
-    rmd_mod = importlib.util.module_from_spec(spec_rmd)
-    spec_rmd.loader.exec_module(rmd_mod)
-    compute_rmd = rmd_mod.compute_relative_mahalanobis_distance
+    from src.ood_metrics import compute_relative_mahalanobis_distance as compute_rmd
 
     candidate_keys = list(model_specs.keys())
     model_probs = {}

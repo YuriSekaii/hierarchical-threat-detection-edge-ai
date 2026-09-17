@@ -461,7 +461,7 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 │   ├── stgcn.py                            # 9-block Spatio-Temporal GCN (Arm-weighted)
 │   ├── ctrgcn.py                           # CTR-GCN channel-wise topology refinement
 │   ├── ctrgcn_scaled.py                    # Scaled CTR-GCN (Tier S 352k & Tier L 2.97M)
-│   ├── poseconv3d.py                       # Modular PoseConv3D (Downscale Tiers 1–5)
+│   ├── poseconv3d.py                       # Modular PoseConv3D (Downscale Tiers 1–5 & Scaled)
 │   ├── skateformer.py                      # SkateFormer spatio-temporal Vision Transformer
 │   ├── ensemble_super.py                   # M-ary super-ensemble soft-voting engine
 │   └── ensemble_dual_tier.py               # Dual-tier edge & server consensus engine
@@ -473,13 +473,16 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 │   ├── inference_realtime_v3.10.py         # Dual-Tier Edge-Server Ensemble pipeline
 │   ├── poseconv3d_utils.py                 # GPU VRAM batch 3D heatmap rasterization
 │   ├── distillation_losses.py              # Relational KD (RKD CVPR 2019) loss modules
-│   └── skeleton_utils.py                   # Torso-scale normalization & temporal smoothing
+│   ├── skeleton_utils.py                   # Torso-scale normalization & temporal smoothing
+│   ├── ood_metrics.py                      # Unified OOD gating (Deep k-NN, Mahalanobis, RMD)
+│   └── dataset.py                          # Dual-format data loading (Graph coords & 3D Heatmaps)
 ├── scripts/                                # Benchmarking, profiling & tuning suites
 │   ├── compare_champions_live.py           # Synchronized CUDA event profiler (Champ 1 vs 2)
 │   ├── tune_multitier_staircase_v5.10.py   # Staircase grid search across 120 permutations
 │   ├── benchmark_super_ensemble.py         # Official CUDA event profiler for ensembles
 │   ├── benchmark_unified_fair_comparison.py# Standardized hardware throughput evaluation
-│   └── validate_stage1_ground_truth.py     # Master 715-image ground truth validator
+│   ├── validate_stage1_ground_truth.py     # Master 715-image ground truth validator
+│   └── generate_pipeline_diagram.py        # Automated vector generation of inference pipeline
 ├── weights/                                # Pretrained models & calibrated statistics
 │   ├── yolo_weapon_distilled.pt            # Distilled YOLO26s Hungarian NMS-Free (~18.8 MB)
 │   ├── yolo26s-pose.pt                     # 17-keypoint skeletal pose extractor (~19.6 MB)
@@ -487,9 +490,12 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 │   ├── poseconv3d_downscale_tier3_598k.pth # PoseConv3D Tier 3 weights (598k params)
 │   ├── poseconv3d_distill_methodB_rkd.pth  # PoseConv3D Distilled T3 weights (598k params)
 │   ├── poseconv3d_downscale_tier5_132k.pth # PoseConv3D Tier 5 weights (132k params)
+│   ├── ctrgcn_violence_v2.00.pth           # CTR-GCN weights (1.33M params)
+│   ├── poseconv3d_violence_v2.10.pth       # PoseConv3D baseline weights (647k params)
 │   ├── reference_data_rmd_v1.08.pt         # Calibrated RMD statistics for ST-GCN
 │   └── reference_data_poseconv3d_pure_dual_tier.pt # Unified reference dictionary (T3, DT3, T5)
 ├── results/                                # Empirical verification logs, CSVs & plots
+├── ARCHIVE_MANIFEST.md                     # Index of archived historical versions & reports
 ├── FULL_FINAL_REPORT.md                    # Exhaustive 1,100-line master technical report
 ├── requirements.txt                        # Python dependencies
 ├── LICENSE                                 # MIT License
@@ -533,13 +539,10 @@ python src/inference_nms_free_v4_50.py --source 0 --conf 0.45 --mode one2one
 
 ---
 
-## C.5 Reference Documentation
-For deeper mathematical derivations, complete 100-configuration hyperparameter sweeps, and architectural details, refer to the companion reports:
-* [`FULL_FINAL_REPORT.md`](FULL_FINAL_REPORT.md) — Comprehensive technical master report covering Phase 1 through Phase 3.
-* [`PROJECT_REPORT_PROGRESSIVE_STAIRCASE_CASCADE_AND_EDGE_BENCHMARKING.md`](PROJECT_REPORT_PROGRESSIVE_STAIRCASE_CASCADE_AND_EDGE_BENCHMARKING.md) — Detailed report on Staircase Cascade v5.10 and CUDA event profiling.
-* [`PROJECT_REPORT_POSECONV3D_SCALING_AND_DISTILLATION.md`](PROJECT_REPORT_POSECONV3D_SCALING_AND_DISTILLATION.md) — Deep dive on PoseConv3D quantization, scaling failure, and Relational KD.
-* [`PROJECT_REPORT_F1_MAXIMIZATION_AND_SUPER_ENSEMBLES.md`](PROJECT_REPORT_F1_MAXIMIZATION_AND_SUPER_ENSEMBLES.md) — Exhaustive analysis of super-ensembles and CTR-GCN capacity scaling.
-* [`VERSIONS.md`](VERSIONS.md) & [`VERSIONS_PHASE2.md`](VERSIONS_PHASE2.md) — Engineering changelogs across all releases.
+## C.5 Reference Documentation & Archival Notice
+For deeper mathematical derivations, complete hyperparameter sweeps, and architectural details, refer to:
+* [`FULL_FINAL_REPORT.md`](FULL_FINAL_REPORT.md) — Comprehensive technical master report covering Phase 1 through Phase 3 (integrated in this repository).
+* [`ARCHIVE_MANIFEST.md`](ARCHIVE_MANIFEST.md) — Complete directory manifest of historical research logs, ablation reports (`PROJECT_REPORT_*.md`, `COMPACT_REPORT_*.md`), and changelogs (`VERSIONS.md`) preserved in the external archive (`D:\Intern AI Project\HTD_Archive_Reports_and_Experiments\`).
 
 ---
 

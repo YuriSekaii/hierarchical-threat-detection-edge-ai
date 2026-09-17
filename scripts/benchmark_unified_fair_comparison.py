@@ -45,19 +45,14 @@ from src.skeleton_utils import normalize_skeleton_clip, smooth_kinematics
 from ultralytics import YOLO
 from models.stgcn import STGCNModel
 from models.ctrgcn import CTRGCNModel
-from models.poseconv3d import PoseConv3DModel
-from models.poseconv3d_scaled import ScaledPoseConv3DModel
-from models.ensemble_dual_tier import DualTierSurveillanceSystem, Tier2ServerEnsemble
-from models.ensemble_poseconv3d_dual_tier import PurePoseConv3DEnsemble, PurePoseConv3DDualTierSystem
-
-# Import RMD metric
-spec_rmd = importlib.util.spec_from_file_location(
-    "ood_metrics_v1_08",
-    os.path.join(REPO_DIR, "src", "ood_metrics_v1.08.py")
+from models.poseconv3d import PoseConv3DModel, ScaledPoseConv3DModel
+from models.ensemble_dual_tier import (
+    DualTierSurveillanceSystem,
+    Tier2ServerEnsemble,
+    PurePoseConv3DEnsemble,
+    PurePoseConv3DDualTierSystem,
 )
-rmd_mod = importlib.util.module_from_spec(spec_rmd)
-spec_rmd.loader.exec_module(rmd_mod)
-compute_relative_mahalanobis_distance = rmd_mod.compute_relative_mahalanobis_distance
+from src.ood_metrics import compute_relative_mahalanobis_distance
 
 
 def measure_gpu_latency(model_fn, dummy_input, warmup=50, iterations=500):
