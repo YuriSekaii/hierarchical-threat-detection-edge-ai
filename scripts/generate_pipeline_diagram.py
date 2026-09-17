@@ -197,7 +197,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     ax.add_patch(s2b_rect)
     ax.text(75.0, 43.2, "STAGE 2b: Progressive Multi-Tier 'Staircase' Cascade",
             ha='center', va='center', fontsize=12.5, fontweight='bold', family='sans-serif', color='#581c87', zorder=3)
-    ax.text(4.5, 3.8, "Dynamic Early-Exit Architecture: Benign actions exit early at Tier 1/2 • Heavy ST-GCN invoked only on ambiguous escalation • Zero-copy GPU UMA memory reuse",
+    ax.text(4.5, 3.8, "Dynamic Early-Exit Architecture: Benign actions exit early at Tier 1/2 • Heavy ST-GCN invoked only on ambiguous escalation",
             ha='left', va='center', fontsize=9.0, family='sans-serif', color='#6b21a8', zorder=3)
 
     # Four columns: X = 17.5, 55.8, 94.1, 133.4
