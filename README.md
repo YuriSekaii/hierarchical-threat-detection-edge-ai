@@ -160,7 +160,7 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 
 # SECTION B: Production Evolution & The Multi-Tier Staircase Cascade (Phase 2 & 3 - Latest Update)
 
-*This section synthesizes the complete research advancements, architectural upgrades, and edge benchmarks documented in [`FULL_FINAL_REPORT.md`](FULL_FINAL_REPORT.md), establishing the new production champion.*
+*This section synthesizes the complete research advancements, architectural upgrades, and edge benchmarks across the project's engineering lifecycle, establishing the new production champion.*
 
 ## B.1 Engineering Gaps of the Baseline & The Path Forward
 
@@ -496,7 +496,6 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 │   └── reference_data_poseconv3d_pure_dual_tier.pt # Unified reference dictionary (T3, DT3, T5)
 ├── results/                                # Empirical verification logs, CSVs & plots
 ├── ARCHIVE_MANIFEST.md                     # Index of archived historical versions & reports
-├── FULL_FINAL_REPORT.md                    # Exhaustive 1,100-line master technical report
 ├── requirements.txt                        # Python dependencies
 ├── LICENSE                                 # MIT License
 └── README.md                               # Project documentation & benchmark synthesis
@@ -540,9 +539,8 @@ python src/inference_nms_free_v4_50.py --source 0 --conf 0.45 --mode one2one
 ---
 
 ## C.5 Reference Documentation & Archival Notice
-For deeper mathematical derivations, complete hyperparameter sweeps, and architectural details, refer to:
-* [`FULL_FINAL_REPORT.md`](FULL_FINAL_REPORT.md) — Comprehensive technical master report covering Phase 1 through Phase 3 (integrated in this repository).
-* [`ARCHIVE_MANIFEST.md`](ARCHIVE_MANIFEST.md) — Complete directory manifest of historical research logs, ablation reports (`PROJECT_REPORT_*.md`, `COMPACT_REPORT_*.md`), and changelogs (`VERSIONS.md`) preserved in the external archive (`D:\Intern AI Project\HTD_Archive_Reports_and_Experiments\`).
+For deeper historical derivations, ablation studies, and comprehensive logs:
+* [`ARCHIVE_MANIFEST.md`](ARCHIVE_MANIFEST.md) — Complete directory manifest of historical research logs, ablation reports (`FULL_FINAL_REPORT.md`, `PROJECT_REPORT_*.md`, `COMPACT_REPORT_*.md`), and changelogs (`VERSIONS.md`) preserved in the external archive (`D:\Intern AI Project\HTD_Archive_Reports_and_Experiments\`).
 
 ---
 
