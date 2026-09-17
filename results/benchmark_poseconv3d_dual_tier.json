@@ -1,0 +1,182 @@
+{
+  "version": "Pure-PoseConv3D Dual-Tier",
+  "description": "Pure 3D CNN surveillance ensemble with single-pass shared heatmap rasterization",
+  "total_parameters": 730778,
+  "configurations": {
+    "consensus_tier5_tier3": {
+      "weights": {
+        "w_tier5": 0.4,
+        "w_tier3": 0.6
+      },
+      "threshold": 0.5499999999999999,
+      "metrics": {
+        "f1": 0.9230769230769231,
+        "recall": 0.9090909090909091,
+        "precision": 0.9375,
+        "accuracy": 0.935064935064935,
+        "tp": 30,
+        "tn": 42,
+        "fp": 2,
+        "fn": 3,
+        "category_breakdown": {
+          "With_Coat": {
+            "videos": 16,
+            "tp": 15,
+            "tn": 0,
+            "fp": 0,
+            "fn": 1
+          },
+          "Without_Coat": {
+            "videos": 17,
+            "tp": 15,
+            "tn": 0,
+            "fp": 0,
+            "fn": 2
+          },
+          "OOD": {
+            "videos": 44,
+            "tp": 0,
+            "tn": 42,
+            "fp": 2,
+            "fn": 0
+          }
+        }
+      }
+    },
+    "consensus_tier5_distilled_tier3": {
+      "weights": {
+        "w_tier5": 0.65,
+        "w_distilled_tier3": 0.35
+      },
+      "threshold": 0.6599999999999999,
+      "metrics": {
+        "f1": 0.8620689655172413,
+        "recall": 0.7575757575757576,
+        "precision": 1.0,
+        "accuracy": 0.8961038961038961,
+        "tp": 25,
+        "tn": 44,
+        "fp": 0,
+        "fn": 8,
+        "category_breakdown": {
+          "With_Coat": {
+            "videos": 16,
+            "tp": 13,
+            "tn": 0,
+            "fp": 0,
+            "fn": 3
+          },
+          "Without_Coat": {
+            "videos": 17,
+            "tp": 12,
+            "tn": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "OOD": {
+            "videos": 44,
+            "tp": 0,
+            "tn": 44,
+            "fp": 0,
+            "fn": 0
+          }
+        }
+      }
+    },
+    "tri_poseconv3d_consensus": {
+      "weights": {
+        "w_tier5": 0.4,
+        "w_tier3": 0.3,
+        "w_distill": 0.3
+      },
+      "threshold": 0.6,
+      "metrics": {
+        "f1": 0.9180327868852459,
+        "recall": 0.8484848484848485,
+        "precision": 1.0,
+        "accuracy": 0.935064935064935,
+        "tp": 28,
+        "tn": 44,
+        "fp": 0,
+        "fn": 5,
+        "category_breakdown": {
+          "With_Coat": {
+            "videos": 16,
+            "tp": 15,
+            "tn": 0,
+            "fp": 0,
+            "fn": 1
+          },
+          "Without_Coat": {
+            "videos": 17,
+            "tp": 13,
+            "tn": 0,
+            "fp": 0,
+            "fn": 4
+          },
+          "OOD": {
+            "videos": 44,
+            "tp": 0,
+            "tn": 44,
+            "fp": 0,
+            "fn": 0
+          }
+        }
+      }
+    },
+    "hierarchical_dual_tier_gating": {
+      "p_low": 0.05,
+      "p_high": 0.5,
+      "stats": {
+        "discard_ratio": 0.38961038961038963,
+        "alert_ratio": 0.3246753246753247,
+        "escalate_ratio": 0.2857142857142857
+      },
+      "metrics": {
+        "f1": 0.9354838709677419,
+        "recall": 0.8787878787878788,
+        "precision": 1.0,
+        "accuracy": 0.948051948051948,
+        "tp": 29,
+        "tn": 44,
+        "fp": 0,
+        "fn": 4,
+        "category_breakdown": {
+          "With_Coat": {
+            "videos": 16,
+            "tp": 14,
+            "tn": 0,
+            "fp": 0,
+            "fn": 2
+          },
+          "Without_Coat": {
+            "videos": 17,
+            "tp": 15,
+            "tn": 0,
+            "fp": 0,
+            "fn": 2
+          },
+          "OOD": {
+            "videos": 44,
+            "tp": 0,
+            "tn": 44,
+            "fp": 0,
+            "fn": 0
+          }
+        }
+      }
+    }
+  },
+  "latencies": {
+    "tier5_alone_gpu_ms": 3.04,
+    "tier3_alone_gpu_ms": 2.92,
+    "shared_heatmap_both_gpu_ms": 6.04,
+    "total_gpu_pipeline_ms": 30.94,
+    "total_gpu_pipeline_fps": 32.3,
+    "tier5_alone_cpu_ms": 15.71,
+    "tier3_alone_cpu_ms": 15.48,
+    "shared_heatmap_both_cpu_ms": 31.31,
+    "total_cpu_pipeline_ms": 49.31,
+    "total_cpu_pipeline_fps": 20.3
+  }
+}

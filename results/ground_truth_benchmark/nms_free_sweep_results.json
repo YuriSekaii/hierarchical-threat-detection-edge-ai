@@ -1,0 +1,462 @@
+{
+  "O2O_Conf0.15": {
+    "name": "One-to-One (NMS-Free, Conf=0.15)",
+    "mode": "one2one",
+    "conf": 0.15,
+    "iou_nms": null,
+    "overall_f1": 53.49,
+    "threat_recall": 88.46,
+    "threat_precision": 38.33,
+    "overall_accuracy": 71.43,
+    "civilian_specificity": 67.54,
+    "ood_false_positives": 26,
+    "ood_specificity": 45.83,
+    "avg_latency_ms": 11.28,
+    "confusion_matrix": {
+      "TP": 23,
+      "FP": 37,
+      "FN": 3,
+      "TN": 77
+    }
+  },
+  "O2O_Conf0.20": {
+    "name": "One-to-One (NMS-Free, Conf=0.20)",
+    "mode": "one2one",
+    "conf": 0.2,
+    "iou_nms": null,
+    "overall_f1": 56.1,
+    "threat_recall": 88.46,
+    "threat_precision": 41.07,
+    "overall_accuracy": 73.91,
+    "civilian_specificity": 70.54,
+    "ood_false_positives": 23,
+    "ood_specificity": 50.0,
+    "avg_latency_ms": 10.45,
+    "confusion_matrix": {
+      "TP": 23,
+      "FP": 33,
+      "FN": 3,
+      "TN": 79
+    }
+  },
+  "O2O_Conf0.25": {
+    "name": "One-to-One (NMS-Free, Conf=0.25)",
+    "mode": "one2one",
+    "conf": 0.25,
+    "iou_nms": null,
+    "overall_f1": 59.74,
+    "threat_recall": 88.46,
+    "threat_precision": 45.1,
+    "overall_accuracy": 77.37,
+    "civilian_specificity": 74.77,
+    "ood_false_positives": 21,
+    "ood_specificity": 54.35,
+    "avg_latency_ms": 11.57,
+    "confusion_matrix": {
+      "TP": 23,
+      "FP": 28,
+      "FN": 3,
+      "TN": 83
+    }
+  },
+  "O2O_Conf0.30": {
+    "name": "One-to-One (NMS-Free, Conf=0.30)",
+    "mode": "one2one",
+    "conf": 0.3,
+    "iou_nms": null,
+    "overall_f1": 64.79,
+    "threat_recall": 88.46,
+    "threat_precision": 51.11,
+    "overall_accuracy": 81.62,
+    "civilian_specificity": 80.0,
+    "ood_false_positives": 18,
+    "ood_specificity": 60.0,
+    "avg_latency_ms": 11.04,
+    "confusion_matrix": {
+      "TP": 23,
+      "FP": 22,
+      "FN": 3,
+      "TN": 88
+    }
+  },
+  "O2O_Conf0.35": {
+    "name": "One-to-One (NMS-Free, Conf=0.35)",
+    "mode": "one2one",
+    "conf": 0.35,
+    "iou_nms": null,
+    "overall_f1": 67.74,
+    "threat_recall": 80.77,
+    "threat_precision": 58.33,
+    "overall_accuracy": 84.96,
+    "civilian_specificity": 85.98,
+    "ood_false_positives": 12,
+    "ood_specificity": 71.43,
+    "avg_latency_ms": 11.33,
+    "confusion_matrix": {
+      "TP": 21,
+      "FP": 15,
+      "FN": 5,
+      "TN": 92
+    }
+  },
+  "O2O_Conf0.40": {
+    "name": "One-to-One (NMS-Free, Conf=0.40)",
+    "mode": "one2one",
+    "conf": 0.4,
+    "iou_nms": null,
+    "overall_f1": 71.19,
+    "threat_recall": 80.77,
+    "threat_precision": 63.64,
+    "overall_accuracy": 87.22,
+    "civilian_specificity": 88.79,
+    "ood_false_positives": 11,
+    "ood_specificity": 73.81,
+    "avg_latency_ms": 10.44,
+    "confusion_matrix": {
+      "TP": 21,
+      "FP": 12,
+      "FN": 5,
+      "TN": 95
+    }
+  },
+  "O2O_Conf0.45": {
+    "name": "One-to-One (NMS-Free, Conf=0.45)",
+    "mode": "one2one",
+    "conf": 0.45,
+    "iou_nms": null,
+    "overall_f1": 72.41,
+    "threat_recall": 80.77,
+    "threat_precision": 65.62,
+    "overall_accuracy": 87.97,
+    "civilian_specificity": 89.72,
+    "ood_false_positives": 10,
+    "ood_specificity": 76.19,
+    "avg_latency_ms": 11.14,
+    "confusion_matrix": {
+      "TP": 21,
+      "FP": 11,
+      "FN": 5,
+      "TN": 96
+    }
+  },
+  "O2O_Conf0.50": {
+    "name": "One-to-One (NMS-Free, Conf=0.50)",
+    "mode": "one2one",
+    "conf": 0.5,
+    "iou_nms": null,
+    "overall_f1": 72.73,
+    "threat_recall": 76.92,
+    "threat_precision": 68.97,
+    "overall_accuracy": 88.64,
+    "civilian_specificity": 91.51,
+    "ood_false_positives": 8,
+    "ood_specificity": 80.49,
+    "avg_latency_ms": 11.0,
+    "confusion_matrix": {
+      "TP": 20,
+      "FP": 9,
+      "FN": 6,
+      "TN": 97
+    }
+  },
+  "O2M_Conf0.20_IoU0.30": {
+    "name": "One-to-Many (NMS IoU=0.30, Conf=0.20)",
+    "mode": "one2many",
+    "conf": 0.2,
+    "iou_nms": 0.3,
+    "overall_f1": 49.44,
+    "threat_recall": 84.62,
+    "threat_precision": 34.92,
+    "overall_accuracy": 68.09,
+    "civilian_specificity": 64.35,
+    "ood_false_positives": 29,
+    "ood_specificity": 40.82,
+    "avg_latency_ms": 10.56,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 41,
+      "FN": 4,
+      "TN": 74
+    }
+  },
+  "O2M_Conf0.20_IoU0.45": {
+    "name": "One-to-Many (NMS IoU=0.45, Conf=0.20)",
+    "mode": "one2many",
+    "conf": 0.2,
+    "iou_nms": 0.45,
+    "overall_f1": 49.44,
+    "threat_recall": 84.62,
+    "threat_precision": 34.92,
+    "overall_accuracy": 68.09,
+    "civilian_specificity": 64.35,
+    "ood_false_positives": 29,
+    "ood_specificity": 40.82,
+    "avg_latency_ms": 10.32,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 41,
+      "FN": 4,
+      "TN": 74
+    }
+  },
+  "O2M_Conf0.20_IoU0.60": {
+    "name": "One-to-Many (NMS IoU=0.60, Conf=0.20)",
+    "mode": "one2many",
+    "conf": 0.2,
+    "iou_nms": 0.6,
+    "overall_f1": 49.44,
+    "threat_recall": 84.62,
+    "threat_precision": 34.92,
+    "overall_accuracy": 68.09,
+    "civilian_specificity": 64.35,
+    "ood_false_positives": 29,
+    "ood_specificity": 40.82,
+    "avg_latency_ms": 10.63,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 41,
+      "FN": 4,
+      "TN": 74
+    }
+  },
+  "O2M_Conf0.20_IoU0.75": {
+    "name": "One-to-Many (NMS IoU=0.75, Conf=0.20)",
+    "mode": "one2many",
+    "conf": 0.2,
+    "iou_nms": 0.75,
+    "overall_f1": 47.83,
+    "threat_recall": 84.62,
+    "threat_precision": 33.33,
+    "overall_accuracy": 66.67,
+    "civilian_specificity": 62.71,
+    "ood_false_positives": 32,
+    "ood_specificity": 38.46,
+    "avg_latency_ms": 10.04,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 44,
+      "FN": 4,
+      "TN": 74
+    }
+  },
+  "O2M_Conf0.30_IoU0.30": {
+    "name": "One-to-Many (NMS IoU=0.30, Conf=0.30)",
+    "mode": "one2many",
+    "conf": 0.3,
+    "iou_nms": 0.3,
+    "overall_f1": 55.7,
+    "threat_recall": 84.62,
+    "threat_precision": 41.51,
+    "overall_accuracy": 74.64,
+    "civilian_specificity": 72.32,
+    "ood_false_positives": 21,
+    "ood_specificity": 54.35,
+    "avg_latency_ms": 10.7,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 31,
+      "FN": 4,
+      "TN": 81
+    }
+  },
+  "O2M_Conf0.30_IoU0.45": {
+    "name": "One-to-Many (NMS IoU=0.45, Conf=0.30)",
+    "mode": "one2many",
+    "conf": 0.3,
+    "iou_nms": 0.45,
+    "overall_f1": 55.7,
+    "threat_recall": 84.62,
+    "threat_precision": 41.51,
+    "overall_accuracy": 74.64,
+    "civilian_specificity": 72.32,
+    "ood_false_positives": 21,
+    "ood_specificity": 54.35,
+    "avg_latency_ms": 9.84,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 31,
+      "FN": 4,
+      "TN": 81
+    }
+  },
+  "O2M_Conf0.30_IoU0.60": {
+    "name": "One-to-Many (NMS IoU=0.60, Conf=0.30)",
+    "mode": "one2many",
+    "conf": 0.3,
+    "iou_nms": 0.6,
+    "overall_f1": 55.7,
+    "threat_recall": 84.62,
+    "threat_precision": 41.51,
+    "overall_accuracy": 74.64,
+    "civilian_specificity": 72.32,
+    "ood_false_positives": 21,
+    "ood_specificity": 54.35,
+    "avg_latency_ms": 10.53,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 31,
+      "FN": 4,
+      "TN": 81
+    }
+  },
+  "O2M_Conf0.30_IoU0.75": {
+    "name": "One-to-Many (NMS IoU=0.75, Conf=0.30)",
+    "mode": "one2many",
+    "conf": 0.3,
+    "iou_nms": 0.75,
+    "overall_f1": 55.0,
+    "threat_recall": 84.62,
+    "threat_precision": 40.74,
+    "overall_accuracy": 74.1,
+    "civilian_specificity": 71.68,
+    "ood_false_positives": 22,
+    "ood_specificity": 53.19,
+    "avg_latency_ms": 10.49,
+    "confusion_matrix": {
+      "TP": 22,
+      "FP": 32,
+      "FN": 4,
+      "TN": 81
+    }
+  },
+  "O2M_Conf0.45_IoU0.30": {
+    "name": "One-to-Many (NMS IoU=0.30, Conf=0.45)",
+    "mode": "one2many",
+    "conf": 0.45,
+    "iou_nms": 0.3,
+    "overall_f1": 60.0,
+    "threat_recall": 80.77,
+    "threat_precision": 47.73,
+    "overall_accuracy": 79.26,
+    "civilian_specificity": 78.9,
+    "ood_false_positives": 16,
+    "ood_specificity": 62.79,
+    "avg_latency_ms": 10.47,
+    "confusion_matrix": {
+      "TP": 21,
+      "FP": 23,
+      "FN": 5,
+      "TN": 86
+    }
+  },
+  "O2M_Conf0.45_IoU0.45": {
+    "name": "One-to-Many (NMS IoU=0.45, Conf=0.45)",
+    "mode": "one2many",
+    "conf": 0.45,
+    "iou_nms": 0.45,
+    "overall_f1": 60.0,
+    "threat_recall": 80.77,
+    "threat_precision": 47.73,
+    "overall_accuracy": 79.26,
+    "civilian_specificity": 78.9,
+    "ood_false_positives": 16,
+    "ood_specificity": 62.79,
+    "avg_latency_ms": 10.67,
+    "confusion_matrix": {
+      "TP": 21,
+      "FP": 23,
+      "FN": 5,
+      "TN": 86
+    }
+  },
+  "O2M_Conf0.45_IoU0.60": {
+    "name": "One-to-Many (NMS IoU=0.60, Conf=0.45)",
+    "mode": "one2many",
+    "conf": 0.45,
+    "iou_nms": 0.6,
+    "overall_f1": 60.0,
+    "threat_recall": 80.77,
+    "threat_precision": 47.73,
+    "overall_accuracy": 79.26,
+    "civilian_specificity": 78.9,
+    "ood_false_positives": 16,
+    "ood_specificity": 62.79,
+    "avg_latency_ms": 10.37,
+    "confusion_matrix": {
+      "TP": 21,
+      "FP": 23,
+      "FN": 5,
+      "TN": 86
+    }
+  },
+  "O2M_Conf0.45_IoU0.75": {
+    "name": "One-to-Many (NMS IoU=0.75, Conf=0.45)",
+    "mode": "one2many",
+    "conf": 0.45,
+    "iou_nms": 0.75,
+    "overall_f1": 60.0,
+    "threat_recall": 80.77,
+    "threat_precision": 47.73,
+    "overall_accuracy": 79.26,
+    "civilian_specificity": 78.9,
+    "ood_false_positives": 16,
+    "ood_specificity": 62.79,
+    "avg_latency_ms": 10.69,
+    "confusion_matrix": {
+      "TP": 21,
+      "FP": 23,
+      "FN": 5,
+      "TN": 86
+    }
+  },
+  "RTDETR_Conf0.10": {
+    "name": "RT-DETR-L Zero-Shot (COCO knife, Conf=0.10)",
+    "mode": "rtdetr",
+    "conf": 0.1,
+    "iou_nms": null,
+    "overall_f1": 0.0,
+    "threat_recall": 0.0,
+    "threat_precision": 0.0,
+    "overall_accuracy": 76.12,
+    "civilian_specificity": 94.44,
+    "ood_false_positives": 5,
+    "ood_specificity": 88.1,
+    "avg_latency_ms": 28.19,
+    "confusion_matrix": {
+      "TP": 0,
+      "FP": 6,
+      "FN": 26,
+      "TN": 102
+    }
+  },
+  "RTDETR_Conf0.20": {
+    "name": "RT-DETR-L Zero-Shot (COCO knife, Conf=0.20)",
+    "mode": "rtdetr",
+    "conf": 0.2,
+    "iou_nms": null,
+    "overall_f1": 0.0,
+    "threat_recall": 0.0,
+    "threat_precision": 0.0,
+    "overall_accuracy": 78.03,
+    "civilian_specificity": 97.17,
+    "ood_false_positives": 3,
+    "ood_specificity": 92.68,
+    "avg_latency_ms": 28.12,
+    "confusion_matrix": {
+      "TP": 0,
+      "FP": 3,
+      "FN": 26,
+      "TN": 103
+    }
+  },
+  "RTDETR_Conf0.30": {
+    "name": "RT-DETR-L Zero-Shot (COCO knife, Conf=0.30)",
+    "mode": "rtdetr",
+    "conf": 0.3,
+    "iou_nms": null,
+    "overall_f1": 0.0,
+    "threat_recall": 0.0,
+    "threat_precision": 0.0,
+    "overall_accuracy": 78.03,
+    "civilian_specificity": 97.17,
+    "ood_false_positives": 3,
+    "ood_specificity": 92.68,
+    "avg_latency_ms": 27.41,
+    "confusion_matrix": {
+      "TP": 0,
+      "FP": 3,
+      "FN": 26,
+      "TN": 103
+    }
+  }
+}

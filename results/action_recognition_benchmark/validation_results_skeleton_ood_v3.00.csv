@@ -1,0 +1,78 @@
+source_video,category,ground_truth,threat_score,predicted,verdict
+Cut_Down_1.xml,With_Coat,Violence,2.0208,Violence,CORRECT
+Cut_Down_10.xml,With_Coat,Violence,1.9994,Violence,CORRECT
+Cut_Down_11.xml,With_Coat,Violence,2.0055,Violence,CORRECT
+Cut_Down_12.xml,With_Coat,Violence,2.0008,Violence,CORRECT
+Cut_Down_13.xml,With_Coat,Violence,1.9612,Violence,CORRECT
+Cut_Down_14.xml,With_Coat,Violence,1.9933,Violence,CORRECT
+Cut_Down_15.xml,With_Coat,Violence,2.01,Violence,CORRECT
+Cut_Down_16.xml,With_Coat,Violence,2.0594,Violence,CORRECT
+Cut_Down_2.xml,With_Coat,Violence,1.9516,Violence,CORRECT
+Cut_Down_3.xml,With_Coat,Violence,1.9211,Violence,CORRECT
+Cut_Down_4.xml,With_Coat,Violence,1.9168,Violence,CORRECT
+Cut_Down_5.xml,With_Coat,Violence,1.9219,Violence,CORRECT
+Cut_Down_6.xml,With_Coat,Violence,1.9169,Violence,CORRECT
+Cut_Down_7.xml,With_Coat,Violence,1.9437,Violence,CORRECT
+Cut_Down_8.xml,With_Coat,Violence,1.9454,Violence,CORRECT
+Cut_Down_9.xml,With_Coat,Violence,2.0497,Violence,CORRECT
+Cut_Down.xml,Without_Coat,Violence,1.9241,Violence,CORRECT
+Cut_down_1.xml,Without_Coat,Violence,1.9694,Violence,CORRECT
+Cut_down_10.xml,Without_Coat,Violence,2.0554,Violence,CORRECT
+Cut_down_11.xml,Without_Coat,Violence,1.995,Violence,CORRECT
+Cut_down_12.xml,Without_Coat,Violence,2.0061,Violence,CORRECT
+Cut_down_13.xml,Without_Coat,Violence,1.98,Violence,CORRECT
+Cut_down_14.xml,Without_Coat,Violence,1.97,Violence,CORRECT
+Cut_down_15.xml,Without_Coat,Violence,1.9924,Violence,CORRECT
+Cut_down_16.xml,Without_Coat,Violence,2.0031,Violence,CORRECT
+Cut_down_2.xml,Without_Coat,Violence,2.0436,Violence,CORRECT
+Cut_down_3.xml,Without_Coat,Violence,2.03,Violence,CORRECT
+Cut_down_4.xml,Without_Coat,Violence,2.0897,Violence,CORRECT
+Cut_down_5.xml,Without_Coat,Violence,2.0179,Violence,CORRECT
+Cut_down_6.xml,Without_Coat,Violence,2.0321,Violence,CORRECT
+Cut_down_7.xml,Without_Coat,Violence,1.9867,Violence,CORRECT
+Cut_down_8.xml,Without_Coat,Violence,1.9928,Violence,CORRECT
+Cut_down_9.xml,Without_Coat,Violence,1.9759,Violence,CORRECT
+Chop_Wood.xml,OOD,Civilian/OOD,1.9547,Violence,FALSE_ALARM
+Copy of None_1.xml,OOD,Civilian/OOD,1.9894,Violence,FALSE_ALARM
+Copy of None_2.xml,OOD,Civilian/OOD,1.9365,Violence,FALSE_ALARM
+Copy of None_4.xml,OOD,Civilian/OOD,1.9076,Civilian/OOD,CORRECT
+Copy of None_5.xml,OOD,Civilian/OOD,1.9242,Violence,FALSE_ALARM
+Copy of None_6.xml,OOD,Civilian/OOD,1.9228,Violence,FALSE_ALARM
+Copy of Random_Vid_10.xml,OOD,Civilian/OOD,1.9543,Violence,FALSE_ALARM
+Copy of Random_Vid_6.xml,OOD,Civilian/OOD,2.2528,Violence,FALSE_ALARM
+Copy of Random_Vid_8.xml,OOD,Civilian/OOD,1.9387,Violence,FALSE_ALARM
+Copy of Running_1.xml,OOD,Civilian/OOD,1.9604,Violence,FALSE_ALARM
+Jab.xml,OOD,Civilian/OOD,2.0807,Violence,FALSE_ALARM
+Volleyball_Strike.xml,OOD,Civilian/OOD,2.2192,Violence,FALSE_ALARM
+clip_1772692490348-2.xml,OOD,Civilian/OOD,2.0366,Violence,FALSE_ALARM
+clip_1772692490348.xml,OOD,Civilian/OOD,2.0366,Violence,FALSE_ALARM
+clip_1772692494406-2.xml,OOD,Civilian/OOD,1.9163,Violence,FALSE_ALARM
+clip_1772692494406.xml,OOD,Civilian/OOD,1.9163,Violence,FALSE_ALARM
+clip_1772692534259-2.xml,OOD,Civilian/OOD,1.9086,Civilian/OOD,CORRECT
+clip_1772692534259.xml,OOD,Civilian/OOD,1.9086,Civilian/OOD,CORRECT
+clip_1772692540260-2.xml,OOD,Civilian/OOD,1.9264,Violence,FALSE_ALARM
+clip_1772692540260.xml,OOD,Civilian/OOD,1.9264,Violence,FALSE_ALARM
+clip_1772692552997-2.xml,OOD,Civilian/OOD,2.1796,Violence,FALSE_ALARM
+clip_1772692552997.xml,OOD,Civilian/OOD,2.1796,Violence,FALSE_ALARM
+clip_1772693469732-2.xml,OOD,Civilian/OOD,1.9958,Violence,FALSE_ALARM
+clip_1772693469732.xml,OOD,Civilian/OOD,1.9958,Violence,FALSE_ALARM
+clip_1772693562096-2.xml,OOD,Civilian/OOD,2.143,Violence,FALSE_ALARM
+clip_1772693562096.xml,OOD,Civilian/OOD,2.143,Violence,FALSE_ALARM
+clip_1772693568454-2.xml,OOD,Civilian/OOD,2.0205,Violence,FALSE_ALARM
+clip_1772693568454.xml,OOD,Civilian/OOD,2.0205,Violence,FALSE_ALARM
+clip_1772693569264-2.xml,OOD,Civilian/OOD,2.141,Violence,FALSE_ALARM
+clip_1772693569264.xml,OOD,Civilian/OOD,2.141,Violence,FALSE_ALARM
+clip_1772693576727-2.xml,OOD,Civilian/OOD,1.9509,Violence,FALSE_ALARM
+clip_1772693576727.xml,OOD,Civilian/OOD,1.9509,Violence,FALSE_ALARM
+clip_1772693589293-2.xml,OOD,Civilian/OOD,1.9459,Violence,FALSE_ALARM
+clip_1772693589293.xml,OOD,Civilian/OOD,1.9459,Violence,FALSE_ALARM
+clip_1772693590072-2.xml,OOD,Civilian/OOD,1.942,Violence,FALSE_ALARM
+clip_1772693590072.xml,OOD,Civilian/OOD,1.942,Violence,FALSE_ALARM
+clip_1772699163120.xml,OOD,Civilian/OOD,1.9772,Violence,FALSE_ALARM
+clip_1772699171195.xml,OOD,Civilian/OOD,2.021,Violence,FALSE_ALARM
+clip_1772699176513.xml,OOD,Civilian/OOD,2.0664,Violence,FALSE_ALARM
+clip_1772699183170.xml,OOD,Civilian/OOD,2.1001,Violence,FALSE_ALARM
+clip_1772699188580.xml,OOD,Civilian/OOD,2.0855,Violence,FALSE_ALARM
+clip_1772699196534.xml,OOD,Civilian/OOD,1.9638,Violence,FALSE_ALARM
+clip_1772699201059.xml,OOD,Civilian/OOD,1.9621,Violence,FALSE_ALARM
+clip_1772699209580.xml,OOD,Civilian/OOD,1.9812,Violence,FALSE_ALARM

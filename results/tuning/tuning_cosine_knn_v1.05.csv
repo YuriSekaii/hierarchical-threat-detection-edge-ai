@@ -1,0 +1,11 @@
+k,aggregation,threshold,recall,precision,accuracy,f1_score,tp,tn,fp,fn,operational_profile
+2,kth,0.001,0.5758,0.8636,0.7639,0.6909,19,36,3,14,Ultra-Conservative (Minimal Alarms)
+2,kth,0.0012,0.6667,0.8148,0.7778,0.7333,22,34,5,11,Conservative
+2,kth,0.0015,0.7273,0.8276,0.8056,0.7742,24,34,5,9,Optimal F1 / Balanced Best
+2,kth,0.0018,0.7576,0.7353,0.7639,0.7463,25,30,9,8,Moderate Security
+2,kth,0.002,0.7576,0.7143,0.75,0.7353,25,29,10,8,Balanced High-Recall
+2,kth,0.0025,0.8182,0.675,0.7361,0.7397,27,26,13,6,High Recall
+2,kth,0.003,0.8788,0.5918,0.6667,0.7073,29,19,20,4,Higher Sensitivity
+2,kth,0.0035,0.9091,0.5882,0.6667,0.7143,30,18,21,3,Very High Sensitivity
+2,kth,0.004,0.9697,0.6038,0.6944,0.7442,32,18,21,1,Near Zero-Miss (1 Miss)
+2,kth,0.0047,1.0,0.5893,0.6806,0.7416,33,16,23,0,Absolute Zero-Miss Security

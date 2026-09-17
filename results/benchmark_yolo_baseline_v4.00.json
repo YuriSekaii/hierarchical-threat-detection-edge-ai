@@ -1,0 +1,861 @@
+{
+  "benchmark_v4.00_yolo": {
+    "conf_0.45": {
+      "conf_threshold": 0.45,
+      "iou_threshold": 0.2,
+      "precision": 0.5,
+      "recall": 0.625,
+      "f1_score": 0.5556,
+      "avg_latency_ms": 21.18,
+      "tp": 10,
+      "fn": 6,
+      "fp_bare_fists": 1,
+      "fp_clothing_seams": 8,
+      "fp_civilian": 1,
+      "fp_total": 10,
+      "tn_total": 13,
+      "category_breakdown": {
+        "threat_weapons": {
+          "total": 16,
+          "detected": 10,
+          "detections": [
+            {
+              "file": "threat_cutdown_Cut_Down_1_idx0030.jpg",
+              "boxes": [
+                {
+                  "conf": 0.7891010642051697,
+                  "cls": 0,
+                  "xyxy": [
+                    308.06,
+                    513.78,
+                    359.17,
+                    621.14
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_cutdown_Cut_Down_1_idx0080.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8667005896568298,
+                  "cls": 0,
+                  "xyxy": [
+                    942.7,
+                    1127.27,
+                    1008.83,
+                    1226.76
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0015.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8500723838806152,
+                  "cls": 0,
+                  "xyxy": [
+                    553.57,
+                    513.09,
+                    614.4,
+                    615.78
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0025.jpg",
+              "boxes": [
+                {
+                  "conf": 0.736294686794281,
+                  "cls": 0,
+                  "xyxy": [
+                    664.4,
+                    493.05,
+                    718.32,
+                    593.51
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0035.jpg",
+              "boxes": [
+                {
+                  "conf": 0.7962636947631836,
+                  "cls": 0,
+                  "xyxy": [
+                    713.36,
+                    548.34,
+                    768.2,
+                    648.48
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0045.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8812688589096069,
+                  "cls": 0,
+                  "xyxy": [
+                    1093.75,
+                    679.59,
+                    1199.61,
+                    743.56
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0055.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8493934273719788,
+                  "cls": 0,
+                  "xyxy": [
+                    1253.05,
+                    703.63,
+                    1362.32,
+                    763.88
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0065.jpg",
+              "boxes": [
+                {
+                  "conf": 0.7761191129684448,
+                  "cls": 0,
+                  "xyxy": [
+                    1166.78,
+                    692.33,
+                    1271.73,
+                    752.73
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0075.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8851696848869324,
+                  "cls": 0,
+                  "xyxy": [
+                    923.77,
+                    729.19,
+                    1034.76,
+                    817.92
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0085.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8299182057380676,
+                  "cls": 0,
+                  "xyxy": [
+                    767.95,
+                    616.36,
+                    824.26,
+                    751.07
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "bare_hands_fists": {
+          "total": 10,
+          "detected": 1,
+          "detections": [
+            {
+              "file": "probe_fist_Jab_idx0055.jpg",
+              "boxes": [
+                {
+                  "conf": 0.6061661243438721,
+                  "cls": 0,
+                  "xyxy": [
+                    2943.94,
+                    441.57,
+                    3095.83,
+                    557.43
+                  ]
+                },
+                {
+                  "conf": 0.5866357088088989,
+                  "cls": 0,
+                  "xyxy": [
+                    2062.2,
+                    1001.99,
+                    2208.82,
+                    1210.53
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "clothing_seams_shadows": {
+          "total": 9,
+          "detected": 8,
+          "detections": [
+            {
+              "file": "probe_seam_falseclip1_clip_1772789899168_idx0010.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8068206310272217,
+                  "cls": 0,
+                  "xyxy": [
+                    564.55,
+                    326.96,
+                    603.19,
+                    406.03
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip1_clip_1772789899168_idx0025.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8212003707885742,
+                  "cls": 0,
+                  "xyxy": [
+                    559.35,
+                    334.75,
+                    600.81,
+                    414.66
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip1_clip_1772789899168_idx0040.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8192508220672607,
+                  "cls": 0,
+                  "xyxy": [
+                    554.46,
+                    336.07,
+                    595.29,
+                    412.88
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip2_clip_1772789911504_idx0010.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8296026587486267,
+                  "cls": 0,
+                  "xyxy": [
+                    562.19,
+                    334.5,
+                    603.05,
+                    417.99
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip2_clip_1772789911504_idx0025.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8292214274406433,
+                  "cls": 0,
+                  "xyxy": [
+                    535.07,
+                    338.6,
+                    577.8,
+                    420.67
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip2_clip_1772789911504_idx0040.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8156336545944214,
+                  "cls": 0,
+                  "xyxy": [
+                    497.96,
+                    417.62,
+                    542.54,
+                    500.79
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_walk_clip_1772692490348_idx0030.jpg",
+              "boxes": [
+                {
+                  "conf": 0.5627297759056091,
+                  "cls": 0,
+                  "xyxy": [
+                    0.04,
+                    290.61,
+                    26.56,
+                    329.66
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_walk_clip_1772692490348_idx0045.jpg",
+              "boxes": [
+                {
+                  "conf": 0.6459488272666931,
+                  "cls": 0,
+                  "xyxy": [
+                    17.07,
+                    356.19,
+                    55.8,
+                    399.7
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "civilian_objects": {
+          "total": 4,
+          "detected": 1,
+          "detections": [
+            {
+              "file": "civilian_volleyball_Volleyball_Strike_idx0050.jpg",
+              "boxes": [
+                {
+                  "conf": 0.6219308972358704,
+                  "cls": 0,
+                  "xyxy": [
+                    353.83,
+                    947.82,
+                    423.55,
+                    1035.37
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "conf_0.20": {
+      "conf_threshold": 0.2,
+      "iou_threshold": 0.2,
+      "precision": 0.4138,
+      "recall": 0.75,
+      "f1_score": 0.5333,
+      "avg_latency_ms": 14.05,
+      "tp": 12,
+      "fn": 4,
+      "fp_bare_fists": 7,
+      "fp_clothing_seams": 9,
+      "fp_civilian": 1,
+      "fp_total": 17,
+      "tn_total": 6,
+      "category_breakdown": {
+        "threat_weapons": {
+          "total": 16,
+          "detected": 12,
+          "detections": [
+            {
+              "file": "threat_cutdown_Cut_Down_1_idx0010.jpg",
+              "boxes": [
+                {
+                  "conf": 0.3836744427680969,
+                  "cls": 0,
+                  "xyxy": [
+                    141.23,
+                    482.3,
+                    197.74,
+                    576.27
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_cutdown_Cut_Down_1_idx0030.jpg",
+              "boxes": [
+                {
+                  "conf": 0.7891010642051697,
+                  "cls": 0,
+                  "xyxy": [
+                    308.06,
+                    513.78,
+                    359.17,
+                    621.14
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_cutdown_Cut_Down_1_idx0070.jpg",
+              "boxes": [
+                {
+                  "conf": 0.4388084411621094,
+                  "cls": 0,
+                  "xyxy": [
+                    976.12,
+                    1156.2,
+                    1055.41,
+                    1267.46
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_cutdown_Cut_Down_1_idx0080.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8667005896568298,
+                  "cls": 0,
+                  "xyxy": [
+                    942.7,
+                    1127.27,
+                    1008.83,
+                    1226.76
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0015.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8500723838806152,
+                  "cls": 0,
+                  "xyxy": [
+                    553.57,
+                    513.09,
+                    614.4,
+                    615.78
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0025.jpg",
+              "boxes": [
+                {
+                  "conf": 0.736294686794281,
+                  "cls": 0,
+                  "xyxy": [
+                    664.4,
+                    493.05,
+                    718.32,
+                    593.51
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0035.jpg",
+              "boxes": [
+                {
+                  "conf": 0.7962636947631836,
+                  "cls": 0,
+                  "xyxy": [
+                    713.36,
+                    548.34,
+                    768.2,
+                    648.48
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0045.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8812688589096069,
+                  "cls": 0,
+                  "xyxy": [
+                    1093.75,
+                    679.59,
+                    1199.61,
+                    743.56
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0055.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8493934273719788,
+                  "cls": 0,
+                  "xyxy": [
+                    1253.05,
+                    703.63,
+                    1362.32,
+                    763.88
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0065.jpg",
+              "boxes": [
+                {
+                  "conf": 0.7761191129684448,
+                  "cls": 0,
+                  "xyxy": [
+                    1166.78,
+                    692.33,
+                    1271.73,
+                    752.73
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0075.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8851696848869324,
+                  "cls": 0,
+                  "xyxy": [
+                    923.77,
+                    729.19,
+                    1034.76,
+                    817.92
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "threat_thrust_Thrust_1_idx0085.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8299182057380676,
+                  "cls": 0,
+                  "xyxy": [
+                    767.95,
+                    616.36,
+                    824.26,
+                    751.07
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "bare_hands_fists": {
+          "total": 10,
+          "detected": 7,
+          "detections": [
+            {
+              "file": "probe_chop_Chop_Wood_idx0020.jpg",
+              "boxes": [
+                {
+                  "conf": 0.2942587435245514,
+                  "cls": 0,
+                  "xyxy": [
+                    377.71,
+                    765.25,
+                    459.55,
+                    823.46
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_chop_Chop_Wood_idx0040.jpg",
+              "boxes": [
+                {
+                  "conf": 0.2519688010215759,
+                  "cls": 0,
+                  "xyxy": [
+                    358.68,
+                    606.47,
+                    456.76,
+                    702.01
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_chop_Chop_Wood_idx0060.jpg",
+              "boxes": [
+                {
+                  "conf": 0.26692551374435425,
+                  "cls": 0,
+                  "xyxy": [
+                    388.53,
+                    773.81,
+                    478.31,
+                    844.5
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_fist_Jab_idx0025.jpg",
+              "boxes": [
+                {
+                  "conf": 0.4205583333969116,
+                  "cls": 0,
+                  "xyxy": [
+                    2044.04,
+                    988.64,
+                    2209.68,
+                    1220.49
+                  ]
+                },
+                {
+                  "conf": 0.3834516704082489,
+                  "cls": 0,
+                  "xyxy": [
+                    2046.91,
+                    1011.97,
+                    2204.83,
+                    1225.86
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_fist_Jab_idx0040.jpg",
+              "boxes": [
+                {
+                  "conf": 0.23182694613933563,
+                  "cls": 0,
+                  "xyxy": [
+                    2847.84,
+                    485.51,
+                    2944.23,
+                    597.88
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_fist_Jab_idx0055.jpg",
+              "boxes": [
+                {
+                  "conf": 0.6061661243438721,
+                  "cls": 0,
+                  "xyxy": [
+                    2943.94,
+                    441.57,
+                    3095.83,
+                    557.43
+                  ]
+                },
+                {
+                  "conf": 0.5866357088088989,
+                  "cls": 0,
+                  "xyxy": [
+                    2062.2,
+                    1001.99,
+                    2208.82,
+                    1210.53
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_fist_Jab_idx0070.jpg",
+              "boxes": [
+                {
+                  "conf": 0.28143319487571716,
+                  "cls": 0,
+                  "xyxy": [
+                    2877.18,
+                    492.55,
+                    3016.44,
+                    610.18
+                  ]
+                },
+                {
+                  "conf": 0.22726283967494965,
+                  "cls": 0,
+                  "xyxy": [
+                    2027.7,
+                    1077.5,
+                    2165.38,
+                    1239.36
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "clothing_seams_shadows": {
+          "total": 9,
+          "detected": 9,
+          "detections": [
+            {
+              "file": "probe_seam_falseclip1_clip_1772789899168_idx0010.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8068206310272217,
+                  "cls": 0,
+                  "xyxy": [
+                    564.55,
+                    326.96,
+                    603.19,
+                    406.03
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip1_clip_1772789899168_idx0025.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8212003707885742,
+                  "cls": 0,
+                  "xyxy": [
+                    559.35,
+                    334.75,
+                    600.81,
+                    414.66
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip1_clip_1772789899168_idx0040.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8192508220672607,
+                  "cls": 0,
+                  "xyxy": [
+                    554.46,
+                    336.07,
+                    595.29,
+                    412.88
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip2_clip_1772789911504_idx0010.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8296026587486267,
+                  "cls": 0,
+                  "xyxy": [
+                    562.19,
+                    334.5,
+                    603.05,
+                    417.99
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip2_clip_1772789911504_idx0025.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8292214274406433,
+                  "cls": 0,
+                  "xyxy": [
+                    535.07,
+                    338.6,
+                    577.8,
+                    420.67
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_falseclip2_clip_1772789911504_idx0040.jpg",
+              "boxes": [
+                {
+                  "conf": 0.8156336545944214,
+                  "cls": 0,
+                  "xyxy": [
+                    497.96,
+                    417.62,
+                    542.54,
+                    500.79
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_walk_clip_1772692490348_idx0015.jpg",
+              "boxes": [
+                {
+                  "conf": 0.23397786915302277,
+                  "cls": 0,
+                  "xyxy": [
+                    0.0,
+                    286.82,
+                    31.35,
+                    332.14
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_walk_clip_1772692490348_idx0030.jpg",
+              "boxes": [
+                {
+                  "conf": 0.5627297759056091,
+                  "cls": 0,
+                  "xyxy": [
+                    0.04,
+                    290.61,
+                    26.56,
+                    329.66
+                  ]
+                }
+              ]
+            },
+            {
+              "file": "probe_seam_walk_clip_1772692490348_idx0045.jpg",
+              "boxes": [
+                {
+                  "conf": 0.6459488272666931,
+                  "cls": 0,
+                  "xyxy": [
+                    17.07,
+                    356.19,
+                    55.8,
+                    399.7
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "civilian_objects": {
+          "total": 4,
+          "detected": 1,
+          "detections": [
+            {
+              "file": "civilian_volleyball_Volleyball_Strike_idx0050.jpg",
+              "boxes": [
+                {
+                  "conf": 0.6219308972358704,
+                  "cls": 0,
+                  "xyxy": [
+                    353.83,
+                    947.82,
+                    423.55,
+                    1035.37
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

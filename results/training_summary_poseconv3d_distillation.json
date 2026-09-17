@@ -1,0 +1,30 @@
+[
+  {
+    "method": "methodA_feature",
+    "parameters": 598429,
+    "best_fold": 1,
+    "best_valid_loss": 6524475.857142857,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_distill_methodA_feature.pth"
+  },
+  {
+    "method": "methodB_rkd",
+    "parameters": 598429,
+    "best_fold": 3,
+    "best_valid_loss": 13.546604428973511,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_distill_methodB_rkd.pth"
+  },
+  {
+    "method": "methodC_attention",
+    "parameters": 598429,
+    "best_fold": 1,
+    "best_valid_loss": 6535307.214285715,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_distill_methodC_attention.pth"
+  },
+  {
+    "method": "methodD_combined",
+    "parameters": 598429,
+    "best_fold": 1,
+    "best_valid_loss": 6520131.714285715,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_distill_methodD_combined.pth"
+  }
+]

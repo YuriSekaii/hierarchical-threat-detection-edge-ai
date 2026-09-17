@@ -1,0 +1,33 @@
+{
+  "architecture": "ScaledPoseConv3D (R(2+1)D Heatmap CNN, ~3.55M params)",
+  "parameters": 3545409,
+  "k_folds": 3,
+  "best_fold": 2,
+  "best_valid_loss": 0.0,
+  "folds": [
+    {
+      "fold": 1,
+      "train_samples": 198,
+      "valid_samples": 99,
+      "final_train_loss": 0.0085,
+      "best_valid_loss": 0.0103,
+      "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_scaled_violence_fold1.pth"
+    },
+    {
+      "fold": 2,
+      "train_samples": 197,
+      "valid_samples": 100,
+      "final_train_loss": 0.0034,
+      "best_valid_loss": 0.0,
+      "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_scaled_violence_fold2.pth"
+    },
+    {
+      "fold": 3,
+      "train_samples": 199,
+      "valid_samples": 98,
+      "final_train_loss": 0.006,
+      "best_valid_loss": 0.0035,
+      "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_scaled_violence_fold3.pth"
+    }
+  ]
+}

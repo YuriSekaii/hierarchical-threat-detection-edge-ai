@@ -1,0 +1,78 @@
+source_file,category,ground_truth,predicted,tier_dispatched,edge_probability,correct
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_1.xml,With_Coat,1,1,edge,0.9875,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_10.xml,With_Coat,1,1,edge,0.9986,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_11.xml,With_Coat,1,1,edge,0.9991,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_12.xml,With_Coat,1,1,edge,0.8843,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_13.xml,With_Coat,1,1,edge,0.8495,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_14.xml,With_Coat,1,1,edge,0.9824,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_15.xml,With_Coat,1,1,edge,0.9933,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_16.xml,With_Coat,1,1,edge,0.9524,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_2.xml,With_Coat,1,1,edge,0.9493,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_3.xml,With_Coat,1,1,edge,0.969,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_4.xml,With_Coat,1,1,edge,1.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_5.xml,With_Coat,1,1,edge,1.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_6.xml,With_Coat,1,1,edge,0.982,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_7.xml,With_Coat,1,1,edge,0.9998,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_8.xml,With_Coat,1,1,edge,0.9678,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\With_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down_9.xml,With_Coat,1,1,edge,0.9998,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_Down.xml,Without_Coat,1,1,edge,1.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_1.xml,Without_Coat,1,1,edge,0.9747,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_10.xml,Without_Coat,1,1,edge,0.9966,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_11.xml,Without_Coat,1,1,edge,0.9916,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_12.xml,Without_Coat,1,1,edge,0.7645,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_13.xml,Without_Coat,1,1,edge,0.9755,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_14.xml,Without_Coat,1,1,edge,0.8734,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_15.xml,Without_Coat,1,1,edge,0.9989,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_16.xml,Without_Coat,1,1,edge,0.9973,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_2.xml,Without_Coat,1,1,edge,0.9981,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_3.xml,Without_Coat,1,1,edge,0.9973,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_4.xml,Without_Coat,1,1,edge,0.9885,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_5.xml,Without_Coat,1,1,edge,0.6524,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_6.xml,Without_Coat,1,1,edge,1.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_7.xml,Without_Coat,1,1,edge,0.9996,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_8.xml,Without_Coat,1,1,edge,0.6404,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\Without_Coat\Cut_Down\annotations_yolo26s-pose\Cut_down_9.xml,Without_Coat,1,1,edge,0.9996,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Chop_Wood.xml,OOD,0,0,server,0.4122,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of None_1.xml,OOD,0,0,edge,0.0005,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of None_2.xml,OOD,0,0,edge,0.0109,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of None_4.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of None_5.xml,OOD,0,0,edge,0.0001,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of None_6.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of Random_Vid_10.xml,OOD,0,0,edge,0.0002,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of Random_Vid_6.xml,OOD,0,1,edge,0.9764,0
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of Random_Vid_8.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Copy of Running_1.xml,OOD,0,0,edge,0.0008,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Jab.xml,OOD,0,0,edge,0.0192,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\Volleyball_Strike.xml,OOD,0,1,edge,0.719,0
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692490348-2.xml,OOD,0,0,server,0.4627,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692490348.xml,OOD,0,0,server,0.4627,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692494406-2.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692494406.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692534259-2.xml,OOD,0,1,edge,0.9959,0
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692534259.xml,OOD,0,1,edge,0.9959,0
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692540260-2.xml,OOD,0,1,edge,0.9978,0
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692540260.xml,OOD,0,1,edge,0.9978,0
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692552997-2.xml,OOD,0,0,edge,0.0011,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772692552997.xml,OOD,0,0,edge,0.0011,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693469732-2.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693469732.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693562096-2.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693562096.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693568454-2.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693568454.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693569264-2.xml,OOD,0,0,edge,0.0098,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693569264.xml,OOD,0,0,edge,0.0098,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693576727-2.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693576727.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693589293-2.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693589293.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693590072-2.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772693590072.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699163120.xml,OOD,0,0,server,0.2795,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699171195.xml,OOD,0,0,edge,0.104,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699176513.xml,OOD,0,0,edge,0.0436,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699183170.xml,OOD,0,0,edge,0.0005,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699188580.xml,OOD,0,0,edge,0.0,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699196534.xml,OOD,0,0,edge,0.0152,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699201059.xml,OOD,0,0,edge,0.0901,1
+D:\Intern AI Project\hierarchical-threat-detection-edge-ai\data\Validate\OOD\annotations_yolo26s-pose\clip_1772699209580.xml,OOD,0,0,edge,0.0942,1

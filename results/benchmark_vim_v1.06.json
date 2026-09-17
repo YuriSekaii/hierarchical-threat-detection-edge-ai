@@ -1,0 +1,28 @@
+{
+  "benchmark_target": "Virtual-Logit Matching (Version 1.06)",
+  "champion_configuration": {
+    "K": 24,
+    "alpha": 4.3082,
+    "threshold": 0.0888,
+    "metrics": {
+      "threshold": 0.0888,
+      "f1_score": 0.8052,
+      "precision": 70.45,
+      "recall": 93.94,
+      "accuracy": 79.17,
+      "tp": 31,
+      "tn": 26,
+      "fp": 13,
+      "fn": 2,
+      "operational_profile": "Balanced Best (Optimal F1)"
+    }
+  },
+  "latency": {
+    "gpu_rtx3090": {
+      "vim_us": 109.83
+    },
+    "cpu": {
+      "vim_us": 49.78
+    }
+  }
+}

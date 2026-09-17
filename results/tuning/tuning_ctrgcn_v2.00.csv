@@ -1,0 +1,10 @@
+threshold,f1_score,precision,recall,accuracy,tp,tn,fp,fn,operational_profile
+1.6498,0.8649,78.05,96.97,86.11,32,30,9,1,High Sensitivity
+2.1498,0.9014,84.21,96.97,90.28,32,33,6,1,High Sensitivity
+2.6498,0.9014,84.21,96.97,90.28,32,33,6,1,High Sensitivity
+2.9498,0.9014,84.21,96.97,90.28,32,33,6,1,High Sensitivity
+3.1498,0.9014,84.21,96.97,90.28,32,33,6,1,Balanced Best (Optimal F1)
+3.3498,0.9014,84.21,96.97,90.28,32,33,6,1,High Sensitivity
+3.6498,0.9014,84.21,96.97,90.28,32,33,6,1,High Sensitivity
+4.1498,0.9014,84.21,96.97,90.28,32,33,6,1,High Sensitivity
+4.6498,0.9014,84.21,96.97,90.28,32,33,6,1,High Sensitivity

@@ -1,0 +1,258 @@
+{
+  "shrinkage_epsilon_sweep": [
+    {
+      "shrinkage_epsilon": 0.002,
+      "optimal_threshold": -5.6766,
+      "f1_score": 0.8767,
+      "precision": 80.0,
+      "recall": 96.97,
+      "accuracy": 87.5,
+      "fp": 8,
+      "fn": 1
+    },
+    {
+      "shrinkage_epsilon": 0.005,
+      "optimal_threshold": -0.9198,
+      "f1_score": 0.9167,
+      "precision": 84.62,
+      "recall": 100.0,
+      "accuracy": 91.67,
+      "fp": 6,
+      "fn": 0
+    },
+    {
+      "shrinkage_epsilon": 0.008,
+      "optimal_threshold": -0.6931,
+      "f1_score": 0.8919,
+      "precision": 80.49,
+      "recall": 100.0,
+      "accuracy": 88.89,
+      "fp": 8,
+      "fn": 0
+    },
+    {
+      "shrinkage_epsilon": 0.01,
+      "optimal_threshold": 0.5068,
+      "f1_score": 0.8857,
+      "precision": 83.78,
+      "recall": 93.94,
+      "accuracy": 88.89,
+      "fp": 6,
+      "fn": 2
+    },
+    {
+      "shrinkage_epsilon": 0.012,
+      "optimal_threshold": 0.3732,
+      "f1_score": 0.8267,
+      "precision": 73.81,
+      "recall": 93.94,
+      "accuracy": 81.94,
+      "fp": 11,
+      "fn": 2
+    },
+    {
+      "shrinkage_epsilon": 0.015,
+      "optimal_threshold": -0.2178,
+      "f1_score": 0.8101,
+      "precision": 69.57,
+      "recall": 96.97,
+      "accuracy": 79.17,
+      "fp": 14,
+      "fn": 1
+    },
+    {
+      "shrinkage_epsilon": 0.02,
+      "optimal_threshold": -0.0737,
+      "f1_score": 0.7901,
+      "precision": 66.67,
+      "recall": 96.97,
+      "accuracy": 76.39,
+      "fp": 16,
+      "fn": 1
+    },
+    {
+      "shrinkage_epsilon": 0.025,
+      "optimal_threshold": 0.4966,
+      "f1_score": 0.775,
+      "precision": 65.96,
+      "recall": 93.94,
+      "accuracy": 75.0,
+      "fp": 16,
+      "fn": 2
+    },
+    {
+      "shrinkage_epsilon": 0.03,
+      "optimal_threshold": -0.0369,
+      "f1_score": 0.7765,
+      "precision": 63.46,
+      "recall": 100.0,
+      "accuracy": 73.61,
+      "fp": 19,
+      "fn": 0
+    },
+    {
+      "shrinkage_epsilon": 0.04,
+      "optimal_threshold": 0.2093,
+      "f1_score": 0.7765,
+      "precision": 63.46,
+      "recall": 100.0,
+      "accuracy": 73.61,
+      "fp": 19,
+      "fn": 0
+    },
+    {
+      "shrinkage_epsilon": 0.05,
+      "optimal_threshold": 0.1671,
+      "f1_score": 0.7674,
+      "precision": 62.26,
+      "recall": 100.0,
+      "accuracy": 72.22,
+      "fp": 20,
+      "fn": 0
+    }
+  ],
+  "threshold_sweep_champion_eps": [
+    {
+      "threshold": -2.0,
+      "f1_score": 0.8684,
+      "precision": 76.74,
+      "recall": 100.0,
+      "accuracy": 86.11,
+      "tp": 33,
+      "tn": 29,
+      "fp": 10,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": -1.5,
+      "f1_score": 0.88,
+      "precision": 78.57,
+      "recall": 100.0,
+      "accuracy": 87.5,
+      "tp": 33,
+      "tn": 30,
+      "fp": 9,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": -1.2,
+      "f1_score": 0.8919,
+      "precision": 80.49,
+      "recall": 100.0,
+      "accuracy": 88.89,
+      "tp": 33,
+      "tn": 31,
+      "fp": 8,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": -1.0,
+      "f1_score": 0.9167,
+      "precision": 84.62,
+      "recall": 100.0,
+      "accuracy": 91.67,
+      "tp": 33,
+      "tn": 33,
+      "fp": 6,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": -0.9289,
+      "f1_score": 0.9167,
+      "precision": 84.62,
+      "recall": 100.0,
+      "accuracy": 91.67,
+      "tp": 33,
+      "tn": 33,
+      "fp": 6,
+      "fn": 0,
+      "operational_profile": "Balanced Best (Optimal F1)"
+    },
+    {
+      "threshold": -0.8,
+      "f1_score": 0.9167,
+      "precision": 84.62,
+      "recall": 100.0,
+      "accuracy": 91.67,
+      "tp": 33,
+      "tn": 33,
+      "fp": 6,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": -0.5,
+      "f1_score": 0.9167,
+      "precision": 84.62,
+      "recall": 100.0,
+      "accuracy": 91.67,
+      "tp": 33,
+      "tn": 33,
+      "fp": 6,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": 0.0,
+      "f1_score": 0.8857,
+      "precision": 83.78,
+      "recall": 93.94,
+      "accuracy": 88.89,
+      "tp": 31,
+      "tn": 33,
+      "fp": 6,
+      "fn": 2,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 0.5,
+      "f1_score": 0.8824,
+      "precision": 85.71,
+      "recall": 90.91,
+      "accuracy": 88.89,
+      "tp": 30,
+      "tn": 34,
+      "fp": 5,
+      "fn": 3,
+      "operational_profile": "Conservative"
+    },
+    {
+      "threshold": 1.0,
+      "f1_score": 0.8657,
+      "precision": 85.29,
+      "recall": 87.88,
+      "accuracy": 87.5,
+      "tp": 29,
+      "tn": 34,
+      "fp": 5,
+      "fn": 4,
+      "operational_profile": "Conservative"
+    },
+    {
+      "threshold": 2.0,
+      "f1_score": 0.8308,
+      "precision": 84.38,
+      "recall": 81.82,
+      "accuracy": 84.72,
+      "tp": 27,
+      "tn": 34,
+      "fp": 5,
+      "fn": 6,
+      "operational_profile": "Conservative"
+    }
+  ],
+  "champion_config": {
+    "epsilon": 0.005,
+    "threshold": -0.9289,
+    "f1_score": 0.9167,
+    "precision": 84.62,
+    "recall": 100.0,
+    "accuracy": 91.67,
+    "fp": 6,
+    "fn": 0
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "version": "v1.02 (Standoff Protocol & Forensic Archival)",
+  "archival_benchmark": {
+    "frame_count": 1200,
+    "total_dump_time_sec": 2.13,
+    "video_encode_throughput_fps": 562.5,
+    "video_file_size_mb": 1.41,
+    "sha256_verified": true,
+    "video_path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\evidence\\benchmark_test\\incident_20260916_022820_violent_assault.mp4",
+    "metadata_path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\evidence\\benchmark_test\\incident_20260916_022820_violent_assault_meta.json"
+  },
+  "thread_isolation_benchmark": {
+    "mean_ingestion_latency_ms": 5.945,
+    "p99_ingestion_latency_ms": 6.51,
+    "max_ingestion_latency_ms": 7.666,
+    "stream_dropout_rate_pct": 0.0
+  },
+  "standoff_logic_benchmark": {
+    "configured_threshold_sec": 1.5,
+    "escalation_timing_error_ms": 105.08,
+    "state_transition_verified": true
+  }
+}

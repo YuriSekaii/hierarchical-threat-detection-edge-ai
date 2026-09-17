@@ -9,10 +9,16 @@ __pycache__/
 *.zip
 *.bin
 
+# Root downloads
+/*.pt
+
 # Allow weights folder
 !weights/*.pt
 !weights/*.pth
 !weights/*.json
+
+# Exclude oversized weights >100MB (GitHub 100MB limit)
+weights/yolov8x-worldv2.pt
 
 # Datasets and Media Recordings
 *.mp4

@@ -1,0 +1,202 @@
+{
+  "K_sweep": [
+    {
+      "K_dimensions": 8,
+      "alpha": 1.78,
+      "optimal_threshold": 0.1,
+      "f1_score": 0.7356,
+      "precision": 59.26,
+      "recall": 96.97,
+      "accuracy": 68.06,
+      "fp": 22,
+      "fn": 1
+    },
+    {
+      "K_dimensions": 12,
+      "alpha": 2.54,
+      "optimal_threshold": 0.1,
+      "f1_score": 0.7654,
+      "precision": 64.58,
+      "recall": 93.94,
+      "accuracy": 73.61,
+      "fp": 17,
+      "fn": 2
+    },
+    {
+      "K_dimensions": 16,
+      "alpha": 3.13,
+      "optimal_threshold": 0.1,
+      "f1_score": 0.7632,
+      "precision": 67.44,
+      "recall": 87.88,
+      "accuracy": 75.0,
+      "fp": 14,
+      "fn": 4
+    },
+    {
+      "K_dimensions": 20,
+      "alpha": 3.71,
+      "optimal_threshold": 0.0888,
+      "f1_score": 0.7848,
+      "precision": 67.39,
+      "recall": 93.94,
+      "accuracy": 76.39,
+      "fp": 15,
+      "fn": 2
+    },
+    {
+      "K_dimensions": 24,
+      "alpha": 4.31,
+      "optimal_threshold": 0.0888,
+      "f1_score": 0.8052,
+      "precision": 70.45,
+      "recall": 93.94,
+      "accuracy": 79.17,
+      "fp": 13,
+      "fn": 2
+    },
+    {
+      "K_dimensions": 28,
+      "alpha": 4.91,
+      "optimal_threshold": 0.0888,
+      "f1_score": 0.7792,
+      "precision": 68.18,
+      "recall": 90.91,
+      "accuracy": 76.39,
+      "fp": 14,
+      "fn": 3
+    },
+    {
+      "K_dimensions": 32,
+      "alpha": 5.53,
+      "optimal_threshold": 0.1,
+      "f1_score": 0.7385,
+      "precision": 75.0,
+      "recall": 72.73,
+      "accuracy": 76.39,
+      "fp": 8,
+      "fn": 9
+    },
+    {
+      "K_dimensions": 48,
+      "alpha": 8.06,
+      "optimal_threshold": 0.07,
+      "f1_score": 0.7342,
+      "precision": 63.04,
+      "recall": 87.88,
+      "accuracy": 70.83,
+      "fp": 17,
+      "fn": 4
+    }
+  ],
+  "threshold_sweep": [
+    {
+      "threshold": 0.05,
+      "f1_score": 0.6667,
+      "precision": 50.0,
+      "recall": 100.0,
+      "accuracy": 54.17,
+      "tp": 33,
+      "tn": 6,
+      "fp": 33,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": 0.06,
+      "f1_score": 0.6804,
+      "precision": 51.56,
+      "recall": 100.0,
+      "accuracy": 56.94,
+      "tp": 33,
+      "tn": 8,
+      "fp": 31,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": 0.07,
+      "f1_score": 0.7097,
+      "precision": 55.0,
+      "recall": 100.0,
+      "accuracy": 62.5,
+      "tp": 33,
+      "tn": 12,
+      "fp": 27,
+      "fn": 0,
+      "operational_profile": "Zero-Miss Security"
+    },
+    {
+      "threshold": 0.08,
+      "f1_score": 0.747,
+      "precision": 62.0,
+      "recall": 93.94,
+      "accuracy": 70.83,
+      "tp": 31,
+      "tn": 20,
+      "fp": 19,
+      "fn": 2,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 0.0888,
+      "f1_score": 0.8052,
+      "precision": 70.45,
+      "recall": 93.94,
+      "accuracy": 79.17,
+      "tp": 31,
+      "tn": 26,
+      "fp": 13,
+      "fn": 2,
+      "operational_profile": "Balanced Best (Optimal F1)"
+    },
+    {
+      "threshold": 0.1,
+      "f1_score": 0.7887,
+      "precision": 73.68,
+      "recall": 84.85,
+      "accuracy": 79.17,
+      "tp": 28,
+      "tn": 29,
+      "fp": 10,
+      "fn": 5,
+      "operational_profile": "Conservative"
+    },
+    {
+      "threshold": 0.12,
+      "f1_score": 0.7097,
+      "precision": 75.86,
+      "recall": 66.67,
+      "accuracy": 75.0,
+      "tp": 22,
+      "tn": 32,
+      "fp": 7,
+      "fn": 11,
+      "operational_profile": "Conservative"
+    },
+    {
+      "threshold": 0.15,
+      "f1_score": 0.4444,
+      "precision": 83.33,
+      "recall": 30.3,
+      "accuracy": 65.28,
+      "tp": 10,
+      "tn": 37,
+      "fp": 2,
+      "fn": 23,
+      "operational_profile": "Conservative"
+    },
+    {
+      "threshold": 0.18,
+      "f1_score": 0.0588,
+      "precision": 100.0,
+      "recall": 3.03,
+      "accuracy": 55.56,
+      "tp": 1,
+      "tn": 39,
+      "fp": 0,
+      "fn": 32,
+      "operational_profile": "Conservative"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "tier": "tier1_703k",
+    "base_channels": 20,
+    "feature_dim": 256,
+    "parameters": 702885,
+    "best_fold": 3,
+    "best_valid_loss": 0.0007450112274714879,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_downscale_tier1_703k.pth"
+  },
+  {
+    "tier": "tier2_647k",
+    "base_channels": 16,
+    "feature_dim": 256,
+    "parameters": 647185,
+    "best_fold": 1,
+    "best_valid_loss": 0.0,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_downscale_tier2_647k.pth"
+  },
+  {
+    "tier": "tier3_598k",
+    "base_channels": 12,
+    "feature_dim": 256,
+    "parameters": 598429,
+    "best_fold": 3,
+    "best_valid_loss": 0.0,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_downscale_tier3_598k.pth"
+  },
+  {
+    "tier": "tier4_232k",
+    "base_channels": 16,
+    "feature_dim": 128,
+    "parameters": 232337,
+    "best_fold": 3,
+    "best_valid_loss": 0.004777033414159503,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_downscale_tier4_232k.pth"
+  },
+  {
+    "tier": "tier5_132k",
+    "base_channels": 12,
+    "feature_dim": 96,
+    "parameters": 132349,
+    "best_fold": 2,
+    "best_valid_loss": 0.0009216687508991786,
+    "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\poseconv3d_downscale_tier5_132k.pth"
+  }
+]

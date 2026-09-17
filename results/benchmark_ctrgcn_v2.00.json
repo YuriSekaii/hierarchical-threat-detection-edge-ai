@@ -1,0 +1,47 @@
+{
+  "version": "2.00",
+  "backbone": "Channel-wise Topology Refinement Graph Convolutional Network (CTR-GCN)",
+  "parameters": 1333369,
+  "parameter_reduction_vs_stgcn": "-55.8%",
+  "champion_hyperparameters": {
+    "shrinkage_epsilon": 0.008,
+    "threshold": 3.1498,
+    "classes": [
+      "Cut-Down",
+      "Stab",
+      "Thrust"
+    ],
+    "degrees_of_freedom": 256
+  },
+  "performance": {
+    "f1_score": 0.9014,
+    "precision": 84.21,
+    "recall": 96.97,
+    "accuracy": 90.28,
+    "tp": 32,
+    "tn": 33,
+    "fp": 6,
+    "fn": 1,
+    "ood_rejection_rate": 84.62
+  },
+  "speed_and_latency": {
+    "backbone_fwd_gpu_ms": 10.73,
+    "backbone_fwd_cpu_ms": 23.94,
+    "gating_gpu_us": 189.68,
+    "gating_cpu_us": 131.08,
+    "stage1_weapon_ms": 12.06,
+    "stage2a_pose_ms": 12.54,
+    "stage2b_ctrgcn_and_ood_gpu_ms": 10.92,
+    "stage2b_ctrgcn_and_ood_cpu_ms": 24.07,
+    "total_threat_active_pipeline_gpu_ms": 35.52,
+    "total_threat_active_pipeline_cpu_ms": 48.67,
+    "fps_gpu": 28.2,
+    "fps_cpu": 20.5
+  },
+  "storage": {
+    "model_weights_mb": 5.3,
+    "reference_data_kb": 1030.4,
+    "num_classes": 3,
+    "feature_dimension": 256
+  }
+}

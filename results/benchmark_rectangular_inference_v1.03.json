@@ -1,0 +1,45 @@
+{
+  "benchmark_target": "Native Aspect-Ratio Rectangular Inference (v1.03)",
+  "test_stream": {
+    "resolution": "1280x720 (16:9 Aspect Ratio)",
+    "square_imgsz": [640, 640],
+    "rectangular_imgsz": [384, 640]
+  },
+  "tensor_geometry_analysis": {
+    "square_pixels": 409600,
+    "rectangular_pixels": 245760,
+    "padding_pixels_eliminated": 163840,
+    "compute_reduction_percentage": 40.0,
+    "letterbox_black_padding_percentage_before": 40.0,
+    "letterbox_black_padding_percentage_after": 0.0
+  },
+  "gpu_benchmark_rtx3090": {
+    "stage1_weapon_square_ms": 12.23,
+    "stage1_weapon_rectangular_ms": 12.06,
+    "stage1_weapon_delta_ms": -0.17,
+    "stage1_weapon_fps_rectangular": 82.9,
+    "stage2_pose_square_ms": 13.01,
+    "stage2_pose_rectangular_ms": 12.51,
+    "stage2_pose_delta_ms": -0.50,
+    "stage2_pose_fps_rectangular": 79.9,
+    "bottleneck_profile": "Kernel launch and driver dispatch bound at batch=1 on 10,496 CUDA cores."
+  },
+  "cpu_benchmark": {
+    "stage1_weapon_square_ms": 70.19,
+    "stage1_weapon_rectangular_ms": 66.60,
+    "stage1_weapon_delta_ms": -3.59,
+    "stage1_weapon_speedup_pct": 5.1,
+    "stage2_pose_square_ms": 83.61,
+    "stage2_pose_rectangular_ms": 70.86,
+    "stage2_pose_delta_ms": -12.76,
+    "stage2_pose_speedup_pct": 15.3,
+    "sliding_window_stride_savings_ms": 127.6,
+    "bottleneck_profile": "Strictly compute and memory bandwidth bound; arithmetic savings translate directly into wall-clock speedup."
+  },
+  "fidelity_metrics": {
+    "weapon_decision_agreement_pct": 100.0,
+    "weapon_bounding_box_iou": 1.0000,
+    "pose_joint_mae_pixels": 0.00,
+    "edge_padding_distortion": "Eliminated (0% black padding)"
+  }
+}

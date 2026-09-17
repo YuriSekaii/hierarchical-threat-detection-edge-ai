@@ -1,0 +1,4 @@
+category,videos,tp,tn,fp,fn
+With_Coat,16,13,0,0,3
+Without_Coat,17,13,0,0,4
+OOD,44,0,37,7,0

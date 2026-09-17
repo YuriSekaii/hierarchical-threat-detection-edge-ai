@@ -1,0 +1,78 @@
+video,category,ground_truth,prediction,rmd_score,correct
+Cut_Down_1.xml,With_Coat,1,1,3.5238,True
+Cut_Down_10.xml,With_Coat,1,1,11.9263,True
+Cut_Down_11.xml,With_Coat,1,1,3.4224,True
+Cut_Down_12.xml,With_Coat,1,1,-1.39,True
+Cut_Down_13.xml,With_Coat,1,1,0.2603,True
+Cut_Down_14.xml,With_Coat,1,1,1.9886,True
+Cut_Down_15.xml,With_Coat,1,1,1.1002,True
+Cut_Down_16.xml,With_Coat,1,1,-0.0773,True
+Cut_Down_2.xml,With_Coat,1,1,7.3949,True
+Cut_Down_3.xml,With_Coat,1,0,-19.8355,False
+Cut_Down_4.xml,With_Coat,1,1,-3.5606,True
+Cut_Down_5.xml,With_Coat,1,1,1.7117,True
+Cut_Down_6.xml,With_Coat,1,0,-10.8489,False
+Cut_Down_7.xml,With_Coat,1,1,0.8554,True
+Cut_Down_8.xml,With_Coat,1,1,3.4003,True
+Cut_Down_9.xml,With_Coat,1,1,13.7101,True
+Cut_Down.xml,Without_Coat,1,0,-18.3844,False
+Cut_down_1.xml,Without_Coat,1,1,-0.0779,True
+Cut_down_10.xml,Without_Coat,1,1,14.7925,True
+Cut_down_11.xml,Without_Coat,1,1,14.3385,True
+Cut_down_12.xml,Without_Coat,1,1,7.919,True
+Cut_down_13.xml,Without_Coat,1,1,8.265,True
+Cut_down_14.xml,Without_Coat,1,1,4.4735,True
+Cut_down_15.xml,Without_Coat,1,1,0.1238,True
+Cut_down_16.xml,Without_Coat,1,1,4.165,True
+Cut_down_2.xml,Without_Coat,1,0,-17.9769,False
+Cut_down_3.xml,Without_Coat,1,1,8.3279,True
+Cut_down_4.xml,Without_Coat,1,1,-0.0467,True
+Cut_down_5.xml,Without_Coat,1,1,-0.9462,True
+Cut_down_6.xml,Without_Coat,1,1,-1.5257,True
+Cut_down_7.xml,Without_Coat,1,1,2.9693,True
+Cut_down_8.xml,Without_Coat,1,1,10.8507,True
+Cut_down_9.xml,Without_Coat,1,1,14.912,True
+Chop_Wood.xml,OOD,0,0,-25.5777,True
+Copy of None_1.xml,OOD,0,0,-20.0104,True
+Copy of None_2.xml,OOD,0,1,14.0591,False
+Copy of None_4.xml,OOD,0,1,8.457,False
+Copy of None_5.xml,OOD,0,1,11.7996,False
+Copy of None_6.xml,OOD,0,0,-25.5102,True
+Copy of Random_Vid_10.xml,OOD,0,0,-42.8918,True
+Copy of Random_Vid_6.xml,OOD,0,1,6.7689,False
+Copy of Random_Vid_8.xml,OOD,0,1,39.6802,False
+Copy of Running_1.xml,OOD,0,0,-17.2357,True
+Jab.xml,OOD,0,0,-60.0204,True
+Volleyball_Strike.xml,OOD,0,0,-11.2946,True
+clip_1772692490348-2.xml,OOD,0,0,-9.4366,True
+clip_1772692490348.xml,OOD,0,0,-9.4366,True
+clip_1772692494406-2.xml,OOD,0,0,-56.2466,True
+clip_1772692494406.xml,OOD,0,0,-56.2466,True
+clip_1772692534259-2.xml,OOD,0,1,-0.6325,False
+clip_1772692534259.xml,OOD,0,1,-0.6325,False
+clip_1772692540260-2.xml,OOD,0,0,-6.2743,True
+clip_1772692540260.xml,OOD,0,0,-6.2743,True
+clip_1772692552997-2.xml,OOD,0,0,-17.2148,True
+clip_1772692552997.xml,OOD,0,0,-17.2148,True
+clip_1772693469732-2.xml,OOD,0,0,-10.792,True
+clip_1772693469732.xml,OOD,0,0,-10.792,True
+clip_1772693562096-2.xml,OOD,0,0,-47.9206,True
+clip_1772693562096.xml,OOD,0,0,-47.9206,True
+clip_1772693568454-2.xml,OOD,0,0,-9.5889,True
+clip_1772693568454.xml,OOD,0,0,-9.5889,True
+clip_1772693569264-2.xml,OOD,0,0,-15.9809,True
+clip_1772693569264.xml,OOD,0,0,-15.9809,True
+clip_1772693576727-2.xml,OOD,0,0,-36.3221,True
+clip_1772693576727.xml,OOD,0,0,-36.3221,True
+clip_1772693589293-2.xml,OOD,0,0,-24.0627,True
+clip_1772693589293.xml,OOD,0,0,-24.0627,True
+clip_1772693590072-2.xml,OOD,0,0,-20.83,True
+clip_1772693590072.xml,OOD,0,0,-20.83,True
+clip_1772699163120.xml,OOD,0,0,-5.4754,True
+clip_1772699171195.xml,OOD,0,0,-8.507,True
+clip_1772699176513.xml,OOD,0,0,-27.0816,True
+clip_1772699183170.xml,OOD,0,0,-52.6404,True
+clip_1772699188580.xml,OOD,0,0,-57.7963,True
+clip_1772699196534.xml,OOD,0,0,-6.355,True
+clip_1772699201059.xml,OOD,0,0,-4.7293,True
+clip_1772699209580.xml,OOD,0,0,-8.1795,True

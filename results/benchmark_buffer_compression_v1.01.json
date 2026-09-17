@@ -1,0 +1,39 @@
+{
+  "benchmark_target": "In-Memory JPEG Buffer Compression (Option A)",
+  "baseline_version": "v1.00 (Uncompressed NumPy FrameItem)",
+  "evaluated_version": "v1.01 (JPEG Quality=85 FrameItem)",
+  "memory_metrics": {
+    "buffer_capacity": 1200,
+    "frame_resolution": "640x480",
+    "v1_00_payload_mb": 1054.69,
+    "v1_01_payload_mb": 47.3,
+    "v1_00_rss_delta_mb": 0.1,
+    "v1_01_rss_delta_mb": 41.72,
+    "compression_ratio": 22.3,
+    "savings_percentage": 95.52
+  },
+  "speed_metrics": {
+    "v1_00_ingest_latency_ms": 0.0011,
+    "v1_01_ingest_latency_ms": 0.8805,
+    "v1_01_max_ingest_fps": 1135.7,
+    "v1_00_retrieval_latency_ms": 0.1491,
+    "v1_01_decode_latency_ms": 0.9646,
+    "v1_01_max_decode_fps": 1036.7
+  },
+  "fidelity_metrics": {
+    "weapon_decision_agreement_pct": 95.0,
+    "weapon_box_iou": 0.9,
+    "weapon_conf_delta": 0.0299,
+    "pose_joint_mae_pixels": 0.87,
+    "pose_pck_05_pct": 99.94,
+    "stgcn_embedding_cosine_similarity": 1.0,
+    "knn_manifold_distance_delta": 0.0233,
+    "violence_decision_agreement_pct": 100.0
+  },
+  "duty_metrics": {
+    "cam_ingest_30fps_cpu_overhead_pct": 2.64,
+    "screening_decode_3fps_cpu_overhead_pct": 0.29,
+    "action_decode_threat_cpu_overhead_pct": 0.96,
+    "total_idle_duty_cpu_overhead_pct": 2.93
+  }
+}

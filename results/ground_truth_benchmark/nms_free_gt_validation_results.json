@@ -1,0 +1,287 @@
+{
+  "O2O_Conf0.45": {
+    "name": "One-to-One Bipartite Matching (NMS-Free, Conf=0.45)",
+    "categories": {
+      "With_Coat": {
+        "accuracy": 94.15,
+        "precision": 95.77,
+        "recall": 90.07,
+        "f1_score": 92.83,
+        "specificity": 97.12,
+        "latency_ms": 12.66,
+        "TP": 136,
+        "FP": 6,
+        "FN": 15,
+        "TN": 202,
+        "total_images": 351
+      },
+      "Without_Coat": {
+        "accuracy": 89.52,
+        "precision": 95.65,
+        "recall": 74.16,
+        "f1_score": 83.54,
+        "specificity": 98.11,
+        "latency_ms": 13.93,
+        "TP": 66,
+        "FP": 3,
+        "FN": 23,
+        "TN": 156,
+        "total_images": 245
+      },
+      "OOD": {
+        "accuracy": 88.43,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 88.43,
+        "latency_ms": 11.21,
+        "TP": 0,
+        "FP": 14,
+        "FN": 0,
+        "TN": 107,
+        "total_images": 119
+      },
+      "Overall": {
+        "accuracy": 91.62,
+        "precision": 89.78,
+        "recall": 84.17,
+        "f1_score": 86.88,
+        "specificity": 95.29,
+        "latency_ms": 12.86,
+        "TP": 202,
+        "FP": 23,
+        "FN": 38,
+        "TN": 465,
+        "total_images": 715
+      }
+    }
+  },
+  "O2O_Conf0.20": {
+    "name": "One-to-One Bipartite Matching (NMS-Free, Conf=0.20)",
+    "categories": {
+      "With_Coat": {
+        "accuracy": 90.36,
+        "precision": 85.37,
+        "recall": 92.72,
+        "f1_score": 88.89,
+        "specificity": 88.68,
+        "latency_ms": 13.27,
+        "TP": 140,
+        "FP": 24,
+        "FN": 11,
+        "TN": 188,
+        "total_images": 351
+      },
+      "Without_Coat": {
+        "accuracy": 87.6,
+        "precision": 77.67,
+        "recall": 89.89,
+        "f1_score": 83.33,
+        "specificity": 86.39,
+        "latency_ms": 13.85,
+        "TP": 80,
+        "FP": 23,
+        "FN": 9,
+        "TN": 146,
+        "total_images": 245
+      },
+      "OOD": {
+        "accuracy": 60.47,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 60.47,
+        "latency_ms": 10.56,
+        "TP": 0,
+        "FP": 51,
+        "FN": 0,
+        "TN": 78,
+        "total_images": 119
+      },
+      "Overall": {
+        "accuracy": 84.27,
+        "precision": 69.18,
+        "recall": 91.67,
+        "f1_score": 78.85,
+        "specificity": 80.78,
+        "latency_ms": 13.02,
+        "TP": 220,
+        "FP": 98,
+        "FN": 20,
+        "TN": 412,
+        "total_images": 715
+      }
+    }
+  },
+  "O2M_Conf0.45_IoU0.45": {
+    "name": "One-to-Many Greedy NMS (Conf=0.45, IoU_NMS=0.45)",
+    "categories": {
+      "With_Coat": {
+        "accuracy": 91.06,
+        "precision": 90.48,
+        "recall": 88.08,
+        "f1_score": 89.26,
+        "specificity": 93.24,
+        "latency_ms": 12.7,
+        "TP": 133,
+        "FP": 14,
+        "FN": 18,
+        "TN": 193,
+        "total_images": 351
+      },
+      "Without_Coat": {
+        "accuracy": 89.52,
+        "precision": 88.89,
+        "recall": 80.9,
+        "f1_score": 84.71,
+        "specificity": 94.34,
+        "latency_ms": 13.42,
+        "TP": 72,
+        "FP": 9,
+        "FN": 17,
+        "TN": 150,
+        "total_images": 245
+      },
+      "OOD": {
+        "accuracy": 75.41,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 75.41,
+        "latency_ms": 9.88,
+        "TP": 0,
+        "FP": 30,
+        "FN": 0,
+        "TN": 92,
+        "total_images": 119
+      },
+      "Overall": {
+        "accuracy": 87.91,
+        "precision": 79.46,
+        "recall": 85.42,
+        "f1_score": 82.33,
+        "specificity": 89.14,
+        "latency_ms": 12.48,
+        "TP": 205,
+        "FP": 53,
+        "FN": 35,
+        "TN": 435,
+        "total_images": 715
+      }
+    }
+  },
+  "O2M_Conf0.20_IoU0.45": {
+    "name": "One-to-Many Greedy NMS (Conf=0.20, IoU_NMS=0.45)",
+    "categories": {
+      "With_Coat": {
+        "accuracy": 88.4,
+        "precision": 81.87,
+        "recall": 92.72,
+        "f1_score": 86.96,
+        "specificity": 85.31,
+        "latency_ms": 12.76,
+        "TP": 140,
+        "FP": 31,
+        "FN": 11,
+        "TN": 180,
+        "total_images": 351
+      },
+      "Without_Coat": {
+        "accuracy": 84.46,
+        "precision": 71.19,
+        "recall": 94.38,
+        "f1_score": 81.16,
+        "specificity": 79.01,
+        "latency_ms": 13.43,
+        "TP": 84,
+        "FP": 34,
+        "FN": 5,
+        "TN": 128,
+        "total_images": 245
+      },
+      "OOD": {
+        "accuracy": 41.22,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 41.22,
+        "latency_ms": 10.05,
+        "TP": 0,
+        "FP": 87,
+        "FN": 0,
+        "TN": 61,
+        "total_images": 119
+      },
+      "Overall": {
+        "accuracy": 77.92,
+        "precision": 59.57,
+        "recall": 93.33,
+        "f1_score": 72.73,
+        "specificity": 70.83,
+        "latency_ms": 12.54,
+        "TP": 224,
+        "FP": 152,
+        "FN": 16,
+        "TN": 369,
+        "total_images": 715
+      }
+    }
+  },
+  "RTDETR_Conf0.20": {
+    "name": "RT-DETR-L Zero-Shot (COCO knife class 43, Conf=0.20)",
+    "categories": {
+      "With_Coat": {
+        "accuracy": 57.46,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 100.0,
+        "latency_ms": 29.71,
+        "TP": 0,
+        "FP": 0,
+        "FN": 151,
+        "TN": 204,
+        "total_images": 351
+      },
+      "Without_Coat": {
+        "accuracy": 63.82,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 100.0,
+        "latency_ms": 30.26,
+        "TP": 0,
+        "FP": 0,
+        "FN": 89,
+        "TN": 157,
+        "total_images": 245
+      },
+      "OOD": {
+        "accuracy": 97.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 97.5,
+        "latency_ms": 27.7,
+        "TP": 0,
+        "FP": 3,
+        "FN": 0,
+        "TN": 117,
+        "total_images": 119
+      },
+      "Overall": {
+        "accuracy": 66.3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "specificity": 99.38,
+        "latency_ms": 29.57,
+        "TP": 0,
+        "FP": 3,
+        "FN": 240,
+        "TN": 478,
+        "total_images": 715
+      }
+    }
+  }
+}

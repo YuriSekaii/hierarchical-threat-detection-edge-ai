@@ -1,0 +1,12 @@
+threshold,f1_score,precision,recall,accuracy,tp,tn,fp,fn,operational_profile
+-2.0,0.8684,76.74,100.0,86.11,33,29,10,0,Zero-Miss Security
+-1.5,0.88,78.57,100.0,87.5,33,30,9,0,Zero-Miss Security
+-1.2,0.8919,80.49,100.0,88.89,33,31,8,0,Zero-Miss Security
+-1.0,0.9167,84.62,100.0,91.67,33,33,6,0,Zero-Miss Security
+-0.9289,0.9167,84.62,100.0,91.67,33,33,6,0,Balanced Best (Optimal F1)
+-0.8,0.9167,84.62,100.0,91.67,33,33,6,0,Zero-Miss Security
+-0.5,0.9167,84.62,100.0,91.67,33,33,6,0,Zero-Miss Security
+0.0,0.8857,83.78,93.94,88.89,31,33,6,2,High Sensitivity
+0.5,0.8824,85.71,90.91,88.89,30,34,5,3,Conservative
+1.0,0.8657,85.29,87.88,87.5,29,34,5,4,Conservative
+2.0,0.8308,84.38,81.82,84.72,27,34,5,6,Conservative

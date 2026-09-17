@@ -1,0 +1,40 @@
+{
+  "tier": "tier_l",
+  "parameters": 2972277,
+  "channels": [
+    96,
+    192,
+    384
+  ],
+  "reduction": 8,
+  "arm_weight": 5.0,
+  "k_folds": 3,
+  "best_fold": 1,
+  "best_valid_loss": 0.0,
+  "folds": [
+    {
+      "fold": 1,
+      "train_samples": 198,
+      "valid_samples": 99,
+      "final_train_loss": 0.0452,
+      "best_valid_loss": 0.0,
+      "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\ctrgcn_tier_l_fold1.pth"
+    },
+    {
+      "fold": 2,
+      "train_samples": 197,
+      "valid_samples": 100,
+      "final_train_loss": 0.0,
+      "best_valid_loss": 0.0026,
+      "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\ctrgcn_tier_l_fold2.pth"
+    },
+    {
+      "fold": 3,
+      "train_samples": 199,
+      "valid_samples": 98,
+      "final_train_loss": 0.0347,
+      "best_valid_loss": 0.0247,
+      "checkpoint": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\ctrgcn_tier_l_fold3.pth"
+    }
+  ]
+}

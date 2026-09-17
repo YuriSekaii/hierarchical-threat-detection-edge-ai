@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-09-17 21:16:44",
+  "best_perfect_f1_config": {
+    "edge_screener": "ST-GCN Baseline",
+    "server_committee": "Champion m=3 (ST+CTR+T3)",
+    "p_low": 0.3,
+    "p_high": 0.999,
+    "pct_esc": 42.86,
+    "f1_score": 1.0,
+    "recall": 100.0,
+    "precision": 100.0,
+    "accuracy": 100.0,
+    "fp": 0,
+    "fn": 0,
+    "eff_tot_gpu_ms": 36.82,
+    "eff_fps_gpu": 27.2,
+    "eff_tot_cpu_ms": 206.46,
+    "eff_fps_cpu": 4.8
+  },
+  "fastest_high_f1_config": {
+    "edge_screener": "PoseConv3D Tier 5",
+    "server_committee": "Champion m=3 (ST+CTR+T3)",
+    "p_low": 0.02,
+    "p_high": 0.5,
+    "pct_esc": 29.87,
+    "f1_score": 0.9846,
+    "recall": 96.97,
+    "precision": 100.0,
+    "accuracy": 98.7,
+    "fp": 0,
+    "fn": 1,
+    "eff_tot_gpu_ms": 32.76,
+    "eff_fps_gpu": 30.5,
+    "eff_tot_cpu_ms": 223.57,
+    "eff_fps_cpu": 4.5
+  }
+}

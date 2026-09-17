@@ -1,0 +1,643 @@
+{
+  "threat_weapons": [
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0010.jpg",
+      "has_seg": true,
+      "lat_ms": 5186.4,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0020.jpg",
+      "has_seg": true,
+      "lat_ms": 1980.4,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 226,
+          "pct": 0.01,
+          "bbox": [
+            322,
+            253,
+            460,
+            287
+          ],
+          "solidity": 0.0465
+        }
+      ]
+    },
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0030.jpg",
+      "has_seg": true,
+      "lat_ms": 1985.6,
+      "text": "[SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0040.jpg",
+      "has_seg": true,
+      "lat_ms": 2168.9,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0050.jpg",
+      "has_seg": true,
+      "lat_ms": 2164.0,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0060.jpg",
+      "has_seg": true,
+      "lat_ms": 2141.9,
+      "text": "Sure, [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 2619,
+          "pct": 0.06,
+          "bbox": [
+            583,
+            292,
+            932,
+            823
+          ],
+          "solidity": 0.0141
+        }
+      ]
+    },
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0070.jpg",
+      "has_seg": true,
+      "lat_ms": 2201.2,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 1656,
+          "pct": 0.04,
+          "bbox": [
+            993,
+            1185,
+            1049,
+            1254
+          ],
+          "solidity": 0.415
+        }
+      ]
+    },
+    {
+      "name": "threat_cutdown_Cut_Down_1_idx0080.jpg",
+      "has_seg": true,
+      "lat_ms": 2026.9,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 804,
+          "pct": 0.02,
+          "bbox": [
+            963,
+            1156,
+            996,
+            1211
+          ],
+          "solidity": 0.4223
+        }
+      ]
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0015.jpg",
+      "has_seg": true,
+      "lat_ms": 2096.4,
+      "text": "Sure, [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 543,
+          "pct": 0.01,
+          "bbox": [
+            578,
+            552,
+            599,
+            593
+          ],
+          "solidity": 0.5877
+        }
+      ]
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0025.jpg",
+      "has_seg": true,
+      "lat_ms": 2194.9,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 492,
+          "pct": 0.01,
+          "bbox": [
+            980,
+            600,
+            1008,
+            626
+          ],
+          "solidity": 0.6284
+        }
+      ]
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0035.jpg",
+      "has_seg": true,
+      "lat_ms": 2110.3,
+      "text": "Sure, [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 248,
+          "pct": 0.01,
+          "bbox": [
+            924,
+            1104,
+            965,
+            1305
+          ],
+          "solidity": 0.0292
+        }
+      ]
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0045.jpg",
+      "has_seg": true,
+      "lat_ms": 2229.0,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 474,
+          "pct": 0.01,
+          "bbox": [
+            1152,
+            715,
+            1195,
+            732
+          ],
+          "solidity": 0.5985
+        }
+      ]
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0055.jpg",
+      "has_seg": true,
+      "lat_ms": 1980.2,
+      "text": "[SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0065.jpg",
+      "has_seg": true,
+      "lat_ms": 2206.4,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 7304,
+          "pct": 0.18,
+          "bbox": [
+            920,
+            1096,
+            970,
+            1309
+          ],
+          "solidity": 0.6692
+        }
+      ]
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0075.jpg",
+      "has_seg": true,
+      "lat_ms": 2197.3,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 7375,
+          "pct": 0.18,
+          "bbox": [
+            920,
+            1097,
+            970,
+            1309
+          ],
+          "solidity": 0.6789
+        }
+      ]
+    },
+    {
+      "name": "threat_thrust_Thrust_1_idx0085.jpg",
+      "has_seg": true,
+      "lat_ms": 2213.2,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 274,
+          "pct": 0.01,
+          "bbox": [
+            792,
+            673,
+            957,
+            1097
+          ],
+          "solidity": 0.0039
+        }
+      ]
+    }
+  ],
+  "bare_hands_fists": [
+    {
+      "name": "probe_chop_Chop_Wood_idx0020.jpg",
+      "has_seg": true,
+      "lat_ms": 2520.3,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 3977,
+          "pct": 0.43,
+          "bbox": [
+            293,
+            89,
+            380,
+            206
+          ],
+          "solidity": 0.383
+        }
+      ]
+    },
+    {
+      "name": "probe_chop_Chop_Wood_idx0040.jpg",
+      "has_seg": true,
+      "lat_ms": 1842.9,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 8643,
+          "pct": 0.94,
+          "bbox": [
+            322,
+            664,
+            418,
+            918
+          ],
+          "solidity": 0.3494
+        }
+      ]
+    },
+    {
+      "name": "probe_chop_Chop_Wood_idx0060.jpg",
+      "has_seg": true,
+      "lat_ms": 1982.0,
+      "text": "Sure, [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 9729,
+          "pct": 1.06,
+          "bbox": [
+            223,
+            562,
+            493,
+            785
+          ],
+          "solidity": 0.1603
+        }
+      ]
+    },
+    {
+      "name": "probe_chop_Chop_Wood_idx0080.jpg",
+      "has_seg": true,
+      "lat_ms": 1957.4,
+      "text": "Sure, [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 8753,
+          "pct": 0.95,
+          "bbox": [
+            306,
+            600,
+            539,
+            702
+          ],
+          "solidity": 0.3632
+        }
+      ]
+    },
+    {
+      "name": "probe_fist_Jab_idx0010.jpg",
+      "has_seg": true,
+      "lat_ms": 2107.7,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 656597,
+          "pct": 7.92,
+          "bbox": [
+            2633,
+            4,
+            3146,
+            1358
+          ],
+          "solidity": 0.9427
+        }
+      ]
+    },
+    {
+      "name": "probe_fist_Jab_idx0025.jpg",
+      "has_seg": true,
+      "lat_ms": 2246.2,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 657990,
+          "pct": 7.93,
+          "bbox": [
+            2604,
+            0,
+            3142,
+            1351
+          ],
+          "solidity": 0.9029
+        }
+      ]
+    },
+    {
+      "name": "probe_fist_Jab_idx0040.jpg",
+      "has_seg": true,
+      "lat_ms": 2252.8,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 662049,
+          "pct": 7.98,
+          "bbox": [
+            2644,
+            11,
+            3173,
+            1350
+          ],
+          "solidity": 0.9322
+        }
+      ]
+    },
+    {
+      "name": "probe_fist_Jab_idx0055.jpg",
+      "has_seg": true,
+      "lat_ms": 2249.7,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 756757,
+          "pct": 9.12,
+          "bbox": [
+            2730,
+            0,
+            3462,
+            1380
+          ],
+          "solidity": 0.7476
+        }
+      ]
+    },
+    {
+      "name": "probe_fist_Jab_idx0070.jpg",
+      "has_seg": true,
+      "lat_ms": 2247.5,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 641025,
+          "pct": 7.73,
+          "bbox": [
+            2594,
+            16,
+            3157,
+            1349
+          ],
+          "solidity": 0.852
+        }
+      ]
+    },
+    {
+      "name": "probe_fist_Jab_idx0085.jpg",
+      "has_seg": true,
+      "lat_ms": 2058.0,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 611603,
+          "pct": 7.37,
+          "bbox": [
+            2445,
+            10,
+            3058,
+            1312
+          ],
+          "solidity": 0.7645
+        }
+      ]
+    }
+  ],
+  "clothing_seams_shadows": [
+    {
+      "name": "probe_seam_falseclip1_clip_1772789899168_idx0010.jpg",
+      "has_seg": true,
+      "lat_ms": 2131.7,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 160,
+          "pct": 0.01,
+          "bbox": [
+            583,
+            356,
+            596,
+            371
+          ],
+          "solidity": 0.7143
+        }
+      ]
+    },
+    {
+      "name": "probe_seam_falseclip1_clip_1772789899168_idx0025.jpg",
+      "has_seg": true,
+      "lat_ms": 1913.0,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 12,
+          "pct": 0.0,
+          "bbox": [
+            580,
+            371,
+            583,
+            374
+          ],
+          "solidity": 0.75
+        }
+      ]
+    },
+    {
+      "name": "probe_seam_falseclip1_clip_1772789899168_idx0040.jpg",
+      "has_seg": true,
+      "lat_ms": 2030.8,
+      "text": "Sure, [SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "probe_seam_falseclip2_clip_1772789911504_idx0010.jpg",
+      "has_seg": true,
+      "lat_ms": 2108.5,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 76,
+          "pct": 0.0,
+          "bbox": [
+            585,
+            371,
+            594,
+            385
+          ],
+          "solidity": 0.5067
+        }
+      ]
+    },
+    {
+      "name": "probe_seam_falseclip2_clip_1772789911504_idx0025.jpg",
+      "has_seg": true,
+      "lat_ms": 1891.2,
+      "text": "[SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "probe_seam_falseclip2_clip_1772789911504_idx0040.jpg",
+      "has_seg": true,
+      "lat_ms": 1891.3,
+      "text": "[SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "probe_seam_walk_clip_1772692490348_idx0015.jpg",
+      "has_seg": true,
+      "lat_ms": 904.8,
+      "text": "Sure, [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 327,
+          "pct": 0.11,
+          "bbox": [
+            120,
+            225,
+            135,
+            267
+          ],
+          "solidity": 0.4753
+        }
+      ]
+    },
+    {
+      "name": "probe_seam_walk_clip_1772692490348_idx0030.jpg",
+      "has_seg": true,
+      "lat_ms": 737.8,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 1363,
+          "pct": 0.44,
+          "bbox": [
+            10,
+            234,
+            145,
+            332
+          ],
+          "solidity": 0.1012
+        }
+      ]
+    },
+    {
+      "name": "probe_seam_walk_clip_1772692490348_idx0045.jpg",
+      "has_seg": true,
+      "lat_ms": 734.0,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 499,
+          "pct": 0.16,
+          "bbox": [
+            0,
+            305,
+            39,
+            445
+          ],
+          "solidity": 0.0885
+        }
+      ]
+    }
+  ],
+  "civilian_objects": [
+    {
+      "name": "civilian_volleyball_Volleyball_Strike_idx0020.jpg",
+      "has_seg": true,
+      "lat_ms": 2094.3,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 1648,
+          "pct": 0.08,
+          "bbox": [
+            497,
+            1036,
+            560,
+            1109
+          ],
+          "solidity": 0.348
+        }
+      ]
+    },
+    {
+      "name": "civilian_volleyball_Volleyball_Strike_idx0050.jpg",
+      "has_seg": true,
+      "lat_ms": 1926.9,
+      "text": "[SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 372,
+          "pct": 0.02,
+          "bbox": [
+            397,
+            962,
+            546,
+            1304
+          ],
+          "solidity": 0.0072
+        }
+      ]
+    },
+    {
+      "name": "civilian_volleyball_Volleyball_Strike_idx0080.jpg",
+      "has_seg": true,
+      "lat_ms": 2126.4,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": []
+    },
+    {
+      "name": "civilian_volleyball_Volleyball_Strike_idx0110.jpg",
+      "has_seg": true,
+      "lat_ms": 2090.2,
+      "text": "Sure, it is [SEG].<|im_end|>",
+      "masks": [
+        {
+          "pts": 2599,
+          "pct": 0.13,
+          "bbox": [
+            656,
+            860,
+            684,
+            977
+          ],
+          "solidity": 0.7595
+        }
+      ]
+    }
+  ]
+}

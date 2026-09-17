@@ -1,0 +1,29 @@
+{
+  "benchmark_target": "Activation Shaping & Free Energy (Version 1.07)",
+  "champion_configuration": {
+    "mode": "ash_b",
+    "percentile": 70,
+    "temperature": 1.0,
+    "threshold": 0.5321,
+    "metrics": {
+      "threshold": 0.5321,
+      "f1_score": 0.7887,
+      "precision": 73.68,
+      "recall": 84.85,
+      "accuracy": 79.17,
+      "tp": 28,
+      "tn": 29,
+      "fp": 10,
+      "fn": 5,
+      "operational_profile": "Balanced Best (Optimal F1)"
+    }
+  },
+  "latency": {
+    "gpu_rtx3090": {
+      "ash_us": 102.35
+    },
+    "cpu": {
+      "ash_us": 51.61
+    }
+  }
+}

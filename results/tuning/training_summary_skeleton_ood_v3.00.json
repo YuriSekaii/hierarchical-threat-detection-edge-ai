@@ -1,0 +1,25 @@
+{
+    "model": "SkeletonOODModel",
+    "backbone": "ST-GCN (9-block with arm weighting)",
+    "fusion": "ASH-B@80% + SE + MLP",
+    "boundary": "Unit Hypersphere S^{255} + Free Energy",
+    "champion_fold": 2,
+    "champion_valid_loss": 1.096130982041359,
+    "folds": [
+        {
+            "fold": 1,
+            "best_valid_loss": 1.2022491693496704,
+            "weights_path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\stgcn_skeleton_ood_v3.00_fold1.pth"
+        },
+        {
+            "fold": 2,
+            "best_valid_loss": 1.096130982041359,
+            "weights_path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\stgcn_skeleton_ood_v3.00_fold2.pth"
+        },
+        {
+            "fold": 3,
+            "best_valid_loss": 1.2634868919849396,
+            "weights_path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\weights\\stgcn_skeleton_ood_v3.00_fold3.pth"
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+  "total_videos": 77,
+  "positive_videos": 33,
+  "negative_videos": 44,
+  "distilled_yolo26s": {
+    "accuracy": 0.4545,
+    "precision": 0.3846,
+    "recall": 0.4545,
+    "f1_score": 0.4167,
+    "tp": 15,
+    "tn": 20,
+    "fp": 24,
+    "fn": 18,
+    "avg_latency_ms": 46.76,
+    "fps": 21.4
+  },
+  "sa2va_qwen2_5_vl_7b": {
+    "accuracy": 0.4545,
+    "precision": 0.2,
+    "recall": 0.0909,
+    "f1_score": 0.125,
+    "tp": 3,
+    "tn": 32,
+    "fp": 12,
+    "fn": 30,
+    "avg_latency_ms": 2317.42,
+    "fps": 0.43
+  }
+}

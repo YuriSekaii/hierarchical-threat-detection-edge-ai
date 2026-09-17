@@ -1,0 +1,204 @@
+{
+  "shrinkage_epsilon_sweep": [
+    {
+      "shrinkage_epsilon": 0.002,
+      "optimal_threshold": 2.5986,
+      "f1_score": 0.8857,
+      "precision": 83.78,
+      "recall": 93.94,
+      "accuracy": 88.89,
+      "fp": 6,
+      "fn": 2
+    },
+    {
+      "shrinkage_epsilon": 0.005,
+      "optimal_threshold": 1.7063,
+      "f1_score": 0.8857,
+      "precision": 83.78,
+      "recall": 93.94,
+      "accuracy": 88.89,
+      "fp": 6,
+      "fn": 2
+    },
+    {
+      "shrinkage_epsilon": 0.008,
+      "optimal_threshold": 3.1498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "fp": 6,
+      "fn": 1
+    },
+    {
+      "shrinkage_epsilon": 0.01,
+      "optimal_threshold": 4.7836,
+      "f1_score": 0.8889,
+      "precision": 82.05,
+      "recall": 96.97,
+      "accuracy": 88.89,
+      "fp": 7,
+      "fn": 1
+    },
+    {
+      "shrinkage_epsilon": 0.015,
+      "optimal_threshold": 6.9207,
+      "f1_score": 0.8148,
+      "precision": 68.75,
+      "recall": 100.0,
+      "accuracy": 79.17,
+      "fp": 15,
+      "fn": 0
+    },
+    {
+      "shrinkage_epsilon": 0.02,
+      "optimal_threshold": 5.2451,
+      "f1_score": 0.8108,
+      "precision": 73.17,
+      "recall": 90.91,
+      "accuracy": 80.56,
+      "fp": 11,
+      "fn": 3
+    },
+    {
+      "shrinkage_epsilon": 0.03,
+      "optimal_threshold": 0.012,
+      "f1_score": 0.8451,
+      "precision": 78.95,
+      "recall": 90.91,
+      "accuracy": 84.72,
+      "fp": 8,
+      "fn": 3
+    },
+    {
+      "shrinkage_epsilon": 0.05,
+      "optimal_threshold": 0.3064,
+      "f1_score": 0.8052,
+      "precision": 70.45,
+      "recall": 93.94,
+      "accuracy": 79.17,
+      "fp": 13,
+      "fn": 2
+    }
+  ],
+  "threshold_sweep_champion_eps": [
+    {
+      "threshold": 1.6498,
+      "f1_score": 0.8649,
+      "precision": 78.05,
+      "recall": 96.97,
+      "accuracy": 86.11,
+      "tp": 32,
+      "tn": 30,
+      "fp": 9,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 2.1498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 2.6498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 2.9498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 3.1498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "Balanced Best (Optimal F1)"
+    },
+    {
+      "threshold": 3.3498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 3.6498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 4.1498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    },
+    {
+      "threshold": 4.6498,
+      "f1_score": 0.9014,
+      "precision": 84.21,
+      "recall": 96.97,
+      "accuracy": 90.28,
+      "tp": 32,
+      "tn": 33,
+      "fp": 6,
+      "fn": 1,
+      "operational_profile": "High Sensitivity"
+    }
+  ],
+  "champion_config": {
+    "epsilon": 0.008,
+    "threshold": 3.1498,
+    "f1_score": 0.9014,
+    "precision": 84.21,
+    "recall": 96.97,
+    "accuracy": 90.28,
+    "fp": 6,
+    "fn": 1
+  }
+}

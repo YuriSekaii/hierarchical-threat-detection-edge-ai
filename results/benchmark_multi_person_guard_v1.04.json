@@ -1,0 +1,9 @@
+{
+  "benchmark_target": "Multi-Person Tracking Guard (v1.04)",
+  "naive_identity_swaps": 15,
+  "naive_max_joint_velocity_px_frame": 307.58,
+  "guard_identity_swaps": 0,
+  "guard_actor_lock_rate_pct": 100.0,
+  "guard_max_natural_velocity_px_frame": 1.0,
+  "guard_overhead_per_frame_microseconds": 28.76
+}

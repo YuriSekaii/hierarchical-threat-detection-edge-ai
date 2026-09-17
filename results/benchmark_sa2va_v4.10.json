@@ -1,0 +1,398 @@
+{
+  "benchmark_sa2va_v4.10": {
+    "model": "ByteDance/Sa2VA-Qwen2_5-VL-7B",
+    "precision": 0.5385,
+    "recall": 0.4375,
+    "f1_score": 0.4828,
+    "accuracy": 0.6154,
+    "threat_recall_fraction": "7/16",
+    "bare_fist_suppression_rate": 0.7,
+    "bare_fist_fp": "3/10",
+    "clothing_seam_rejection_rate": 0.7778,
+    "clothing_seam_fp": "2/9",
+    "civilian_fp": "1/4",
+    "total_fp": 6,
+    "total_fn": 9,
+    "avg_latency_ms": 2025.85,
+    "effective_fps": 0.49,
+    "initial_vram_gb": 15.95,
+    "peak_vram_gb": 19.42,
+    "category_breakdown": {
+      "threat_weapons": {
+        "total": 16,
+        "detected": 7,
+        "details": [
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0010.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 4837.51,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0020.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2232.39,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0030.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2139.18,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0040.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2114.35,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0050.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2086.75,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0060.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1972.15,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0070.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 2049.98,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_cutdown_Cut_Down_1_idx0080.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 2077.68,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0015.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 2096.19,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0025.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1930.23,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0035.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1957.52,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0045.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 1959.02,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0055.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 1962.27,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0065.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 2094.55,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0075.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 1958.88,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "threat_thrust_Thrust_1_idx0085.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2125.34,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          }
+        ]
+      },
+      "bare_hands_fists": {
+        "total": 10,
+        "detected": 3,
+        "details": [
+          {
+            "file": "probe_chop_Chop_Wood_idx0020.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 2554.69,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_chop_Chop_Wood_idx0040.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 2045.2,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_chop_Chop_Wood_idx0060.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2079.87,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_chop_Chop_Wood_idx0080.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 1948.94,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_fist_Jab_idx0010.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2115.21,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_fist_Jab_idx0025.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2160.51,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_fist_Jab_idx0040.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2176.32,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_fist_Jab_idx0055.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2187.72,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_fist_Jab_idx0070.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2162.87,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_fist_Jab_idx0085.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1965.65,
+            "narrative": "[SEG].<|im_end|>"
+          }
+        ]
+      },
+      "clothing_seams_shadows": {
+        "total": 9,
+        "detected": 2,
+        "details": [
+          {
+            "file": "probe_seam_falseclip1_clip_1772789899168_idx0010.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1863.2,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_falseclip1_clip_1772789899168_idx0025.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 1878.79,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_falseclip1_clip_1772789899168_idx0040.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1849.3,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_falseclip2_clip_1772789911504_idx0010.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1973.61,
+            "narrative": "Sure, [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_falseclip2_clip_1772789911504_idx0025.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2068.09,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_falseclip2_clip_1772789911504_idx0040.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1867.65,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_walk_clip_1772692490348_idx0015.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 926.89,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_walk_clip_1772692490348_idx0030.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 735.11,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "probe_seam_walk_clip_1772692490348_idx0045.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 846.93,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          }
+        ]
+      },
+      "civilian_objects": {
+        "total": 4,
+        "detected": 1,
+        "details": [
+          {
+            "file": "civilian_volleyball_Volleyball_Strike_idx0020.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 1878.48,
+            "narrative": "[SEG].<|im_end|>"
+          },
+          {
+            "file": "civilian_volleyball_Volleyball_Strike_idx0050.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2061.82,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "civilian_volleyball_Volleyball_Strike_idx0080.jpg",
+            "alert": false,
+            "status": "NORMAL_CLEARED",
+            "has_seg": true,
+            "threat_count": 0,
+            "latency_ms": 2027.09,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          },
+          {
+            "file": "civilian_volleyball_Volleyball_Strike_idx0110.jpg",
+            "alert": true,
+            "status": "CRITICAL_WEAPON_CONFIRMED",
+            "has_seg": true,
+            "threat_count": 1,
+            "latency_ms": 2040.19,
+            "narrative": "Sure, it is [SEG].<|im_end|>"
+          }
+        ]
+      }
+    }
+  }
+}

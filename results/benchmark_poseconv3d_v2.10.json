@@ -1,0 +1,65 @@
+{
+  "version": "2.10",
+  "technique": "PoseConv3D Volumetric 3D Heatmap CNN (Refined)",
+  "model_parameters": 765529,
+  "optimal_parameters": {
+    "shrinkage_epsilon": 0.002,
+    "threat_threshold": -21.4694,
+    "reference_storage_kb": 1327.9
+  },
+  "metrics": {
+    "f1_score": 0.8667,
+    "precision": 96.3,
+    "recall": 78.79,
+    "accuracy": 89.61,
+    "true_positives": 26,
+    "true_negatives": 43,
+    "false_positives": 1,
+    "false_negatives": 7,
+    "cosine_metrics": {
+      "f1_score": 0.871,
+      "threshold": 0.9956,
+      "precision": 93.1,
+      "recall": 81.82,
+      "fp": 2,
+      "fn": 6
+    },
+    "category_breakdown": {
+      "With_Coat": {
+        "videos": 16,
+        "tp": 12,
+        "tn": 0,
+        "fp": 0,
+        "fn": 4
+      },
+      "Without_Coat": {
+        "videos": 17,
+        "tp": 14,
+        "tn": 0,
+        "fp": 0,
+        "fn": 3
+      },
+      "OOD": {
+        "videos": 44,
+        "tp": 0,
+        "tn": 43,
+        "fp": 1,
+        "fn": 0
+      }
+    }
+  },
+  "latencies": {
+    "stage1_weapon_scan_ms": 12.06,
+    "stage2a_pose_track_ms": 12.54,
+    "stage2b_gpu_backbone_fwd_ms": 2.74,
+    "stage2b_gpu_gating_us": 225.17,
+    "stage2b_gpu_total_ms": 2.97,
+    "stage2b_cpu_backbone_fwd_ms": 18.17,
+    "stage2b_cpu_gating_us": 145.47,
+    "stage2b_cpu_total_ms": 18.32,
+    "total_threat_pipeline_gpu_ms": 27.57,
+    "total_threat_pipeline_gpu_fps": 36.3,
+    "total_threat_pipeline_cpu_ms": 42.92,
+    "total_threat_pipeline_cpu_fps": 23.3
+  }
+}

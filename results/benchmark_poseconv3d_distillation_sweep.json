@@ -1,0 +1,217 @@
+[
+  {
+    "model_id": "undistilled_tier3",
+    "parameters": 598429,
+    "f1_score": 0.8857,
+    "recall": 93.94,
+    "precision": 83.78,
+    "accuracy": 89.61,
+    "tp": 31,
+    "tn": 38,
+    "fp": 6,
+    "fn": 2,
+    "optimal_eps": 0.03,
+    "optimal_tau": 0.4867,
+    "gpu_backbone_ms": 2.92,
+    "gpu_pipeline_ms": 27.72,
+    "gpu_fps": 36.1,
+    "cpu_backbone_ms": 15.48,
+    "cpu_pipeline_ms": 33.48,
+    "cpu_fps": 29.9,
+    "category_breakdown": {
+      "With_Coat": {
+        "videos": 16,
+        "tp": 15,
+        "tn": 0,
+        "fp": 0,
+        "fn": 1
+      },
+      "Without_Coat": {
+        "videos": 17,
+        "tp": 16,
+        "tn": 0,
+        "fp": 0,
+        "fn": 1
+      },
+      "OOD": {
+        "videos": 44,
+        "tp": 0,
+        "tn": 38,
+        "fp": 6,
+        "fn": 0
+      }
+    }
+  },
+  {
+    "model_id": "distill_methodA_feature",
+    "parameters": 598429,
+    "f1_score": 0.6957,
+    "recall": 96.97,
+    "precision": 54.24,
+    "accuracy": 63.64,
+    "tp": 32,
+    "tn": 17,
+    "fp": 27,
+    "fn": 1,
+    "optimal_eps": 0.01,
+    "optimal_tau": -0.0972,
+    "gpu_backbone_ms": 4.16,
+    "gpu_pipeline_ms": 28.96,
+    "gpu_fps": 34.5,
+    "cpu_backbone_ms": 15.78,
+    "cpu_pipeline_ms": 33.78,
+    "cpu_fps": 29.6,
+    "category_breakdown": {
+      "With_Coat": {
+        "videos": 16,
+        "tp": 16,
+        "tn": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "Without_Coat": {
+        "videos": 17,
+        "tp": 16,
+        "tn": 0,
+        "fp": 0,
+        "fn": 1
+      },
+      "OOD": {
+        "videos": 44,
+        "tp": 0,
+        "tn": 17,
+        "fp": 27,
+        "fn": 0
+      }
+    }
+  },
+  {
+    "model_id": "distill_methodB_rkd",
+    "parameters": 598429,
+    "f1_score": 0.8,
+    "recall": 96.97,
+    "precision": 68.09,
+    "accuracy": 79.22,
+    "tp": 32,
+    "tn": 29,
+    "fp": 15,
+    "fn": 1,
+    "optimal_eps": 0.01,
+    "optimal_tau": -2.8217,
+    "gpu_backbone_ms": 3.09,
+    "gpu_pipeline_ms": 27.89,
+    "gpu_fps": 35.9,
+    "cpu_backbone_ms": 15.73,
+    "cpu_pipeline_ms": 33.73,
+    "cpu_fps": 29.6,
+    "category_breakdown": {
+      "With_Coat": {
+        "videos": 16,
+        "tp": 16,
+        "tn": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "Without_Coat": {
+        "videos": 17,
+        "tp": 16,
+        "tn": 0,
+        "fp": 0,
+        "fn": 1
+      },
+      "OOD": {
+        "videos": 44,
+        "tp": 0,
+        "tn": 29,
+        "fp": 15,
+        "fn": 0
+      }
+    }
+  },
+  {
+    "model_id": "distill_methodC_attention",
+    "parameters": 598429,
+    "f1_score": 0.7429,
+    "recall": 78.79,
+    "precision": 70.27,
+    "accuracy": 76.62,
+    "tp": 26,
+    "tn": 33,
+    "fp": 11,
+    "fn": 7,
+    "optimal_eps": 0.002,
+    "optimal_tau": 0.4136,
+    "gpu_backbone_ms": 3.04,
+    "gpu_pipeline_ms": 27.84,
+    "gpu_fps": 35.9,
+    "cpu_backbone_ms": 15.49,
+    "cpu_pipeline_ms": 33.49,
+    "cpu_fps": 29.9,
+    "category_breakdown": {
+      "With_Coat": {
+        "videos": 16,
+        "tp": 13,
+        "tn": 0,
+        "fp": 0,
+        "fn": 3
+      },
+      "Without_Coat": {
+        "videos": 17,
+        "tp": 13,
+        "tn": 0,
+        "fp": 0,
+        "fn": 4
+      },
+      "OOD": {
+        "videos": 44,
+        "tp": 0,
+        "tn": 33,
+        "fp": 11,
+        "fn": 0
+      }
+    }
+  },
+  {
+    "model_id": "distill_methodD_combined",
+    "parameters": 598429,
+    "f1_score": 0.7191,
+    "recall": 96.97,
+    "precision": 57.14,
+    "accuracy": 67.53,
+    "tp": 32,
+    "tn": 20,
+    "fp": 24,
+    "fn": 1,
+    "optimal_eps": 0.005,
+    "optimal_tau": -0.9476,
+    "gpu_backbone_ms": 4.04,
+    "gpu_pipeline_ms": 28.84,
+    "gpu_fps": 34.7,
+    "cpu_backbone_ms": 15.46,
+    "cpu_pipeline_ms": 33.46,
+    "cpu_fps": 29.9,
+    "category_breakdown": {
+      "With_Coat": {
+        "videos": 16,
+        "tp": 16,
+        "tn": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "Without_Coat": {
+        "videos": 17,
+        "tp": 16,
+        "tn": 0,
+        "fp": 0,
+        "fn": 1
+      },
+      "OOD": {
+        "videos": 44,
+        "tp": 0,
+        "tn": 20,
+        "fp": 24,
+        "fn": 0
+      }
+    }
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "version": "v2.20",
+  "technique": "SkateFormer Partitioned Skeletal-Temporal Vision Transformer Backbone",
+  "date": "2026-09-16",
+  "total_parameters": 447205,
+  "champion_epsilon": 0.001,
+  "optimal_threshold": -0.4275,
+  "f1_score": 0.7879,
+  "precision": 78.79,
+  "recall": 78.79,
+  "accuracy": 81.82,
+  "false_positives": 7,
+  "false_negatives": 7,
+  "category_breakdown": {
+    "With_Coat": {
+      "videos": 16,
+      "tp": 13,
+      "tn": 0,
+      "fp": 0,
+      "fn": 3
+    },
+    "Without_Coat": {
+      "videos": 17,
+      "tp": 13,
+      "tn": 0,
+      "fp": 0,
+      "fn": 4
+    },
+    "OOD": {
+      "videos": 44,
+      "tp": 0,
+      "tn": 37,
+      "fp": 7,
+      "fn": 0
+    }
+  },
+  "cosine_knn_comparison": {
+    "f1_score": 0.5925925925925926,
+    "threshold": 0.8504716873168945,
+    "precision": 42.66666666666667,
+    "recall": 96.96969696969697,
+    "fp": 43,
+    "fn": 1
+  },
+  "latency_stats": {
+    "gpu_rtx3090": {
+      "backbone_fwd_ms": 9.29,
+      "gating_us": 198.51,
+      "stage2b_total_ms": 9.49
+    },
+    "cpu": {
+      "backbone_fwd_ms": 19.26,
+      "gating_us": 146.17,
+      "stage2b_total_ms": 19.41
+    }
+  },
+  "pipeline_latency": {
+    "gpu_total_ms": 34.09,
+    "gpu_fps": 29.3,
+    "cpu_total_ms": 156.87,
+    "cpu_fps": 6.4
+  }
+}

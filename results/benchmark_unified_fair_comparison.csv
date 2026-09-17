@@ -1,0 +1,17 @@
+system,architecture,mode,parameters,f1_score,recall,fn,precision,fp,accuracy,with_coat_tp,without_coat_tp,ood_fp,fwd_cpu_ms,fwd_gpu_ms,action_cpu_ms,action_gpu_ms,pipeline_cpu_ms,pipeline_cpu_fps,pipeline_gpu_ms,pipeline_gpu_fps
+ST-GCN Baseline (v1.08),ST-GCN Graph CNN,Synchronous (100%),3014981,0.9167,100.0,0,84.62,6,92.21,16,17,6,11.97,3.68,14.4,3.76,170.54,5.9,27.29,36.6
+CTR-GCN (v2.00),CTR-GCN Channel Refinement,Synchronous (100%),1332761,0.8649,96.97,1,78.05,9,87.01,16,16,9,25.25,10.98,27.68,11.06,183.81,5.4,34.6,28.9
+PoseConv3D Baseline (v2.10),"3D CNN (24ch, 256d)",Synchronous (100%),765529,0.8667,78.79,7,96.3,1,89.61,12,14,1,21.33,2.2,57.47,2.82,213.61,4.7,26.36,37.9
+PoseConv3D Scaled (3.55M),"3D CNN (48ch, 512d)",Synchronous (100%),3554813,0.8406,87.88,4,80.56,7,85.71,14,15,7,47.5,2.34,83.64,2.96,239.77,4.2,26.5,37.7
+PoseConv3D Tier 5 (132k),"3D CNN (12ch, 96d)",Synchronous (100%),132349,0.8621,75.76,8,100.0,0,89.61,13,12,0,17.8,2.16,53.94,2.78,210.07,4.8,26.31,38.0
+PoseConv3D Tier 3 (598k),"3D CNN (12ch, 256d)",Synchronous (100%),598429,0.8857,93.94,2,83.78,6,89.61,15,16,6,18.24,2.27,54.38,2.88,210.52,4.8,26.42,37.9
+Distilled Tier 3 (Method B),3D CNN (ST-GCN Distilled),Synchronous (100%),598429,0.8,96.97,1,68.09,15,79.22,16,16,15,18.34,2.18,54.49,2.8,210.62,4.7,26.34,38.0
+Server Ensemble (v3.10 Server),ST-GCN + CTR-GCN + PoseC3D,Synchronous (100%),5113271,0.9706,100.0,0,94.29,2,97.4,16,17,2,59.93,17.46,98.5,18.16,254.63,3.9,41.69,24.0
+Hetero Dual-Tier v3.10 (Orig p=0.60),Edge ST-GCN -> Server Escalation,Hierarchical (5.2% Esc),5113271,0.9167,100.0,0,84.62,6,92.21,16,17,6,14.39,4.36,18.7,4.47,174.83,5.7,28.01,35.7
+Hetero Dual-Tier v3.10 (Opt p=0.999),Edge ST-GCN -> Server Escalation,Hierarchical (44.2% Esc),5113271,0.9706,100.0,0,94.29,2,97.4,16,17,2,32.54,9.5,50.93,9.85,207.06,4.8,33.39,30.0
+Config 1: Pure Dual Consensus,Tier 5 (132k) + Tier 3 (598k),Synchronous (Shared 3D),730778,0.9231,90.91,3,93.75,2,93.51,15,15,2,36.89,4.8,73.03,5.42,229.17,4.4,28.95,34.5
+Config 2: Distilled Consensus,Tier 5 (132k) + Distill Tier 3,Synchronous (Shared 3D),730778,0.8621,75.76,8,100.0,0,89.61,13,12,0,36.89,4.8,73.03,5.42,229.17,4.4,28.95,34.5
+Config 3: Tri-PoseConv3D Consensus,Tier 5 + Tier 3 + Distill Tier 3,Synchronous (Shared 3D),1329207,0.918,84.85,5,100.0,0,93.51,15,13,0,56.96,6.93,93.1,7.55,249.23,4.0,31.09,32.2
+Config 4: Pure Hierarchical Dual,Tier 5 Edge -> Tier 3 Escalation,Hierarchical (28.6% Esc),730778,0.9355,87.88,4,100.0,0,94.81,14,15,0,23.01,2.81,59.15,3.43,215.28,4.6,26.96,37.1
+Config 4: Pure Hierarchical (Tuned),Tier 5 Edge -> Tier 3 (p_low=0.011),Hierarchical (36.4% Esc),730778,0.9524,90.91,3,100.0,0,96.1,15,15,0,24.43,2.98,60.57,3.6,216.71,4.6,27.14,36.8
+Config 5: Tri-Model Hierarchical Vote,Tier 5 Edge -> (20% T5 + 50% T3 + 30% DT3),Hierarchical (36.4% Esc),1329207,0.9538,93.94,2,96.88,1,96.1,15,16,1,31.1,3.78,67.24,4.4,223.38,4.5,27.93,35.8
