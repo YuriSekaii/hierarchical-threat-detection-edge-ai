@@ -170,7 +170,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     ax.add_patch(s2a_rect)
     ax.text(75.0, 66.2, "STAGE 2a: Multi-Person Tracking & Biomechanical Invariance (Gapless Auditing)",
             ha='center', va='center', fontsize=12.5, fontweight='bold', family='sans-serif', color='#1e3a8a', zorder=3)
-    ax.text(4.5, 49.6, "ByteTrack threat lock eliminates ID swaps (0 swaps) • Pose caching reuses 40/50 frames • Torso-scale normalization removes distance drift",
+    ax.text(4.5, 49.6, "ByteTrack persistent threat lock • Pose caching reuses 40/50 frames • Torso-scale normalization removes distance drift",
             ha='left', va='center', fontsize=9.0, family='sans-serif', color='#1d4ed8', zorder=3)
 
     y_s2a = 57.5
@@ -203,7 +203,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     ax.add_patch(s2b_rect)
     ax.text(75.0, 43.2, "STAGE 2b: Progressive Multi-Tier 'Staircase' Cascade (Production Champion 2: pc3d_t3 → pc3d_dt3 → stgcn)",
             ha='center', va='center', fontsize=12.5, fontweight='bold', family='sans-serif', color='#581c87', zorder=3)
-    ax.text(4.5, 3.8, "Early-Exit Topology: 54.55% exits at Tier 1 • 23.38% exits at Tier 2 (77.92% offloaded from ST-GCN) • Zero-copy UMA memory reuse cuts latency by 30.3%",
+    ax.text(4.5, 3.8, "Dynamic Early-Exit Architecture: Benign actions exit early at Tier 1/2 • Heavy ST-GCN invoked only on ambiguous escalation • Zero-copy GPU UMA memory reuse",
             ha='left', va='center', fontsize=9.0, family='sans-serif', color='#6b21a8', zorder=3)
 
     # Four columns: X = 17.5, 55.8, 94.1, 133.4
@@ -222,12 +222,12 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_box(x_c1, y_box_s2b, 25.0, h_box_s2b, "TIER 1: PoseConv3D T3\n(598k params, 3D CNN)", subtext="3D Heatmap (17, 50, 56, 56)")
     draw_arrow(x_c1, y_box_s2b - h_box_s2b/2, x_c1, y_diamond_s2b + h_diamond_s2b/2)
 
-    draw_diamond(x_c1, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P1,max < 0.20?\n(Civilian)", font_sz=9.0)
+    draw_diamond(x_c1, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P1,max < 0.20?\n(Non-Threat)", font_sz=9.0)
 
     # Discard Down
     draw_arrow(x_c1, y_diamond_s2b - h_diamond_s2b/2, x_c1, y_discard_s2b + h_discard_s2b/2)
     ax.text(x_c1 + 1.2, 13.0, "YES", ha='left', va='center', fontsize=8.8, fontweight='bold', color='#14532d', zorder=4)
-    draw_box(x_c1, y_discard_s2b, 21.0, h_discard_s2b, "FAST DISCARD\n(54.55% Resolved)", box_type='dismiss', font_sz=8.6)
+    draw_box(x_c1, y_discard_s2b, 21.0, h_discard_s2b, "FAST DISCARD\n(Early Safe Exit)", box_type='dismiss', font_sz=8.6)
 
     # Escalation from Tier 1 Diamond (right vertex: x=25.5, y=18.5) to Tier 2 Box (left edge: x=43.3, y=33.0)
     x_t1_d_right = x_c1 + w_diamond_s2b/2      # 25.5
@@ -238,9 +238,9 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
                          (x_mid_12, y_diamond_s2b),
                          (x_mid_12, y_box_s2b),
                          (x_t2_b_left, y_box_s2b)], color='#7e22ce', lw=2.0)
-    
+
     # Escalation Label neatly positioned in the channel
-    ax.text(x_mid_12 - 0.8, (y_diamond_s2b + y_box_s2b)/2, "ESCALATE (45.5%)\n[Zero-Copy Heatmap]",
+    ax.text(x_mid_12 - 0.8, (y_diamond_s2b + y_box_s2b)/2, "ESCALATE\n[Zero-Copy Heatmap]",
             ha='right', va='center', fontsize=8.4, fontweight='bold', color='#6b21a8', linespacing=1.2, zorder=4)
     ax.text(x_t1_d_right + 1.0, y_diamond_s2b + 1.2, "NO",
             ha='left', va='bottom', fontsize=8.8, fontweight='bold', color='#6b21a8', zorder=4)
@@ -252,12 +252,12 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_box(x_c2, y_box_s2b, 25.0, h_box_s2b, "TIER 2: PoseConv3D DT3\n(598k params, RKD Student)", subtext="Zero-Copy GPU UMA Heatmap", box_type='champ')
     draw_arrow(x_c2, y_box_s2b - h_box_s2b/2, x_c2, y_diamond_s2b + h_diamond_s2b/2)
 
-    draw_diamond(x_c2, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P2,max < 0.35?\n(Civilian)", font_sz=9.0)
+    draw_diamond(x_c2, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P2,max < 0.35?\n(Non-Threat)", font_sz=9.0)
 
     # Discard Down
     draw_arrow(x_c2, y_diamond_s2b - h_diamond_s2b/2, x_c2, y_discard_s2b + h_discard_s2b/2)
     ax.text(x_c2 + 1.2, 13.0, "YES", ha='left', va='center', fontsize=8.8, fontweight='bold', color='#14532d', zorder=4)
-    draw_box(x_c2, y_discard_s2b, 21.0, h_discard_s2b, "FAST DISCARD\n(23.38% Resolved)", box_type='dismiss', font_sz=8.6)
+    draw_box(x_c2, y_discard_s2b, 21.0, h_discard_s2b, "FAST DISCARD\n(Early Safe Exit)", box_type='dismiss', font_sz=8.6)
 
     # Escalation from Tier 2 Diamond (right vertex: x=63.8, y=18.5) to Tier 3 Box (left edge: x=81.6, y=33.0)
     x_t2_d_right = x_c2 + w_diamond_s2b/2      # 63.8
@@ -270,7 +270,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
                          (x_t3_b_left, y_box_s2b)], color='#7e22ce', lw=2.0)
 
     # Escalation Label neatly positioned in the channel
-    ax.text(x_mid_23 - 0.8, (y_diamond_s2b + y_box_s2b)/2, "ESCALATE (22.1%)\n[Load 2D Coords]",
+    ax.text(x_mid_23 - 0.8, (y_diamond_s2b + y_box_s2b)/2, "ESCALATE\n[Load 2D Graph Coords]",
             ha='right', va='center', fontsize=8.4, fontweight='bold', color='#6b21a8', linespacing=1.2, zorder=4)
     ax.text(x_t2_d_right + 1.0, y_diamond_s2b + 1.2, "NO",
             ha='left', va='bottom', fontsize=8.8, fontweight='bold', color='#6b21a8', zorder=4)
@@ -279,15 +279,15 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     # COL 3: TIER 3 (9-Block ST-GCN)
     # -------------------------------------------------------------------------
     x_c3 = 94.1
-    draw_box(x_c3, y_box_s2b, 25.0, h_box_s2b, "TIER 3: 9-Block ST-GCN\n(3.01M params, 2D Graph)", subtext="Only evaluates 22.08% traffic")
+    draw_box(x_c3, y_box_s2b, 25.0, h_box_s2b, "TIER 3: 9-Block ST-GCN\n(3.01M params, 2D Graph)", subtext="Deep Spatio-Temporal Graph Analysis")
     draw_arrow(x_c3, y_box_s2b - h_box_s2b/2, x_c3, y_diamond_s2b + h_diamond_s2b/2)
 
-    draw_diamond(x_c3, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P3,max >= 0.55?\n(Assault)", font_sz=9.0)
+    draw_diamond(x_c3, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P3,max >= 0.55?\n(Assault Confirmed)", font_sz=9.0)
 
     # Dismiss Down
     draw_arrow(x_c3, y_diamond_s2b - h_diamond_s2b/2, x_c3, y_discard_s2b + h_discard_s2b/2)
     ax.text(x_c3 + 1.2, 13.0, "NO", ha='left', va='center', fontsize=8.8, fontweight='bold', color='#14532d', zorder=4)
-    draw_box(x_c3, y_discard_s2b, 21.0, h_discard_s2b, "DISMISS AS CIVILIAN\n(Final Safe Exit)", box_type='dismiss', font_sz=8.6)
+    draw_box(x_c3, y_discard_s2b, 21.0, h_discard_s2b, "DISMISS AS BENIGN\n(Final Safe Exit)", box_type='dismiss', font_sz=8.6)
 
     # -------------------------------------------------------------------------
     # COL 4: HIGH-CONFIDENCE VIOLENCE ALARM
@@ -304,13 +304,13 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
             ha='center', va='bottom', fontsize=9.2, fontweight='bold', color='#991b1b', zorder=4)
 
     draw_box(x_c4, y_diamond_s2b, w_alarm, h_alarm,
-             "HIGH-CONFIDENCE ALARM\n[Active Assault Verified]\n1.0000 F1 | 100% Recall\n0 FP (0 / 44 civilian)",
-             box_type='violence', font_sz=10.0)
+             "HIGH-CONFIDENCE ALARM\n[Active Assault Verified]\nReal-Time Alert Dispatch\n& Threat Video Logging",
+             box_type='violence', font_sz=9.5)
 
     # Performance & Throughput Badge
     draw_box(x_c4, y_discard_s2b, w_alarm, h_discard_s2b,
-             "34.80 FPS sustained GPU | 5.24 ms action\n77.92% traffic never touches ST-GCN",
-             box_type='champ', font_sz=8.4)
+             "Edge Latency: 5.24 ms / Action\nSustained Pipeline: 34.80 FPS",
+             box_type='champ', font_sz=8.5)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path, dpi=dpi, facecolor='#ffffff', edgecolor='none')
