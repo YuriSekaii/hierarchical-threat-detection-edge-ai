@@ -150,7 +150,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     ax.text(116.25, y_s1 + 1.2, "YES", ha='center', va='bottom', fontsize=9.5, fontweight='bold', color='#0f172a', zorder=4)
 
     # 6. Trigger Stage 2 (X=131.0, W=22)
-    draw_box(131.0, y_s1, 22.0, h_s1, "Lock Frame Index\n& Trigger Stage 2", subtext="Audit worker awakened", box_type='champ')
+    draw_box(131.0, y_s1, 22.0, h_s1, "Lock Frame Index\n& Trigger Stage 2", subtext="Awakens Stage 2 Analysis", box_type='champ')
 
     # Connecting Arrow from Stage 1 to Stage 2a
     draw_polyline_arrow([(131.0, y_s1 - h_s1/2), (131.0, 69.8), (17.5, 69.8), (17.5, 57.5 + 8.5/2)], color='#2563eb', lw=2.0)
@@ -183,7 +183,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_arrow(94.1 + 25.0/2, y_s2a, 133.4 - 27.0/2, y_s2a)
 
     # 4. Dual-Representation Formatter (X=133.4, W=27)
-    draw_box(133.4, y_s2a, 27.0, h_s2a, "Dual-Representation Formatter\n(2D Graph & 3D Heatmaps)", subtext="Batched Kinematic Tensors", box_type='champ')
+    draw_box(133.4, y_s2a, 27.0, h_s2a, "Dual-Representation Formatter\n(2D Graph & 3D Heatmaps)", subtext=None, box_type='champ')
 
     # Connecting Arrow from Stage 2a to Stage 2b
     draw_polyline_arrow([(133.4, y_s2a - h_s2a/2), (133.4, 45.5), (17.5, 45.5), (17.5, 33.0 + 8.5/2)], color='#9333ea', lw=2.0)
