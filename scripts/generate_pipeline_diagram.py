@@ -128,7 +128,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_arrow(11.5 + 15.0/2, y_s1, 28.5 - 17.0/2, y_s1)
 
     # 2. TurboJPEG Circular Buffer (X=28.5, W=17)
-    draw_box(28.5, y_s1, 17.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="47.3 MB (-95.5% RAM)")
+    draw_box(28.5, y_s1, 17.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="47.3 MB")
     draw_arrow(28.5 + 17.0/2, y_s1, 46.5 - 15.0/2, y_s1)
 
     # 3. 3 FPS Subsampling (X=46.5, W=15)
@@ -136,7 +136,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_arrow(46.5 + 15.0/2, y_s1, 65.5 - 17.0/2, y_s1)
 
     # 4. Distilled NMS-Free YOLO26s (X=65.5, W=17)
-    draw_box(65.5, y_s1, 17.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext="11.18 ms edge (384x640)")
+    draw_box(65.5, y_s1, 17.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext="11.18 ms (384x640)")
     draw_arrow(65.5 + 17.0/2, y_s1, 85.5 - 16.0/2, y_s1)
 
     # 5. Weapon Detected? (X=85.5, W=16, H=11.5)
@@ -188,8 +188,8 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_box(94.1, y_s2a, 25.0, h_s2a, "Torso-Scale Normalization\n& Gaussian Filter (σ=1.0)", subtext="L_torso = ||shoulder - hip||_2")
     draw_arrow(94.1 + 25.0/2, y_s2a, 133.4 - 27.0/2, y_s2a)
 
-    # 4. Sequence Max-Pooling Dispatcher (X=133.4, W=27)
-    draw_box(133.4, y_s2a, 27.0, h_s2a, "Sequence Temporal Max-Pool\nDispatcher: P_tier,max", subtext="Prevents pre-attack walking drops", box_type='champ')
+    # 4. Dual-Representation Formatter (X=133.4, W=27)
+    draw_box(133.4, y_s2a, 27.0, h_s2a, "Dual-Representation Formatter\n(2D Graph & 3D Heatmaps)", subtext="Batched Kinematic Tensors", box_type='champ')
 
     # Connecting Arrow from Stage 2a to Stage 2b
     draw_polyline_arrow([(133.4, y_s2a - h_s2a/2), (133.4, 45.5), (17.5, 45.5), (17.5, 33.0 + 8.5/2)], color='#9333ea', lw=2.0)
@@ -303,14 +303,9 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     ax.text((x_t3_d_right + x_alarm_left)/2, y_diamond_s2b + 1.2, "YES (Assault)",
             ha='center', va='bottom', fontsize=9.2, fontweight='bold', color='#991b1b', zorder=4)
 
-    draw_box(x_c4, y_diamond_s2b, w_alarm, h_alarm,
-             "HIGH-CONFIDENCE ALARM\n[Active Assault Verified]\nReal-Time Alert Dispatch\n& Threat Video Logging",
-             box_type='violence', font_sz=9.5)
-
-    # Performance & Throughput Badge
-    draw_box(x_c4, y_discard_s2b, w_alarm, h_discard_s2b,
-             "Edge Latency: 5.24 ms / Action\nSustained Pipeline: 34.80 FPS",
-             box_type='champ', font_sz=8.5)
+    draw_box(x_c4, y_diamond_s2b, w_alarm, 16.5,
+             "HIGH-CONFIDENCE ALARM\n[Active Assault Verified]\n\n• Instant Alert Dispatch\n• Security Team Notification\n• Incident Video Archiving",
+             box_type='violence', font_sz=9.3)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path, dpi=dpi, facecolor='#ffffff', edgecolor='none')
