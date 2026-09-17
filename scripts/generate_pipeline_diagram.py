@@ -103,10 +103,8 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
         draw_arrow(p_prev[0], p_prev[1], p_last[0], p_last[1], zorder=zorder, color=color, lw=lw)
 
     # Master Title Banner
-    ax.text(75.0, 103.5, "Hierarchical Edge-AI Surveillance: End-to-End Threat & Violence Detection Cascade",
+    ax.text(75.0, 102.5, "Hierarchical Edge-AI Surveillance: End-to-End Threat & Violence Detection Cascade",
             ha='center', va='center', fontsize=15.5, fontweight='heavy', family='sans-serif', color='#0f172a')
-    ax.text(75.0, 101.2, "Production Architecture: Distilled NMS-Free YOLO26s  →  Torso-Invariant Tracking  →  Progressive Multi-Tier Staircase Cascade (v5.10)",
-            ha='center', va='center', fontsize=10.5, family='sans-serif', color='#334155')
 
     # =========================================================================
     # STAGE 1: ALWAYS-ON WEAPON SCREENING
@@ -136,7 +134,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     draw_arrow(46.5 + 15.0/2, y_s1, 65.5 - 17.0/2, y_s1)
 
     # 4. Distilled NMS-Free YOLO26s (X=65.5, W=17)
-    draw_box(65.5, y_s1, 17.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext="11.18 ms (384x640)")
+    draw_box(65.5, y_s1, 17.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext=None)
     draw_arrow(65.5 + 17.0/2, y_s1, 85.5 - 16.0/2, y_s1)
 
     # 5. Weapon Detected? (X=85.5, W=16, H=11.5)
