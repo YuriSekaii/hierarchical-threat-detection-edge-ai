@@ -115,7 +115,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     ax.add_patch(s1_rect)
     ax.text(75.0, 96.8, "STAGE 1: Continuous Lightweight Threat Screening (Always-On Ingestion & Gating Loop)",
             ha='center', va='center', fontsize=12.5, fontweight='bold', family='sans-serif', color='#14532d', zorder=3)
-    ax.text(4.5, 72.8, "Subsamples 1 in 10 frames (3 FPS) • Cuts idle GPU workloads by ~90% • NMS-Free Hungarian matching cuts seam false alarms by >50%",
+    ax.text(4.5, 72.8, "Subsamples 1 in 10 frames (3 FPS) • Cuts idle GPU workloads by ~90%",
             ha='left', va='center', fontsize=9.0, family='sans-serif', color='#166534', zorder=3)
 
     y_s1 = 84.5
