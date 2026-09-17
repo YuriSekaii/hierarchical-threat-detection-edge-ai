@@ -171,7 +171,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     h_s2a = 8.5
 
     # 1. 50-Frame Sliding Window (X=17.5, W=25)
-    draw_box(17.5, y_s2a, 25.0, h_s2a, "50-Frame Sliding Window\n(10-Frame Stride)", subtext="1.67s contiguous temporal window")
+    draw_box(17.5, y_s2a, 25.0, h_s2a, "50-Frame Sliding Window\n(10-Frame Stride)", subtext=None)
     draw_arrow(17.5 + 25.0/2, y_s2a, 55.8 - 25.0/2, y_s2a)
 
     # 2. YOLO26s-Pose + ByteTrack (X=55.8, W=25)
