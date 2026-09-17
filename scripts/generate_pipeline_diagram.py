@@ -7,20 +7,20 @@ import os
 
 def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200):
     output_path = os.path.normpath(os.path.abspath(output_path))
-    fig = plt.figure(figsize=(19.6, 12.8), dpi=dpi, facecolor='#ffffff')
+    fig = plt.figure(figsize=(20.0, 13.2), dpi=dpi, facecolor='#ffffff')
     ax = fig.add_axes([0, 0, 1, 1])
-    ax.set_xlim(0, 148.0)
-    ax.set_ylim(0, 104.0)
+    ax.set_xlim(0, 150.0)
+    ax.set_ylim(0, 106.0)
     ax.axis('off')
     
     # Palette definition
-    C_OUTSIDE_BG = '#f8fafc'       # Crisp modern slate canvas
+    C_OUTSIDE_BG = '#f8fafc'       # Modern slate canvas
     C_STAGE1_BG = '#f0fdf4'        # Soft emerald tint (Stage 1)
-    C_STAGE1_BORDER = '#15803d'    # Emerald border
+    C_STAGE1_BORDER = '#16a34a'    # Emerald border
     C_STAGE2A_BG = '#eff6ff'       # Soft sky blue tint (Stage 2a)
-    C_STAGE2A_BORDER = '#1d4ed8'   # Blue border
+    C_STAGE2A_BORDER = '#2563eb'   # Blue border
     C_STAGE2B_BG = '#faf5ff'       # Soft purple tint (Stage 2b)
-    C_STAGE2B_BORDER = '#7e22ce'   # Purple border
+    C_STAGE2B_BORDER = '#9333ea'   # Purple border
     
     C_BOX_BG = '#ffffff'           # Process box fill
     C_BOX_BORDER = '#334155'       # Dark slate border
@@ -30,7 +30,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     C_NOTE_TEXT = '#475569'        # Note/annotation text
     C_ARROW = '#1e293b'            # Arrow lines
     
-    # Highlight styling
+    # Alert & Badge styling
     C_VIOLENCE_BG = '#fee2e2'      # Soft red fill
     C_VIOLENCE_BORDER = '#b91c1c'  # Crimson border
     C_VIOLENCE_TEXT = '#991b1b'    # Crimson text
@@ -43,10 +43,10 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     C_CHAMP_BORDER = '#d97706'     # Amber border
     C_CHAMP_TEXT = '#92400e'       # Amber text
 
-    # Base canvas
-    ax.add_patch(Rectangle((0, 0), 148.0, 104.0, facecolor=C_OUTSIDE_BG, edgecolor='none', zorder=0))
+    # Base canvas background
+    ax.add_patch(Rectangle((0, 0), 150.0, 106.0, facecolor=C_OUTSIDE_BG, edgecolor='none', zorder=0))
 
-    def draw_box(x, y, w, h, title_text, box_type='standard', font_sz=10.5, subtext=None):
+    def draw_box(x, y, w, h, title_text, box_type='standard', font_sz=10.2, subtext=None, title_color=None):
         if box_type == 'violence':
             fc, ec, tc, lw = C_VIOLENCE_BG, C_VIOLENCE_BORDER, C_VIOLENCE_TEXT, 2.4
         elif box_type == 'dismiss':
@@ -55,6 +55,9 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
             fc, ec, tc, lw = C_CHAMP_BG, C_CHAMP_BORDER, C_CHAMP_TEXT, 2.0
         else:
             fc, ec, tc, lw = C_BOX_BG, C_BOX_BORDER, C_TEXT, 1.8
+            
+        if title_color:
+            tc = title_color
             
         rect = Rectangle((x - w/2, y - h/2), w, h, 
                          facecolor=fc, edgecolor=ec, linewidth=lw, 
@@ -66,14 +69,14 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
                     fontsize=font_sz, fontweight='bold', family='sans-serif',
                     color=tc, linespacing=1.2, zorder=3)
             ax.text(x, y - h/2 + 1.4, subtext, ha='center', va='center',
-                    fontsize=8.6, family='sans-serif', color=C_NOTE_TEXT, zorder=3)
+                    fontsize=8.4, family='sans-serif', color=C_NOTE_TEXT, zorder=3)
         else:
             ax.text(x, y, title_text, ha='center', va='center', 
                     fontsize=font_sz, fontweight='bold', family='sans-serif',
-                    color=tc, linespacing=1.25, zorder=3)
+                    color=tc, linespacing=1.22, zorder=3)
         return (x, y, w, h)
 
-    def draw_diamond(x, y, w, h, text, font_sz=9.8):
+    def draw_diamond(x, y, w, h, text, font_sz=9.5):
         vertices = [(x, y + h/2), (x + w/2, y), (x, y - h/2), (x - w/2, y)]
         poly = Polygon(vertices, closed=True, facecolor=C_DIAMOND_BG, 
                        edgecolor=C_DIAMOND_BORDER, linewidth=1.8, zorder=2)
@@ -100,158 +103,214 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
         draw_arrow(p_prev[0], p_prev[1], p_last[0], p_last[1], zorder=zorder, color=color, lw=lw)
 
     # Master Title Banner
-    ax.text(74.0, 101.5, "Hierarchical Edge-AI Surveillance: End-to-End Threat & Violence Detection Cascade",
+    ax.text(75.0, 103.5, "Hierarchical Edge-AI Surveillance: End-to-End Threat & Violence Detection Cascade",
             ha='center', va='center', fontsize=15.5, fontweight='heavy', family='sans-serif', color='#0f172a')
-    ax.text(74.0, 99.2, "Production Architecture: Distilled NMS-Free YOLO26s  →  Torso-Invariant Tracking  →  Progressive Multi-Tier Staircase Cascade (v5.10)",
+    ax.text(75.0, 101.2, "Production Architecture: Distilled NMS-Free YOLO26s  →  Torso-Invariant Tracking  →  Progressive Multi-Tier Staircase Cascade (v5.10)",
             ha='center', va='center', fontsize=10.5, family='sans-serif', color='#334155')
 
     # =========================================================================
     # STAGE 1: ALWAYS-ON WEAPON SCREENING
     # =========================================================================
-    s1_rect = Rectangle((2.0, 69.0), 144.0, 28.5,
+    s1_rect = Rectangle((2.5, 71.0), 145.0, 28.0,
                         facecolor=C_STAGE1_BG, edgecolor=C_STAGE1_BORDER,
                         linestyle='--', linewidth=1.8, zorder=1)
     ax.add_patch(s1_rect)
-    ax.text(74.0, 95.5, "STAGE 1: Continuous Lightweight Threat Screening (Always-On Ingestion & Gating Loop)",
-            ha='center', va='center', fontsize=13.0, fontweight='bold', family='sans-serif', color='#14532d', zorder=3)
-    ax.text(4.0, 71.0, "Subsamples 1 in 10 frames (3 FPS) • Cuts idle GPU workloads by ~90% • NMS-Free Hungarian matching cuts seam false alarms by >50%",
-            ha='left', va='center', fontsize=9.2, family='sans-serif', color='#166534', zorder=3)
+    ax.text(75.0, 96.8, "STAGE 1: Continuous Lightweight Threat Screening (Always-On Ingestion & Gating Loop)",
+            ha='center', va='center', fontsize=12.5, fontweight='bold', family='sans-serif', color='#14532d', zorder=3)
+    ax.text(4.5, 72.8, "Subsamples 1 in 10 frames (3 FPS) • Cuts idle GPU workloads by ~90% • NMS-Free Hungarian matching cuts seam false alarms by >50%",
+            ha='left', va='center', fontsize=9.0, family='sans-serif', color='#166534', zorder=3)
 
-    y_s1 = 82.5
-    h_s1 = 8.8
+    y_s1 = 84.5
+    h_s1 = 8.5
 
-    # 1. Live Video Stream
-    draw_box(12.5, y_s1, 17.0, h_s1, "Live Surveillance\nStream (30 FPS)", subtext="RTSP / USB Camera")
-    draw_arrow(12.5 + 17.0/2, y_s1, 31.0 - 18.0/2, y_s1)
+    # 1. Live Video Stream (X=11.5, W=15)
+    draw_box(11.5, y_s1, 15.0, h_s1, "Live Surveillance\nStream (30 FPS)", subtext="RTSP / USB Camera")
+    draw_arrow(11.5 + 15.0/2, y_s1, 28.5 - 17.0/2, y_s1)
 
-    # 2. TurboJPEG Circular Buffer
-    draw_box(31.0, y_s1, 18.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="47.3 MB (1,200 f, -95.5% RAM)")
-    draw_arrow(31.0 + 18.0/2, y_s1, 49.5 - 16.0/2, y_s1)
+    # 2. TurboJPEG Circular Buffer (X=28.5, W=17)
+    draw_box(28.5, y_s1, 17.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="47.3 MB (-95.5% RAM)")
+    draw_arrow(28.5 + 17.0/2, y_s1, 46.5 - 15.0/2, y_s1)
 
-    # 3. 3 FPS Subsampling
-    draw_box(49.5, y_s1, 16.0, h_s1, "Subsample 1 in 10\n(Effective: 3 FPS)", subtext="Idle power saver")
-    draw_arrow(49.5 + 16.0/2, y_s1, 68.5 - 18.0/2, y_s1)
+    # 3. 3 FPS Subsampling (X=46.5, W=15)
+    draw_box(46.5, y_s1, 15.0, h_s1, "Subsample 1 in 10\n(Effective: 3 FPS)", subtext="Idle power saver")
+    draw_arrow(46.5 + 15.0/2, y_s1, 65.5 - 17.0/2, y_s1)
 
-    # 4. Distilled NMS-Free YOLO26s
-    draw_box(68.5, y_s1, 18.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext="11.18 ms edge (384x640)")
-    draw_arrow(68.5 + 18.0/2, y_s1, 88.5 - 17.0/2, y_s1)
+    # 4. Distilled NMS-Free YOLO26s (X=65.5, W=17)
+    draw_box(65.5, y_s1, 17.0, h_s1, "Distilled YOLO26s\n(NMS-Free Hungarian)", subtext="11.18 ms edge (384x640)")
+    draw_arrow(65.5 + 17.0/2, y_s1, 85.5 - 16.0/2, y_s1)
 
-    # 5. Weapon Detected?
-    w_d1, h_d1 = 17.0, 12.0
-    draw_diamond(88.5, y_s1, w_d1, h_d1, "Weapon\nDetected?\n(Conf > 0.45)", font_sz=9.5)
+    # 5. Weapon Detected? (X=85.5, W=16, H=11.5)
+    w_d1, h_d1 = 16.0, 11.5
+    draw_diamond(85.5, y_s1, w_d1, h_d1, "Weapon\nDetected?\n(Conf > 0.45)", font_sz=9.2)
 
     # Diamond 1 -> NO (Loopback)
-    draw_polyline_arrow([(88.5, y_s1 + h_d1/2), (88.5, 92.5), (49.5, 92.5), (49.5, y_s1 + h_s1/2)])
-    ax.text(90.2, 91.0, "NO (Idle)", ha='left', va='center', fontsize=9.5, fontweight='bold', color='#14532d', zorder=4)
+    draw_polyline_arrow([(85.5, y_s1 + h_d1/2), (85.5, 94.0), (46.5, 94.0), (46.5, y_s1 + h_s1/2)])
+    ax.text(87.2, 92.5, "NO (Idle)", ha='left', va='center', fontsize=9.2, fontweight='bold', color='#14532d', zorder=4)
 
     # Diamond 1 -> YES
-    draw_arrow(88.5 + w_d1/2, y_s1, 107.0 - 18.0/2, y_s1)
-    ax.text(98.5, y_s1 + 1.2, "YES", ha='center', va='bottom', fontsize=9.8, fontweight='bold', color='#0f172a', zorder=4)
+    draw_arrow(85.5 + w_d1/2, y_s1, 106.0 - 18.0/2, y_s1)
+    ax.text(95.5, y_s1 + 1.2, "YES", ha='center', va='bottom', fontsize=9.5, fontweight='bold', color='#0f172a', zorder=4)
 
-    # 6. Stage 1-Guard: Contact HOI (Optional High-Sensitivity)
-    draw_box(107.0, y_s1, 18.0, h_s1, "Stage 1-Guard: HOI\n(DINOv2 Grasp)", subtext="Arm proximity + Grasp affinity")
-    draw_arrow(107.0 + 18.0/2, y_s1, 128.0 - 18.0/2, y_s1)
+    # 6. Stage 1-Guard: Contact HOI (X=106.0, W=18)
+    draw_box(106.0, y_s1, 18.0, h_s1, "Stage 1-Guard: HOI\n(DINOv2 Grasp)", subtext="Arm proximity + Grasp affinity")
+    draw_arrow(106.0 + 18.0/2, y_s1, 127.5 - 18.0/2, y_s1)
 
-    # 7. Trigger Stage 2
-    draw_box(128.0, y_s1, 18.0, h_s1, "Lock Frame Index\n& Trigger Stage 2", subtext="Audit worker awakened", box_type='champ')
+    # 7. Trigger Stage 2 (X=127.5, W=18)
+    draw_box(127.5, y_s1, 18.0, h_s1, "Lock Frame Index\n& Trigger Stage 2", subtext="Audit worker awakened", box_type='champ')
 
     # Connecting Arrow from Stage 1 to Stage 2a
-    draw_polyline_arrow([(128.0, y_s1 - h_s1/2), (128.0, 66.5), (14.0, 66.5), (14.0, 56.5 + 8.2/2)], color='#1d4ed8', lw=2.0)
+    draw_polyline_arrow([(127.5, y_s1 - h_s1/2), (127.5, 68.8), (17.5, 68.8), (17.5, 59.5 + 8.5/2)], color='#2563eb', lw=2.0)
 
     # =========================================================================
     # STAGE 2A: MULTI-PERSON TRACKING & KINEMATICS
     # =========================================================================
-    s2a_rect = Rectangle((2.0, 46.5), 144.0, 20.5,
+    s2a_rect = Rectangle((2.5, 48.0), 145.0, 20.5,
                          facecolor=C_STAGE2A_BG, edgecolor=C_STAGE2A_BORDER,
                          linestyle='--', linewidth=1.8, zorder=1)
     ax.add_patch(s2a_rect)
-    ax.text(74.0, 64.5, "STAGE 2a: Multi-Person Tracking & Biomechanical Invariance (Gapless Auditing)",
+    ax.text(75.0, 66.2, "STAGE 2a: Multi-Person Tracking & Biomechanical Invariance (Gapless Auditing)",
             ha='center', va='center', fontsize=12.5, fontweight='bold', family='sans-serif', color='#1e3a8a', zorder=3)
-    ax.text(4.0, 48.2, "ByteTrack threat lock eliminates ID swaps (0 swaps) • Pose caching reuses 40/50 frames • Torso-scale normalization removes distance drift",
-            ha='left', va='center', fontsize=9.2, family='sans-serif', color='#1d4ed8', zorder=3)
+    ax.text(4.5, 49.6, "ByteTrack threat lock eliminates ID swaps (0 swaps) • Pose caching reuses 40/50 frames • Torso-scale normalization removes distance drift",
+            ha='left', va='center', fontsize=9.0, family='sans-serif', color='#1d4ed8', zorder=3)
 
-    y_s2a = 55.5
+    y_s2a = 57.5
     h_s2a = 8.5
 
-    # 1. 50-Frame Sliding Window
-    draw_box(14.0, y_s2a, 20.0, h_s2a, "50-Frame Sliding Window\n(10-Frame Stride)", subtext="1.67s temporal window")
-    draw_arrow(14.0 + 20.0/2, y_s2a, 41.5 - 23.0/2, y_s2a)
+    # 1. 50-Frame Sliding Window (X=17.5, W=25)
+    draw_box(17.5, y_s2a, 25.0, h_s2a, "50-Frame Sliding Window\n(10-Frame Stride)", subtext="1.67s contiguous temporal window")
+    draw_arrow(17.5 + 25.0/2, y_s2a, 55.8 - 25.0/2, y_s2a)
 
-    # 2. YOLO26s-Pose + ByteTrack
-    draw_box(41.5, y_s2a, 23.0, h_s2a, "YOLO26s-Pose + ByteTrack\n(Threat Actor Locking)", subtext="Pose Caching (40/50 frames reused)")
-    draw_arrow(41.5 + 23.0/2, y_s2a, 71.5 - 25.0/2, y_s2a)
+    # 2. YOLO26s-Pose + ByteTrack (X=55.8, W=25)
+    draw_box(55.8, y_s2a, 25.0, h_s2a, "YOLO26s-Pose + ByteTrack\n(Threat Actor Locking)", subtext="Pose Caching (40/50 frames reused)")
+    draw_arrow(55.8 + 25.0/2, y_s2a, 94.1 - 25.0/2, y_s2a)
 
-    # 3. Torso-Scale Normalization
-    draw_box(71.5, y_s2a, 25.0, h_s2a, "Torso-Scale Normalization\n& Gaussian Filter (σ=1.0)", subtext="L_torso = ||shoulder - hip||_2")
-    draw_arrow(71.5 + 25.0/2, y_s2a, 104.0 - 26.0/2, y_s2a)
+    # 3. Torso-Scale Normalization (X=94.1, W=25)
+    draw_box(94.1, y_s2a, 25.0, h_s2a, "Torso-Scale Normalization\n& Gaussian Filter (σ=1.0)", subtext="L_torso = ||shoulder - hip||_2")
+    draw_arrow(94.1 + 25.0/2, y_s2a, 133.4 - 27.0/2, y_s2a)
 
-    # 4. Sequence Max-Pooling Dispatcher
-    draw_box(104.0, y_s2a, 26.0, h_s2a, "Sequence Temporal Max-Pool\nDispatcher: P_tier,max", subtext="Prevents pre-attack walking drops", box_type='champ')
+    # 4. Sequence Max-Pooling Dispatcher (X=133.4, W=27)
+    draw_box(133.4, y_s2a, 27.0, h_s2a, "Sequence Temporal Max-Pool\nDispatcher: P_tier,max", subtext="Prevents pre-attack walking drops", box_type='champ')
 
     # Connecting Arrow from Stage 2a to Stage 2b
-    draw_polyline_arrow([(104.0, y_s2a - h_s2a/2), (104.0, 44.0), (16.0, 44.0), (16.0, 34.0)], color='#7e22ce', lw=2.0)
+    draw_polyline_arrow([(133.4, y_s2a - h_s2a/2), (133.4, 45.5), (17.5, 45.5), (17.5, 33.0 + 8.5/2)], color='#9333ea', lw=2.0)
 
     # =========================================================================
     # STAGE 2B: PROGRESSIVE MULTI-TIER STAIRCASE CASCADE
     # =========================================================================
-    s2b_rect = Rectangle((2.0, 2.0), 144.0, 42.5,
+    s2b_rect = Rectangle((2.5, 2.0), 145.0, 43.5,
                          facecolor=C_STAGE2B_BG, edgecolor=C_STAGE2B_BORDER,
                          linestyle='--', linewidth=1.8, zorder=1)
     ax.add_patch(s2b_rect)
-    ax.text(74.0, 42.0, "STAGE 2b: Progressive Multi-Tier 'Staircase' Cascade (Production Champion 2: pc3d_t3 → pc3d_dt3 → stgcn)",
-            ha='center', va='center', fontsize=13.0, fontweight='bold', family='sans-serif', color='#581c87', zorder=3)
-    ax.text(4.0, 3.8, "Early-Exit Topology: 54.55% exits at Tier 1 • 23.38% exits at Tier 2 (77.92% offloaded from ST-GCN) • Zero-copy UMA memory reuse cuts latency by 30.3%",
-            ha='left', va='center', fontsize=9.2, family='sans-serif', color='#6b21a8', zorder=3)
+    ax.text(75.0, 43.2, "STAGE 2b: Progressive Multi-Tier 'Staircase' Cascade (Production Champion 2: pc3d_t3 → pc3d_dt3 → stgcn)",
+            ha='center', va='center', fontsize=12.5, fontweight='bold', family='sans-serif', color='#581c87', zorder=3)
+    ax.text(4.5, 3.8, "Early-Exit Topology: 54.55% exits at Tier 1 • 23.38% exits at Tier 2 (77.92% offloaded from ST-GCN) • Zero-copy UMA memory reuse cuts latency by 30.3%",
+            ha='left', va='center', fontsize=9.0, family='sans-serif', color='#6b21a8', zorder=3)
 
-    # TIER 1 (3D CNN)
-    x_t1 = 18.0
-    y_t1_box = 28.5
-    draw_box(x_t1, y_t1_box, 24.0, 8.5, "TIER 1: PoseConv3D T3\n(598k params, 3D CNN)", subtext="3D Heatmap (17, 50, 56, 56)")
-    draw_arrow(x_t1, y_t1_box - 8.5/2, x_t1, 16.5 + 5.5)
+    # Four columns: X = 17.5, 55.8, 94.1, 133.4
+    y_box_s2b = 33.0
+    h_box_s2b = 8.5
+    y_diamond_s2b = 18.5
+    w_diamond_s2b = 16.0
+    h_diamond_s2b = 10.5
+    y_discard_s2b = 7.5
+    h_discard_s2b = 5.2
 
-    draw_diamond(x_t1, 16.5, 17.0, 11.0, "P1,max < 0.20?\n(Civilian)", font_sz=9.2)
-    # Tier 1 Discard
-    draw_arrow(x_t1, 16.5 - 5.5, x_t1, 7.5 + 4.5/2)
-    ax.text(x_t1 + 1.2, 11.8, "YES", ha='left', va='center', fontsize=9.0, fontweight='bold', color='#14532d', zorder=4)
-    draw_box(x_t1, 7.5, 20.0, 4.5, "FAST DISCARD\n(54.55% Resolved)", box_type='dismiss', font_sz=8.8)
+    # -------------------------------------------------------------------------
+    # COL 1: TIER 1 (PoseConv3D Tier 3)
+    # -------------------------------------------------------------------------
+    x_c1 = 17.5
+    draw_box(x_c1, y_box_s2b, 25.0, h_box_s2b, "TIER 1: PoseConv3D T3\n(598k params, 3D CNN)", subtext="3D Heatmap (17, 50, 56, 56)")
+    draw_arrow(x_c1, y_box_s2b - h_box_s2b/2, x_c1, y_diamond_s2b + h_diamond_s2b/2)
 
-    # Tier 1 Escalate to Tier 2
-    draw_polyline_arrow([(x_t1 + 17.0/2, 16.5), (37.0, 16.5), (37.0, 28.5), (48.0 - 24.0/2, 28.5)], color='#7e22ce', lw=1.8)
-    ax.text(37.5, 23.0, "ESCALATE (45.5%)\n[Zero-Copy Heatmap]", ha='left', va='center', fontsize=8.6, fontweight='bold', color='#6b21a8', zorder=4)
+    draw_diamond(x_c1, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P1,max < 0.20?\n(Civilian)", font_sz=9.0)
 
-    # TIER 2 (Distilled 3D CNN)
-    x_t2 = 58.0
-    draw_box(x_t2, y_t1_box, 25.0, 8.5, "TIER 2: PoseConv3D DT3\n(598k params, RKD Student)", subtext="Zero-Copy GPU UMA Heatmap", box_type='champ')
-    draw_arrow(x_t2, y_t1_box - 8.5/2, x_t2, 16.5 + 5.5)
+    # Discard Down
+    draw_arrow(x_c1, y_diamond_s2b - h_diamond_s2b/2, x_c1, y_discard_s2b + h_discard_s2b/2)
+    ax.text(x_c1 + 1.2, 13.0, "YES", ha='left', va='center', fontsize=8.8, fontweight='bold', color='#14532d', zorder=4)
+    draw_box(x_c1, y_discard_s2b, 21.0, h_discard_s2b, "FAST DISCARD\n(54.55% Resolved)", box_type='dismiss', font_sz=8.6)
 
-    draw_diamond(x_t2, 16.5, 17.0, 11.0, "P2,max < 0.35?\n(Civilian)", font_sz=9.2)
-    # Tier 2 Discard
-    draw_arrow(x_t2, 16.5 - 5.5, x_t2, 7.5 + 4.5/2)
-    ax.text(x_t2 + 1.2, 11.8, "YES", ha='left', va='center', fontsize=9.0, fontweight='bold', color='#14532d', zorder=4)
-    draw_box(x_t2, 7.5, 20.0, 4.5, "FAST DISCARD\n(23.38% Resolved)", box_type='dismiss', font_sz=8.8)
+    # Escalation from Tier 1 Diamond (right vertex: x=25.5, y=18.5) to Tier 2 Box (left edge: x=43.3, y=33.0)
+    x_t1_d_right = x_c1 + w_diamond_s2b/2      # 25.5
+    x_t2_b_left = 55.8 - 25.0/2               # 43.3
+    x_mid_12 = (x_t1_d_right + x_t2_b_left) / 2 # 34.4
 
-    # Tier 2 Escalate to Tier 3
-    draw_polyline_arrow([(x_t2 + 17.0/2, 16.5), (78.5, 16.5), (78.5, 28.5), (90.0 - 24.0/2, 28.5)], color='#7e22ce', lw=1.8)
-    ax.text(79.0, 23.0, "ESCALATE (22.1%)\n[Load 2D Coords]", ha='left', va='center', fontsize=8.6, fontweight='bold', color='#6b21a8', zorder=4)
+    draw_polyline_arrow([(x_t1_d_right, y_diamond_s2b),
+                         (x_mid_12, y_diamond_s2b),
+                         (x_mid_12, y_box_s2b),
+                         (x_t2_b_left, y_box_s2b)], color='#7e22ce', lw=2.0)
+    
+    # Escalation Label neatly positioned in the channel
+    ax.text(x_mid_12 - 0.8, (y_diamond_s2b + y_box_s2b)/2, "ESCALATE (45.5%)\n[Zero-Copy Heatmap]",
+            ha='right', va='center', fontsize=8.4, fontweight='bold', color='#6b21a8', linespacing=1.2, zorder=4)
+    ax.text(x_t1_d_right + 1.0, y_diamond_s2b + 1.2, "NO",
+            ha='left', va='bottom', fontsize=8.8, fontweight='bold', color='#6b21a8', zorder=4)
 
-    # TIER 3 (9-Block ST-GCN)
-    x_t3 = 99.0
-    draw_box(x_t3, y_t1_box, 24.0, 8.5, "TIER 3: 9-Block ST-GCN\n(3.01M params, 2D Graph)", subtext="Only evaluates 22.08% traffic")
-    draw_arrow(x_t3, y_t1_box - 8.5/2, x_t3, 16.5 + 5.5)
+    # -------------------------------------------------------------------------
+    # COL 2: TIER 2 (PoseConv3D Distilled T3)
+    # -------------------------------------------------------------------------
+    x_c2 = 55.8
+    draw_box(x_c2, y_box_s2b, 25.0, h_box_s2b, "TIER 2: PoseConv3D DT3\n(598k params, RKD Student)", subtext="Zero-Copy GPU UMA Heatmap", box_type='champ')
+    draw_arrow(x_c2, y_box_s2b - h_box_s2b/2, x_c2, y_diamond_s2b + h_diamond_s2b/2)
 
-    draw_diamond(x_t3, 16.5, 17.0, 11.0, "P3,max >= 0.55?\n(Assault)", font_sz=9.2)
-    # Tier 3 Discard
-    draw_arrow(x_t3, 16.5 - 5.5, x_t3, 7.5 + 4.5/2)
-    ax.text(x_t3 + 1.2, 11.8, "NO", ha='left', va='center', fontsize=9.0, fontweight='bold', color='#14532d', zorder=4)
-    draw_box(x_t3, 7.5, 20.0, 4.5, "DISMISS AS CIVILIAN\n(Final Safe Exit)", box_type='dismiss', font_sz=8.8)
+    draw_diamond(x_c2, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P2,max < 0.35?\n(Civilian)", font_sz=9.0)
 
-    # Tier 3 Alarm -> Violence Alarm Box
-    x_alarm = 132.5
-    draw_arrow(x_t3 + 17.0/2, 16.5, x_alarm - 22.0/2, 16.5, color='#b91c1c', lw=2.2)
-    ax.text(114.5, 18.2, "YES (Assault)", ha='center', va='bottom', fontsize=9.5, fontweight='bold', color='#991b1b', zorder=4)
+    # Discard Down
+    draw_arrow(x_c2, y_diamond_s2b - h_diamond_s2b/2, x_c2, y_discard_s2b + h_discard_s2b/2)
+    ax.text(x_c2 + 1.2, 13.0, "YES", ha='left', va='center', fontsize=8.8, fontweight='bold', color='#14532d', zorder=4)
+    draw_box(x_c2, y_discard_s2b, 21.0, h_discard_s2b, "FAST DISCARD\n(23.38% Resolved)", box_type='dismiss', font_sz=8.6)
 
-    draw_box(x_alarm, 16.5, 23.0, 12.5, "HIGH-CONFIDENCE ALARM\n[Active Assault Verified]\n1.0000 F1 | 100% Recall\n0 FP (0 / 44 civilian)", box_type='violence', font_sz=10.2)
-    ax.text(x_alarm, 7.2, "34.80 FPS sustained GPU\n5.24 ms action latency", ha='center', va='center', fontsize=8.8, fontweight='bold', color='#991b1b', zorder=3)
+    # Escalation from Tier 2 Diamond (right vertex: x=63.8, y=18.5) to Tier 3 Box (left edge: x=81.6, y=33.0)
+    x_t2_d_right = x_c2 + w_diamond_s2b/2      # 63.8
+    x_t3_b_left = 94.1 - 25.0/2               # 81.6
+    x_mid_23 = (x_t2_d_right + x_t3_b_left) / 2 # 72.7
+
+    draw_polyline_arrow([(x_t2_d_right, y_diamond_s2b),
+                         (x_mid_23, y_diamond_s2b),
+                         (x_mid_23, y_box_s2b),
+                         (x_t3_b_left, y_box_s2b)], color='#7e22ce', lw=2.0)
+
+    # Escalation Label neatly positioned in the channel
+    ax.text(x_mid_23 - 0.8, (y_diamond_s2b + y_box_s2b)/2, "ESCALATE (22.1%)\n[Load 2D Coords]",
+            ha='right', va='center', fontsize=8.4, fontweight='bold', color='#6b21a8', linespacing=1.2, zorder=4)
+    ax.text(x_t2_d_right + 1.0, y_diamond_s2b + 1.2, "NO",
+            ha='left', va='bottom', fontsize=8.8, fontweight='bold', color='#6b21a8', zorder=4)
+
+    # -------------------------------------------------------------------------
+    # COL 3: TIER 3 (9-Block ST-GCN)
+    # -------------------------------------------------------------------------
+    x_c3 = 94.1
+    draw_box(x_c3, y_box_s2b, 25.0, h_box_s2b, "TIER 3: 9-Block ST-GCN\n(3.01M params, 2D Graph)", subtext="Only evaluates 22.08% traffic")
+    draw_arrow(x_c3, y_box_s2b - h_box_s2b/2, x_c3, y_diamond_s2b + h_diamond_s2b/2)
+
+    draw_diamond(x_c3, y_diamond_s2b, w_diamond_s2b, h_diamond_s2b, "P3,max >= 0.55?\n(Assault)", font_sz=9.0)
+
+    # Dismiss Down
+    draw_arrow(x_c3, y_diamond_s2b - h_diamond_s2b/2, x_c3, y_discard_s2b + h_discard_s2b/2)
+    ax.text(x_c3 + 1.2, 13.0, "NO", ha='left', va='center', fontsize=8.8, fontweight='bold', color='#14532d', zorder=4)
+    draw_box(x_c3, y_discard_s2b, 21.0, h_discard_s2b, "DISMISS AS CIVILIAN\n(Final Safe Exit)", box_type='dismiss', font_sz=8.6)
+
+    # -------------------------------------------------------------------------
+    # COL 4: HIGH-CONFIDENCE VIOLENCE ALARM
+    # -------------------------------------------------------------------------
+    x_c4 = 133.4
+    w_alarm = 27.0
+    h_alarm = 14.0
+    x_alarm_left = x_c4 - w_alarm/2 # 119.9
+    x_t3_d_right = x_c3 + w_diamond_s2b/2 # 102.1
+
+    # Straight horizontal arrow from Tier 3 Diamond to Alarm Box
+    draw_arrow(x_t3_d_right, y_diamond_s2b, x_alarm_left, y_diamond_s2b, color='#b91c1c', lw=2.2)
+    ax.text((x_t3_d_right + x_alarm_left)/2, y_diamond_s2b + 1.2, "YES (Assault)",
+            ha='center', va='bottom', fontsize=9.2, fontweight='bold', color='#991b1b', zorder=4)
+
+    draw_box(x_c4, y_diamond_s2b, w_alarm, h_alarm,
+             "HIGH-CONFIDENCE ALARM\n[Active Assault Verified]\n1.0000 F1 | 100% Recall\n0 FP (0 / 44 civilian)",
+             box_type='violence', font_sz=10.0)
+
+    # Performance & Throughput Badge
+    draw_box(x_c4, y_discard_s2b, w_alarm, h_discard_s2b,
+             "34.80 FPS sustained GPU | 5.24 ms action\n77.92% traffic never touches ST-GCN",
+             box_type='champ', font_sz=8.4)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path, dpi=dpi, facecolor='#ffffff', edgecolor='none')
