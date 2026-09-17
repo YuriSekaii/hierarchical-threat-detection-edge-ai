@@ -3,7 +3,7 @@ src/inference_realtime_v3.10.py
 
 Hierarchical Real-Time Threat Detection System - Version 3.10 (Final Milestone).
 Production Dual-Tier Edge & Server Surveillance Architecture:
-1. In-Memory TurboJPEG Buffer Compression (v1.01) - 47.3 MB RAM
+1. In-Memory TurboJPEG Buffer Compression (v1.01) - ~188.5 MB RAM (1,200 1080p frames vs 7.46 GB raw)
 2. Torso-Scale Invariant Kinematic Normalization (v1.02)
 3. Native Aspect-Ratio Rectangular Inference (v1.03) - 384x640 resolution
 4. Multi-Person Tracking Guard with ByteTrack & Spatial-Temporal Continuity (v1.04)

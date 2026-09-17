@@ -46,7 +46,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
     # Base canvas background
     ax.add_patch(Rectangle((0, 0), 150.0, 106.0, facecolor=C_OUTSIDE_BG, edgecolor='none', zorder=0))
 
-    def draw_box(x, y, w, h, title_text, box_type='standard', font_sz=10.2, subtext=None, title_color=None):
+    def draw_box(x, y, w, h, title_text, box_type='standard', font_sz=10.2, subtext=None, title_color=None, sub_font_sz=8.4):
         if box_type == 'violence':
             fc, ec, tc, lw = C_VIOLENCE_BG, C_VIOLENCE_BORDER, C_VIOLENCE_TEXT, 2.4
         elif box_type == 'dismiss':
@@ -69,7 +69,7 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
                     fontsize=font_sz, fontweight='bold', family='sans-serif',
                     color=tc, linespacing=1.2, zorder=3)
             ax.text(x, y - h/2 + 1.4, subtext, ha='center', va='center',
-                    fontsize=8.4, family='sans-serif', color=C_NOTE_TEXT, zorder=3)
+                    fontsize=sub_font_sz, family='sans-serif', color=C_NOTE_TEXT, zorder=3)
         else:
             ax.text(x, y, title_text, ha='center', va='center', 
                     fontsize=font_sz, fontweight='bold', family='sans-serif',
@@ -123,11 +123,11 @@ def create_pipeline_diagram(output_path='assets/inference_pipeline.png', dpi=200
 
     # 1. Live Video Stream (X=14.0, W=16)
     draw_box(14.0, y_s1, 16.0, h_s1, "Live Surveillance\nStream (30 FPS)", subtext="RTSP / USB Camera")
-    draw_arrow(14.0 + 16.0/2, y_s1, 36.0 - 18.0/2, y_s1)
+    draw_arrow(14.0 + 16.0/2, y_s1, 36.0 - 19.0/2, y_s1)
 
-    # 2. TurboJPEG Circular Buffer (X=36.0, W=18)
-    draw_box(36.0, y_s1, 18.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="47.3 MB")
-    draw_arrow(36.0 + 18.0/2, y_s1, 58.0 - 16.0/2, y_s1)
+    # 2. TurboJPEG Circular Buffer (X=36.0, W=19)
+    draw_box(36.0, y_s1, 19.0, h_s1, "TurboJPEG SIMD\nCircular Buffer", subtext="1200 buffer frames as ~188.5 MB", sub_font_sz=7.2)
+    draw_arrow(36.0 + 19.0/2, y_s1, 58.0 - 16.0/2, y_s1)
 
     # 3. 3 FPS Subsampling (X=58.0, W=16)
     draw_box(58.0, y_s1, 16.0, h_s1, "Subsample 1 in 10\n(Effective: 3 FPS)", subtext="Idle power saver")
