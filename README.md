@@ -218,7 +218,7 @@ Incoming Video Frame (1080p / 720p @ 30 FPS)
 ### 2. High-Sensitivity Guard: Contact-State HOI Transformer (v4.30)
 * **Operational Goal:** In high-security environments, screening weapons at low confidence (Conf = 0.20) captures **91.67% raw weapon recall**, but introduces 98 false alarms.
 * **The HOI Solution:** Evaluates physical human-object interaction (HOI) via a dual-stream guard:
-  1. *Forearm-Scaled Spatial Proximity:* Calculates normalized Euclidean distance $d_{\text{norm}} = \frac{\|c_{\text{weapon}} - c_{\text{hand}}\|_2}{L_{\text{forearm}}}$. Proposals with $d_{\text{norm}} > 2.2$ are immediately pruned as unheld clothing seams.
+  1. *Forearm-Scaled Spatial Proximity:* Calculates normalized Euclidean distance $`d_{\text{norm}} = \frac{\|c_{\text{weapon}} - c_{\text{hand}}\|_2}{L_{\text{forearm}}}`$. Proposals with $`d_{\text{norm}} > 2.2`$ are immediately pruned as unheld clothing seams.
   2. *DINOv2 Grasp-Affinity Manifold:* Feeds hand-object crops through a frozen DINOv2-ViT-S/14 encoder ($f \in \mathbb{R}^{384}$). True weapon grips exhibit cosine similarity $S \ge 0.52$ against verified combat grasp prototypes (0.775 vs 0.379 on empty hands).
 * **Impact:** Slashes civilian false alarms by **-84.3%** (51 → 8 FP on OOD clips), retaining 85.83% recall at 33.93 ms GPU latency.
 
@@ -247,10 +247,8 @@ Incoming Video Frame (1080p / 720p @ 30 FPS)
    - Storing 1,200 raw NumPy frames at 1080p $(1920 \times 1080 \times 3)$ consumed **7,464.0 MB (~7.46 GB)** (or 1,054.7 MB at $640 \times 480$).
    - Integrated SIMD TurboJPEG encoding (`quality=85`). Buffer memory collapsed to **~188.5 MB for 1080p (97.5% reduction / 39.6× compression)** (or **47.30 MB (95.5% reduction) at $640 \times 480$)**.
    - Continuous ingestion encoding overhead: +0.88 ms (1,135 FPS throughput), consuming just **2.93% of a single CPU core**. Cosine similarity between latent embeddings extracted from raw vs compressed frames was **1.00000**, confirming zero loss in biomechanical action accuracy.
-2. **Torso-Scale Normalization ($L_{\text{torso}}$, v1.02):**
-   - Replaced centroid mean subtraction with physical anatomical distance scaling:
-     $$L_{\text{torso}} = \|\mathbf{p}_{\text{shoulder}} - \mathbf{p}_{\text{hip}}\|_2$$
-     with dynamic fallback to $0.5 \times d_{\text{bbox}}$ if hip/shoulder joints are occluded.
+2. **Torso-Scale Normalization ($`L_{\text{torso}}`$, v1.02):**
+   - Replaced centroid mean subtraction with physical anatomical distance scaling: $`L_{\text{torso}} = \|\mathbf{p}_{\text{shoulder}} - \mathbf{p}_{\text{hip}}\|_2`$, with dynamic fallback to $`0.5 \times d_{\text{bbox}}`$ if hip/shoulder joints are occluded.
    - Slashed missed attacks from **24.2% → 6.1% (only 2 missed attacks)**, making kinematic trajectories completely invariant to camera distance.
 3. **Dynamic Rectangular Inference ($384 \times 640$, v1.03):**
    - Standard 16:9 widescreen streams ($1280 \times 720$, $1920 \times 1080$) letterboxed to square $640 \times 640$ tensors wasted 163,840 pixels (40.0% compute waste) on black padding.
@@ -271,10 +269,14 @@ To prevent false alarms on non-violent civilian motions (wood chopping, aerobics
 (v1.02, 73.6% Acc)    (v1.05, 80.6%)    (v1.06, 79.2%)     (v1.07, 79.2%)      (v1.08, 91.7% Acc, 100% Rec)
 ```
 
-* **Relative Mahalanobis Distance (RMD, v1.08) [Standalone Champion]:**
-  Formulates multi-modal class-conditional Gaussians $\mathcal{N}(\mu_c, \Sigma_c)$ and global background distribution $\mathcal{N}(\mu_0, \Sigma_0)$ with ridge shrinkage $\Sigma_{\text{reg}} = \Sigma + \epsilon I$ ($\epsilon = 0.005$):
-  $$\text{Score}_{\text{RMD}}(z) = (z - \mu_0)^T \Sigma_0^{-1} (z - \mu_0) - \min_{c} (z - \mu_c)^T \Sigma_c^{-1} (z - \mu_c)$$
-  Background subtraction cancels out shared standing posture variances, achieving **100.0% Recall (33/33 attacks caught, 0 FN)** and **0.9167 F1** standalone.
+**Relative Mahalanobis Distance (RMD, v1.08) [Standalone Champion]:**  
+Formulates multi-modal class-conditional Gaussians $`\mathcal{N}(\mu_c, \Sigma_c)`$ and global background distribution $`\mathcal{N}(\mu_0, \Sigma_0)`$ with ridge shrinkage $`\Sigma_{\text{reg}} = \Sigma + \epsilon I`$ ($\epsilon = 0.005$):
+
+$$
+\text{Score}_{\text{RMD}}(z) = (z - \mu_0)^T \Sigma_0^{-1} (z - \mu_0) - \min_{c} (z - \mu_c)^T \Sigma_c^{-1} (z - \mu_c)
+$$
+
+Background subtraction cancels out shared standing posture variances, achieving **100.0% Recall (33/33 attacks caught, 0 FN)** and **0.9167 F1** standalone.
 
 ---
 
@@ -298,8 +300,7 @@ To prevent false alarms on non-violent civilian motions (wood chopping, aerobics
   - **Tier 3 (598k params, `bc=12, fd=256`):** Standalone F1 jumped to **0.8857**, recall reached **93.94%** (only 2 missed attacks), and CPU throughput accelerated to **27.9 FPS** (3.9× faster than ST-GCN).
   - **Tier 5 (132k params, `bc=12, fd=96`):** **100.0% Precision with ZERO False Positives (0 FP / 44 civilian clips)**, creating the ideal front-line screening filter.
 * **Cross-Paradigm Knowledge Distillation (ST-GCN → PoseConv3D Tier 3):**
-  - Continuous coordinate graph ST-GCN (100% recall, 0 FN) was used as a frozen teacher to train discrete volumetric PoseConv3D Tier 3 (`pc3d_dt3`) via **Relational Knowledge Distillation (RKD CVPR 2019)**:
-    $$\mathcal{L}_{\text{RKD}} = 1.0 \cdot \mathcal{L}_{\text{R-dist}} + 2.0 \cdot \mathcal{L}_{\text{R-angle}}$$
+  - Continuous coordinate graph ST-GCN (100% recall, 0 FN) was used as a frozen teacher to train discrete volumetric PoseConv3D Tier 3 (`pc3d_dt3`) via **Relational Knowledge Distillation (RKD CVPR 2019)**: $`\mathcal{L}_{\text{RKD}} = 1.0 \cdot \mathcal{L}_{\text{R-dist}} + 2.0 \cdot \mathcal{L}_{\text{R-angle}}`$.
   - **Outerwear Breakthrough:** Under Relational KD, `pc3d_dt3` achieved **100.0% Recall on concealed winter coat attacks (`With_Coat`: 16/16, ZERO MISSES)**, proving that topological joint angular dynamics were successfully transferred through thick fabric.
 
 ---
