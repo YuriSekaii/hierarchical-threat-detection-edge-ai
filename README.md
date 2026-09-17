@@ -499,7 +499,6 @@ Measured across 5 complete passes of all 77 validation videos using synchronized
 │   ├── reference_data_rmd_v1.08.pt         # Calibrated RMD statistics for ST-GCN
 │   └── reference_data_poseconv3d_pure_dual_tier.pt # Unified reference dictionary (T3, DT3, T5)
 ├── results/                                # Empirical verification logs, CSVs & plots
-├── ARCHIVE_MANIFEST.md                     # Index of archived historical versions & reports
 ├── requirements.txt                        # Python dependencies
 ├── LICENSE                                 # MIT License
 └── README.md                               # Project documentation & benchmark synthesis
@@ -542,9 +541,10 @@ python src/inference_nms_free_v4_50.py --source 0 --conf 0.45 --mode one2one
 
 ---
 
-## C.5 Reference Documentation & Archival Notice
-For deeper historical derivations, ablation studies, and comprehensive logs:
-* [`ARCHIVE_MANIFEST.md`](ARCHIVE_MANIFEST.md) — Complete directory manifest of historical research logs, ablation reports (`FULL_FINAL_REPORT.md`, `PROJECT_REPORT_*.md`, `COMPACT_REPORT_*.md`), and changelogs (`VERSIONS.md`) preserved in the external archive (`D:\Intern AI Project\HTD_Archive_Reports_and_Experiments\`).
+## C.5 Technical Reference & Architecture Documentation
+The complete production architecture, mathematical derivations, empirical validation benchmarks, and system post-mortems are fully documented within this repository:
+* **Production Cascade Implementation**: Refer to Section B.5 for decision boundaries, sequential early-exit conditions, and GPU zero-copy memory reuse.
+* **Benchmarking & Live Profiling**: Standalone and cascaded execution scripts with synchronized CUDA event timers are provided in [`scripts/`](scripts/) and logged in [`results/`](results/).
 
 ---
 
