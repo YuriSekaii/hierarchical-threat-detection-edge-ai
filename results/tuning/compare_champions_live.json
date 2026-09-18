@@ -1,8 +1,8 @@
 {
   "champion1": {
     "name": "Champion 1 (pc3d_tier3 -> stgcn -> pc3d_dt3)",
-    "overall_mean_ms": 5.654936626979283,
-    "overall_median_ms": 4.945286512374878,
+    "overall_mean_ms": 5.521404754341423,
+    "overall_median_ms": 5.051321697235108,
     "f1": 1.0,
     "recall": 100.0,
     "precision": 100.0,
@@ -16,14 +16,14 @@
     "t3_count": 5,
     "pct_esc1": 45.45454545454545,
     "pct_esc2": 6.493506493506493,
-    "t1_mean_ms": 2.9142211187453495,
-    "t2_mean_ms": 8.345809497833251,
-    "t3_mean_ms": 12.531709671020508
+    "t1_mean_ms": 3.0522409143902007,
+    "t2_mean_ms": 7.856983041763306,
+    "t3_mean_ms": 12.248911285400391
   },
   "champion2": {
     "name": "Champion 2 (pc3d_tier3 -> pc3d_dt3 -> stgcn)",
-    "overall_mean_ms": 5.241490277377042,
-    "overall_median_ms": 3.0723968029022215,
+    "overall_mean_ms": 5.172055860618492,
+    "overall_median_ms": 2.7827775955200194,
     "f1": 1.0,
     "recall": 100.0,
     "precision": 100.0,
@@ -37,8 +37,8 @@
     "t3_count": 17,
     "pct_esc1": 45.45454545454545,
     "pct_esc2": 22.07792207792208,
-    "t1_mean_ms": 2.759059658504668,
-    "t2_mean_ms": 5.8195928626590305,
-    "t3_mean_ms": 10.762445539586684
+    "t1_mean_ms": 2.7658281133288427,
+    "t2_mean_ms": 5.797399478488498,
+    "t3_mean_ms": 10.454725287942324
   }
 }

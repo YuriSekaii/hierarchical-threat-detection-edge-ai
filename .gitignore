@@ -16,11 +16,17 @@ __pycache__/
 !weights/*.pt
 !weights/*.pth
 !weights/*.json
+!weights/*.onnx
+
+# Exclude hardware-specific TensorRT binaries (compiled locally, >100MB)
+*.engine
+weights/*.engine
 
 # Exclude oversized weights >100MB (GitHub 100MB limit)
 weights/yolov8x-worldv2.pt
 
 # Datasets and Media Recordings
+data/
 *.mp4
 *.avi
 *.mkv

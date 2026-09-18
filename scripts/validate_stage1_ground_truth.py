@@ -84,7 +84,7 @@ def calculate_metrics(tp, fp, fn, tn):
 
 
 def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20):
-    model = YOLO(model_path)
+    model = YOLO(model_path, task="detect")
     stats = defaultdict(lambda: {"TP": 0, "FP": 0, "FN": 0, "TN": 0, "total_images": 0, "inference_time": 0.0})
 
     for img_path in image_files:
@@ -95,7 +95,7 @@ def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20):
         gt_txt_path = os.path.join(grandparent_dir, "labels", f"{filename}.txt")
         gt_boxes = load_ground_truth(gt_txt_path)
 
-        results = model(img_path, conf=conf, verbose=False)
+        results = model(img_path, conf=conf, imgsz=640, verbose=False)
         inf_time = results[0].speed.get("inference", 0.0)
 
         stats[category]["inference_time"] += inf_time
@@ -144,21 +144,26 @@ def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20):
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Stage 1 Ground Truth Evaluator")
+    parser.add_argument("--weights", type=str, default=os.path.join(REPO_DIR, "weights", "yolo_weapon_distilled.engine"),
+                        help="Path to YOLO weights (.engine or .pt)")
+    parser.add_argument("--conf", type=float, default=0.45, help="Confidence threshold (default: 0.45)")
+    args = parser.parse_args()
+
     image_files = sorted(glob.glob(os.path.join(GT_DATASET_DIR, "**", "*.jpg"), recursive=True))
     print(f"Loaded {len(image_files)} Ground Truth test images from {GT_DATASET_DIR}.")
+    print(f"Target Model: {args.weights}")
 
-    weights_path = os.path.join(REPO_DIR, "weights", "yolo_weapon_distilled.pt")
-
-    for conf in [0.45, 0.20]:
-        print(f"\n" + "=" * 80)
-        print(f"EVALUATING DISTILLED YOLO26s (Conf={conf}, IoU=0.20)")
-        print("=" * 80)
-        stats = validate_yolo_model(weights_path, image_files, conf=conf)
-        for cat in ["OOD", "With_Coat", "Without_Coat", "Overall"]:
-            d = stats[cat]
-            p, r, f1, spec, acc = calculate_metrics(d["TP"], d["FP"], d["FN"], d["TN"])
-            avg_t = d["inference_time"] / d["total_images"] if d["total_images"] > 0 else 0
-            print(f"[{cat:12s}] Acc: {acc*100:6.2f}% | P: {p*100:6.2f}% | R: {r*100:6.2f}% | F1: {f1*100:6.2f}% | Spec: {spec*100:6.2f}% | Lat: {avg_t:5.2f}ms | (TP={d['TP']}, FP={d['FP']}, FN={d['FN']}, TN={d['TN']})")
+    print(f"\n" + "=" * 80)
+    print(f"EVALUATING STAGE 1 (Model={os.path.basename(args.weights)}, Conf={args.conf}, IoU=0.20)")
+    print("=" * 80)
+    stats = validate_yolo_model(args.weights, image_files, conf=args.conf)
+    for cat in ["OOD", "With_Coat", "Without_Coat", "Overall"]:
+        d = stats[cat]
+        p, r, f1, spec, acc = calculate_metrics(d["TP"], d["FP"], d["FN"], d["TN"])
+        avg_t = d["inference_time"] / d["total_images"] if d["total_images"] > 0 else 0
+        print(f"[{cat:12s}] Acc: {acc*100:6.2f}% | P: {p*100:6.2f}% | R: {r*100:6.2f}% | F1: {f1*100:6.2f}% | Spec: {spec*100:6.2f}% | Lat: {avg_t:5.2f}ms | (TP={d['TP']}, FP={d['FP']}, FN={d['FN']}, TN={d['TN']})")
 
 
 if __name__ == "__main__":
