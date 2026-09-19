@@ -732,9 +732,11 @@ verdict = action_engine.evaluate_clip(graph_tensor)  # {"is_threat": bool, "conf
 │   ├── reference_data_rmd_v1.08.pt         # Calibrated RMD statistics for ST-GCN
 │   └── reference_data_poseconv3d_pure_dual_tier.pt # Unified reference dictionary (T3, DT3, T5)
 ├── results/                                # Empirical verification logs, CSVs & plots
-├── run_webcam_tensorrt.bat                 # [ONE-CLICK] Live webcam surveillance via native TensorRT engines
-├── run_webcam_pytorch.bat                  # [ONE-CLICK] Live webcam surveillance via base PyTorch reference
-├── requirements.txt                        # Python dependencies (includes tensorrt, onnx, onnxslim)
+├── run_webcam_tensorrt.bat                 # [ONE-CLICK] Live webcam surveillance via native TensorRT engines (NVIDIA GPU)
+├── run_webcam_pytorch.bat                  # [ONE-CLICK] Live webcam surveillance via base PyTorch reference (Universal / Laptop)
+├── migrate_to_venv.bat                     # [UTILITY] Zero-download package migration from host PC to .venv
+├── requirements.txt                        # Universal core dependencies (PyTorch, Ultralytics, OpenCV, Pillow)
+├── requirements-tensorrt.txt               # Native TensorRT acceleration stack (NVIDIA GPUs only)
 ├── LICENSE                                 # MIT License
 └── README.md                               # Project documentation & benchmark synthesis
 ```
@@ -747,20 +749,25 @@ verdict = action_engine.evaluate_clip(graph_tensor)  # {"is_threat": bool, "conf
 ```bash
 git clone https://github.com/YuriSekaii/hierarchical-threat-detection-edge-ai.git
 cd hierarchical-threat-detection-edge-ai
+
+# Universal Core Installation (Laptops, Intel Iris Xe, AMD, or CPU):
 pip install -r requirements.txt
+
+# (Optional) Native NVIDIA TensorRT Acceleration (Dedicated NVIDIA GPUs only):
+pip install -r requirements-tensorrt.txt
 ```
-*(Note: `tensorrt-cu12`, `onnx`, and `onnxslim` are automatically installed to enable on-device engine compilation).*
 
 ### 2. One-Click Real-Time Webcam Launchers (Windows `.bat`)
 
-For instantaneous, hands-off testing with a physical webcam (camera index 0), double-click or run either launcher from the terminal:
+For instantaneous, hands-off testing with a physical webcam (camera index 0), double-click or run from the terminal:
 
-| Batch Script | Backend | Pipeline Characteristics | Recommended For |
+| Batch Script | Supported Hardware | Runtime Backend | Key Characteristics |
 | :--- | :--- | :--- | :--- |
-| [`run_webcam_tensorrt.bat`](run_webcam_tensorrt.bat) | **Native NVIDIA TensorRT 11.3** | **Ultra-low latency (5.80 ms weapon / 0.43 ms action)**, Hungarian NMS-free, zero-copy GPU memory pointer execution | **Production deployment & high-FPS live testing** |
-| [`run_webcam_pytorch.bat`](run_webcam_pytorch.bat) | **Base PyTorch Eager** | Baseline reference execution (`.pt` and `.pth` checkpoints), standard PyTorch eager graph | **Algorithmic parity verification & debugging** |
+| [`run_webcam_tensorrt.bat`](run_webcam_tensorrt.bat) | **Dedicated NVIDIA GPUs** (RTX 3050, 3090, etc.) | **Native NVIDIA TensorRT 11.3** | **Ultra-low latency (5.80 ms weapon / 0.43 ms action)**, strict CUDA enforcement, zero-copy GPU pointer execution |
+| [`run_webcam_pytorch.bat`](run_webcam_pytorch.bat) | **Universal Hardware** (NVIDIA CUDA / Intel Iris Xe / Host CPU) | **Base PyTorch Eager** | Universal hardware cascade (CUDA -> Intel XPU -> CPU oneDNN), reference `.pt` / `.pth` checkpoints |
+| [`migrate_to_venv.bat`](migrate_to_venv.bat) | **Any Windows PC** | **Zero-Download Migration Utility** | Migrates existing host packages (`AppData`) to `.venv` in ~2 seconds with zero network download, freeing drive C: |
 
-*Both scripts automatically locate the local `.venv` virtual environment, enforce strict CUDA GPU acceleration (fail-fast without CPU fallback), calibrate detection confidence to 0.45, and render real-time telemetry HUD. Press `q` inside the camera window to terminate surveillance cleanly.*
+*Both webcam launchers auto-detect/create `.venv`, feature pre-flight self-healing for binary C-extensions (e.g. Pillow), calibrate detection confidence to 0.45, and display real-time HUD telemetry. Press `q` inside the camera window to safely terminate surveillance.*
 
 ### 3. Manual Pipeline Execution & CLI Options
 Launch the surveillance orchestrator with customizable video sources, confidence thresholds, and runtime backends:
