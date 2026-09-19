@@ -1,0 +1,9 @@
+# ==============================================================================
+# Native NVIDIA TensorRT Acceleration Stack (Dedicated NVIDIA CUDA GPUs Only)
+# ==============================================================================
+-r requirements.txt
+
+# Native TensorRT Runtime & ONNX Export Blueprints
+tensorrt-cu12>=10.0.0
+onnx>=1.16.0
+onnxslim>=0.1.0

@@ -44,26 +44,30 @@ if %ERRORLEVEL% EQU 0 goto :LAUNCH
 
 rem Try migrating existing packages from host PC into .venv (Zero Download!)
 if exist "scripts\migrate_packages_to_venv.py" (
-    echo [CHECK] Libraries not yet in .venv. Scanning host PC for existing packages to migrate...
+    echo [CHECK] Core libraries not yet active in .venv. Scanning host PC for existing packages to migrate...
     python scripts\migrate_packages_to_venv.py
     "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
     if %ERRORLEVEL% EQU 0 (
-        echo [SUCCESS] Packages migrated into .venv successfully! Zero network download used.
+        echo [SUCCESS] Packages active in .venv! Zero network download used.
         goto :LAUNCH
     )
 )
 
 echo.
+echo [DIAGNOSTIC] Checking exact import status in environment:
+"%PY_BIN%" -c "import torch; print('  [OK] torch ' + torch.__version__); import torchvision; print('  [OK] torchvision ' + torchvision.__version__); import ultralytics; print('  [OK] ultralytics ' + ultralytics.__version__); import cv2; print('  [OK] opencv ' + cv2.__version__); import scipy; print('  [OK] scipy ' + scipy.__version__); import sklearn; print('  [OK] scikit-learn ' + sklearn.__version__)"
+echo.
+
 echo ===============================================================================
-echo [AUTO-SETUP] Required libraries (PyTorch, Ultralytics, OpenCV, etc.) not found!
-echo [AUTO-SETUP] Automatically installing all dependencies via pip...
-echo              This is a one-time automated setup. Please wait...
+echo [AUTO-SETUP] Missing core libraries detected in environment!
+echo [AUTO-SETUP] Installing lightweight universal vision dependencies via pip...
+echo              (NO TensorRT, pure CPU/Universal PyTorch stack)
 echo ===============================================================================
 echo.
 "%PY_BIN%" -m pip install -r requirements.txt
 if %ERRORLEVEL% NEQ 0 (
     echo [RETRY] Direct installation of core packages...
-    "%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib pyyaml tqdm timm einops
+    "%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib seaborn pandas pyyaml tqdm timm einops
 )
 if %ERRORLEVEL% NEQ 0 goto :INSTALL_DEPS_FAIL
 

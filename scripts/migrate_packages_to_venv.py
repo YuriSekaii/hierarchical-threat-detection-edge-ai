@@ -268,12 +268,18 @@ def migrate():
     try:
         verify_cmd = [
             VENV_PY, "-c",
-            "import torch, ultralytics; "
-            "print(f'[VERIFIED IN .VENV] PyTorch {torch.__version__} | CUDA Available: {torch.cuda.is_available()} | Ultralytics: {ultralytics.__version__}')"
+            "import torch; print(f'[VERIFIED] Torch: {torch.__version__} | CUDA: {torch.cuda.is_available()}'); "
+            "import ultralytics; print(f'[VERIFIED] Ultralytics: {ultralytics.__version__}'); "
+            "import cv2; print(f'[VERIFIED] OpenCV: {cv2.__version__}')"
         ]
         out = subprocess.check_output(verify_cmd, text=True, stderr=subprocess.STDOUT).strip()
         print(out)
         print("[SUCCESS] .venv is fully operational with zero network download!\n")
+    except subprocess.CalledProcessError as e:
+        print(f"[DIAGNOSTIC] .venv verification returned error code {e.returncode}:")
+        if e.output:
+            for line in e.output.strip().splitlines():
+                print(f"  {line}")
     except Exception as e:
         print(f"[NOTE] Environment verification check: {e}")
 
