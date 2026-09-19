@@ -43,6 +43,17 @@ rem 1. Check if core dependencies are installed
 "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
 if %ERRORLEVEL% EQU 0 goto :CHECK_NVIDIA
 
+rem 1a. Try migrating existing packages from host PC into .venv (Zero Download!)
+if exist "scripts\migrate_packages_to_venv.py" (
+    echo [CHECK] Libraries not yet in .venv. Scanning host PC for existing packages to migrate...
+    python scripts\migrate_packages_to_venv.py
+    "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
+    if %ERRORLEVEL% EQU 0 (
+        echo [SUCCESS] Packages migrated into .venv successfully! Zero network download used.
+        goto :CHECK_NVIDIA
+    )
+)
+
 echo.
 echo ===============================================================================
 echo [AUTO-SETUP] Core libraries (PyTorch, Ultralytics, OpenCV) not found in environment!

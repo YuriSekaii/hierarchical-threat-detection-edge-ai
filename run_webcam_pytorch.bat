@@ -42,6 +42,17 @@ echo [CHECK] Verifying Python environment and dependencies (%PY_BIN%)...
 "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
 if %ERRORLEVEL% EQU 0 goto :LAUNCH
 
+rem Try migrating existing packages from host PC into .venv (Zero Download!)
+if exist "scripts\migrate_packages_to_venv.py" (
+    echo [CHECK] Libraries not yet in .venv. Scanning host PC for existing packages to migrate...
+    python scripts\migrate_packages_to_venv.py
+    "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
+    if %ERRORLEVEL% EQU 0 (
+        echo [SUCCESS] Packages migrated into .venv successfully! Zero network download used.
+        goto :LAUNCH
+    )
+)
+
 echo.
 echo ===============================================================================
 echo [AUTO-SETUP] Required libraries (PyTorch, Ultralytics, OpenCV, etc.) not found!
