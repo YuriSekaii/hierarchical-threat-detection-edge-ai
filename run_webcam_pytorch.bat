@@ -19,6 +19,16 @@ echo [INFO] Ingesting real-time video from Webcam (Index: 0)
 echo [INFO] Press 'q' in the camera window to safely terminate surveillance.
 echo.
 
+rem Auto-create isolated .venv if not present
+if not exist ".\.venv\Scripts\python.exe" (
+    echo [AUTO-SETUP] No virtual environment found.
+    echo [AUTO-SETUP] Creating isolated project environment in .venv...
+    python -m venv .venv
+    if %ERRORLEVEL% NEQ 0 (
+        echo [WARNING] Failed to create .venv. Falling back to system Python.
+    )
+)
+
 if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=.\.venv\Scripts\python.exe"
 ) else if exist "..\.venv\Scripts\python.exe" (
@@ -27,7 +37,7 @@ if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=python"
 )
 
-echo [CHECK] Verifying Python environment and dependencies...
+echo [CHECK] Verifying Python environment and dependencies (%PY_BIN%)...
 
 "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
 if %ERRORLEVEL% EQU 0 goto :LAUNCH

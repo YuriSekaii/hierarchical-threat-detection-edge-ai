@@ -19,6 +19,16 @@ echo [INFO] Ingesting real-time video from Webcam (Index: 0)
 echo [INFO] Press 'q' in the camera window to safely terminate surveillance.
 echo.
 
+rem Auto-create isolated .venv if not present
+if not exist ".\.venv\Scripts\python.exe" (
+    echo [AUTO-SETUP] No virtual environment found.
+    echo [AUTO-SETUP] Creating isolated project environment in .venv...
+    python -m venv .venv
+    if %ERRORLEVEL% NEQ 0 (
+        echo [WARNING] Failed to create .venv. Falling back to system Python.
+    )
+)
+
 if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=.\.venv\Scripts\python.exe"
 ) else if exist "..\.venv\Scripts\python.exe" (
@@ -27,7 +37,7 @@ if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=python"
 )
 
-echo [CHECK] Verifying hardware and Python environment...
+echo [CHECK] Verifying hardware and Python environment (%PY_BIN%)...
 
 rem 1. Check if core dependencies are installed
 "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
@@ -35,9 +45,9 @@ if %ERRORLEVEL% EQU 0 goto :CHECK_NVIDIA
 
 echo.
 echo ===============================================================================
-echo [AUTO-SETUP] Core libraries (PyTorch, Ultralytics, OpenCV) not found!
+echo [AUTO-SETUP] Core libraries (PyTorch, Ultralytics, OpenCV) not found in environment!
 echo [AUTO-SETUP] Automatically installing dependencies via pip...
-echo              This is a one-time automated setup. Please wait...
+echo              (Uses local pip cache if previously downloaded. Please wait...)
 echo ===============================================================================
 echo.
 "%PY_BIN%" -m pip install -r requirements.txt
@@ -83,7 +93,7 @@ echo ===========================================================================
 echo [AUTO-SETUP] Detected CPU-only PyTorch build on this system!
 echo [AUTO-SETUP] Your NVIDIA GPU requires PyTorch compiled with CUDA support.
 echo [AUTO-SETUP] Automatically installing PyTorch with CUDA 12.4 for your GPU...
-echo              (Downloading CUDA runtime wheels ~2.5 GB. Please wait...)
+echo              (Uses local pip wheel cache if available. Please wait...)
 echo ===============================================================================
 echo.
 "%PY_BIN%" -m pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu124 --force-reinstall
