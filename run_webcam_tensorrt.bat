@@ -29,11 +29,34 @@ if exist ".\.venv\Scripts\python.exe" (
 
 echo [CHECK] Verifying hardware and Python environment...
 
-rem 1. Check if an NVIDIA GPU is physically present
+rem 1. Check if core dependencies are installed
+"%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
+if %ERRORLEVEL% EQU 0 goto :CHECK_NVIDIA
+
+echo.
+echo ===============================================================================
+echo [AUTO-SETUP] Core libraries (PyTorch, Ultralytics, OpenCV) not found!
+echo [AUTO-SETUP] Automatically installing dependencies via pip...
+echo              This is a one-time automated setup. Please wait...
+echo ===============================================================================
+echo.
+"%PY_BIN%" -m pip install -r requirements.txt
+if %ERRORLEVEL% NEQ 0 (
+    echo [RETRY] Direct installation of core packages...
+    "%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib pyyaml tqdm timm einops
+)
+if %ERRORLEVEL% NEQ 0 goto :INSTALL_DEPS_FAIL
+
+echo.
+echo [AUTO-SETUP] Core dependencies installed successfully!
+echo.
+
+:CHECK_NVIDIA
+rem 2. Check if an NVIDIA GPU is physically present
 nvidia-smi >nul 2>&1
 if %ERRORLEVEL% NEQ 0 goto :NO_NVIDIA_GPU
 
-rem 2. Check if TensorRT is installed
+rem 3. Check if TensorRT is installed
 "%PY_BIN%" -c "import tensorrt" 2>nul
 if %ERRORLEVEL% EQU 0 goto :CHECK_CUDA
 
@@ -51,7 +74,7 @@ echo [AUTO-SETUP] TensorRT dependencies installed successfully!
 echo.
 
 :CHECK_CUDA
-rem 3. Check if PyTorch has CUDA enabled
+rem 4. Check if PyTorch has CUDA enabled
 "%PY_BIN%" -c "import torch; exit(0 if torch.cuda.is_available() else 1)" 2>nul
 if %ERRORLEVEL% EQU 0 goto :LAUNCH
 
@@ -86,7 +109,19 @@ echo.
 echo TensorRT and this surveillance pipeline strictly require an NVIDIA GPU
 echo (GeForce RTX / GTX, Quadro, or Jetson).
 echo.
-echo Please run this on your test site PC (which has the NVIDIA GeForce RTX 3050).
+echo To run on this laptop, please run:
+echo   run_webcam_pytorch.bat
+echo (Which runs in CPU reference mode without needing an NVIDIA card).
+echo ===============================================================================
+pause
+exit /b 1
+
+:INSTALL_DEPS_FAIL
+echo.
+echo ===============================================================================
+echo [ERROR] Failed to automatically install dependencies.
+echo Please ensure your internet connection is active and run manually:
+echo   "%PY_BIN%" -m pip install -r requirements.txt
 echo ===============================================================================
 pause
 exit /b 1

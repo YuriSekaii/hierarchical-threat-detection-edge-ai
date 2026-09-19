@@ -27,11 +27,45 @@ if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=python"
 )
 
+echo [CHECK] Verifying Python environment and dependencies...
+
+"%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
+if %ERRORLEVEL% EQU 0 goto :LAUNCH
+
+echo.
+echo ===============================================================================
+echo [AUTO-SETUP] Required libraries (PyTorch, Ultralytics, OpenCV, etc.) not found!
+echo [AUTO-SETUP] Automatically installing all dependencies via pip...
+echo              This is a one-time automated setup. Please wait...
+echo ===============================================================================
+echo.
+"%PY_BIN%" -m pip install -r requirements.txt
+if %ERRORLEVEL% NEQ 0 (
+    echo [RETRY] Direct installation of core packages...
+    "%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib pyyaml tqdm timm einops
+)
+if %ERRORLEVEL% NEQ 0 goto :INSTALL_DEPS_FAIL
+
+echo.
+echo [AUTO-SETUP] All dependencies installed successfully!
+echo.
+
+:LAUNCH
 echo [LAUNCH] Starting PyTorch Baseline Surveillance Pipeline...
 echo.
 "%PY_BIN%" src/inference_production_pipeline.py --source 0 --conf 0.45 --backend pytorch %*
 if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
 goto :END
+
+:INSTALL_DEPS_FAIL
+echo.
+echo ===============================================================================
+echo [ERROR] Failed to automatically install dependencies.
+echo Please ensure your internet connection is active and run manually:
+echo   "%PY_BIN%" -m pip install -r requirements.txt
+echo ===============================================================================
+pause
+exit /b 1
 
 :RUN_FAIL
 echo.
