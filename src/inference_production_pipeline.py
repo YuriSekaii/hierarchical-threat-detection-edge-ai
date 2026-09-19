@@ -84,7 +84,7 @@ class ProductionHierarchicalPipeline:
 
         self.conf_threshold = conf_threshold
         self.imgsz_override = imgsz_override
-        self.rect_imgsz = imgsz_override or 640
+        self.rect_imgsz = imgsz_override or (384, 640)
 
         print("\n" + "=" * 80)
         print("   HIERARCHICAL EDGE-AI THREAT & VIOLENCE DETECTION (PRODUCTION PIPELINE)")
@@ -237,9 +237,9 @@ class ProductionHierarchicalPipeline:
         if self.imgsz_override:
             self.rect_imgsz = self.imgsz_override
         else:
-            self.rect_imgsz = 640
+            self.rect_imgsz = calculate_rectangular_imgsz(f_h, f_w, base_dim=640) if f_w > 0 and f_h > 0 else (384, 640)
 
-        print(f"[CONFIG] Input Stream: {f_w}x{f_h} -> Inference Resolution: {self.rect_imgsz} (Static TensorRT Binding)")
+        print(f"[CONFIG] Input Stream: {f_w}x{f_h} -> Inference Resolution: {self.rect_imgsz} (Native TensorRT Rectangular)")
 
         self.is_running = True
         t_weapon = threading.Thread(target=self.weapon_scanner_worker, daemon=True)

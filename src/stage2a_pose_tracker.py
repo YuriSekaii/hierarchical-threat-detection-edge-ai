@@ -59,7 +59,7 @@ class Stage2aPoseTracker:
         self,
         weights_path: Optional[str] = None,
         device: Optional[str] = None,
-        imgsz: Optional[Union[int, Tuple[int, int]]] = 640,
+        imgsz: Optional[Union[int, Tuple[int, int]]] = (384, 640),
         backend: str = "tensorrt",
     ):
         self.backend = backend.lower()
@@ -105,7 +105,7 @@ class Stage2aPoseTracker:
                 "stride": 32,
                 "task": "pose",
                 "batch": 1,
-                "imgsz": [640, 640],
+                "imgsz": [384, 640],
                 "names": {0: "person"},
                 "kpt_shape": [17, 3],
                 "end2end": True,
@@ -163,7 +163,7 @@ class Stage2aPoseTracker:
             - actor_bbox: [x1, y1, x2, y2] or None
             - track_id: int or None
         """
-        target_imgsz = imgsz or self.imgsz or 640
+        target_imgsz = imgsz or self.imgsz or (384, 640)
         res = self.pose_model.track(
             frame,
             persist=True,

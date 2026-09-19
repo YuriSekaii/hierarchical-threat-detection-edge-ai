@@ -49,7 +49,7 @@ def export_all():
     yolo_onnx = os.path.join(weights_dir, "yolo_weapon_distilled.onnx")
     print(f"\n[1/5] Exporting Stage 1 Weapon Detector ({os.path.basename(yolo_pt)})...")
     model_yolo = YOLO(yolo_pt)
-    model_yolo.export(format="onnx", imgsz=640, half=True, dynamic=False, opset=17)
+    model_yolo.export(format="onnx", imgsz=[384, 640], half=True, dynamic=False, opset=17)
     print(f"      -> Generated {yolo_onnx} ({os.path.getsize(yolo_onnx)/(1024*1024):.2f} MB)")
 
     # 2. Stage 2a Pose Extractor
@@ -57,7 +57,7 @@ def export_all():
     pose_onnx = os.path.join(weights_dir, "yolo26s-pose.onnx")
     print(f"\n[2/5] Exporting Stage 2a Pose Tracker ({os.path.basename(pose_pt)})...")
     model_pose = YOLO(pose_pt)
-    model_pose.export(format="onnx", imgsz=640, half=True, dynamic=False, opset=17)
+    model_pose.export(format="onnx", imgsz=[384, 640], half=True, dynamic=False, opset=17)
     print(f"      -> Generated {pose_onnx} ({os.path.getsize(pose_onnx)/(1024*1024):.2f} MB)")
 
     # 3. Stage 2b Tier 1 (PoseConv3D Tier 3)

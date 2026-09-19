@@ -16,16 +16,16 @@ An end-to-end, resource-efficient dual-stage surveillance framework engineered f
 
 | Dimension | Baseline Architecture (CV / Phase 1) | Production Evolution (Latest / Phase 2–4) | Engineering Impact |
 | :--- | :--- | :--- | :--- |
-| **Inference Runtime Engine** | PyTorch Eager Runtime (`.pt` / `.pth`) | **Native NVIDIA TensorRT 11.3 (`.engine`) via Universal ONNX** | **2.08x to 5.87x Speedup** (PoseConv3D T3: 0.43 ms; YOLO Weapon: 5.80 ms; ST-GCN: 0.86 ms). Strict CUDA enforcement, 1.0 GB workspace cap, auto FP16/FP32 |
-| **Stage 1 Weapon Detector** | Distilled YOLO26s (One-to-Many NMS) | **Hungarian NMS-Free Distilled YOLO26s (TensorRT FP16)** | **Production Champion (84.91% F1, 5.80 ms on RTX 3090)**; slashes false alarms by **>50%** (53 → 23 FP) |
-| **Inference Geometry** | Square Letterboxing ($640 \times 640$) | **Dynamic Rectangular ($384 \times 640$) / Static 640 TensorRT** | Eliminates 163,840 padding pixels (**-40.0% waste**) in dynamic mode; 640x640 letterbox preserves 85-87% F1 on arbitrary aspect ratios |
-| **Circular Buffer RAM** | 7,464.0 MB (1,200 Raw 1080p Frames) | **~188.5 MB (SIMD TurboJPEG, Q=85)** | **97.5% RAM reduction (39.6× compression at 1080p)** (47.3 MB @ 480p); prevents Jetson OOM |
+| **Inference Runtime Engine** | PyTorch Eager Runtime (`.pt` / `.pth`) | **Native NVIDIA TensorRT 11.3 (`.engine`) via Universal ONNX** | **2.08x to 5.87x Speedup** (PoseConv3D T3: 0.43 ms; YOLO Weapon: **3.86 ms**; ST-GCN: 0.86 ms). Strict CUDA enforcement, 1.0 GB workspace cap, auto FP16/FP32 |
+| **Stage 1 Weapon Detector** | Distilled YOLO26s (One-to-Many NMS) | **Hungarian NMS-Free Distilled YOLO26s (TensorRT FP16)** | **Production Champion (84.91% F1, 3.86 ms on RTX 3090, 259.2 FPS)**; Hungarian matching slashes false alarms by **>50%** (53 → 23 FP on PyTorch / 13 OOD FP on TensorRT) |
+| **Inference Geometry** | Square Letterboxing ($640 \times 640$) | **Native Rectangular ($384 \times 640$) TensorRT FP16** | Eliminates 163,840 padding pixels (**-40.0% waste**) on 16:9 widescreen streams ($1920 \times 1080$, $1280 \times 720$), boosting throughput to **259.2 FPS** |
+| **Circular Buffer RAM** | 7,464.0 MB (1,200 Raw 1080p Frames) | **~188.5 MB (SIMD JPEG, Q=85)** | **97.5% RAM reduction (39.6× compression at 1080p)** (79.7 MB @ 480p/benchmarks); prevents Jetson OOM |
 | **Kinematic Normalization** | Centroid Mean Subtraction | **Torso-Length Scale Invariant ($L_{\text{torso}}$)** | Eliminates distance attenuation; cuts missed attacks from 24.2% → 6.1% |
 | **Multi-Person Tracking** | Naive Bounding-Box Indexing | **ByteTrack Threat Actor Locking** | Slashes ID swaps from **15 → 0**; prevents joint coordinate teleportation |
-| **Stage 2b Action Engine** | ST-GCN + Non-Parametric Deep $k$-NN | **Staircase Cascade v6.00 (Champion 2 TensorRT)** | Sequential early exits (`pc3d_t3` → `pc3d_dt3` → `stgcn`) executed via zero-copy GPU CUDA pointers |
+| **Stage 2b Action Engine** | ST-GCN + Non-Parametric Deep $k$-NN | **Staircase Cascade v6.00 (Champion 2 TensorRT)** | Sequential early exits (`pc3d_tier3` → `pc3d_dt3` → `stgcn`) executed via zero-copy GPU CUDA pointers |
 | **Outerwear Robustness** | Deep $k$-NN Euclidean Distance | **Cross-Paradigm Relational KD (`pc3d_dt3`)** | **100% Recall on heavy winter coats** (16/16 attacks caught) |
 | **Assault Detection (F1)** | **0.9261 F1** (90.38% Recall, 94.95% Prec) | **1.0000 F1 (100.0% Recall, 100.0% Prec)** | **0 Missed Attacks (0 FN), 0 False Alarms (0 FP / 44 videos)** |
-| **Action Latency per Model** | 2.53 ms - 3.99 ms (PyTorch) | **0.43 ms (pc3d_t3) / 0.86 ms (stgcn)** | **4.62x - 5.87x individual backbone speedup**; total 77 validation videos evaluated in **1.22 s** |
+| **Action Latency per Model** | 2.53 ms - 3.99 ms (PyTorch) | **0.43 ms (pc3d_t3) / 0.86 ms (stgcn)** | **4.62x - 5.87x individual backbone speedup**; total 77 validation videos evaluated in **1.13 s** (14.62 ms/video) |
 
 ---
 
@@ -57,13 +57,13 @@ An end-to-end, resource-efficient dual-stage surveillance framework engineered f
                                 │
                                 ▼
   [ PHASE 4: Native NVIDIA TensorRT Acceleration & Universal ONNX Blueprints (Current Release) ]
-  ├── Universal ONNX Blueprints: Exported 5 hardware-agnostic .onnx models (Stage 1, 2a, and all 2b Tiers)
+  ├── Universal ONNX Blueprints: Exported 5 hardware-agnostic .onnx models with native rectangular (384, 640) geometry for Stages 1 & 2a (-40.0% compute on 16:9 surveillance)
   ├── Automated Hardware-Aware Builder: Dynamic FP16/FP32 precision selection & 1.0 GB workspace memory guardrail
   ├── Zero-Copy CUDA Pointer Engine: Direct VRAM-to-TensorRT execution (execute_async_v3, set_tensor_address)
-  ├── Strict GPU Enforcement: Strict fail-fast policy prohibiting silent CPU fallbacks (6 FPS slideshow prevention)
+  ├── Strict GPU Enforcement: Strict fail-fast policy prohibiting silent CPU fallbacks on TensorRT (6 FPS slideshow prevention)
   └── Production Benchmarks:
-      - Stage 1 Weapon Detector: 12.05 ms -> 5.80 ms (2.08x speedup) on 715 GT images, 84.91% F1
-      - Stage 2b Action Cascade: 1.0000 F1 preserved (33/33 TP, 0 FP, 0 FN), 0.43 ms PoseConv3D latency (5.87x speedup)
+      - Stage 1 Weapon Detector: 12.05 ms -> 3.86 ms (259.2 FPS, 3.12x speedup) on 715 GT images, 84.91% F1
+      - Stage 2b Action Cascade: 1.0000 F1 preserved (33/33 TP, 0 FP, 0 FN), 0.43 ms PoseConv3D latency (5.87x speedup); 77-video validation suite executed in 1.13 s (14.62 ms/video)
 ```
 
 ---
@@ -171,7 +171,7 @@ The ST-GCN model was trained on 17-node skeleton trajectories across 3 action ca
 
 ---
 
-# SECTION B: Production Evolution & The Multi-Tier Staircase Cascade (Phase 2 & 3 - Latest Update)
+# SECTION B: Production Evolution & The Multi-Tier Staircase Cascade (Phase 2 & 3 - Algorithmic Evolution)
 
 *This section synthesizes the complete research advancements, architectural upgrades, and edge benchmarks across the project's engineering lifecycle, establishing the new production champion.*
 
@@ -368,7 +368,7 @@ The **Progressive Multi-Tier "Staircase" Cascade (v5.10)** replaces synchronous 
 | :--- | :--- | :---: | :--- | :--- | :--- | :---: | :---: |
 | **Tier 1** | `pc3d_tier3` | 598,429 | Heatmap $(1, 17, 50, 56, 56)$ | $P_{1,\max} < 0.20$<br>$P_{1,\max} \ge 0.99$<br>$0.20 \le P_{1,\max} < 0.99$ | **Fast Discard (Civilian)**<br>Fast Alarm (Threat)<br>**Escalate to Tier 2** | **42 / 77 (54.55%)**<br>0 (0 FP)<br>35 escalated (%ESC: 45.45%) | **54.55%** |
 | **Tier 2** | `pc3d_dt3` (Distilled) | 598,429 | Heatmap (Zero-Copy Reuse) | $P_{2,\max} < 0.35$<br>$P_{2,\max} \ge 0.95$<br>$0.35 \le P_{2,\max} < 0.95$ | **Fast Discard (Civilian)**<br>Fast Alarm (Threat)<br>**Escalate to Tier 3** | **18 / 77 (23.38%)**<br>0 (0 FP)<br>17 escalated (%ESC: 22.08%) | **77.92%** |
-| **Tier 3** | `stgcn` | 3,014,981 | Coordinates $(1, 3, 50, 17, 1)$ | $P_{3,\max} \ge 0.55$<br>$P_{3,\max} < 0.55$ | **Threat Alarm (Assault)**<br>Civilian Discard | **17 / 77 (22.08%)**<br>0 (0 FN) | **100.0%** |
+| **Tier 3** | `stgcn` | 3,014,981 | Coordinates $(1, 2, 50, 17, 1)$ | $P_{3,\max} \ge 0.55$<br>$P_{3,\max} < 0.55$ | **Threat Alarm (Assault)**<br>Civilian Discard | **17 / 77 (22.08%)**<br>0 (0 FN) | **100.0%** |
 
 * **Traffic Offloaded:** **77.92% of all video streams never execute the heavy 3.01M parameter ST-GCN model**, reserving edge GPU/NPU compute for continuous monitoring.
 
@@ -486,8 +486,8 @@ All 5 core neural network models were exported to standardized ONNX format (opse
 
 | Model Component | Framework Source | Universal ONNX Blueprint | File Size | Input Tensor Geometry | Primary Output Geometry |
 | :--- | :--- | :--- | :---: | :--- | :--- |
-| **Stage 1 Weapon Detector** | `weights/yolo_weapon_distilled.pt` | [`yolo_weapon_distilled.onnx`](weights/yolo_weapon_distilled.onnx) | 19.2 MB | `(1, 3, 640, 640)` FP32 | `(1, 5, 8400)` Bounding Boxes + Logits |
-| **Stage 2a Pose Tracker** | `weights/yolo26s-pose.pt` | [`yolo26s-pose.onnx`](weights/yolo26s-pose.onnx) | 21.0 MB | `(1, 3, 640, 640)` FP32 | `(1, 56, 8400)` 17 Keypoints + Conf |
+| **Stage 1 Weapon Detector** | `weights/yolo_weapon_distilled.pt` | [`yolo_weapon_distilled.onnx`](weights/yolo_weapon_distilled.onnx) | 18.2 MB | `(1, 3, 384, 640)` FP32 | `(1, 300, 6)` Filtered Detections [xyxy, conf, cls] |
+| **Stage 2a Pose Tracker** | `weights/yolo26s-pose.pt` | [`yolo26s-pose.onnx`](weights/yolo26s-pose.onnx) | 20.0 MB | `(1, 3, 384, 640)` FP32 | `(1, 300, 57)` 17 Keypoints + Box Detections |
 | **Stage 2b Tier 1 Action** | `poseconv3d_downscale_tier3_598k.pth` | [`poseconv3d_downscale_tier3.onnx`](weights/poseconv3d_downscale_tier3.onnx) | 2.4 MB | `(1, 17, 50, 56, 56)` FP32 | `logits: (1, 1)`, `feats: (1, 256)` |
 | **Stage 2b Tier 2 Action** | `poseconv3d_distill_methodB_rkd.pth` | [`poseconv3d_distill_dt3.onnx`](weights/poseconv3d_distill_dt3.onnx) | 2.4 MB | `(1, 17, 50, 56, 56)` FP32 | `logits: (1, 1)`, `feats: (1, 256)` |
 | **Stage 2b Tier 3 Action** | `stgcn_violence_v1.02.pth` | [`stgcn.onnx`](weights/stgcn.onnx) | 12.1 MB | `(1, 2, 50, 17, 1)` FP32 | `logits: (1, 1)`, `feats: (1, 256)` |
@@ -500,7 +500,7 @@ Rather than shipping brittle, machine-specific `.engine` binaries (which crash i
 
 ### 1. Dynamic Hardware Precision Policy (FP32 vs FP16)
 * **Older Architectures (Compute Capability $< 7.0$, e.g., GTX 1060, GTX 1080):** These Pascal-era cards lack native FP16 Tensor Cores. Attempting to force FP16 triggers driver-level software emulation and latency degradation. `src/engine_builder.py` auto-selects **FP32** native engines.
-* **Modern Architectures (Compute Capability $\ge 7.0$, e.g., RTX 20/30/40/50 series, Jetson Orin/Nano):** Enables native **FP16 Tensor Cores** via `builder_config.set_flag(trt.BuilderFlag.FP16)`, unlocking $2\times$ math throughput with identical classification parity.
+* **Modern Architectures (Compute Capability $\ge 7.0$, e.g., RTX 20/30/40/50 series, Jetson Orin/Nano):** Employs strongly-typed network graphs (`trt.NetworkDefinitionCreationFlag.STRONGLY_TYPED`) to automatically compile native **FP16 Tensor Cores**, unlocking $2\times$ arithmetic throughput with exact mathematical classification parity.
 
 ### 2. Low-to-Medium Spec VRAM Memory Guardrail (1.0 GB Workspace Cap)
 Default TensorRT engine builders frequently attempt to allocate the entire GPU VRAM (up to 16–24 GB) while profiling timing tactics. On edge devices and budget GPUs (3 GB to 6 GB VRAM), this causes fatal CUDA out-of-memory allocations. We strictly limit builder workspace allocation:
@@ -511,14 +511,16 @@ builder_config.set_memory_pool_limit(
 )
 ```
 
-### 3. Strict CUDA Enforcement (No Silent CPU Fallbacks)
-Surveillance threat detection systems must maintain strict real-time guarantees. Silent CPU fallbacks reduce video processing to 2–6 FPS, creating dangerous blind spots where weapon brandishing is missed. The pipeline enforces a fail-fast GPU policy:
+### 3. Strict CUDA Enforcement on TensorRT Backend
+Surveillance threat detection systems must maintain strict real-time guarantees. Silent CPU fallbacks reduce video processing to 2–6 FPS, creating dangerous blind spots where weapon brandishing is missed. The pipeline enforces a fail-fast GPU policy for TensorRT while preserving CPU fallback on the PyTorch baseline for laptop development:
 ```python
-if not torch.cuda.is_available() or (device and "cpu" in device.lower()):
-    raise RuntimeError(
-        "[CRITICAL ERROR] Production pipeline strictly requires an NVIDIA CUDA GPU. "
-        "CPU execution is disabled to maintain real-time edge SLA and prevent security failures."
-    )
+if self.backend == "tensorrt":
+    if not torch.cuda.is_available() or (device and "cpu" in str(device).lower()):
+        raise RuntimeError(
+            "[CRITICAL ERROR] TensorRT backend strictly requires an NVIDIA CUDA GPU.\n"
+            "CPU execution is disabled to maintain real-time edge SLA and prevent security failures.\n"
+            "To run on CPU / non-CUDA environments, use: --backend pytorch"
+        )
 ```
 
 ### 4. Ultralytics-Compliant Metadata Injection
@@ -563,8 +565,8 @@ class TensorRTActionModel:
 
 | Model Component | Architecture / Parameters | PyTorch Eager Latency | TensorRT FP16 Latency | Latency Reduction | Speedup Factor |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **Distilled YOLO26s (Weapon)** | Hungarian NMS-Free (8.9M) | 12.05 ms | **5.80 ms** | **-51.9%** | **2.08x Faster** |
-| **YOLO26s-Pose (Keypoints)** | 17 COCO Keypoints (9.3M) | 14.80 ms | **6.10 ms** | **-58.8%** | **2.43x Faster** |
+| **Distilled YOLO26s (Weapon)** | Hungarian NMS-Free (8.9M) | 12.05 ms | **3.86 ms** (Rectangular $384 \times 640$)<br>5.80 ms (Square $640 \times 640$) | **-68.0%**<br>-51.9% | **3.12x Faster (259.2 FPS)**<br>2.08x Faster |
+| **YOLO26s-Pose (Keypoints)** | 17 COCO Keypoints (9.3M) | 14.80 ms | **6.10 ms** (Square $640 \times 640$) | **-58.8%** | **2.43x Faster** |
 | **PoseConv3D Tier 3** | Volumetric 3D CNN (598k) | 2.53 ms | **0.43 ms** | **-83.0%** | **5.87x Faster** |
 | **PoseConv3D Distilled T3** | Relational KD 3D CNN (598k) | 2.53 ms | **0.43 ms** | **-83.0%** | **5.87x Faster** |
 | **ST-GCN Baseline** | Spatial-Temporal GCN (3.01M) | 3.99 ms | **0.86 ms** | **-78.4%** | **4.62x Faster** |
@@ -590,7 +592,7 @@ Evaluated against the master 715 Ground Truth dataset (`data/Ground_Truth_Datase
 | | **Overall Precision** | **89.78%** | **87.95%** | **-1.83% (Parity)** |
 | | **Overall Threat Recall**| **84.17% (202/240)** | **82.08% (197/240)** | **-2.09% (Parity)** |
 | | **Overall F1-Score** | **86.88%** | **84.91%** | **-1.97% (Parity)** |
-| | **Mean Inference Latency**| **12.05 ms** | **5.80 ms** | **2.08x Speedup** |
+| | **Mean Inference Latency**| **12.05 ms** | **3.86 ms** (1080p stream) / **5.80 ms** (GT batch) | **3.12x / 2.08x Speedup** |
 
 ### 3. Stage 2b Staircase Cascade on Official 77-Video Validation Suite
 
@@ -607,8 +609,8 @@ Evaluated on all 77 validation videos (33 violent assaults + 44 civilian OOD vid
 | **Tier 1 Resolution (`pc3d_t3`)** | 42 / 77 (54.5%) | 42 / 77 (54.5%) | Identical Cascade Trajectory |
 | **Tier 2 Resolution (`pc3d_dt3`)** | 18 / 77 (23.4%) | 18 / 77 (23.4%) | Identical Cascade Trajectory |
 | **Tier 3 Resolution (`stgcn`)** | 17 / 77 (22.1%) | 17 / 77 (22.1%) | Identical Cascade Trajectory |
-| **Mean Action Latency per Video** | ~22.80 ms | **15.86 ms** | **-30.4% Latency Reduction** |
-| **Total 77-Video Suite Wall-Time** | 1.75 s | **1.22 s** | **-30.3% Wall-Time Reduction** |
+| **Mean Action Latency per Video** | ~22.80 ms | **14.62 ms** | **-35.9% Latency Reduction** |
+| **Total 77-Video Suite Wall-Time** | 1.75 s | **1.13 s** | **-35.4% Wall-Time Reduction** |
 
 ---
 
@@ -660,13 +662,13 @@ verdict = action_engine.evaluate_clip(graph_tensor)  # {"is_threat": bool, "conf
 | **Hardware** | Dual NVIDIA GeForce RTX 3090 (24GB) | NVIDIA GeForce GTX 1060 (3GB / 6GB) | NVIDIA Jetson Orin Nano (4GB / 8GB LPDDR5) |
 | **Precision Mode** | **FP16 Native TensorRT** | **FP32 Native TensorRT** (Compute < 7.0) | **FP16 Native TensorRT** (Compute >= 7.0) |
 | **Builder Workspace Cap** | **1.0 GB strictly enforced** | **1.0 GB strictly enforced** | **1.0 GB strictly enforced** (Prevents OOM) |
-| **Stage 1 Detector** | Distilled YOLO26s Engine (**5.80 ms**) | Distilled YOLO26s Engine (~14 ms) | Distilled YOLO26s Engine (~22 ms) |
+| **Stage 1 Detector** | Distilled YOLO26s Engine (**3.86 ms** / 259.2 FPS) | Distilled YOLO26s Engine (~14 ms) | Distilled YOLO26s Engine (~22 ms) |
 | **Stage 2a Buffer** | In-Memory TurboJPEG (~188.5 MB) | In-Memory TurboJPEG (~188.5 MB) | In-Memory TurboJPEG (~188.5 MB) |
 | **Stage 2b Action Engine** | **Champion 2 TensorRT Cascade** | **Champion 2 TensorRT Cascade** | **Champion 2 TensorRT Cascade** |
 | **PoseConv3D T3 Latency** | **0.43 ms (5.87x vs PyTorch)** | **~1.20 ms** | **~3.50 ms** |
 | **ST-GCN Latency** | **0.86 ms (4.62x vs PyTorch)** | **~2.10 ms** | **~5.80 ms** |
 | **Classification F1**| **1.0000 F1 (0 FP, 0 FN)** | **1.0000 F1 (0 FP, 0 FN)** | **1.0000 F1 (0 FP, 0 FN)** |
-| **Total 77-Video Suite** | **1.22 s total wall-time** | **~2.80 s total wall-time** | **~7.50 s total wall-time** |
+| **Total 77-Video Suite** | **1.13 s total wall-time** | **~2.80 s total wall-time** | **~7.50 s total wall-time** |
 
 ---
 
@@ -714,10 +716,10 @@ verdict = action_engine.evaluate_clip(graph_tensor)  # {"is_threat": bool, "conf
 │   ├── generate_pipeline_diagram.py        # Automated vector generation of inference pipeline
 │   └── generate_pareto_chart.py            # Automated generation of PoseConv3D Pareto chart
 ├── weights/                                # Pretrained models, universal ONNX blueprints & TensorRT engines
-│   ├── yolo_weapon_distilled.onnx          # Universal ONNX blueprint for Distilled YOLO26s (19.2 MB)
-│   ├── yolo_weapon_distilled.engine        # Native TensorRT engine (imgsz=640, Hungarian NMS-Free)
-│   ├── yolo26s-pose.onnx                   # Universal ONNX blueprint for YOLO26s-Pose (21.0 MB)
-│   ├── yolo26s-pose.engine                 # Native TensorRT engine (imgsz=640, kpt_shape=[17, 3])
+│   ├── yolo_weapon_distilled.onnx          # Universal ONNX blueprint for Distilled YOLO26s (18.2 MB)
+│   ├── yolo_weapon_distilled.engine        # Native TensorRT engine (imgsz=[384, 640], Hungarian NMS-Free)
+│   ├── yolo26s-pose.onnx                   # Universal ONNX blueprint for YOLO26s-Pose (20.0 MB)
+│   ├── yolo26s-pose.engine                 # Native TensorRT engine (imgsz=[384, 640], kpt_shape=[17, 3])
 │   ├── poseconv3d_downscale_tier3.onnx     # Universal ONNX blueprint for PoseConv3D Tier 3 (2.4 MB)
 │   ├── poseconv3d_downscale_tier3.engine   # Native TensorRT engine (0.43 ms latency, FP16)
 │   ├── poseconv3d_distill_dt3.onnx         # Universal ONNX blueprint for PoseConv3D Distilled T3 (2.4 MB)
@@ -763,7 +765,7 @@ For instantaneous, hands-off testing with a physical webcam (camera index 0), do
 
 | Batch Script | Supported Hardware | Runtime Backend | Key Characteristics |
 | :--- | :--- | :--- | :--- |
-| [`run_webcam_tensorrt.bat`](run_webcam_tensorrt.bat) | **Dedicated NVIDIA GPUs** (RTX 3050, 3090, etc.) | **Native NVIDIA TensorRT 11.3** | **Ultra-low latency (5.80 ms weapon / 0.43 ms action)**, strict CUDA enforcement, zero-copy GPU pointer execution |
+| [`run_webcam_tensorrt.bat`](run_webcam_tensorrt.bat) | **Dedicated NVIDIA GPUs** (RTX 3050, 3090, etc.) | **Native NVIDIA TensorRT 11.3** | **Ultra-low latency (3.86 ms weapon / 0.43 ms action)**, strict CUDA enforcement, zero-copy GPU pointer execution |
 | [`run_webcam_pytorch.bat`](run_webcam_pytorch.bat) | **Universal Hardware** (NVIDIA CUDA / Intel Iris Xe / Host CPU) | **Base PyTorch Eager** | Universal hardware cascade (CUDA -> Intel XPU -> CPU oneDNN), reference `.pt` / `.pth` checkpoints |
 | [`migrate_to_venv.bat`](migrate_to_venv.bat) | **Any Windows PC** | **Zero-Download Migration Utility** | Migrates existing host packages (`AppData`) to `.venv` in ~2 seconds with zero network download, freeing drive C: |
 
@@ -791,7 +793,7 @@ Evaluates all 33 violent assault videos and 44 civilian OOD videos through the T
 ```bash
 python scripts/test_modular_validation_suite.py --all
 ```
-Expected result: **1.0000 F1 (33/33 TP, 0 FP, 0 FN), 100.00% Accuracy, ~1.22 s total wall-time**.
+Expected result: **1.0000 F1 (33/33 TP, 0 FP, 0 FN), 100.00% Accuracy, ~1.13 s total wall-time**.
 
 ### 5. Feed a Real Video File into the End-to-End Pipeline
 Picks a random real `.mp4` video from the dataset and executes the complete multi-threaded pipeline:
@@ -802,7 +804,7 @@ python scripts/test_modular_validation_suite.py --feed-raw-video
 ### 6. Validate Stage 1 Weapon Detector on 715 Ground Truth Images
 Benchmarking script comparing the native TensorRT engine against the PyTorch baseline on the 715 Ground Truth surveillance images:
 ```bash
-# TensorRT Engine (5.80 ms latency, 84.91% F1, 90.34% Acc):
+# TensorRT Engine (3.86 ms stream latency / 5.80 ms GT batch, 84.91% F1, 90.34% Acc):
 python scripts/validate_stage1_ground_truth.py --weights weights/yolo_weapon_distilled.engine
 
 # PyTorch Baseline (12.05 ms latency, 86.88% F1, 91.62% Acc):

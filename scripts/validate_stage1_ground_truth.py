@@ -83,7 +83,7 @@ def calculate_metrics(tp, fp, fn, tn):
     return precision, recall, f1, specificity, accuracy
 
 
-def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20):
+def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20, imgsz=(384, 640)):
     model = YOLO(model_path, task="detect")
     stats = defaultdict(lambda: {"TP": 0, "FP": 0, "FN": 0, "TN": 0, "total_images": 0, "inference_time": 0.0})
 
@@ -95,7 +95,7 @@ def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20):
         gt_txt_path = os.path.join(grandparent_dir, "labels", f"{filename}.txt")
         gt_boxes = load_ground_truth(gt_txt_path)
 
-        results = model(img_path, conf=conf, imgsz=640, verbose=False)
+        results = model(img_path, conf=conf, imgsz=imgsz, verbose=False)
         inf_time = results[0].speed.get("inference", 0.0)
 
         stats[category]["inference_time"] += inf_time
@@ -149,16 +149,18 @@ def main():
     parser.add_argument("--weights", type=str, default=os.path.join(REPO_DIR, "weights", "yolo_weapon_distilled.engine"),
                         help="Path to YOLO weights (.engine or .pt)")
     parser.add_argument("--conf", type=float, default=0.45, help="Confidence threshold (default: 0.45)")
+    parser.add_argument("--imgsz", type=int, nargs="+", default=[384, 640], help="Inference resolution [H, W] (default: [384, 640])")
     args = parser.parse_args()
 
+    target_imgsz = tuple(args.imgsz) if len(args.imgsz) == 2 else args.imgsz[0]
     image_files = sorted(glob.glob(os.path.join(GT_DATASET_DIR, "**", "*.jpg"), recursive=True))
     print(f"Loaded {len(image_files)} Ground Truth test images from {GT_DATASET_DIR}.")
-    print(f"Target Model: {args.weights}")
+    print(f"Target Model: {args.weights} | Resolution: {target_imgsz}")
 
     print(f"\n" + "=" * 80)
-    print(f"EVALUATING STAGE 1 (Model={os.path.basename(args.weights)}, Conf={args.conf}, IoU=0.20)")
+    print(f"EVALUATING STAGE 1 (Model={os.path.basename(args.weights)}, Conf={args.conf}, IoU=0.20, Imgsz={target_imgsz})")
     print("=" * 80)
-    stats = validate_yolo_model(args.weights, image_files, conf=args.conf)
+    stats = validate_yolo_model(args.weights, image_files, conf=args.conf, imgsz=target_imgsz)
     for cat in ["OOD", "With_Coat", "Without_Coat", "Overall"]:
         d = stats[cat]
         p, r, f1, spec, acc = calculate_metrics(d["TP"], d["FP"], d["FN"], d["TN"])
