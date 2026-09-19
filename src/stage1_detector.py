@@ -55,16 +55,19 @@ class Stage1WeaponDetector:
         imgsz: Optional[Union[int, Tuple[int, int]]] = 640,
         backend: str = "tensorrt",
     ):
-        if not torch.cuda.is_available():
-            raise RuntimeError(
-                "[STAGE 1 CRITICAL ERROR] Stage 1 Weapon Detector strictly requires an NVIDIA CUDA GPU.\n"
-                "CPU execution is disabled to prevent severe latency degradation and dropped attacks."
-            )
+        self.backend = backend.lower()
+        if self.backend == "tensorrt":
+            if not torch.cuda.is_available():
+                raise RuntimeError(
+                    "[STAGE 1 CRITICAL ERROR] TensorRT Stage 1 Weapon Detector strictly requires an NVIDIA CUDA GPU.\n"
+                    "CPU execution is not supported by TensorRT."
+                )
+            self.device = device or "cuda:0"
+        else:
+            self.device = device or ("cuda:0" if torch.cuda.is_available() else "cpu")
 
-        self.device = device or "cuda:0"
         self.conf_threshold = conf_threshold
         self.imgsz = imgsz
-        self.backend = backend.lower()
 
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         weights_dir = os.path.join(repo_dir, "weights")

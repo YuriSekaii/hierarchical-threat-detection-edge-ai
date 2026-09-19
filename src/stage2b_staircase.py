@@ -46,7 +46,7 @@ def rasterize_heatmap_from_coords(
     into a 3D spatiotemporal heatmap volume tensor of shape (1, 17, 50, 56, 56).
     """
     if device is None:
-        device = clip.device if isinstance(clip, torch.Tensor) else torch.device("cuda:0")
+        device = clip.device if isinstance(clip, torch.Tensor) else (torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu"))
 
     if not isinstance(clip, torch.Tensor):
         clip = torch.from_numpy(clip).float().to(device)
@@ -166,17 +166,20 @@ class Stage2bStaircaseEngine:
         device: Optional[torch.device] = None,
         backend: str = "tensorrt",
     ):
-        if not torch.cuda.is_available():
-            raise RuntimeError(
-                "[STAGE 2b CRITICAL ERROR] Stage 2b Action Engine strictly requires an NVIDIA CUDA GPU.\n"
-                "CPU execution is disabled to prevent frame drop and pipeline stalls."
-            )
+        self.backend = backend.lower()
+        if self.backend == "tensorrt":
+            if not torch.cuda.is_available():
+                raise RuntimeError(
+                    "[STAGE 2b CRITICAL ERROR] TensorRT Stage 2b Action Engine strictly requires an NVIDIA CUDA GPU.\n"
+                    "CPU execution is not supported by TensorRT."
+                )
+            self.device = device or torch.device("cuda:0")
+        else:
+            self.device = device or (torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu"))
 
-        self.device = device or torch.device("cuda:0")
         self.tier1_key = tier1_key
         self.tier2_key = tier2_key
         self.tier3_key = tier3_key
-        self.backend = backend.lower()
 
         self.p_low1 = float(p_low1)
         self.p_high1 = float(p_high1)

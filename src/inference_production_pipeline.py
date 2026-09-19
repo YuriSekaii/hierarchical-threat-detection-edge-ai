@@ -53,30 +53,39 @@ class ProductionHierarchicalPipeline:
         imgsz_override: Optional[Tuple[int, int]] = None,
         backend: str = "tensorrt",
     ):
-        if not torch.cuda.is_available():
-            raise RuntimeError(
-                "[CRITICAL ERROR] Production pipeline strictly requires an NVIDIA CUDA GPU.\n"
-                "CPU execution is disabled to maintain real-time edge SLA and prevent security failures."
-            )
-        self.device = device or "cuda:0"
-        if "cpu" in self.device.lower():
-            raise RuntimeError("[CRITICAL ERROR] Strict GPU policy: Cannot run production pipeline on CPU.")
+        self.backend = backend.lower()
+        if self.backend == "tensorrt":
+            if not torch.cuda.is_available():
+                raise RuntimeError(
+                    "[CRITICAL ERROR] TensorRT backend strictly requires an NVIDIA CUDA GPU.\n"
+                    "CPU execution is not supported by TensorRT."
+                )
+            self.device = device or "cuda:0"
+            if "cpu" in self.device.lower():
+                raise RuntimeError("[CRITICAL ERROR] Strict GPU policy: Cannot run TensorRT on CPU.")
+            prec, _ = get_hardware_precision()
+            runtime_label = f"NATIVE TENSORRT 11.3 ({prec})"
+            hw_name = torch.cuda.get_device_name(0)
+            hw_policy = "Strict CUDA Active (No CPU Fallback)"
+        else:
+            if torch.cuda.is_available() and (device is None or "cpu" not in device.lower()):
+                self.device = device or "cuda:0"
+                hw_name = torch.cuda.get_device_name(0)
+                hw_policy = "CUDA GPU Accelerated"
+            else:
+                self.device = "cpu"
+                hw_name = "CPU (Reference / Non-NVIDIA Host)"
+                hw_policy = "CPU Reference Mode (~5-10 FPS)"
+            runtime_label = "BASE PYTORCH EAGER (.pt / .pth)"
 
         self.conf_threshold = conf_threshold
         self.imgsz_override = imgsz_override
         self.rect_imgsz = imgsz_override or 640
-        self.backend = backend.lower()
-
-        if self.backend == "tensorrt":
-            prec, _ = get_hardware_precision()
-            runtime_label = f"NATIVE TENSORRT 11.3 ({prec})"
-        else:
-            runtime_label = "BASE PYTORCH EAGER (.pt / .pth)"
 
         print("\n" + "=" * 80)
         print("   HIERARCHICAL EDGE-AI THREAT & VIOLENCE DETECTION (PRODUCTION PIPELINE)")
-        print(f"   Hardware: {torch.cuda.get_device_name(0)} | Runtime: {runtime_label}")
-        print(f"   Target Confidence: {self.conf_threshold:.2f} | Strict CUDA Active (No CPU Fallback)")
+        print(f"   Hardware: {hw_name} | Runtime: {runtime_label}")
+        print(f"   Target Confidence: {self.conf_threshold:.2f} | Policy: {hw_policy}")
         print("=" * 80)
 
         # 1. In-Memory Ring Buffer

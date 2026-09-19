@@ -14,7 +14,7 @@ echo        - Stage 2a: YOLO26s-Pose + ByteTrack Actor Locking (PyTorch .pt Chec
 echo        - Stage 2b: Champion 2 Staircase Cascade (PyTorch .pth Weights)
 echo        - Buffer:  In-Memory TurboJPEG Ring Buffer (~188.5 MB RAM)
 echo.
-echo [INFO] Hardware Enforcement: Strict NVIDIA CUDA GPU Active (No CPU Fallback)
+echo [INFO] Hardware Support: Universal (NVIDIA GPU if available, CPU if on laptop)
 echo [INFO] Ingesting real-time video from Webcam (Index: 0)
 echo [INFO] Press 'q' in the camera window to safely terminate surveillance.
 echo.
@@ -27,58 +27,11 @@ if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=python"
 )
 
-echo [CHECK] Verifying hardware and CUDA availability...
-
-rem 1. Check if an NVIDIA GPU is physically present
-nvidia-smi >nul 2>&1
-if %ERRORLEVEL% NEQ 0 goto :NO_NVIDIA_GPU
-
-rem 2. Check if PyTorch has CUDA enabled
-"%PY_BIN%" -c "import torch; exit(0 if torch.cuda.is_available() else 1)" 2>nul
-if %ERRORLEVEL% EQU 0 goto :LAUNCH
-
-echo.
-echo ===============================================================================
-echo [AUTO-SETUP] Detected CPU-only PyTorch build on this system!
-echo [AUTO-SETUP] Your NVIDIA GPU requires PyTorch compiled with CUDA support.
-echo [AUTO-SETUP] Automatically installing PyTorch with CUDA 12.4 for your GPU...
-echo              (Downloading CUDA runtime wheels ~2.5 GB. Please wait...)
-echo ===============================================================================
-echo.
-"%PY_BIN%" -m pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu124 --force-reinstall
-if %ERRORLEVEL% NEQ 0 goto :CUDA_INSTALL_FAIL
-echo.
-echo [AUTO-SETUP] PyTorch CUDA installed successfully!
-echo.
-
-:LAUNCH
 echo [LAUNCH] Starting PyTorch Baseline Surveillance Pipeline...
 echo.
 "%PY_BIN%" src/inference_production_pipeline.py --source 0 --conf 0.45 --backend pytorch %*
 if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
 goto :END
-
-:NO_NVIDIA_GPU
-echo.
-echo ===============================================================================
-echo [HARDWARE ALERT] No NVIDIA CUDA GPU detected on this computer!
-echo Task Manager shows this machine only has integrated Intel Iris Xe / AMD graphics.
-echo.
-echo This surveillance pipeline strictly requires an NVIDIA GPU (GeForce RTX / GTX).
-echo Please run this on your test site PC (which has the NVIDIA GeForce RTX 3050).
-echo ===============================================================================
-pause
-exit /b 1
-
-:CUDA_INSTALL_FAIL
-echo.
-echo ===============================================================================
-echo [ERROR] Failed to automatically install CUDA-enabled PyTorch.
-echo Please run manually in your command prompt:
-echo   "%PY_BIN%" -m pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu124 --force-reinstall
-echo ===============================================================================
-pause
-exit /b 1
 
 :RUN_FAIL
 echo.

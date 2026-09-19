@@ -62,15 +62,18 @@ class Stage2aPoseTracker:
         imgsz: Optional[Union[int, Tuple[int, int]]] = 640,
         backend: str = "tensorrt",
     ):
-        if not torch.cuda.is_available():
-            raise RuntimeError(
-                "[STAGE 2a CRITICAL ERROR] Stage 2a Pose Tracker strictly requires an NVIDIA CUDA GPU.\n"
-                "CPU execution is disabled to prevent frame drops and queue starvation."
-            )
-
-        self.device = device or "cuda:0"
-        self.imgsz = imgsz
         self.backend = backend.lower()
+        if self.backend == "tensorrt":
+            if not torch.cuda.is_available():
+                raise RuntimeError(
+                    "[STAGE 2a CRITICAL ERROR] TensorRT Stage 2a Pose Tracker strictly requires an NVIDIA CUDA GPU.\n"
+                    "CPU execution is not supported by TensorRT."
+                )
+            self.device = device or "cuda:0"
+        else:
+            self.device = device or ("cuda:0" if torch.cuda.is_available() else "cpu")
+
+        self.imgsz = imgsz
 
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         weights_dir = os.path.join(repo_dir, "weights")
