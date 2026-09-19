@@ -20,4 +20,4 @@ sentencepiece>=0.2.0
 # Native NVIDIA TensorRT Acceleration & ONNX Engine Blueprints
 tensorrt-cu12>=10.0.0
 onnx>=1.16.0
-onnxslim>=0.2.0
+onnxslim>=0.1.0

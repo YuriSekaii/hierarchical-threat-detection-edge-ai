@@ -69,6 +69,7 @@ class Stage2aPoseTracker:
                     "[STAGE 2a CRITICAL ERROR] TensorRT Stage 2a Pose Tracker strictly requires an NVIDIA CUDA GPU.\n"
                     "CPU execution is not supported by TensorRT."
                 )
+            self.device = device or "cuda:0"
         else:
             if torch.cuda.is_available():
                 self.device = device or "cuda:0"

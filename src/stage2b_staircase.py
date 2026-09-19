@@ -173,6 +173,7 @@ class Stage2bStaircaseEngine:
                     "[STAGE 2b CRITICAL ERROR] TensorRT Stage 2b Action Engine strictly requires an NVIDIA CUDA GPU.\n"
                     "CPU execution is not supported by TensorRT."
                 )
+            self.device = device or torch.device("cuda:0")
         else:
             if torch.cuda.is_available():
                 self.device = device or torch.device("cuda:0")
