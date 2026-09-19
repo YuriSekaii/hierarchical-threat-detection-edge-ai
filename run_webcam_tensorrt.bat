@@ -37,13 +37,15 @@ if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=python"
 )
 
-rem Auto-heal Pillow C-extension if corrupted
-"%PY_BIN%" -c "from PIL import Image" 2>nul
-if %ERRORLEVEL% NEQ 0 (
-    echo [AUTO-REPAIR] Corrupted Pillow (PIL) C-extension detected!
-    echo [AUTO-REPAIR] Reinstalling clean Pillow binary wheel...
-    "%PY_BIN%" -m pip install --force-reinstall --no-cache-dir pillow
-)
+rem Pre-flight: Auto-heal Pillow C-extension if corrupted
+"%PY_BIN%" -c "from PIL import Image" >nul 2>&1
+if %ERRORLEVEL% EQU 0 goto :CHECK_CORE_DEPS_TRT
+
+echo [AUTO-REPAIR] Corrupted Pillow C-extension detected.
+echo [AUTO-REPAIR] Reinstalling clean Pillow binary wheel...
+"%PY_BIN%" -m pip install --force-reinstall --no-cache-dir pillow
+
+:CHECK_CORE_DEPS_TRT
 
 rem 1. Check if core dependencies are installed
 "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul

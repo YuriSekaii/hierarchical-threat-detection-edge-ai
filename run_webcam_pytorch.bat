@@ -20,15 +20,15 @@ echo [INFO] Press 'q' in the camera window to safely terminate surveillance.
 echo.
 
 rem Auto-create isolated .venv if not present
-if not exist ".\.venv\Scripts\python.exe" (
-    echo [AUTO-SETUP] No virtual environment found.
-    echo [AUTO-SETUP] Creating isolated project environment in .venv...
-    python -m venv .venv
-    if %ERRORLEVEL% NEQ 0 (
-        echo [WARNING] Failed to create .venv. Falling back to system Python.
-    )
+if exist ".\.venv\Scripts\python.exe" goto :SELECT_VENV
+echo [AUTO-SETUP] No virtual environment found.
+echo [AUTO-SETUP] Creating isolated project environment in .venv...
+python -m venv .venv
+if %ERRORLEVEL% NEQ 0 (
+    echo [WARNING] Failed to create .venv. Falling back to system Python.
 )
 
+:SELECT_VENV
 if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=.\.venv\Scripts\python.exe"
 ) else if exist "..\.venv\Scripts\python.exe" (
@@ -37,28 +37,31 @@ if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=python"
 )
 
-rem Auto-heal Pillow C-extension if corrupted
-"%PY_BIN%" -c "from PIL import Image" 2>nul
-if %ERRORLEVEL% NEQ 0 (
-    echo [AUTO-REPAIR] Corrupted Pillow (PIL) C-extension detected!
-    echo [AUTO-REPAIR] Reinstalling clean Pillow binary wheel...
-    "%PY_BIN%" -m pip install --force-reinstall --no-cache-dir pillow
-)
+echo [CHECK] Verifying Python environment and dependencies (%PY_BIN%)...
 
-"%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
+rem Pre-flight: Auto-heal Pillow C-extension if corrupted
+"%PY_BIN%" -c "from PIL import Image" >nul 2>&1
+if %ERRORLEVEL% EQU 0 goto :CHECK_CORE_DEPS
+
+echo [AUTO-REPAIR] Corrupted Pillow C-extension detected.
+echo [AUTO-REPAIR] Reinstalling clean Pillow binary wheel...
+"%PY_BIN%" -m pip install --force-reinstall --no-cache-dir pillow
+
+:CHECK_CORE_DEPS
+"%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" >nul 2>&1
 if %ERRORLEVEL% EQU 0 goto :LAUNCH
 
 rem Try migrating existing packages from host PC into .venv (Zero Download!)
-if exist "scripts\migrate_packages_to_venv.py" (
-    echo [CHECK] Core libraries not yet active in .venv. Scanning host PC for existing packages to migrate...
-    python scripts\migrate_packages_to_venv.py
-    "%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" 2>nul
-    if %ERRORLEVEL% EQU 0 (
-        echo [SUCCESS] Packages active in .venv! Zero network download used.
-        goto :LAUNCH
-    )
+if not exist "scripts\migrate_packages_to_venv.py" goto :RUN_DIAGNOSTICS
+echo [CHECK] Core libraries not yet active in .venv. Scanning host PC for existing packages to migrate...
+python scripts\migrate_packages_to_venv.py
+"%PY_BIN%" -c "import torch, torchvision, ultralytics, cv2, scipy, sklearn" >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo [SUCCESS] Packages active in .venv! Zero network download used.
+    goto :LAUNCH
 )
 
+:RUN_DIAGNOSTICS
 echo.
 echo [DIAGNOSTIC] Checking exact import status in environment:
 "%PY_BIN%" -c "import torch; print('  [OK] torch ' + torch.__version__); import torchvision; print('  [OK] torchvision ' + torchvision.__version__); import ultralytics; print('  [OK] ultralytics ' + ultralytics.__version__); import cv2; print('  [OK] opencv ' + cv2.__version__); import scipy; print('  [OK] scipy ' + scipy.__version__); import sklearn; print('  [OK] scikit-learn ' + sklearn.__version__)"
@@ -71,12 +74,13 @@ echo              (NO TensorRT, pure CPU/Universal PyTorch stack)
 echo ===============================================================================
 echo.
 "%PY_BIN%" -m pip install -r requirements.txt
-if %ERRORLEVEL% NEQ 0 (
-    echo [RETRY] Direct installation of core packages...
-    "%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib seaborn pandas pyyaml tqdm timm einops
-)
+if %ERRORLEVEL% EQU 0 goto :DEPS_OK
+
+echo [RETRY] Direct installation of core packages...
+"%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib seaborn pandas pyyaml tqdm timm einops pillow
 if %ERRORLEVEL% NEQ 0 goto :INSTALL_DEPS_FAIL
 
+:DEPS_OK
 echo.
 echo [AUTO-SETUP] All dependencies installed successfully!
 echo.
