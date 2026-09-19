@@ -113,7 +113,19 @@ class Stage2aPoseTracker:
 
             prec, _ = get_hardware_precision()
             print(f"[STAGE 2a] Loading YOLO26s-Pose TensorRT Engine ({prec}) on {self.device}...")
-            self.pose_model = YOLO(self.engine_path, task="pose")
+            try:
+                self.pose_model = YOLO(self.engine_path, task="pose")
+            except Exception as e:
+                print(f"[STAGE 2a WARNING] Failed to load engine ({e}). Re-compiling from ONNX blueprint...")
+                if os.path.exists(self.engine_path):
+                    os.remove(self.engine_path)
+                self.engine_path = ensure_engine(
+                    onnx_path=onnx_path,
+                    engine_path=engine_path,
+                    metadata=metadata,
+                    workspace_gb=1.0,
+                )
+                self.pose_model = YOLO(self.engine_path, task="pose")
 
         # Tracking state
         self.active_threat_actor_id: Optional[int] = None

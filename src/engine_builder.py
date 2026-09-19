@@ -17,11 +17,52 @@ import json
 import time
 from typing import Optional, Dict, Any, Tuple
 import torch
-import tensorrt as trt
+try:
+    import tensorrt as trt
+except ImportError:
+    trt = None
 
 REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
+
+
+def ensure_tensorrt():
+    """
+    Verifies that 'tensorrt' is installed. If missing, attempts automatic installation
+    via pip ('tensorrt-cu12', 'onnx', 'onnxslim') so the user doesn't have to manually configure it.
+    """
+    global trt
+    if trt is not None:
+        return trt
+
+    try:
+        import tensorrt as trt_mod
+        trt = trt_mod
+        return trt
+    except ImportError:
+        print("\n" + "=" * 80)
+        print(" [AUTO-SETUP] 'tensorrt' package not found in current Python environment.")
+        print(" [AUTO-SETUP] Automatically installing required TensorRT runtime ('tensorrt-cu12', 'onnx', 'onnxslim')...")
+        print("              This is a one-time automated setup. Please wait...")
+        print("=" * 80 + "\n")
+        import subprocess
+        try:
+            subprocess.check_call([
+                sys.executable, "-m", "pip", "install",
+                "tensorrt-cu12", "onnx", "onnxslim"
+            ])
+            import tensorrt as trt_mod
+            trt = trt_mod
+            print("\n[AUTO-SETUP] Successfully installed and loaded TensorRT runtime!\n")
+            return trt
+        except Exception as e:
+            raise RuntimeError(
+                f"\n[CRITICAL ERROR] Failed to auto-install TensorRT.\n"
+                f"Please manually execute in your terminal:\n"
+                f"    pip install tensorrt-cu12 onnx onnxslim\n"
+                f"Error detail: {e}"
+            ) from e
 
 
 def get_hardware_precision() -> Tuple[str, bool]:
@@ -81,6 +122,10 @@ def build_engine_from_onnx(
     print(f"   Memory Workspace Limit: {workspace_gb:.1f} GB (Edge/Consumer Guardrail)")
     print("=" * 80)
     print("   [NOTE] First-run compilation performs kernel auto-tuning (~30-90s). Please wait...")
+
+    global trt
+    if trt is None:
+        trt = ensure_tensorrt()
 
     logger_level = trt.Logger.INFO if verbose else trt.Logger.WARNING
     logger = trt.Logger(logger_level)

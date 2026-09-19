@@ -19,7 +19,10 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 import torch.nn as nn
-import tensorrt as trt
+try:
+    import tensorrt as trt
+except ImportError:
+    trt = None
 
 REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if REPO_DIR not in sys.path:
@@ -93,13 +96,27 @@ class TensorRTActionModel:
     Ultra-low latency, zero-copy TensorRT inference engine for Action models.
     Executes directly on PyTorch GPU CUDA pointers without host memory round-trips.
     """
-    def __init__(self, engine_path: str, input_name: str, device: str = "cuda:0"):
+    def __init__(self, engine_path: str, input_name: str, device: str = "cuda:0", onnx_path: Optional[str] = None):
         self.device = torch.device(device)
+        global trt
+        if trt is None:
+            from src.engine_builder import ensure_tensorrt
+            trt = ensure_tensorrt()
         self.runtime = trt.Runtime(trt.Logger(trt.Logger.ERROR))
         with open(engine_path, "rb") as f:
-            self.engine = self.runtime.deserialize_cuda_engine(f.read())
+            engine_bytes = f.read()
+        self.engine = self.runtime.deserialize_cuda_engine(engine_bytes)
         if self.engine is None:
-            raise RuntimeError(f"[STAGE 2b] Failed to deserialize TensorRT engine: {engine_path}")
+            if onnx_path and os.path.exists(onnx_path):
+                print(f"[STAGE 2b WARNING] Incompatible or corrupted engine detected: {os.path.basename(engine_path)}")
+                print(f"                   Recompiling from ONNX blueprint {os.path.basename(onnx_path)}...")
+                if os.path.exists(engine_path):
+                    os.remove(engine_path)
+                ensure_engine(onnx_path, engine_path, workspace_gb=1.0)
+                with open(engine_path, "rb") as f:
+                    self.engine = self.runtime.deserialize_cuda_engine(f.read())
+            if self.engine is None:
+                raise RuntimeError(f"[STAGE 2b] Failed to deserialize TensorRT engine: {engine_path}")
         self.context = self.engine.create_execution_context()
         self.input_name = input_name
         self.stream = torch.cuda.Stream(device=self.device)
@@ -214,7 +231,12 @@ class Stage2bStaircaseEngine:
             for key in [self.tier1_key, self.tier2_key, self.tier3_key]:
                 pt_meta = load_model_instance(key, self.device)
                 cfg = engine_configs[key]
-                trt_model = TensorRTActionModel(cfg["engine"], cfg["input_name"], device=str(self.device))
+                trt_model = TensorRTActionModel(
+                    engine_path=cfg["engine"],
+                    input_name=cfg["input_name"],
+                    device=str(self.device),
+                    onnx_path=cfg["onnx"],
+                )
                 self.models[key] = {
                     "model": trt_model,
                     "mu_0": pt_meta["mu_0"],

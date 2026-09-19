@@ -16,3 +16,8 @@ qwen-vl-utils>=0.0.8
 timm>=1.0.0
 einops>=0.8.0
 sentencepiece>=0.2.0
+
+# Native NVIDIA TensorRT Acceleration & ONNX Engine Blueprints
+tensorrt-cu12>=10.0.0
+onnx>=1.16.0
+onnxslim>=0.2.0

@@ -112,8 +112,19 @@ class Stage1WeaponDetector:
             )
 
             prec, _ = get_hardware_precision()
-            print(f"[STAGE 1] Loading Distilled YOLO26s TensorRT Engine ({prec}) on {self.device}...")
-            self.model = YOLO(self.engine_path, task="detect")
+            try:
+                self.model = YOLO(self.engine_path, task="detect")
+            except Exception as e:
+                print(f"[STAGE 1 WARNING] Failed to load engine ({e}). Re-compiling from ONNX blueprint...")
+                if os.path.exists(self.engine_path):
+                    os.remove(self.engine_path)
+                self.engine_path = ensure_engine(
+                    onnx_path=onnx_path,
+                    engine_path=engine_path,
+                    metadata=metadata,
+                    workspace_gb=1.0,
+                )
+                self.model = YOLO(self.engine_path, task="detect")
             print(f"          -> Stage 1 Initialized (Conf={self.conf_threshold:.2f}, NMS-Free=True, Engine={os.path.basename(self.engine_path)})")
 
     def predict(self, frame: np.ndarray, custom_conf: Optional[float] = None, imgsz: Optional[Union[int, Tuple[int, int]]] = None) -> Dict:
