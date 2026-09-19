@@ -29,42 +29,51 @@ if exist ".\.venv\Scripts\python.exe" (
 
 echo [CHECK] Verifying Python environment and dependencies...
 "%PY_BIN%" -c "import tensorrt" 2>nul
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo ===============================================================================
-    echo [AUTO-SETUP] 'tensorrt' is not installed in the current Python environment.
-    echo [AUTO-SETUP] Automatically installing TensorRT 11.3 (tensorrt-cu12, onnx, onnxslim)...
-    echo              This is a one-time automated setup for native GPU acceleration.
-    echo ===============================================================================
-    echo.
-    "%PY_BIN%" -m pip install tensorrt-cu12 onnx onnxslim
-    if %ERRORLEVEL% NEQ 0 (
-        echo.
-        echo ===============================================================================
-        echo [ERROR] Automatic installation of tensorrt-cu12 failed.
-        echo Please ensure you have an active internet connection and run manually:
-        echo   "%PY_BIN%" -m pip install tensorrt-cu12 onnx onnxslim
-        echo ===============================================================================
-        pause
-        exit /b 1
-    )
-    echo.
-    echo [AUTO-SETUP] TensorRT dependencies installed successfully!
-    echo.
-)
+if %ERRORLEVEL% EQU 0 goto :LAUNCH
 
+echo.
+echo ===============================================================================
+echo [AUTO-SETUP] 'tensorrt' is not installed in the current Python environment.
+echo [AUTO-SETUP] Automatically installing TensorRT 11.3: tensorrt-cu12, onnx, onnxslim
+echo              This is a one-time automated setup for native GPU acceleration.
+echo ===============================================================================
+echo.
+"%PY_BIN%" -m pip install tensorrt-cu12 onnx onnxslim
+if %ERRORLEVEL% NEQ 0 goto :INSTALL_FAIL
+
+echo.
+echo [AUTO-SETUP] TensorRT dependencies installed successfully!
+echo.
+
+:LAUNCH
 echo [LAUNCH] Starting TensorRT Surveillance Pipeline...
 echo [NOTE]   Any missing .engine models will auto-compile from .onnx on first run.
 echo.
 "%PY_BIN%" src/inference_production_pipeline.py --source 0 --conf 0.45 --backend tensorrt %*
+if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
+goto :END
 
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo ===============================================================================
-    echo [ERROR] Pipeline stopped with exit code %ERRORLEVEL%.
-    echo Please inspect the error traceback above.
-    echo ===============================================================================
-    pause
-)
+:INSTALL_FAIL
+echo.
+echo ===============================================================================
+echo [ERROR] Automatic installation of tensorrt-cu12 failed.
+echo Please ensure you have an active internet connection and run manually:
+echo   "%PY_BIN%" -m pip install tensorrt-cu12 onnx onnxslim
+echo ===============================================================================
+pause
+exit /b 1
 
+:RUN_FAIL
+echo.
+echo ===============================================================================
+echo [ERROR] Pipeline stopped with exit code %ERRORLEVEL%.
+echo Please inspect the error traceback above.
+echo ===============================================================================
+pause
+exit /b %ERRORLEVEL%
+
+:END
+echo.
+echo [INFO] Surveillance session terminated.
+pause
 endlocal

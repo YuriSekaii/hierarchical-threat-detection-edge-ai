@@ -38,6 +38,10 @@ if %ERRORLEVEL% NEQ 0 (
     echo Please inspect the error traceback above.
     echo ===============================================================================
     pause
+    exit /b %ERRORLEVEL%
 )
 
+echo.
+echo [INFO] Surveillance session terminated.
+pause
 endlocal
