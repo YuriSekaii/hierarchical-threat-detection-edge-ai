@@ -27,8 +27,13 @@ if exist ".\.venv\Scripts\python.exe" (
     set "PY_BIN=python"
 )
 
-echo [CHECK] Verifying Python environment and dependencies...
+echo [CHECK] Verifying hardware and Python environment...
 
+rem 1. Check if an NVIDIA GPU is physically present
+nvidia-smi >nul 2>&1
+if %ERRORLEVEL% NEQ 0 goto :NO_NVIDIA_GPU
+
+rem 2. Check if TensorRT is installed
 "%PY_BIN%" -c "import tensorrt" 2>nul
 if %ERRORLEVEL% EQU 0 goto :CHECK_CUDA
 
@@ -46,6 +51,7 @@ echo [AUTO-SETUP] TensorRT dependencies installed successfully!
 echo.
 
 :CHECK_CUDA
+rem 3. Check if PyTorch has CUDA enabled
 "%PY_BIN%" -c "import torch; exit(0 if torch.cuda.is_available() else 1)" 2>nul
 if %ERRORLEVEL% EQU 0 goto :LAUNCH
 
@@ -57,7 +63,7 @@ echo [AUTO-SETUP] Automatically installing PyTorch with CUDA 12.4 for your GPU..
 echo              (Downloading CUDA runtime wheels ~2.5 GB. Please wait...)
 echo ===============================================================================
 echo.
-"%PY_BIN%" -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124 --force-reinstall
+"%PY_BIN%" -m pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu124 --force-reinstall
 if %ERRORLEVEL% NEQ 0 goto :CUDA_INSTALL_FAIL
 echo.
 echo [AUTO-SETUP] PyTorch CUDA installed successfully!
@@ -70,6 +76,20 @@ echo.
 "%PY_BIN%" src/inference_production_pipeline.py --source 0 --conf 0.45 --backend tensorrt %*
 if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
 goto :END
+
+:NO_NVIDIA_GPU
+echo.
+echo ===============================================================================
+echo [HARDWARE ALERT] No NVIDIA CUDA GPU detected on this computer!
+echo Task Manager shows this machine only has integrated Intel Iris Xe / AMD graphics.
+echo.
+echo TensorRT and this surveillance pipeline strictly require an NVIDIA GPU
+echo (GeForce RTX / GTX, Quadro, or Jetson).
+echo.
+echo Please run this on your test site PC (which has the NVIDIA GeForce RTX 3050).
+echo ===============================================================================
+pause
+exit /b 1
 
 :INSTALL_FAIL
 echo.
@@ -86,7 +106,7 @@ echo.
 echo ===============================================================================
 echo [ERROR] Failed to automatically install CUDA-enabled PyTorch.
 echo Please run manually in your command prompt:
-echo   "%PY_BIN%" -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124 --force-reinstall
+echo   "%PY_BIN%" -m pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu124 --force-reinstall
 echo ===============================================================================
 pause
 exit /b 1
