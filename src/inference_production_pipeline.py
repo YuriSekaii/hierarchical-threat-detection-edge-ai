@@ -68,13 +68,17 @@ class ProductionHierarchicalPipeline:
             hw_name = torch.cuda.get_device_name(0)
             hw_policy = "Strict CUDA Active (No CPU Fallback)"
         else:
-            if torch.cuda.is_available() and (device is None or "cpu" not in device.lower()):
+            if torch.cuda.is_available() and (device is None or "cpu" not in str(device).lower()):
                 self.device = device or "cuda:0"
                 hw_name = torch.cuda.get_device_name(0)
-                hw_policy = "CUDA GPU Accelerated"
+                hw_policy = "NVIDIA CUDA GPU Accelerated"
+            elif hasattr(torch, "xpu") and torch.xpu.is_available() and (device is None or "cpu" not in str(device).lower()):
+                self.device = device or "xpu:0"
+                hw_name = torch.xpu.get_device_name(0) if hasattr(torch.xpu, "get_device_name") else "Intel XPU GPU"
+                hw_policy = "Intel XPU Hardware Acceleration"
             else:
                 self.device = "cpu"
-                hw_name = "CPU (Reference / Non-NVIDIA Host)"
+                hw_name = "Host CPU (AVX / oneDNN Reference Mode)"
                 hw_policy = "CPU Reference Mode (~5-10 FPS)"
             runtime_label = "BASE PYTORCH EAGER (.pt / .pth)"
 

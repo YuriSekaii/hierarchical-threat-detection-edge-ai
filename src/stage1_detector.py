@@ -62,9 +62,13 @@ class Stage1WeaponDetector:
                     "[STAGE 1 CRITICAL ERROR] TensorRT Stage 1 Weapon Detector strictly requires an NVIDIA CUDA GPU.\n"
                     "CPU execution is not supported by TensorRT."
                 )
-            self.device = device or "cuda:0"
         else:
-            self.device = device or ("cuda:0" if torch.cuda.is_available() else "cpu")
+            if torch.cuda.is_available():
+                self.device = device or "cuda:0"
+            elif hasattr(torch, "xpu") and torch.xpu.is_available():
+                self.device = device or "xpu:0"
+            else:
+                self.device = device or "cpu"
 
         self.conf_threshold = conf_threshold
         self.imgsz = imgsz
