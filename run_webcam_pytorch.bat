@@ -15,7 +15,8 @@ echo        - Stage 2b: Champion 2 Staircase Cascade (PyTorch .pth Weights)
 echo        - Buffer:  In-Memory TurboJPEG Ring Buffer (~188.5 MB RAM)
 echo.
 echo [INFO] Hardware Support: Universal (NVIDIA GPU if available, CPU if on laptop)
-echo [INFO] Ingesting real-time video from Webcam (Index: 0)
+echo [INFO] Ingesting real-time video from External Webcam (Index: 1)
+echo [INFO] Press 'i' in the camera window to cycle / swap connected cameras.
 echo [INFO] Press 'q' in the camera window to safely terminate surveillance.
 echo.
 
@@ -77,7 +78,7 @@ echo.
 if %ERRORLEVEL% EQU 0 goto :DEPS_OK
 
 echo [RETRY] Direct installation of core packages...
-"%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib seaborn pandas pyyaml tqdm timm einops pillow
+"%PY_BIN%" -m pip install torch torchvision ultralytics opencv-python numpy scipy scikit-learn matplotlib seaborn pandas pyyaml tqdm timm einops pillow pygrabber
 if %ERRORLEVEL% NEQ 0 goto :INSTALL_DEPS_FAIL
 
 :DEPS_OK
@@ -88,7 +89,7 @@ echo.
 :LAUNCH
 echo [LAUNCH] Starting PyTorch Baseline Surveillance Pipeline...
 echo.
-"%PY_BIN%" src/inference_production_pipeline.py --source 0 --conf 0.45 --backend pytorch %*
+"%PY_BIN%" src/inference_production_pipeline.py --source 1 --conf 0.45 --backend pytorch %*
 if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
 goto :END
 

@@ -1,4 +1,4 @@
-"""
+﻿"""
 src/inference_production_pipeline.py
 
 Production End-to-End Real-Time Surveillance Pipeline (Version 6.00 - TensorRT Acceleration).
@@ -84,7 +84,7 @@ class ProductionHierarchicalPipeline:
 
         self.conf_threshold = conf_threshold
         self.imgsz_override = imgsz_override
-        self.rect_imgsz = imgsz_override or (384, 640)
+        self.rect_imgsz = imgsz_override or 640
 
         print("\n" + "=" * 80)
         print("   HIERARCHICAL EDGE-AI THREAT & VIOLENCE DETECTION (PRODUCTION PIPELINE)")
@@ -227,17 +227,9 @@ class ProductionHierarchicalPipeline:
 
     def run(self, source: Union[int, str] = 0, headless: bool = False):
         """Executes live video stream surveillance."""
-        current_source = source
-        # Open initial camera capture (use CAP_DSHOW on Windows for fast init)
-        if isinstance(current_source, int):
-            cap = cv2.VideoCapture(current_source, cv2.CAP_DSHOW)
-            if not cap.isOpened():
-                cap = cv2.VideoCapture(current_source)
-        else:
-            cap = cv2.VideoCapture(current_source)
-
+        cap = cv2.VideoCapture(source)
         if not cap.isOpened():
-            print(f"[ERROR] Could not open video source: {current_source}")
+            print(f"[ERROR] Could not open video source: {source}")
             return
 
         f_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -245,48 +237,9 @@ class ProductionHierarchicalPipeline:
         if self.imgsz_override:
             self.rect_imgsz = self.imgsz_override
         else:
-            self.rect_imgsz = calculate_rectangular_imgsz(f_h, f_w, base_dim=640) if f_w > 0 and f_h > 0 else (384, 640)
+            self.rect_imgsz = 640
 
-        print(f"[CONFIG] Input Stream: {f_w}x{f_h} -> Inference Resolution: {self.rect_imgsz} (Native TensorRT Rectangular)")
-
-        # Fast camera discovery via DirectShow COM (pygrabber)
-        available_cameras = [current_source] if isinstance(current_source, int) else []
-        camera_names = {current_source: f"Camera {current_source}"} if isinstance(current_source, int) else {}
-
-        if isinstance(current_source, int):
-            def _probe_cameras():
-                devices = []
-                try:
-                    from pygrabber.dshow_graph import FilterGraph
-                    names = FilterGraph().get_input_devices()
-                    for idx, name in enumerate(names):
-                        devices.append((idx, name.strip()))
-                except Exception:
-                    for idx in range(3):
-                        devices.append((idx, f"Camera {idx}"))
-
-                verified = []
-                for idx, name in devices:
-                    if idx == current_source:
-                        verified.append((idx, name))
-                        camera_names[idx] = name
-                        continue
-                    test_c = cv2.VideoCapture(idx, cv2.CAP_DSHOW)
-                    if test_c.isOpened():
-                        r, _ = test_c.read()
-                        if r:
-                            verified.append((idx, name))
-                            camera_names[idx] = name
-                    test_c.release()
-
-                if verified:
-                    available_cameras.clear()
-                    available_cameras.extend([idx for idx, _ in verified])
-                    summary = [f"{idx}: {camera_names.get(idx, 'Cam')}" for idx in available_cameras]
-                    print(f"[CAMERAS] Active cameras ready for cycling: {summary}")
-
-            # Run in fast background thread so launch is instant (<0.5s discovery)
-            threading.Thread(target=_probe_cameras, daemon=True).start()
+        print(f"[CONFIG] Input Stream: {f_w}x{f_h} -> Inference Resolution: {self.rect_imgsz} (Static TensorRT Binding)")
 
         self.is_running = True
         t_weapon = threading.Thread(target=self.weapon_scanner_worker, daemon=True)
@@ -294,71 +247,16 @@ class ProductionHierarchicalPipeline:
         t_weapon.start()
         t_action.start()
 
-        print("[RUNNING] Surveillance pipeline active. Press 'q' to stop, 'i' to swap camera.")
+        print("[RUNNING] Surveillance pipeline active. Press 'q' to stop.")
 
         frame_times = deque(maxlen=30)
         t_last = time.perf_counter()
-        last_frame = None
 
-        # State for asynchronous non-blocking camera swap
-        is_swapping = False
-        swap_target_idx = None
-        swap_target_name = ""
-
-        def _async_swap_worker(target_idx: int, target_name: str):
-            nonlocal cap, current_source, is_swapping, last_frame
-            try:
-                new_cap = cv2.VideoCapture(target_idx, cv2.CAP_DSHOW)
-                if not new_cap.isOpened():
-                    new_cap = cv2.VideoCapture(target_idx)
-                if new_cap.isOpened():
-                    ret_test, frame_test = new_cap.read()
-                    if ret_test and frame_test is not None:
-                        old_cap = cap
-                        cap = new_cap
-                        current_source = target_idx
-                        last_frame = frame_test
-                        old_cap.release()
-                        new_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                        new_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                        print(f"\n[CAMERA] Swapped to Camera {current_source} ({target_name}, {new_w}x{new_h}) successfully.")
-                    else:
-                        new_cap.release()
-                        print(f"\n[CAMERA WARNING] Camera {target_idx} opened but produced no frames.")
-                else:
-                    print(f"\n[CAMERA WARNING] Failed to connect to Camera {target_idx}.")
-            except Exception as e:
-                print(f"\n[CAMERA ERROR] Exception during swap: {e}")
-            finally:
-                is_swapping = False
-
-        while self.is_running:
-            if is_swapping:
-                # Keep GUI active and responsive while swap worker runs in background!
-                if last_frame is not None and not headless:
-                    hud = last_frame.copy()
-                    cv2.rectangle(hud, (10, 10), (820, 85), (0, 0, 0), -1)
-                    cv2.putText(hud, f"STATUS: SWITCHING TO CAMERA {swap_target_idx} ({swap_target_name})...", (20, 40),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 2)
-                    cv2.putText(hud, "Please wait, initializing camera hardware...", (20, 70),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.42, (200, 200, 200), 1)
-                    cv2.imshow(f"Hierarchical Edge Threat Detection [{self.backend.upper()}]", hud)
-                    if cv2.waitKey(20) & 0xFF == ord('q'):
-                        break
-                else:
-                    time.sleep(0.02)
-                continue
-
-            if not cap.isOpened():
-                time.sleep(0.02)
-                continue
-
+        while cap.isOpened() and self.is_running:
             ret, frame = cap.read()
-            if not ret or frame is None:
-                time.sleep(0.01)
-                continue
+            if not ret:
+                break
 
-            last_frame = frame
             now = time.perf_counter()
             frame_times.append(now - t_last)
             t_last = now
@@ -378,44 +276,13 @@ class ProductionHierarchicalPipeline:
                 buf_len = len(self.buffer)
                 tier_info = f"Tier: {self.last_resolved_tier}" if self.last_resolved_tier else "Tier: Idle"
                 actor_info = f"Actor ID: {self.stage2a_tracker.active_threat_actor_id}" if self.stage2a_tracker.active_threat_actor_id else "Scanning"
-                cam_name = camera_names.get(current_source, f"Cam {current_source}")
-                cam_label = f"Cam: {current_source} ({cam_name}) ['i' to swap]" if isinstance(current_source, int) else "Source: File"
-                telemetry = f"{cam_label} | FPS: {self.fps_telemetry:.1f} | Buf: {buf_len}/1200 | {tier_info} | {actor_info}"
+                telemetry = f"FPS: {self.fps_telemetry:.1f} | Buffer: {buf_len}/1200 (~{buf_mb:.1f} MB) | {tier_info} | {actor_info} | Backlog: {self.pending_audit_frames}"
                 cv2.putText(hud, telemetry, (20, 70),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.38, (200, 200, 200), 1)
-
-                # Draw weapon bounding box if actively detected
-                if time.time() < self.weapon_active_until and self.last_weapon_bbox is not None:
-                    bx1, by1, bx2, by2 = [int(v) for v in self.last_weapon_bbox]
-                    cv2.rectangle(hud, (bx1, by1), (bx2, by2), (0, 0, 255), 2)
-                    cv2.putText(hud, "WEAPON: KNIFE", (bx1, max(20, by1 - 8)),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.60, (0, 0, 255), 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.42, (200, 200, 200), 1)
 
                 cv2.imshow(f"Hierarchical Edge Threat Detection [{self.backend.upper()}]", hud)
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord('q'):
+                if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
-                elif key in (ord('i'), ord('I')) and isinstance(current_source, int):
-                    if not is_swapping:
-                        cams = list(available_cameras) if available_cameras else [1, 0]
-                        # Ensure both 0 and 1 are in pool if list is small
-                        for fallback_idx in [0, 1]:
-                            if fallback_idx not in cams:
-                                cams.append(fallback_idx)
-                        if current_source in cams:
-                            cur_pos = cams.index(current_source)
-                            next_pos = (cur_pos + 1) % len(cams)
-                            target_source = cams[next_pos]
-                        else:
-                            target_source = cams[0]
-
-                        if target_source != current_source:
-                            target_name = camera_names.get(target_source, f"Camera {target_source}")
-                            print(f"\n[CAMERA] Initiating hot-swap: Camera {current_source} -> Camera {target_source} ({target_name})...")
-                            is_swapping = True
-                            swap_target_idx = target_source
-                            swap_target_name = target_name
-                            threading.Thread(target=_async_swap_worker, args=(target_source, target_name), daemon=True).start()
 
         self.is_running = False
         cap.release()
