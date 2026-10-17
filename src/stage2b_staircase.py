@@ -54,7 +54,9 @@ def rasterize_heatmap_from_coords(
         clip = clip.float().to(device)
 
     # Ensure shape (T, 17, 2)
-    if clip.dim() == 4 and clip.shape[0] == 3:  # (3, T, V, M)
+    if clip.dim() == 5:  # (1, 2, T, V, 1)
+        clip = clip[0, :2, :, :, 0].permute(1, 2, 0)
+    elif clip.dim() == 4 and clip.shape[0] == 3:  # (3, T, V, M)
         clip = clip[:2, :, :, 0].permute(1, 2, 0)
     elif clip.dim() == 4 and clip.shape[1] == 2:  # (1, 2, T, V, M)
         clip = clip[0, :2, :, :, 0].permute(1, 2, 0)

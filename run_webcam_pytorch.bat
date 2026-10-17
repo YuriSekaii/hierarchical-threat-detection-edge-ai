@@ -15,7 +15,8 @@ echo        - Stage 2b: Champion 2 Staircase Cascade (PyTorch .pth Weights)
 echo        - Buffer:  In-Memory TurboJPEG Ring Buffer (~188.5 MB RAM)
 echo.
 echo [INFO] Hardware Support: Universal (NVIDIA GPU if available, CPU if on laptop)
-echo [INFO] Ingesting real-time video from External Webcam (Index: 1)
+echo [INFO] Ingesting real-time video (Primary: Index 1, with Auto-Failover to next active camera)
+echo [INFO] Framing Format: 4:3 Aspect Ratio (Max Sensor Resolution 1920x1440)
 echo [INFO] Press 'i' in the camera window to cycle / swap connected cameras.
 echo [INFO] Press 'q' in the camera window to safely terminate surveillance.
 echo.
@@ -89,7 +90,7 @@ echo.
 :LAUNCH
 echo [LAUNCH] Starting PyTorch Baseline Surveillance Pipeline...
 echo.
-"%PY_BIN%" src/inference_production_pipeline.py --source 1 --conf 0.45 --backend pytorch %*
+"%PY_BIN%" src/inference_production_pipeline.py --source 1 --aspect 4:3 --conf 0.45 --backend pytorch %*
 if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
 goto :END
 

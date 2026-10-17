@@ -241,14 +241,28 @@ class Stage2aPoseTracker:
 
         return raw_kpts, self.last_actor_bbox, active_id
 
-    def process_window(self, kpts_sequence: List[np.ndarray]) -> torch.Tensor:
+    def preprocess_sliding_window(
+        self, kpts_sequence: Union[List[np.ndarray], np.ndarray]
+    ) -> Tuple[np.ndarray, torch.Tensor]:
         """
         Applies temporal interpolation, Gaussian smoothing, and torso-scale normalization.
-        Expects a list of 50 frames of (17, 2) keypoints.
-        Returns tensor of shape (1, 3, 50, 17, 1) or (50, 17, 2).
+        Expects a sequence of 50 frames of (17, 2) keypoints.
+        Returns:
+            - normed_coords: np.ndarray of shape (50, 17, 2)
+            - graph_tensor: torch.Tensor of shape (50, 17, 2)
         """
         arr = np.array(kpts_sequence, dtype=np.float32)  # (T, 17, 2)
         arr = interpolate_missing_joints(arr)
         arr = smooth_kinematics(arr, sigma=1.0)
         normed = normalize_skeleton_clip(arr)  # (50, 17, 2)
-        return torch.from_numpy(normed).float()
+        tensor = torch.from_numpy(normed).float()
+        return normed, tensor
+
+    def process_window(self, kpts_sequence: Union[List[np.ndarray], np.ndarray]) -> torch.Tensor:
+        """
+        Applies temporal interpolation, Gaussian smoothing, and torso-scale normalization.
+        Expects a list of 50 frames of (17, 2) keypoints.
+        Returns tensor of shape (50, 17, 2).
+        """
+        _, tensor = self.preprocess_sliding_window(kpts_sequence)
+        return tensor

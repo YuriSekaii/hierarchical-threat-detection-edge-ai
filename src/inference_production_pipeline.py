@@ -52,7 +52,11 @@ class ProductionHierarchicalPipeline:
         device: Optional[str] = None,
         imgsz_override: Optional[Tuple[int, int]] = None,
         backend: str = "tensorrt",
+        camera_res: str = "auto",
+        aspect_ratio: str = "4:3",
     ):
+        self.camera_res = camera_res.lower()
+        self.aspect_ratio = aspect_ratio.lower()
         self.backend = backend.lower()
         if self.backend == "tensorrt":
             if not torch.cuda.is_available():
@@ -225,29 +229,106 @@ class ProductionHierarchicalPipeline:
                     self.status_text = f"WEAPON DRAWN - NORMAL MOTION ({actor_tag} | {detail_str})"
                     self.status_color = (0, 165, 255)
 
+    def apply_aspect_ratio(self, frame: np.ndarray) -> np.ndarray:
+        """
+        Enforces desired aspect ratio (e.g. 4:3) on camera frames.
+        Extracts the highest possible resolution 4:3 center crop (e.g. 1920x1440 from 2560x1440).
+        """
+        if frame is None or self.aspect_ratio not in ("4:3", "4/3"):
+            return frame
+        h, w = frame.shape[:2]
+        target_w = int(h * 4.0 / 3.0)
+        if target_w < w:
+            offset_x = (w - target_w) // 2
+            return frame[:, offset_x : offset_x + target_w]
+        elif target_w > w:
+            target_h = int(w * 3.0 / 4.0)
+            offset_y = (h - target_h) // 2
+            return frame[offset_y : offset_y + target_h, :]
+        return frame
+
+    def open_camera(self, idx: int) -> Optional[cv2.VideoCapture]:
+        """
+        Opens camera index with DirectShow/MSMF acceleration, MJPG FourCC,
+        and high-resolution sensor negotiation (up to 2560x1440 native).
+        """
+        for backend in [cv2.CAP_DSHOW, cv2.CAP_MSMF, cv2.CAP_ANY]:
+            try:
+                c = cv2.VideoCapture(idx, backend)
+                if c.isOpened():
+                    c.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+                    if self.camera_res in ("1440p", "2k", "auto"):
+                        c.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)
+                        c.set(cv2.CAP_PROP_FRAME_HEIGHT, 1440)
+                    elif self.camera_res == "1080p":
+                        c.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+                        c.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+                    elif self.camera_res == "720p":
+                        c.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+                        c.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+                    elif self.camera_res == "480p":
+                        c.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                        c.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+                    for _ in range(3):
+                        r, test_frame = c.read()
+                        if r and test_frame is not None and test_frame.size > 0:
+                            return c
+                    c.release()
+            except Exception:
+                pass
+        return None
+
     def run(self, source: Union[int, str] = 0, headless: bool = False):
-        """Executes live video stream surveillance."""
+        """Executes live video stream surveillance with auto-failover and non-blocking camera cycling."""
         current_source = source
-        # Open initial camera capture (use CAP_DSHOW on Windows for fast init)
+        cap = None
+
         if isinstance(current_source, int):
-            cap = cv2.VideoCapture(current_source, cv2.CAP_DSHOW)
-            if not cap.isOpened():
-                cap = cv2.VideoCapture(current_source)
+            cap = self.open_camera(current_source)
+            if cap is None:
+                print(f"\n[CAMERA NOTICE] Requested Camera Index {current_source} is not available or disconnected.")
+                print("[CAMERA NOTICE] Auto-scanning connected cameras for the next available device...")
+                candidates = [(current_source + i) % 4 for i in range(1, 5)]
+                for cand in candidates:
+                    test_c = self.open_camera(cand)
+                    if test_c is not None:
+                        cap = test_c
+                        current_source = cand
+                        cand_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                        cand_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                        print(f"[CAMERA AUTO-SELECT] Switched automatically to active Camera Index: {current_source} ({cand_w}x{cand_h})\n")
+                        break
         else:
             cap = cv2.VideoCapture(current_source)
 
-        if not cap.isOpened():
+        if cap is None or not cap.isOpened():
             print(f"[ERROR] Could not open video source: {current_source}")
             return
 
-        f_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        f_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        # Determine geometry from test frame or cap properties
+        ret_t, test_frame = cap.read() if cap.isOpened() else (False, None)
+        if ret_t and test_frame is not None:
+            test_frame = self.apply_aspect_ratio(test_frame)
+            f_w, f_h = test_frame.shape[1], test_frame.shape[0]
+            last_frame = test_frame
+        else:
+            raw_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            raw_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            if self.aspect_ratio in ("4:3", "4/3") and raw_w > 0 and raw_h > 0:
+                crop_w = int(raw_h * 4.0 / 3.0)
+                f_w = crop_w if crop_w <= raw_w else raw_w
+                f_h = raw_h
+            else:
+                f_w, f_h = raw_w, raw_h
+
         if self.imgsz_override:
             self.rect_imgsz = self.imgsz_override
         else:
-            self.rect_imgsz = calculate_rectangular_imgsz(f_h, f_w, base_dim=640) if f_w > 0 and f_h > 0 else (384, 640)
+            self.rect_imgsz = calculate_rectangular_imgsz(f_h, f_w, base_dim=640) if f_w > 0 and f_h > 0 else (480, 640)
 
-        print(f"[CONFIG] Input Stream: {f_w}x{f_h} -> Inference Resolution: {self.rect_imgsz} (Native TensorRT Rectangular)")
+        aspect_tag = f" [4:3 Aspect Ratio]" if self.aspect_ratio in ("4:3", "4/3") else ""
+        print(f"[CONFIG] Input Stream: {f_w}x{f_h}{aspect_tag} -> Inference Resolution: {self.rect_imgsz} (Native TensorRT Rectangular)")
 
         # Fast camera discovery via DirectShow COM (pygrabber)
         available_cameras = [current_source] if isinstance(current_source, int) else []
@@ -262,7 +343,7 @@ class ProductionHierarchicalPipeline:
                     for idx, name in enumerate(names):
                         devices.append((idx, name.strip()))
                 except Exception:
-                    for idx in range(3):
+                    for idx in range(4):
                         devices.append((idx, f"Camera {idx}"))
 
                 verified = []
@@ -271,13 +352,11 @@ class ProductionHierarchicalPipeline:
                         verified.append((idx, name))
                         camera_names[idx] = name
                         continue
-                    test_c = cv2.VideoCapture(idx, cv2.CAP_DSHOW)
-                    if test_c.isOpened():
-                        r, _ = test_c.read()
-                        if r:
-                            verified.append((idx, name))
-                            camera_names[idx] = name
-                    test_c.release()
+                    test_c = self.open_camera(idx)
+                    if test_c is not None:
+                        verified.append((idx, name))
+                        camera_names[idx] = name
+                        test_c.release()
 
                 if verified:
                     available_cameras.clear()
@@ -308,35 +387,63 @@ class ProductionHierarchicalPipeline:
         def _async_swap_worker(target_idx: int, target_name: str):
             nonlocal cap, current_source, is_swapping, last_frame
             try:
-                new_cap = cv2.VideoCapture(target_idx, cv2.CAP_DSHOW)
-                if not new_cap.isOpened():
-                    new_cap = cv2.VideoCapture(target_idx)
-                if new_cap.isOpened():
-                    ret_test, frame_test = new_cap.read()
-                    if ret_test and frame_test is not None:
-                        old_cap = cap
-                        cap = new_cap
-                        current_source = target_idx
-                        last_frame = frame_test
+                new_cap = self.open_camera(target_idx)
+                if new_cap is not None:
+                    old_cap = cap
+                    cap = new_cap
+                    current_source = target_idx
+                    if old_cap is not None:
                         old_cap.release()
-                        new_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                        new_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                        print(f"\n[CAMERA] Swapped to Camera {current_source} ({target_name}, {new_w}x{new_h}) successfully.")
-                    else:
-                        new_cap.release()
-                        print(f"\n[CAMERA WARNING] Camera {target_idx} opened but produced no frames.")
+                    new_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    new_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                    if self.aspect_ratio in ("4:3", "4/3") and new_w > 0 and new_h > 0:
+                        crop_w = int(new_h * 4.0 / 3.0)
+                        if crop_w <= new_w:
+                            new_w = crop_w
+                    if not self.imgsz_override and new_w > 0 and new_h > 0:
+                        self.rect_imgsz = calculate_rectangular_imgsz(new_h, new_w, base_dim=640)
+                    print(f"\n[CAMERA] Swapped to Camera {current_source} ({target_name}, {new_w}x{new_h}) successfully.")
                 else:
-                    print(f"\n[CAMERA WARNING] Failed to connect to Camera {target_idx}.")
+                    print(f"\n[CAMERA WARNING] Camera {target_idx} opened but produced no frames.")
             except Exception as e:
                 print(f"\n[CAMERA ERROR] Exception during swap: {e}")
             finally:
                 is_swapping = False
 
+        def _trigger_swap():
+            nonlocal is_swapping, swap_target_idx, swap_target_name
+            if is_swapping:
+                return
+            cams = list(available_cameras) if available_cameras else [0, 1, 2]
+            for fallback_idx in [0, 1, 2]:
+                if fallback_idx not in cams:
+                    cams.append(fallback_idx)
+            if current_source in cams:
+                cur_pos = cams.index(current_source)
+                target_idx = cams[(cur_pos + 1) % len(cams)]
+            else:
+                target_idx = cams[0]
+            target_name = camera_names.get(target_idx, f"Camera {target_idx}")
+            print(f"\n[CAMERA] Initiating hot-swap: Camera {current_source} -> Camera {target_idx} ({target_name})...")
+            is_swapping = True
+            swap_target_idx = target_idx
+            swap_target_name = target_name
+            threading.Thread(target=_async_swap_worker, args=(target_idx, target_name), daemon=True).start()
+
+        consecutive_failures = 0
+        win_title = f"Hierarchical Edge Threat Detection [{self.backend.upper()}]"
+        if not headless:
+            cv2.namedWindow(win_title, cv2.WINDOW_NORMAL)
+            if self.aspect_ratio in ("4:3", "4/3"):
+                cv2.resizeWindow(win_title, 960, 720)
+            else:
+                cv2.resizeWindow(win_title, 1280, 720)
+
         while self.is_running:
             if is_swapping:
                 # Keep GUI active and responsive while swap worker runs in background!
-                if last_frame is not None and not headless:
-                    hud = last_frame.copy()
+                if not headless:
+                    hud = last_frame.copy() if last_frame is not None else np.zeros((720, 1280, 3), dtype=np.uint8)
                     cv2.rectangle(hud, (10, 10), (820, 85), (0, 0, 0), -1)
                     cv2.putText(hud, f"STATUS: SWITCHING TO CAMERA {swap_target_idx} ({swap_target_name})...", (20, 40),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 2)
@@ -349,15 +456,39 @@ class ProductionHierarchicalPipeline:
                     time.sleep(0.02)
                 continue
 
-            if not cap.isOpened():
+            ret = False
+            frame = None
+            if cap is not None and cap.isOpened():
+                ret, frame = cap.read()
+
+            if not ret or frame is None:
+                consecutive_failures += 1
+                if not headless:
+                    hud = last_frame.copy() if last_frame is not None else np.zeros((720, 1280, 3), dtype=np.uint8)
+                    cv2.rectangle(hud, (10, 10), (820, 85), (0, 0, 0), -1)
+                    cv2.putText(hud, f"CAMERA ALERT: NO SIGNAL FROM CAMERA {current_source}", (20, 40),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
+                    cv2.putText(hud, f"Press 'i' to switch camera | Auto-failover in {max(0, 30 - consecutive_failures)} ticks | 'q' to quit", (20, 70),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.40, (200, 200, 200), 1)
+                    cv2.imshow(f"Hierarchical Edge Threat Detection [{self.backend.upper()}]", hud)
+                    key = cv2.waitKey(30) & 0xFF
+                    if key == ord('q'):
+                        break
+                    elif key in (ord('i'), ord('I')) and isinstance(current_source, int):
+                        _trigger_swap()
+                        continue
+
+                # Auto-failover if disconnected for ~1 second (30 ticks)
+                if isinstance(current_source, int) and consecutive_failures >= 30 and not is_swapping:
+                    consecutive_failures = 0
+                    print(f"\n[AUTO-FAILOVER] Camera {current_source} signal unavailable. Auto-switching to next camera...")
+                    _trigger_swap()
                 time.sleep(0.02)
                 continue
 
-            ret, frame = cap.read()
-            if not ret or frame is None:
-                time.sleep(0.01)
-                continue
-
+            # Frame successfully acquired
+            consecutive_failures = 0
+            frame = self.apply_aspect_ratio(frame)
             last_frame = frame
             now = time.perf_counter()
             frame_times.append(now - t_last)
@@ -379,7 +510,8 @@ class ProductionHierarchicalPipeline:
                 tier_info = f"Tier: {self.last_resolved_tier}" if self.last_resolved_tier else "Tier: Idle"
                 actor_info = f"Actor ID: {self.stage2a_tracker.active_threat_actor_id}" if self.stage2a_tracker.active_threat_actor_id else "Scanning"
                 cam_name = camera_names.get(current_source, f"Cam {current_source}")
-                cam_label = f"Cam: {current_source} ({cam_name}) ['i' to swap]" if isinstance(current_source, int) else "Source: File"
+                res_info = f"{frame.shape[1]}x{frame.shape[0]}"
+                cam_label = f"Cam: {current_source} ({cam_name}, {res_info}) ['i' to swap]" if isinstance(current_source, int) else "Source: File"
                 telemetry = f"{cam_label} | FPS: {self.fps_telemetry:.1f} | Buf: {buf_len}/1200 | {tier_info} | {actor_info}"
                 cv2.putText(hud, telemetry, (20, 70),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.38, (200, 200, 200), 1)
@@ -396,29 +528,11 @@ class ProductionHierarchicalPipeline:
                 if key == ord('q'):
                     break
                 elif key in (ord('i'), ord('I')) and isinstance(current_source, int):
-                    if not is_swapping:
-                        cams = list(available_cameras) if available_cameras else [1, 0]
-                        # Ensure both 0 and 1 are in pool if list is small
-                        for fallback_idx in [0, 1]:
-                            if fallback_idx not in cams:
-                                cams.append(fallback_idx)
-                        if current_source in cams:
-                            cur_pos = cams.index(current_source)
-                            next_pos = (cur_pos + 1) % len(cams)
-                            target_source = cams[next_pos]
-                        else:
-                            target_source = cams[0]
-
-                        if target_source != current_source:
-                            target_name = camera_names.get(target_source, f"Camera {target_source}")
-                            print(f"\n[CAMERA] Initiating hot-swap: Camera {current_source} -> Camera {target_source} ({target_name})...")
-                            is_swapping = True
-                            swap_target_idx = target_source
-                            swap_target_name = target_name
-                            threading.Thread(target=_async_swap_worker, args=(target_source, target_name), daemon=True).start()
+                    _trigger_swap()
 
         self.is_running = False
-        cap.release()
+        if cap is not None:
+            cap.release()
         if not headless:
             cv2.destroyAllWindows()
         print("[SHUTDOWN] Surveillance pipeline terminated cleanly.")
@@ -477,6 +591,12 @@ if __name__ == "__main__":
                         help="Run verification dry run with synthetic frames")
     parser.add_argument("--device", type=str, default=None,
                         help="Compute device: 'cuda:0' (default: auto)")
+    parser.add_argument("--resolution", "--res", type=str, default="auto",
+                        choices=["auto", "1440p", "1080p", "720p", "480p"],
+                        help="Camera stream resolution: 'auto' (native sensor, up to 2560x1440), '1080p', '720p', '480p'")
+    parser.add_argument("--aspect-ratio", "--aspect", type=str, default="4:3",
+                        choices=["4:3", "16:9", "native"],
+                        help="Video aspect ratio framing: '4:3' (highest resolution 4:3, e.g. 1920x1440), '16:9', or 'native' (default: 4:3)")
 
     args = parser.parse_args()
 
@@ -487,6 +607,8 @@ if __name__ == "__main__":
         jpeg_quality=args.quality,
         device=args.device,
         backend=args.backend,
+        camera_res=args.resolution,
+        aspect_ratio=args.aspect_ratio,
     )
 
     if args.dry_run:
