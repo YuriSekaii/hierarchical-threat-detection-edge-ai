@@ -81,4 +81,7 @@ CLIP_WARNING #1: production heatmap body is 6.0 cells tall vs 19.0 for training-
 
 Training (`PoseConv3DHeatmapDataset`) normalizes raw pixel skeletons only once.
 
-**Status:** reported only. It has not been confirmed on a real violent clip yet; the next step is a `--debug` run on the user's GPU with a real knife scenario, comparing `PROBE prod` against `train-style` p1 in `trace.log`.
+**Status:** confirmed and fixed.
+- Confirmed on the Edge PC (`session_20261022_172102`, knife scenario, 44 clips): production p1/p2 were 0.000 on every clip and the body was 6.0 cells tall. The training-style input reached p1 up to 0.986 and p2 up to 0.996.
+- Fix: `rasterize_heatmap_from_coords` takes `normalize=False` for coordinates that are already normalized, and `evaluate_clip` / `evaluate_video` pass it. ST-GCN input is unchanged.
+- Verified offline on 3 recorded clips: the fixed production heatmap equals the training-style heatmap (body about 30 cells tall, max abs difference about 3e-6).

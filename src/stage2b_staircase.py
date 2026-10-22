@@ -40,10 +40,16 @@ def rasterize_heatmap_from_coords(
     W: int = 56,
     sigma: float = 1.5,
     device: Optional[torch.device] = None,
+    normalize: bool = True,
 ) -> torch.Tensor:
     """
-    Fast vectorized GPU rasterizer converting normalized skeleton coordinates (T, 17, 2)
+    Fast vectorized GPU rasterizer converting skeleton coordinates (T, 17, 2)
     into a 3D spatiotemporal heatmap volume tensor of shape (1, 17, 50, 56, 56).
+
+    normalize=True  : input is raw pixel keypoints; torso-normalize here (as PoseConv3DHeatmapDataset does).
+    normalize=False : input is already torso-normalized (Stage 2a output). Normalizing it a second time
+                      trips the 10 px guards in normalize_skeleton_clip, falls back to scale=100 and
+                      collapses the whole skeleton onto the centre cell.
     """
     if device is None:
         device = clip.device if isinstance(clip, torch.Tensor) else (torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu"))
@@ -70,8 +76,8 @@ def rasterize_heatmap_from_coords(
     elif current_len > clip_length:
         clip = clip[:clip_length]
 
-    # Torso-scale normalization
-    normed_kpts = normalize_skeleton_clip(clip)  # (50, 17, 2)
+    # Torso-scale normalization (exactly once)
+    normed_kpts = normalize_skeleton_clip(clip) if normalize else clip  # (50, 17, 2)
 
     # Canonical mapping [-3.0, 3.0] -> [0.0, 1.0]
     mapped_x = torch.clamp((normed_kpts[..., 0] + 3.0) / 6.0, 0.0, 1.0)
@@ -294,7 +300,8 @@ class Stage2bStaircaseEngine:
         # Step 1: Rasterize 3D heatmap in VRAM once if needed
         t_prep = time.perf_counter()
         if (item1["requires_heatmap"] or item2["requires_heatmap"] or item3["requires_heatmap"]) and heatmap is None:
-            heatmap = rasterize_heatmap_from_coords(coords, device=self.device)
+            # coords are already torso-normalized by Stage 2a (same input ST-GCN consumes)
+            heatmap = rasterize_heatmap_from_coords(coords, device=self.device, normalize=False)
         elif heatmap is not None:
             heatmap = heatmap.to(self.device)
         latencies["prep_heatmap_ms"] = (time.perf_counter() - t_prep) * 1000.0
@@ -414,7 +421,7 @@ class Stage2bStaircaseEngine:
         if (item1["requires_heatmap"] or item2["requires_heatmap"] or item3["requires_heatmap"]):
             if heatmaps_batch is None:
                 heatmaps_batch = torch.cat([
-                    rasterize_heatmap_from_coords(coords_batch[i], device=self.device)
+                    rasterize_heatmap_from_coords(coords_batch[i], device=self.device, normalize=False)
                     for i in range(coords_batch.shape[0])
                 ], dim=0)
             else:

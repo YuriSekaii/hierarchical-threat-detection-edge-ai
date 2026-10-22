@@ -811,7 +811,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
         """Evaluates every tier on the production input and on a training-style heatmap (diagnostic only)."""
         eng = self.stage2b_engine
         out: Dict[str, Any] = {}
-        hm_prod = rasterize_heatmap_from_coords(graph_tensor, device=eng.device)
+        hm_prod = rasterize_heatmap_from_coords(graph_tensor, device=eng.device, normalize=False)
         smoothed_px = smooth_kinematics(interpolate_missing_joints(raw_seq), sigma=1.0)
         hm_train = rasterize_heatmap_from_coords(torch.from_numpy(np.asarray(smoothed_px, dtype=np.float32)),
                                                  device=eng.device)
