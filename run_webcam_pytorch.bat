@@ -90,7 +90,7 @@ echo.
 :LAUNCH
 echo [LAUNCH] Starting PyTorch Baseline Surveillance Pipeline...
 echo.
-"%PY_BIN%" src/inference_production_pipeline.py --source 1 --aspect 4:3 --conf 0.45 --backend pytorch %*
+"%PY_BIN%" src/inference_production_pipeline.py --source 0 --aspect 4:3 --conf 0.45 --backend pytorch %*
 if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
 goto :END
 

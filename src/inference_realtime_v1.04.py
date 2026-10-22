@@ -349,6 +349,66 @@ class HierarchicalThreatDetector:
                     self.status_color = (0, 165, 255)
                     print(f"[ACTION] Non-violent motion verified ({actor_tag} | {detail_str})")
 
+
+    @staticmethod
+    def _fit_text(text: str, font: int, target_scale: float, target_thickness: int, max_w: int):
+        scale = target_scale
+        th = target_thickness
+        (tw, th_box), _ = cv2.getTextSize(text, font, scale, th)
+        if tw > max_w and tw > 0:
+            ratio = max_w / tw
+            scale = target_scale * ratio
+            th = max(1, int(round(target_thickness * ratio)))
+            (tw, th_box), _ = cv2.getTextSize(text, font, scale, th)
+        return scale, th, tw, th_box
+
+    @classmethod
+    def render_hud_overlay(cls, hud: np.ndarray, title: str, title_color: Tuple[int, int, int], line2: str, line3: Optional[str] = None):
+        h, w = hud.shape[:2]
+        scale = max(0.5, h / 720.0)
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        base_scale_title = 0.38 * scale
+        base_scale_body = 0.28 * scale
+        base_th_title = max(1, int(round(1.0 * scale)))
+        base_th_body = max(1, int(round(0.9 * scale)))
+
+        pad_x = max(8, int(8 * scale))
+        pad_y = max(6, int(6 * scale))
+        line_spacing = max(4, int(5 * scale))
+        max_line_w = w - int(20 * scale) - 2 * pad_x
+
+        s1, th1, w1, h1 = cls._fit_text(title, font, base_scale_title, base_th_title, max_line_w)
+        s2, th2, w2, h2 = cls._fit_text(line2, font, base_scale_body, base_th_body, max_line_w)
+
+        lines_to_draw = [(title, s1, th1, title_color, h1), (line2, s2, th2, (230, 230, 230), h2)]
+        if line3:
+            s3, th3, w3, h3 = cls._fit_text(line3, font, base_scale_body, base_th_body, max_line_w)
+            lines_to_draw.append((line3, s3, th3, (185, 185, 185), h3))
+            max_text_w = max(w1, w2, w3)
+        else:
+            max_text_w = max(w1, w2)
+
+        box_w = min(w - int(20 * scale), max_text_w + 2 * pad_x)
+        total_text_h = sum(item[4] for item in lines_to_draw)
+        box_h = pad_y * 2 + total_text_h + line_spacing * (len(lines_to_draw) - 1)
+
+        x1, y1 = max(10, int(10 * scale)), max(10, int(10 * scale))
+        x2, y2 = x1 + box_w, y1 + box_h
+
+        overlay = hud.copy()
+        cv2.rectangle(overlay, (x1, y1), (x2, y2), (12, 12, 12), -1)
+        cv2.addWeighted(overlay, 0.88, hud, 0.12, 0, hud)
+
+        border_th = max(1, int(round(1.0 * scale)))
+        cv2.rectangle(hud, (x1, y1), (x2, y2), title_color, border_th)
+
+        cur_y = y1 + pad_y
+        for text, s, th, col, line_h in lines_to_draw:
+            cur_y += line_h
+            cv2.putText(hud, text, (x1 + pad_x, cur_y), font, s, col, th, cv2.LINE_AA)
+            cur_y += line_spacing
+
     def run(self, source=0, headless=False):
         cap = cv2.VideoCapture(source)
         if not cap.isOpened():
@@ -397,15 +457,11 @@ class HierarchicalThreatDetector:
                 self.buffer_ram_mb = total_bytes / (1024.0 * 1024.0)
 
             if not headless:
-                cv2.rectangle(frame, (10, 10), (740, 80), (0, 0, 0), -1)
-                cv2.putText(frame, f"STATUS: {self.status_text}", (20, 38),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.58, self.status_color, 2)
-                
                 buf_len = len(self.frame_buffer)
                 actor_info = f"Track ID: {self.active_threat_actor_id}" if self.active_threat_actor_id else "Scanning"
-                telemetry = f"Buffer: {buf_len}/1200 (~{self.buffer_ram_mb:.1f} MB) | {actor_info} | Backlog: {self.pending_audit_frames}"
-                cv2.putText(frame, telemetry, (20, 68),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.42, (200, 200, 200), 1)
+                line2 = f"Buffer: {buf_len}/1200 (~{self.buffer_ram_mb:.1f} MB)  |  Audit Backlog: {self.pending_audit_frames}"
+                line3 = f"Threat Tracking: {actor_info}  |  Press 'q' to quit"
+                self.render_hud_overlay(frame, f"STATUS: {self.status_text}", self.status_color, line2, line3)
 
                 cv2.imshow("Hierarchical Threat Detection (v1.04 Edge AI)", frame)
                 if cv2.waitKey(1) & 0xFF == ord('q'):

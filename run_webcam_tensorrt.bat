@@ -127,7 +127,7 @@ echo.
 echo [LAUNCH] Starting TensorRT Surveillance Pipeline...
 echo [NOTE]   Any missing .engine models will auto-compile from .onnx on first run.
 echo.
-"%PY_BIN%" src/inference_production_pipeline.py --source 1 --aspect 4:3 --conf 0.45 --backend tensorrt %*
+"%PY_BIN%" src/inference_production_pipeline.py --source 0 --aspect 4:3 --conf 0.45 --backend tensorrt %*
 if %ERRORLEVEL% NEQ 0 goto :RUN_FAIL
 goto :END
 
