@@ -1223,12 +1223,18 @@ if __name__ == "__main__":
                         help="UI backend: 'auto' (Qt6 vector overlay if installed, else pre-scaled OpenCV), 'qt' (PySide6/PyQt6), 'web' (HTML5 Glassmorphism browser HUD), 'opencv'")
     parser.add_argument("--port", type=int, default=8080,
                         help="HTTP port when using `--ui web` (default: 8080)")
+    parser.add_argument("--debug", action="store_true",
+                        help="Run Stage 1/2 workers through src/debug_stage2_tracer.py (action log + analyzed-frame dumps in results/debug_stage2/)")
 
     args = parser.parse_args()
 
     active_source = parse_source(args.webcam if args.webcam is not None else args.source)
 
-    pipeline = ProductionHierarchicalPipeline(
+    pipeline_cls = ProductionHierarchicalPipeline
+    if args.debug:
+        from src.debug_stage2_tracer import DebugHierarchicalPipeline as pipeline_cls
+
+    pipeline = pipeline_cls(
         conf_threshold=args.conf,
         jpeg_quality=args.quality,
         device=args.device,
