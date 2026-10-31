@@ -43,6 +43,7 @@ from src.pipeline_buffer import ThreadSafeCircularBuffer, FrameItem, _encode_jpe
 from src.stage1_detector import Stage1WeaponDetector, calculate_rectangular_imgsz
 from src.stage2a_pose_tracker import Stage2aPoseTracker
 from src.stage2b_staircase import Stage2bStaircaseEngine
+from src.weapon_gate import WeaponMotionGate, weapon_in_hand
 from src.engine_builder import get_hardware_precision
 
 
@@ -190,6 +191,10 @@ class ProductionHierarchicalPipeline:
         aspect_ratio: str = "4:3",
         ui_mode: str = "auto",
         web_port: int = 8080,
+        static_filter: bool = True,
+        static_min_move: float = 0.15,
+        hand_gate: bool = True,
+        hand_max_dist: float = 0.5,
     ):
         self.camera_res = camera_res.lower()
         self.aspect_ratio = aspect_ratio.lower()
@@ -276,6 +281,12 @@ class ProductionHierarchicalPipeline:
         self.clip_length = 50
         self.max_audit_lag = self.clip_length + (3 * self.clip_stride)
 
+        # Weapon plausibility gates (src/weapon_gate.py)
+        self.static_filter = bool(static_filter)
+        self.hand_gate = bool(hand_gate)
+        self.hand_max_dist = float(hand_max_dist)
+        self.weapon_gate = WeaponMotionGate(min_move=static_min_move)
+
         # UI & Telemetry State
         self.status_text = "SCANNING (IDLE)"
         self.status_color = (0, 255, 0)
@@ -303,6 +314,11 @@ class ProductionHierarchicalPipeline:
                 if det_res["has_threat"]:
                     now = time.time()
                     was_inactive = now >= self.weapon_active_until
+                    _, accepted = self._gate_weapon_detection(frame_idx, det_res["best_box"], now, was_inactive)
+                    if not accepted:
+                        elapsed = time.perf_counter() - t_start
+                        time.sleep(max(0.005, target_delay - elapsed))
+                        continue
                     self.weapon_active_until = now + 3.0
                     self.last_weapon_bbox = det_res["best_box"]
                     self.stage2a_tracker.update_weapon_anchor(det_res["best_box"])
@@ -320,6 +336,29 @@ class ProductionHierarchicalPipeline:
 
             elapsed = time.perf_counter() - t_start
             time.sleep(max(0.005, target_delay - elapsed))
+
+    def _gate_weapon_detection(self, frame_idx: int, box, now: float, was_inactive: bool) -> Tuple[str, bool]:
+        """
+        Static-weapon filter. Returns (verdict, accepted). An accepted detection arms or extends
+        the Stage 2 window: 'moving' always, 'still'/'first' only while a window is already open.
+        'static' (same place for several scans) is a false alarm and is never accepted.
+        """
+        verdict, _ = self.weapon_gate.classify(frame_idx, now, box)
+        if not self.static_filter:
+            return verdict, True
+        if verdict == "moving":
+            return verdict, True
+        if verdict in ("still", "first"):
+            return verdict, not was_inactive
+        return verdict, False
+
+    def _check_weapon_in_hand(self, window: Sequence[FrameItem]) -> Tuple[str, Optional[float], int]:
+        """Hand gate: is any Stage 1 detection inside this clip close to the threat actor's wrist?"""
+        if not self.hand_gate:
+            return "disabled", None, 0
+        dets = self.weapon_gate.detections_between(window[0].index, window[-1].index)
+        kpts = {item.index: item.skeleton for item in window if item.skeleton is not None}
+        return weapon_in_hand(kpts, dets, self.hand_max_dist)
 
     def _populate_window_skeletons(self, window: Sequence[FrameItem]):
         """
@@ -445,6 +484,15 @@ class ProductionHierarchicalPipeline:
             self._populate_window_skeletons(window)
             if not self.is_running:
                 break
+
+            # Step 1b: Hand gate - drop the clip if the weapon is never near the actor's hand
+            hand_verdict, hand_dist, _ = self._check_weapon_in_hand(window)
+            if hand_verdict in ("far", "no_person"):
+                if not self.is_violent_alert:
+                    reason = "no person" if hand_verdict == "no_person" else f"{hand_dist:.2f} torso from hand"
+                    self.status_text = f"WEAPON NOT IN HAND - CLIP SKIPPED ({reason})"
+                    self.status_color = (0, 165, 255)
+                continue
 
             # Step 2: Kinematic preprocessing & Torso-Scale Normalization
             raw_seq = np.array([item.skeleton for item in window], dtype=np.float32)
@@ -1223,6 +1271,14 @@ if __name__ == "__main__":
                         help="UI backend: 'auto' (Qt6 vector overlay if installed, else pre-scaled OpenCV), 'qt' (PySide6/PyQt6), 'web' (HTML5 Glassmorphism browser HUD), 'opencv'")
     parser.add_argument("--port", type=int, default=8080,
                         help="HTTP port when using `--ui web` (default: 8080)")
+    parser.add_argument("--no-static-filter", action="store_true",
+                        help="Let a weapon box that stays in the same place scan after scan arm Stage 2 (filter on by default)")
+    parser.add_argument("--static-min-move", type=float, default=0.15,
+                        help="Box-centre move between Stage 1 scans, in box diagonals, that counts as moving (default: 0.15)")
+    parser.add_argument("--no-hand-gate", action="store_true",
+                        help="Analyze clips even when the weapon is not near the actor's hand (gate on by default)")
+    parser.add_argument("--hand-max-dist", type=float, default=0.5,
+                        help="Max wrist-to-weapon-box distance in torso lengths for the weapon to count as held (default: 0.5)")
     parser.add_argument("--debug", action="store_true",
                         help="Run Stage 1/2 workers through src/debug_stage2_tracer.py (action log + analyzed-frame dumps in results/debug_stage2/)")
 
@@ -1243,6 +1299,10 @@ if __name__ == "__main__":
         aspect_ratio=args.aspect_ratio,
         ui_mode=args.ui,
         web_port=args.port,
+        static_filter=not args.no_static_filter,
+        static_min_move=args.static_min_move,
+        hand_gate=not args.no_hand_gate,
+        hand_max_dist=args.hand_max_dist,
     )
 
     if args.dry_run:

@@ -504,6 +504,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
         self._dbg_last_det_time = 0.0
         self._dbg_last_det_idx = -1
         self._dbg_weapon_seen_prev = False
+        self._dbg_prev_gate = None
         self._dbg_prev_track_id = None
         self._dbg_last_status = None
         self._dbg_install_pose_probe()
@@ -518,6 +519,8 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
             f"clip_length={self.clip_length} clip_stride={self.clip_stride} max_audit_lag={self.max_audit_lag} "
             f"weapon_hold=3.0s alert_hold=5.0s | T1={eng.tier1_key} [{eng.p_low1:.2f},{eng.p_high1:.2f}] "
             f"T2={eng.tier2_key} [{eng.p_low2:.2f},{eng.p_high2:.2f}] T3={eng.tier3_key} tau={eng.tau3:.2f} | "
+            f"static_filter={'on' if self.static_filter else 'off'} (min_move={self.weapon_gate.min_move:.2f} diag) "
+            f"hand_gate={'on' if self.hand_gate else 'off'} (max_dist={self.hand_max_dist:.2f} torso) | "
             f"probe={'on' if self._dbg_probe else 'off'} near_miss={'on' if self._dbg_near_miss else 'off'} "
             f"save_frames={'on' if T.save_frames else 'off'}",
             console=True,
@@ -630,7 +633,22 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                         latency_ms=det_res["latency_ms"], lock_wait_ms=lock_wait_ms,
                     )
 
+                    gated = False
                     if det_res["has_threat"]:
+                        gate_verdict, gate_ok = self._gate_weapon_detection(
+                            frame_idx, det_res["best_box"], now, now >= self.weapon_active_until)
+                        if not gate_ok:
+                            gated = True
+                            T.counters["s1_gated_" + gate_verdict] += 1
+                            why = ("box has not moved for several scans -> static object, false alarm"
+                                   if gate_verdict == "static" else
+                                   "first sighting, waiting for a moving second detection before arming")
+                            T.event("S1_GATED", f"f{frame_idx} conf={top:.3f} box={_fmt_box(det_res['best_box'])} "
+                                                f"-> {gate_verdict.upper()}: {why} (Stage 2 not armed/extended)",
+                                    console=(gate_verdict == "static" and self._dbg_prev_gate != "static"),
+                                    frame_idx=frame_idx, verdict=gate_verdict, box=det_res["best_box"])
+                        self._dbg_prev_gate = gate_verdict
+                    if det_res["has_threat"] and not gated:
                         was_inactive = now >= self.weapon_active_until
                         self.weapon_active_until = now + 3.0
                         self.last_weapon_bbox = det_res["best_box"]
@@ -650,7 +668,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                             T.event(
                                 "KNIFE_TRIGGER",
                                 f"Stage 1 weapon at f{frame_idx} conf={top:.3f} box={_fmt_box(det_res['best_box'])} "
-                                f"-> Stage 2 ARMED for 3.0 s | cursor {old_cursor} -> {self.last_analyzed_idx} "
+                                f"gate={gate_verdict} -> Stage 2 ARMED for 3.0 s | cursor {old_cursor} -> {self.last_analyzed_idx} "
                                 f"(live f{latest_idx}, scan was {latest_idx - frame_idx} frames behind live) "
                                 f"| imgsz={self.rect_imgsz} frame={frame.shape[1]}x{frame.shape[0]}",
                                 console=True, frame_idx=frame_idx, conf=top, box=det_res["best_box"],
@@ -671,7 +689,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                             self.status_color = (0, 165, 255)
                             self._dbg_status("Stage 1 detection")
                         self._dbg_weapon_seen_prev = True
-                    else:
+                    elif not gated:
                         if self._dbg_weapon_seen_prev:
                             T.event(
                                 "WEAPON_LOST",
@@ -956,6 +974,26 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                 st = getattr(self._dbg_tls, "window_stats", {}) or {}
                 tags = [self._dbg_frame_src.get(it.index, "?") for it in window]
 
+                # Step 1b: Hand gate
+                hand_verdict, hand_dist, hand_n = self._check_weapon_in_hand(window)
+                dist_txt = f"{hand_dist:.2f}" if hand_dist is not None else "-"
+                if hand_verdict in ("far", "no_person"):
+                    T.counters["clips_skipped_not_in_hand"] += 1
+                    T.event("CLIP_SKIPPED",
+                            f"#{clip_no} f{first}..f{last} weapon not in hand ({hand_verdict}, closest wrist "
+                            f"{dist_txt} torso > {self.hand_max_dist:.2f}, {hand_n} detection(s)) -> cascade not run",
+                            console=True, clip=clip_no, first=first, last=last, verdict=hand_verdict,
+                            dist=hand_dist, detections=hand_n)
+                    if not self.is_violent_alert:
+                        reason = "no person" if hand_verdict == "no_person" else f"{dist_txt} torso from hand"
+                        self.status_text = f"WEAPON NOT IN HAND - CLIP SKIPPED ({reason})"
+                        self.status_color = (0, 165, 255)
+                        self._dbg_status(f"clip #{clip_no} hand gate")
+                    continue
+                T.event("HAND_CHECK", f"#{clip_no} {hand_verdict} (closest wrist {dist_txt} torso, "
+                                      f"{hand_n} detection(s)) -> cascade runs",
+                        clip=clip_no, verdict=hand_verdict, dist=hand_dist, detections=hand_n)
+
                 # Step 2: Kinematic preprocessing & Torso-Scale Normalization
                 raw_seq = np.array([item.skeleton for item in window], dtype=np.float32)
                 normed_coords, graph_tensor = self.stage2a_tracker.preprocess_sliding_window(raw_seq)
@@ -1113,7 +1151,10 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
         s = {
             "session_dir": T.session_dir,
             "duration_s": time.time() - T.t0,
-            "stage1": {"detections": T.counters["s1_detections"], "triggers": T.counters["s1_triggers"]},
+            "stage1": {"detections": T.counters["s1_detections"], "triggers": T.counters["s1_triggers"],
+                       "gated_static": T.counters["s1_gated_static"],
+                       "gated_unconfirmed": T.counters["s1_gated_first"] + T.counters["s1_gated_still"]},
+            "clips_skipped_not_in_hand": T.counters["clips_skipped_not_in_hand"],
             "stage2": {
                 "episodes": T.counters["episodes"],
                 "episodes_without_any_clip": T.counters["episodes_without_clip"],
@@ -1153,7 +1194,9 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
         st2 = summary["stage2"]
         print("\n" + "=" * 80)
         print("  STAGE 2 DEBUG SUMMARY")
-        print(f"  Stage 1: {summary['stage1']['detections']} weapon detections, {summary['stage1']['triggers']} trigger(s)")
+        print(f"  Stage 1: {summary['stage1']['detections']} accepted weapon detections, {summary['stage1']['triggers']} trigger(s) | "
+              f"gated: {summary['stage1']['gated_static']} static, {summary['stage1']['gated_unconfirmed']} unconfirmed")
+        print(f"  Hand gate: {summary['clips_skipped_not_in_hand']} clip(s) skipped (weapon not in hand)")
         print(f"  Stage 2: {st2['episodes']} episode(s), {st2['clips']} clip(s), "
               f"{st2['episodes_without_any_clip']} episode(s) with NO clip | tiers {st2['tier_histogram']} | "
               f"decisions {st2['decision_histogram']}")
