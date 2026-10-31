@@ -67,6 +67,24 @@ For every non-static Stage 1 detection inside the clip, the distance from the ac
 
 **Not yet covered end to end:** the `far` path (a weapon seen while a person stands away from it) is only covered by a synthetic unit check. A live test with a knife on a table and a person walking past would confirm it.
 
-## 5. Known trade-off
+## 5. Follow-up: misleading weapon box in debug images (session 2026-10-31 11:00)
+
+**Report:** in `clip_0032` (f546-595) the knife looked far from the hand, yet the clip was not dropped.
+
+**Finding:** the hand gate was right. All 5 Stage 1 detections in the clip were held:
+
+| Detection | f553 | f563 | f574 | f584 | f593 |
+|---|---|---|---|---|---|
+| Wrist distance (torso) | 0.05 | 0.11 | 0.18 | 0.13 | 0.14 |
+
+The debug tracer drew `self.last_weapon_bbox` on every frame. That is the newest detection when the clip is analyzed, and Stage 2 lags live by 1-2.5 s. Each frame therefore showed where the knife was up to 70 frames later; on f574 that box was about 400 px from the knife in the hand.
+
+**Fix (debug tracer only, no decision logic changed):**
+- Each frame image shows the box of the nearest Stage 1 scan (at most 5 frames away), labelled with its frame offset, gate verdict and wrist distance, for example `knife: S1 f563 (-3, moving) wrist 0.21 torso`. Frames with no scan nearby show no box.
+- `HAND_CHECK` / `CLIP_SKIPPED` list the distance of every detection, for example `per detection: f553 0.05, f563 0.11, ...`.
+- `clip.json` replaces `weapon_bbox` with `weapon_detections` (frame, box, gate verdict, wrist distance).
+- `WeaponMotionGate.nearest_detection()` was added for the lookup.
+
+## 6. Known trade-off
 
 A person who holds a knife completely still for about 1 s stops extending the Stage 2 window. Stage 2 re-arms as soon as the knife moves again, and it analyzes the 50 frames before re-arming.

@@ -89,6 +89,14 @@ class WeaponMotionGate:
         with self._lock:
             return [(f, b, v) for f, _, b, v in self._hist if first_idx <= f <= last_idx and v != "static"]
 
+    def nearest_detection(self, frame_idx: int, max_frames: int) -> Optional[Tuple[int, List[float], str]]:
+        """Detection closest in frame index to frame_idx (static ones included), or None if none within max_frames."""
+        with self._lock:
+            best = min(self._hist, key=lambda h: abs(h[0] - frame_idx), default=None)
+        if best is None or abs(best[0] - frame_idx) > max_frames:
+            return None
+        return best[0], best[2], best[3]
+
     def reset(self):
         with self._lock:
             self._hist.clear()

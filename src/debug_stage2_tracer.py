@@ -70,6 +70,7 @@ from src.inference_production_pipeline import ProductionHierarchicalPipeline
 from src.pipeline_buffer import FrameItem
 from src.skeleton_utils import interpolate_missing_joints, smooth_kinematics
 from src.stage2b_staircase import rasterize_heatmap_from_coords
+from src.weapon_gate import wrist_to_box_distance
 
 
 # COCO-17 skeleton edges (same keypoint order as YOLO26s-Pose)
@@ -86,6 +87,9 @@ _SRC_DESC = {
     "N": "no image (frame could not be decoded -> zero skeleton)",
 }
 _SRC_COLOR = {"C": (200, 200, 200), "E": (0, 255, 0), "I": (0, 200, 255), "N": (0, 0, 255)}
+# Frame images show the Stage 1 box of the nearest scan only if it is at most this many frames away
+# (Stage 1 scans about every 10 frames).
+_S1_BOX_MAX_FRAMES = 5
 
 
 def _env_flag(name: str, default: bool) -> bool:
@@ -981,7 +985,8 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                     T.counters["clips_skipped_not_in_hand"] += 1
                     T.event("CLIP_SKIPPED",
                             f"#{clip_no} f{first}..f{last} weapon not in hand ({hand_verdict}, closest wrist "
-                            f"{dist_txt} torso > {self.hand_max_dist:.2f}, {hand_n} detection(s)) -> cascade not run",
+                            f"{dist_txt} torso > {self.hand_max_dist:.2f}, {hand_n} detection(s)) -> cascade not run"
+                            f" | per detection: {self._dbg_hand_detail(window) or '-'}",
                             console=True, clip=clip_no, first=first, last=last, verdict=hand_verdict,
                             dist=hand_dist, detections=hand_n)
                     if not self.is_violent_alert:
@@ -991,7 +996,8 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                         self._dbg_status(f"clip #{clip_no} hand gate")
                     continue
                 T.event("HAND_CHECK", f"#{clip_no} {hand_verdict} (closest wrist {dist_txt} torso, "
-                                      f"{hand_n} detection(s)) -> cascade runs",
+                                      f"{hand_n} detection(s)) -> cascade runs | per detection: "
+                                      f"{self._dbg_hand_detail(window) or '-'}",
                         clip=clip_no, verdict=hand_verdict, dist=hand_dist, detections=hand_n)
 
                 # Step 2: Kinematic preprocessing & Torso-Scale Normalization
@@ -1103,17 +1109,25 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
             T.counters["clips_heatmap_collapsed"] += 1
 
         # ---- images / arrays (async) ----
-        weapon_box = self.last_weapon_bbox
+        # Draw the Stage 1 box of the scan nearest to each frame. self.last_weapon_bbox is the newest
+        # detection (Stage 2 lags live by 1-3 s), so drawing it put the knife where it would be seconds later.
         for it, tag, age in zip(window, tags, ages):
             if it.index in T._saved_frames:
                 continue
             valid = int(np.sum(np.sum(np.abs(it.skeleton), axis=-1) > 1e-6)) if it.skeleton is not None else 0
+            near = self.weapon_gate.nearest_detection(it.index, _S1_BOX_MAX_FRAMES)
+            lines = [f"f{it.index} [{tag}] age {age:.0f}ms clip#{clip_no}",
+                     f"actor ID {it.track_id}  joints {valid}/17"]
+            if near is not None:
+                d = wrist_to_box_distance(it.skeleton, near[1])
+                lines.append(f"knife: S1 f{near[0]} ({near[0] - it.index:+d}, {near[2]}) "
+                             f"wrist {'-' if d is None else f'{d:.2f}'} torso")
             info = {
-                "kpts": it.skeleton, "actor_bbox": it.actor_bbox, "weapon_bbox": weapon_box, "src": tag,
-                "lines": [f"f{it.index} [{tag}] age {age:.0f}ms clip#{clip_no}",
-                          f"actor ID {it.track_id}  joints {valid}/17"],
+                "kpts": it.skeleton, "actor_bbox": it.actor_bbox,
+                "weapon_bbox": near[1] if near is not None else None, "src": tag, "lines": lines,
             }
             T.queue_frame_image(it.index, it.get_frame(), info)
+        weapon_dets = [{"frame": f, "box": b, "verdict": v, "wrist_dist": d} for f, b, v, d in self._dbg_hand_dists(window)]
 
         clip_dir = os.path.join(T.clips_dir, f"clip_{clip_no:04d}_f{first:07d}-{last:07d}")
         header = [
@@ -1131,7 +1145,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
             "clip": clip_no, "frames": [it.index for it in window], "sources": tags,
             "timestamps": [it.timestamp for it in window], "age_ms": ages,
             "track_ids": [it.track_id for it in window], "actor_boxes": [it.actor_bbox for it in window],
-            "weapon_bbox": weapon_box, "live_idx": live_idx, "pending": pending,
+            "weapon_detections": weapon_dets, "live_idx": live_idx, "pending": pending,
             "window_stats": {k: (dict(v) if isinstance(v, Counter) else v) for k, v in st.items()},
             "cascade": dict(cascade_res), "probe": probs, "sim_prod": probe.get("sim_prod"),
             "sim_train": probe.get("sim_train"), "hm_stats_prod": hs_p, "hm_stats_train": hs_t,
@@ -1142,6 +1156,15 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                           meta, hm_imgs)
 
     # ------------------------------------------------------------------ session wrap-up
+    def _dbg_hand_dists(self, window) -> List[tuple]:
+        """[(frame, box, verdict, wrist distance in torso lengths or None)] for the Stage 1 detections in the clip."""
+        kpts = {it.index: it.skeleton for it in window}
+        return [(f, b, v, wrist_to_box_distance(kpts.get(f), b))
+                for f, b, v in self.weapon_gate.detections_between(window[0].index, window[-1].index)]
+
+    def _dbg_hand_detail(self, window) -> str:
+        return ", ".join(f"f{f} {'-' if d is None else f'{d:.2f}'}" for f, _, _, d in self._dbg_hand_dists(window))
+
     def _dbg_summary(self) -> Dict[str, Any]:
         T = self._dbg
 
