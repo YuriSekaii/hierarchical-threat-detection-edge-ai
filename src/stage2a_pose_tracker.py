@@ -164,12 +164,16 @@ class Stage2aPoseTracker:
             - track_id: int or None
         """
         target_imgsz = imgsz or self.imgsz or (384, 640)
+        # ByteTrack must be named explicitly: the Ultralytics default (tracktrack/BoT-SORT) runs camera-motion
+        # compensation over the full-resolution frame, ~20 ms of CPU per call (26 ms vs 6 ms on the RTX 3050
+        # Edge PC at 1920x1440) and useless for a fixed camera.
         res = self.pose_model.track(
             frame,
             persist=True,
             imgsz=target_imgsz,
             verbose=False,
             device=self.device,
+            tracker="bytetrack.yaml",
         )
 
         if len(res) == 0 or not hasattr(res[0], "boxes") or len(res[0].boxes) == 0:

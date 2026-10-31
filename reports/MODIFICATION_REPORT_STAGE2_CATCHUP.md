@@ -46,6 +46,33 @@ Test input: 12 held-out videos (Thrust, Stab, Cut-Down, without coat) joined int
 
 Production mode (no `--debug`) on the same video: 32 alarms, clean shutdown, no errors.
 
-## 5. Trade-off
+## 5. Follow-up: the real cause was the tracker, not the GPU
+
+A breakdown of one pose call on the Edge PC (RTX 3050, TensorRT FP16, 1920x1440 frame, imgsz 480x640):
+
+| Call | Wall time | of which network inference |
+|---|---|---|
+| `predict()` (no tracker) | 4.9 ms | 2.2 ms |
+| `track()` as the pipeline called it (no `tracker=`, so the Ultralytics default `tracktrack.yaml`) | 25.5 ms | 2.5 ms |
+| `track(tracker="botsort.yaml")` | 25.5 ms | - |
+| `track(tracker="bytetrack.yaml")` | **5.9 ms** | - |
+
+The Ultralytics default tracker runs camera-motion compensation over the full-resolution frame on the CPU, which costs about 20 ms per frame and is useless for a fixed camera. The design (and the logs) already said ByteTrack, but it was never passed. `src/stage2a_pose_tracker.py` now passes `tracker="bytetrack.yaml"`.
+
+Same 43.5 s test video, debug mode, Edge PC:
+
+| | Original | + catch-up | + ByteTrack |
+|---|---|---|---|
+| Pose per frame inside the pipeline (median) | 34.0 ms | 37.2 ms | **11.5 ms** |
+| Backlog behind live: median / max | 25 / 73 frames | 14 / 24 | **0 / 5** |
+| Frames never analyzed | 163 | 0 | 0 |
+| Clips in catch-up mode | - | 29 | **0** |
+| Clips analyzed / with alarm | 103 / 23 | 122 / 26 | 125 / 32 |
+| Clip processing time (median) | 451 ms | 478 ms | **214 ms** |
+| Actor switches (the video is 12 joined clips) | 12 | 10 | 8 |
+
+Production mode on the same video: 33 alarms, no errors. Catch-up mode stays as a safety net for slower hardware.
+
+## 6. Trade-off
 
 In catch-up mode, 4 of the 10 new frames of a clip get interpolated poses instead of measured ones. Training skeletons are already Gaussian-smoothed (sigma = 1 frame), so a one-frame midpoint is a similar amount of smoothing. On the test video, the alarm count did not drop (23 -> 26).
