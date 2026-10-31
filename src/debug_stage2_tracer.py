@@ -521,6 +521,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
             "CONFIG",
             f"backend={self.backend} device={self.device} stage1_conf={self.conf_threshold:.2f} "
             f"clip_length={self.clip_length} clip_stride={self.clip_stride} max_audit_lag={self.max_audit_lag} "
+            f"catchup_lag={self.catchup_lag} "
             f"weapon_hold=3.0s alert_hold=5.0s | T1={eng.tier1_key} [{eng.p_low1:.2f},{eng.p_high1:.2f}] "
             f"T2={eng.tier2_key} [{eng.p_low2:.2f},{eng.p_high2:.2f}] T3={eng.tier3_key} tau={eng.tau3:.2f} | "
             f"static_filter={'on' if self.static_filter else 'off'} (min_move={self.weapon_gate.min_move:.2f} diag) "
@@ -725,8 +726,11 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
         if not missing_indices:
             return
 
-        use_strided_cold_start = len(missing_indices) > (self.clip_stride + 5)
-        st["cold_start"] = use_strided_cold_start
+        cold_start = len(missing_indices) > (self.clip_stride + 5)
+        catch_up = not cold_start and self.pending_audit_frames > self.catchup_lag
+        use_strided_cold_start = cold_start or catch_up
+        st["cold_start"] = cold_start
+        st["catch_up"] = catch_up
 
         def _extract(item: FrameItem):
             raw_frame = item.get_frame()
@@ -789,9 +793,15 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                 _extract(window[idx])
         else:
             key_positions = set(missing_indices[::2]) | {missing_indices[0], missing_indices[-1]}
-            T.event("S2A_COLD_START",
-                    f"{len(missing_indices)} frames without pose -> strided: run pose on {len(key_positions)}, "
-                    f"interpolate {len(missing_indices) - len(key_positions)}")
+            if catch_up:
+                T.counters["clips_catchup"] += 1
+                T.event("S2A_CATCH_UP",
+                        f"{self.pending_audit_frames} frames behind live (> {self.catchup_lag}) -> strided: run pose on "
+                        f"{len(key_positions)} of {len(missing_indices)} new frames, interpolate the rest")
+            else:
+                T.event("S2A_COLD_START",
+                        f"{len(missing_indices)} frames without pose -> strided: run pose on {len(key_positions)}, "
+                        f"interpolate {len(missing_indices) - len(key_positions)}")
             for idx in sorted(key_positions):
                 if not self.is_running:
                     return
@@ -1186,6 +1196,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                 "decision_histogram": dict(T.decision_hist),
                 "cursor_lag_snaps": T.counters["cursor_lag_snaps"],
                 "frames_skipped_by_snap": T.counters["frames_skipped_by_snap"],
+                "clips_catchup": T.counters["clips_catchup"],
                 "frames_no_person": T.counters["frames_no_person"],
                 "actor_switches": T.counters["actor_switches"],
                 "clips_heatmap_collapsed": T.counters["clips_heatmap_collapsed"],
@@ -1223,6 +1234,8 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
         print(f"  Stage 2: {st2['episodes']} episode(s), {st2['clips']} clip(s), "
               f"{st2['episodes_without_any_clip']} episode(s) with NO clip | tiers {st2['tier_histogram']} | "
               f"decisions {st2['decision_histogram']}")
+        print(f"  Lag: {st2['cursor_lag_snaps']} snap(s), {st2['frames_skipped_by_snap']} frame(s) never analyzed | "
+              f"{st2['clips_catchup']} clip(s) in catch-up mode (pose on every other frame)")
         print(f"  Heatmap body height (cells of 56): production={st2['mean_heatmap_body_h_cells_prod']} "
               f"training-style={st2['mean_heatmap_body_h_cells_train_style']}")
         print(f"  Mean p1: production={st2['mean_p1_prod']} training-style={st2['mean_p1_train_style']}")

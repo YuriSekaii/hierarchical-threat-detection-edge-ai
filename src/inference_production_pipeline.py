@@ -280,6 +280,10 @@ class ProductionHierarchicalPipeline:
         self.clip_stride = 10
         self.clip_length = 50
         self.max_audit_lag = self.clip_length + (3 * self.clip_stride)
+        # Catch-up mode: once Stage 2 is this many frames behind live, pose runs on every other new
+        # frame (the rest are interpolated) so it gains on the camera instead of drifting into a
+        # max_audit_lag snap, which drops ~3 s of frames unanalyzed.
+        self.catchup_lag = 15
 
         # Weapon plausibility gates (src/weapon_gate.py)
         self.static_filter = bool(static_filter)
@@ -360,17 +364,35 @@ class ProductionHierarchicalPipeline:
         kpts = {item.index: item.skeleton for item in window if item.skeleton is not None}
         return weapon_in_hand(kpts, dets, self.hand_max_dist)
 
+    def _warmup_pose(self, h: int, w: int, runs: int = 3):
+        """
+        Runs the pose engine on a blank frame before the workers start. Otherwise the first pose call
+        of the first Stage 2 episode pays the engine/CUDA start-up cost (~0.5 s measured on the RTX 3050).
+        predict() is used instead of track() so ByteTrack state stays clean.
+        """
+        dummy = np.zeros((max(h, 32), max(w, 32), 3), dtype=np.uint8)
+        try:
+            for _ in range(runs):
+                self.stage2a_tracker.pose_model.predict(dummy, imgsz=self.rect_imgsz, verbose=False,
+                                                        device=self.stage2a_tracker.device)
+        except Exception as e:
+            print(f"[STAGE 2a] Pose warm-up skipped: {e}")
+
     def _populate_window_skeletons(self, window: Sequence[FrameItem]):
         """
         Populates missing skeletons across the 50-frame window.
         Uses strided extraction + linear keypoint interpolation during initial cold-start bursts
-        (>clip_stride missing frames) to cut burst latency by ~50% and prevent GPU/CPU starvation.
+        (>clip_stride missing frames) and while Stage 2 is behind live (catch-up mode) to cut pose
+        cost by ~50% and prevent GPU/CPU starvation.
         """
         missing_indices = [i for i, item in enumerate(window) if item.skeleton is None]
         if not missing_indices:
             return
 
-        use_strided_cold_start = len(missing_indices) > (self.clip_stride + 5)
+        use_strided_cold_start = (
+            len(missing_indices) > (self.clip_stride + 5)
+            or self.pending_audit_frames > self.catchup_lag
+        )
 
         if not use_strided_cold_start:
             for idx in missing_indices:
@@ -1098,6 +1120,8 @@ class ProductionHierarchicalPipeline:
                 "frame_w": fw,
                 "frame_h": fh,
             }
+
+        self._warmup_pose(f_h, f_w)
 
         self.is_running = True
         t_capture = threading.Thread(target=_camera_capture_worker, daemon=True)
