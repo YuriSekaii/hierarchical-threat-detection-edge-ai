@@ -110,6 +110,7 @@ def export_stage2b_sim():
     jobs = [("pc3d_tier3_sim", "poseconv3d_tier3_sim_v2.onnx", "heatmap", (1, 17, 50, 56, 56)),
             ("pc3d_dt3_sim", "poseconv3d_dt3_sim_v2.onnx", "heatmap", (1, 17, 50, 56, 56)),
             ("stgcn_sim", "stgcn_sim_v2.onnx", "coords", (1, 2, 50, 17, 1))]
+    jobs += [(f"stgcn_sim3_{m}", f"stgcn_sim3_{m}.onnx", "coords", (1, 2, 50, 17, 1)) for m in ("old", "fixed", "mix")]
     for key, name, input_name, shape in jobs:
         out = os.path.join(weights_dir, name)
         wrapper = ModelFeatureWrapper(load_model_instance(key, device)["model"]).eval()

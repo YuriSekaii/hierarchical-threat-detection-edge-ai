@@ -17,6 +17,10 @@ W, H = 1920, 1440
 # robust jitter per joint (torso units), measured on the lab takes
 JITTER = np.array([0.010, 0.010, 0.011, 0.009, 0.011, 0.010, 0.010, 0.012, 0.014,
                    0.014, 0.016, 0.010, 0.010, 0.012, 0.012, 0.009, 0.009])
+# Real skeletons have little fast jitter but much slow wobble in bone lengths, most of all on hips and legs
+FAST_JITTER_SCALE = 0.4
+DRIFT = np.array([0.012, 0.012, 0.012, 0.012, 0.012, 0.025, 0.025, 0.025, 0.025,
+                  0.025, 0.025, 0.035, 0.035, 0.035, 0.035, 0.030, 0.030])
 
 
 @dataclass
@@ -31,9 +35,11 @@ class Camera:
 
     @staticmethod
     def random(rng, azimuth=None, height=None, distance=None):
+        # half of the shots are close and looking down, like the real cameras (torso about 350 px)
+        close = rng.random() < 0.5
         return Camera(azimuth=rng.uniform(0, 360) if azimuth is None else azimuth,
-                      height=rng.uniform(0.9, 3.6) if height is None else height,
-                      distance=rng.uniform(2.5, 9.0) if distance is None else distance,
+                      height=(rng.uniform(1.5, 3.2) if close else rng.uniform(0.9, 3.6)) if height is None else height,
+                      distance=(rng.uniform(1.2, 2.5) if close else rng.uniform(2.5, 9.0)) if distance is None else distance,
                       hfov=rng.uniform(55, 95), aim_dx=rng.uniform(-0.25, 0.25), aim_dy=rng.uniform(-0.2, 0.2),
                       roll=rng.normal(0, 1.5))
 
@@ -118,12 +124,15 @@ def sensor(uv, occ, rng, level=1.0):
     # frame-to-frame jitter, slightly correlated in time
     j = rng.normal(0, 1, (T, 17, 2))
     j = 0.6 * j + 0.4 * gaussian_filter1d(j, 1.0, axis=0) / 0.55
-    out += j * JITTER[None, :, None] * torso * level * rng.uniform(0.8, 1.3)
+    out += j * JITTER[None, :, None] * torso * level * rng.uniform(0.8, 1.3) * FAST_JITTER_SCALE
+    # slow wobble of every joint, independent of whether it is hidden
+    w = gaussian_filter1d(rng.normal(0, 1, (T + 40, 17, 2)), 5, axis=0)[20:20 + T]
+    out += w / max(w.std(), 1e-9) * DRIFT[None, :, None] * torso * level * rng.uniform(0.6, 1.4)
     # hidden joints: the model guesses, so they wander slowly and jump more
     if occ.any():
         drift = gaussian_filter1d(rng.normal(0, 1, (T + 20, 17, 2)), 4, axis=0)[10:10 + T]
         drift /= max(drift.std(), 1e-9)
-        guess = (drift * 0.05 + rng.normal(0, 0.025, (T, 17, 2))) * torso * level
+        guess = (drift * 0.05 + rng.normal(0, 0.006, (T, 17, 2))) * torso * level
         out += np.where(occ[..., None], guess, 0)
     # rare glitches: one joint jumps for a frame or two
     for _ in range(rng.poisson(0.4 * level * T / 60)):

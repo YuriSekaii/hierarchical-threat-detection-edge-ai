@@ -31,6 +31,17 @@ t2 needs t3 first:
 
 Outputs go to weights/*_sim_v2.* via the deploy stage (the live weights are not touched) and
 results/train_sim/.
+
+The sim3 blend (--stage2-models sim3, reports/MODIFICATION_REPORT_STAGE2_SIM3.md) averages three ST-GCNs. HTD_SIM_DIR and
+HTD_TRAIN_OUT choose the dataset and the output folder. Train each with --steps 6000 --seed 1, then move the weights to
+results/train_sim/experiment_weights/ and run `blend`:
+
+  old:   dataset from commit e6bfc07, HTD_TRAIN_OUT=train_sim/exp_A_old, --tag _A_old_s1
+  fixed: dataset from this commit,    HTD_TRAIN_OUT=train_sim/exp_H_all, --tag _H_all_s1
+  mix:   same dataset, prepare --live-dir LIVE_DIR --real-normal-live s1031:28-34,s110035:29-35,
+         HTD_TRAIN_OUT=train_sim/exp_H_mix, --tag _H_mixB_s1 --mix real:3,sim:12,normal:6,real_normal:7
+
+  python scripts/train_stage2_sim.py blend --live-dir LIVE_DIR
 """
 
 import argparse
@@ -57,7 +68,7 @@ from src.ood_metrics import compute_relative_mahalanobis_distance  # noqa: E402
 from src.skeleton_utils import interpolate_missing_joints, normalize_skeleton_clip, smooth_kinematics  # noqa: E402
 
 ANN = "annotations_yolo26s-pose"
-OUT = os.path.join(REPO_DIR, "results", "train_sim")
+OUT = os.path.join(REPO_DIR, "results", os.environ.get("HTD_TRAIN_OUT", "train_sim"))
 SIM = os.path.join(REPO_DIR, "data", os.environ.get("HTD_SIM_DIR", "Simulated_v2"))
 LAB = os.path.join(REPO_DIR, "data", "lab_recordings", "2026-10-31")
 CLASSES = ["normal", "thrust", "stab", "cut_down", "slash", "swing", "combo"]
@@ -148,6 +159,18 @@ def prepare(args):
                 add(s, 0, "train", f"real_normal/Validate_OOD/{base}", "real_normal")
             else:
                 add(s, folder_class(sub), "calib", f"validate/{cat}/{sub}/{base}", "validate")
+    # optional real normals from the deployment camera: first half of lab take 001 and the named live sessions,
+    # minus each session's range of attack tests. The blend stage sets its bound on the other sessions.
+    excl = dict(item.split(":") for item in filter(None, args.real_normal_live.split(",")))
+    if excl:
+        K = np.load(os.path.join(LAB, "analysis", "001_floor_markers_142701_analysis.npz"))["kpts"][..., :2]
+        for s in range(0, len(K) // 2 - 49, STRIDE):
+            W.append(live_prep(K[s:s + 50]))
+            meta.append((0, "train", f"real_normal/lab001/{s}", "real_normal"))
+        for sess, clip, w in live_clips(args.live_dir):
+            if sess in excl and not int(excl[sess].split("-")[0]) <= int(clip.split("_")[1]) <= int(excl[sess].split("-")[1]):
+                W.append(w)
+                meta.append((0, "train", f"real_normal/{sess}/{clip}", "real_normal"))
     W = np.stack(W).astype(np.float32)
     cls, split, group, source = map(np.array, zip(*meta))
     np.savez(os.path.join(OUT, "windows.npz"), X=W, cls=cls.astype(np.int64), split=split, group=group, source=source)
@@ -648,6 +671,9 @@ LOGIT = lambda p: float(np.log(p / (1 - p)))
 # default they are pass-through (p = 0.5: never discard, never alarm) until real deployment-camera data exists.
 SIM_ORDER = ("t2", "t1", "t3")
 BOUNDS = {"t2": (0.20, 0.99), "t1": (0.35, 0.95), "t3": (None, 0.55)}
+# The sim3 blend: model name -> (window cache under results/train_sim, experiment weight tag), all seed 1.
+BLEND = {"old": ("exp_A_old", "_A_old_s1"), "fixed": ("exp_H_all", "_H_all_s1"), "mix": ("exp_H_mix", "_H_mixB_s1")}
+BLEND_NORMAL_EXCL = {"s111247": (30, 40), "s114942": (34, 42)}
 
 
 def deployment_normals(args):
@@ -729,9 +755,50 @@ def deploy_calibrate(args):
         json.dump(summary, fh, indent=1)
 
 
+def blend_normals(live_dir):
+    """Deployment-camera normals not used by --real-normal-live: second half of take 001 and two live sessions."""
+    K = np.load(os.path.join(LAB, "analysis", "001_floor_markers_142701_analysis.npz"))["kpts"][..., :2]
+    W = [live_prep(K[s:s + 50]) for s in range(len(K) // 2, len(K) - 49, STRIDE)]
+    for sess, clip, w in live_clips(live_dir):
+        a, b = BLEND_NORMAL_EXCL.get(sess, (0, 10 ** 9))  # other sessions are left out completely
+        if not a <= int(clip.split("_")[1]) <= b:
+            W.append(w)
+    return np.stack(W).astype(np.float32)
+
+
+def deploy_blend(args):
+    """Writes weights/stgcn_sim3_*: each model's score becomes z = (RMD - mean) / std on the held-out normals, and the
+    alarm bound sits at the highest blended z of those normals, so sigmoid(mean z - bound) >= 0.5 means alarm."""
+    dev = torch.device(args.device)
+    normals = blend_normals(args.live_dir)
+    models, z = [], []
+    for name, (cache, tag) in BLEND.items():
+        c = np.load(os.path.join(REPO_DIR, "results", "train_sim", cache, "windows.npz"))
+        tr = c["split"] == "train"
+        m = build("t3").to(dev)
+        m.load_state_dict(torch.load(os.path.join(REPO_DIR, "results", "train_sim", "experiment_weights",
+                                                  f"stgcn_sim_v1{tag}.pth"), map_location=dev, weights_only=True))
+        m.eval()
+        ref = rmd_reference(features(m, "t3", c["X"][tr], dev), torch.from_numpy(c["cls"][tr]), args.eps)
+        s = rmd(features(m, "t3", normals, dev), ref).numpy()
+        T = float(s.std() + 1e-6)
+        models.append((name, m, ref, float(s.mean()) / T, T))
+        z.append((s - s.mean()) / T)
+    bound = float(np.mean(z, axis=0).max())
+    for name, m, ref, tau, T in models:
+        torch.save({"version": f"stgcn_sim3_{name}", "mu_0": ref["mu_0"], "mu_c": ref["mu_c"],
+                    "inv_Sigma_0": ref["inv_Sigma_0"] / T, "inv_Sigma_c": ref["inv_Sigma_c"] / T, "optimal_epsilon": args.eps,
+                    "optimal_threshold": tau + bound, "temperature": T, "classes": CLASSES[1:], "blend_bound_z": bound},
+                   os.path.join(REPO_DIR, "weights", f"reference_data_stgcn_sim3_{name}.pt"))
+        torch.save(m.state_dict(), os.path.join(REPO_DIR, "weights", f"stgcn_sim3_{name}.pth"))
+    print(f"[BLEND] {len(normals)} held-out normal windows, bound z {bound:.3f} -> weights/stgcn_sim3_*")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("stage", choices=["prepare", "train", "calibrate", "deploy", "evaluate"])
+    ap.add_argument("stage", choices=["prepare", "train", "calibrate", "deploy", "evaluate", "blend"])
+    ap.add_argument("--real-normal-live", default="", help="prepare: live sessions added as real normals, each with "
+                                                           "its attack-test range, e.g. s1031:28-34,s110035:29-35")
     ap.add_argument("--model", choices=["t1", "t2", "t3"])
     ap.add_argument("--device", default="cuda:0")
     ap.add_argument("--steps", type=int, default=12000)
@@ -756,7 +823,7 @@ def main():
                     help="deploy: tier 3 alarms above this quantile of deployment-camera normal windows")
     args = ap.parse_args()
     {"prepare": prepare, "train": train, "calibrate": calibrate, "deploy": deploy_calibrate,
-     "evaluate": evaluate}[args.stage](args)
+     "evaluate": evaluate, "blend": deploy_blend}[args.stage](args)
 
 
 if __name__ == "__main__":

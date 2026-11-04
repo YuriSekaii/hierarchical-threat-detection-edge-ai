@@ -132,6 +132,25 @@ MODEL_REGISTRY = {
         "family": "gcn",
         "weights": "weights/stgcn_sim_v2.pth",
         "ref": "weights/reference_data_stgcn_sim_v2.pt"
+    },
+    # 3-model blend (scripts/train_stage2_sim.py blend, reports/MODIFICATION_REPORT_STAGE2_SIM3.md)
+    "stgcn_sim3_old": {
+        "name": "ST-GCN (sim3: earlier simulator)",
+        "family": "gcn",
+        "weights": "weights/stgcn_sim3_old.pth",
+        "ref": "weights/reference_data_stgcn_sim3_old.pt"
+    },
+    "stgcn_sim3_fixed": {
+        "name": "ST-GCN (sim3: corrected simulator)",
+        "family": "gcn",
+        "weights": "weights/stgcn_sim3_fixed.pth",
+        "ref": "weights/reference_data_stgcn_sim3_fixed.pt"
+    },
+    "stgcn_sim3_mix": {
+        "name": "ST-GCN (sim3: corrected simulator + real clips)",
+        "family": "gcn",
+        "weights": "weights/stgcn_sim3_mix.pth",
+        "ref": "weights/reference_data_stgcn_sim3_mix.pt"
     }
 }
 
@@ -140,6 +159,8 @@ STAGE2_MODEL_SETS = {
     "live": ("pc3d_tier3", "pc3d_dt3", "stgcn"),
     # retrained set: both PoseConv3D tiers are calibrated as pass-through (never discard or alarm), the ST-GCN alone decides
     "sim": ("pc3d_dt3_sim", "pc3d_tier3_sim", "stgcn_sim"),
+    # three ST-GCNs whose scores are averaged; no tier exits early (engine blend=True)
+    "sim3": ("stgcn_sim3_old", "stgcn_sim3_fixed", "stgcn_sim3_mix"),
 }
 
 

@@ -269,12 +269,15 @@ class ProductionHierarchicalPipeline:
         # 4. Stage 2b Champion 2 Staircase Cascade Engine
         from models.ensemble_super import STAGE2_MODEL_SETS
         t1_key, t2_key, t3_key = STAGE2_MODEL_SETS[stage2_models]
+        # sim3 references place the alarm at p = 0.5 of the blended score; bounds outside 0-1 stop early exits
+        blend_args = dict(blend=True, p_low1=-1.0, p_high1=2.0, p_low2=-1.0, p_high2=2.0, tau3=0.5) if stage2_models == "sim3" else {}
         self.stage2b_engine = Stage2bStaircaseEngine(
             tier1_key=t1_key,
             tier2_key=t2_key,
             tier3_key=t3_key,
             device=torch.device(self.device),
             backend=self.backend,
+            **blend_args,
         )
 
         # Runtime & Threading State
@@ -1309,8 +1312,8 @@ if __name__ == "__main__":
                         help="Analyze clips even when the weapon is not near the actor's hand (gate on by default)")
     parser.add_argument("--hand-max-dist", type=float, default=0.5,
                         help="Max wrist-to-weapon-box distance in torso lengths for the weapon to count as held (default: 0.5)")
-    parser.add_argument("--stage2-models", choices=["live", "sim"], default="live",
-                        help="Stage 2b cascade weights: 'live' (original) or 'sim' (retrained on simulated skeletons)")
+    parser.add_argument("--stage2-models", choices=["live", "sim", "sim3"], default="live",
+                        help="Stage 2b cascade weights: 'live' (original), 'sim' (retrained on simulated skeletons) or 'sim3' (3-model blend)")
     parser.add_argument("--debug", action="store_true",
                         help="Run Stage 1/2 workers through src/debug_stage2_tracer.py (action log + analyzed-frame dumps in results/debug_stage2/)")
 

@@ -61,6 +61,7 @@ def build_motion(rng, action, hand=None, speed=None):
         t_att = tl.t
         variant, t_strike = A.ATTACKS[action][0](tl, a)
         t_end = tl.t
+        A.free_arm_life(tl, a, t_att, t_end)
         info["postlude"] = _postlude(tl, a)
         joints, ctrl = tl.sample()
         # cut: up to 1 s before the attack starts, up to 1 s after it ends

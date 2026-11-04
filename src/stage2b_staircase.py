@@ -12,6 +12,7 @@ Performance: 1.0000 F1 (33/33 TP, 0 FP, 0 FN).
 Strict GPU enforcement (No CPU fallback).
 """
 
+import math
 import os
 import sys
 import time
@@ -31,6 +32,12 @@ if REPO_DIR not in sys.path:
 from src.skeleton_utils import normalize_skeleton_clip
 from models.ensemble_super import load_model_instance, compute_relative_mahalanobis_distance
 from src.engine_builder import ensure_engine, get_hardware_precision
+
+
+def blend_probs(probs) -> float:
+    """Probability whose logit is the mean of the given probabilities' logits."""
+    z = [math.log(p / (1.0 - p)) for p in (min(max(p, 1e-6), 1.0 - 1e-6) for p in probs)]
+    return 1.0 / (1.0 + math.exp(-sum(z) / len(z)))
 
 
 def rasterize_heatmap_from_coords(
@@ -143,7 +150,9 @@ class TensorRTActionModel:
             self.context.set_tensor_address(self.input_name, single_x.data_ptr())
             self.context.set_tensor_address("logits", logits.data_ptr())
             self.context.set_tensor_address("feats", feats.data_ptr())
-            self.context.execute_async_v3(self.stream.cuda_stream)
+            # a failed run leaves the outputs uninitialised, which would read as "no threat"
+            if not self.context.execute_async_v3(self.stream.cuda_stream):
+                raise RuntimeError("[STAGE 2b] TensorRT inference failed; restart the pipeline")
             self.stream.synchronize()
             logits_list.append(logits)
             feats_list.append(feats)
@@ -173,8 +182,10 @@ class Stage2bStaircaseEngine:
         tau3: float = 0.55,
         device: Optional[torch.device] = None,
         backend: str = "tensorrt",
+        blend: bool = False,
     ):
         self.backend = backend.lower()
+        self.blend = blend  # the verdict uses the mean of all three tier scores; set p bounds so no tier exits early
         if self.backend == "tensorrt":
             if not torch.cuda.is_available():
                 raise RuntimeError(
@@ -250,6 +261,11 @@ class Stage2bStaircaseEngine:
                     "engine": os.path.join(weights_dir, "stgcn_sim_v2.engine"),
                     "input_name": "coords",
                 },
+                **{f"stgcn_sim3_{m}": {
+                    "onnx": os.path.join(weights_dir, f"stgcn_sim3_{m}.onnx"),
+                    "engine": os.path.join(weights_dir, f"stgcn_sim3_{m}.engine"),
+                    "input_name": "coords",
+                } for m in ("old", "fixed", "mix")},
             }
 
             # Auto-compile engines if missing
@@ -404,6 +420,8 @@ class Stage2bStaircaseEngine:
         p3 = self._eval_model(self.tier3_key, inp3)
         latencies["tier3_fwd_ms"] = (time.perf_counter() - t_t3) * 1000.0
 
+        if self.blend:
+            p3 = blend_probs((p1, p2, p3))
         is_threat = (p3 >= self.tau3)
         return {
             "verdict": 1 if is_threat else 0,
@@ -420,6 +438,8 @@ class Stage2bStaircaseEngine:
         }
 
     def evaluate_video(self, coords_batch: torch.Tensor, heatmaps_batch: Optional[torch.Tensor] = None) -> Dict:
+        if self.blend:
+            raise NotImplementedError("evaluate_video has no blend mode; use evaluate_clip")
         """
         Runs progressive staircase cascade on a full video represented by a batch of sliding clips.
         Uses sequence-level temporal max-pooling across clips to prevent early exit on pre-attack walking frames.

@@ -1,5 +1,7 @@
 # Modification Report: Stage 2 Retrained on Simulated Skeletons (sim v2)
 
+**Newer work: [MODIFICATION_REPORT_STAGE2_SIM3.md](MODIFICATION_REPORT_STAGE2_SIM3.md).**
+
 **Status: checkpoint, not finished.** The new models are in the repo as an option. The live models stay the default. The new set has never run end to end on the Edge PC or the live camera.
 
 ## 1. Result

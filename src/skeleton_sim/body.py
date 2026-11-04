@@ -45,11 +45,11 @@ CONTROLS = {
 @dataclass
 class BodyShape:
     height: float = 1.72
-    torso: float = 0.29      # mid-hip to mid-shoulder, fraction of height
+    torso: float = 0.325     # mid-hip to mid-shoulder as YOLO-pose places them (longer than anatomical)
     sh_half: float = 0.105   # half shoulder width
     hip_half: float = 0.06
     uarm: float = 0.172
-    farm: float = 0.150
+    farm: float = 0.172
     thigh: float = 0.245
     shank: float = 0.245
     ankle: float = 0.04      # ankle height above the floor
@@ -58,11 +58,11 @@ class BodyShape:
 
     @staticmethod
     def random(rng):
-        """A random adult; proportions vary about +-6 % around the anthropometric means
-        (they match the bone ratios measured from YOLO-pose on the lab takes)."""
+        """A random adult; proportions vary about +-6 % around the means, with the torso set so that
+        limb / torso ratios match real YOLO-pose skeletons (measured with close, steep cameras)."""
         j = lambda: rng.normal(1.0, 0.035)
-        return BodyShape(height=rng.uniform(1.52, 1.92), torso=0.29 * j(), sh_half=0.105 * j(),
-                         hip_half=0.06 * j(), uarm=0.172 * j(), farm=0.150 * j(), thigh=0.245 * j(),
+        return BodyShape(height=rng.uniform(1.52, 1.92), torso=0.325 * j(), sh_half=0.105 * j(),
+                         hip_half=0.06 * j(), uarm=0.172 * j(), farm=0.172 * j(), thigh=0.245 * j(),
                          shank=0.245 * j(), neck=0.11 * j(), nose_fwd=0.055 * j())
 
     def m(self, frac):

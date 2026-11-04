@@ -59,7 +59,18 @@ def ready_knife(a):
 def windup_el(a):
     """Wind-up elevation for overhand strikes. Real takes mostly raise the hand to about head height
     (wrist peak ~0.3-0.4 torso above the shoulder in the training and lab clips); some go high."""
-    return a.u(30, 65) if a.chance(0.7) else a.u(65, 105)
+    return a.u(15, 50) if a.chance(0.8) else a.u(50, 90)
+
+
+def free_arm_life(tl, a, t0, t1):
+    """The free arm keeps moving during an attack (real clips: 2-3x the speed of a held pose)."""
+    if a.free_style == "grab":
+        return
+    t = t0
+    while t < t1:
+        dur = a.u(0.2, 0.45)
+        tl.move(dur, start=t, advance=False, **{F(a): aim(-a.s, a.u(-25, 40), a.u(-75, -5), a.u(0.55, 0.97))})
+        t += dur + a.u(0, 0.15)
 
 
 def free_pose(a, style=None):

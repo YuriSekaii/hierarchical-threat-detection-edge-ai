@@ -1,5 +1,7 @@
 # Modification Report: Skeleton Simulator for Stage 2 Training Data
 
+**The body, camera and noise values described here were corrected later; see [MODIFICATION_REPORT_STAGE2_SIM3.md](MODIFICATION_REPORT_STAGE2_SIM3.md).**
+
 ## 1. Problem
 
 The Stage 2 action models were trained on 118 real clips (43 Thrust, 28 Stab, 47 Cut-Down) recorded with one camera: high (about 3 m), close, looking steeply down, the person mostly seen from behind or at a diagonal. Training uses no augmentation. On 2026-10-31 the live demo thrusts scored 0.000.
