@@ -52,7 +52,7 @@ Window AUC and attacks caught are on the lab takes (both takes, attack vs normal
 What this showed:
 
 - **The live models score camera angle more than action.** Seen from a high camera behind the person, simulated walking scores like simulated attacks; from the front, nearly everything scores near 0.
-- **Real attacks + simulated-only normals teaches a shortcut.** In that mix every real clip is an attack and every normal is simulated, so "looks real" points to "attack". v1 flagged 40-74 % of live clips. This explanation fits the numbers but was not tested on its own. The 49 real normal clips added to the mix (55 windows) were too few to fix it.
+- **Real attacks + simulated-only normals teaches a shortcut.** In that mix every real clip is an attack and every normal is simulated, so "looks real" points to "attack". v1 flagged 40-74 % of live clips. This explanation fits the numbers but was not tested on its own. The 25 real normal clips added to the mix (55 windows) were too few to fix it.
 - **Calm simulated normals were a realism bug.** Their wrist speed was 0.05 torso/frame against 0.13 in the lab. Adding brisk activities (arm circles, waving, reaching, jogging, fidgeting, looking around) raised it to 0.11.
 - **PoseConv3D does not transfer from simulation.** Calibrated as a discard filter, it dropped 82 % of real attack windows. Why is unknown.
 
@@ -95,7 +95,7 @@ ST-GCN alone on take 002. Each threshold is computed from the same normal window
 
 | Path | Contents |
 |---|---|
-| `data/Simulated_v2/` | The dataset these models used: 7,060 clips, including 3,000 normal. `data/Simulated/` is the older set. |
+| `data/Simulated_v2/` | The dataset these models used: 7,180 clips (3,000 simulated attacks, 3,000 simulated normal, 1,180 perturbed real; the chosen models train on the simulated ones only). `data/Simulated/` is the older set. |
 | `data/live_clips_2026-10-31/` | Copies of 296 live debug clips (some are excluded when calibrating or scoring, see below). The originals sat in a temporary folder. Thrust ranges to exclude: `s111247:30-40,s114942:34-42,s1031:28-34,s110035:29-35`. Those ranges are partly from memory and deliberately wide. |
 | `results/train_sim/` | Window cache (414 MB), logs, `evaluation_v2.json`, and experiment weights in `experiment_weights/`. |
 
