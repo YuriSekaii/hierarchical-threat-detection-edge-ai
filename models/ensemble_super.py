@@ -109,7 +109,37 @@ MODEL_REGISTRY = {
         "family": "skateformer",
         "weights": "weights/skateformer_violence_v2.20.pth",
         "ref": "weights/reference_data_skateformer_v2.20.pt"
+    },
+    # Retrained on simulated skeletons (scripts/train_stage2_sim.py, reports/MODIFICATION_REPORT_STAGE2_RETRAIN_SIM.md)
+    "pc3d_tier3_sim": {
+        "name": "PoseConv3D Tier 3 (sim v2)",
+        "family": "poseconv3d",
+        "base_channels": 12,
+        "feature_dim": 256,
+        "weights": "weights/poseconv3d_tier3_sim_v2.pth",
+        "ref": "weights/reference_data_poseconv3d_tier3_sim_v2.pt"
+    },
+    "pc3d_dt3_sim": {
+        "name": "PoseConv3D Distilled Tier 3 (sim v2)",
+        "family": "poseconv3d",
+        "base_channels": 12,
+        "feature_dim": 256,
+        "weights": "weights/poseconv3d_dt3_sim_v2.pth",
+        "ref": "weights/reference_data_poseconv3d_dt3_sim_v2.pt"
+    },
+    "stgcn_sim": {
+        "name": "ST-GCN (sim v2)",
+        "family": "gcn",
+        "weights": "weights/stgcn_sim_v2.pth",
+        "ref": "weights/reference_data_stgcn_sim_v2.pt"
     }
+}
+
+# Stage 2b cascade model sets: (tier 1, tier 2, tier 3)
+STAGE2_MODEL_SETS = {
+    "live": ("pc3d_tier3", "pc3d_dt3", "stgcn"),
+    # retrained set: both PoseConv3D tiers are calibrated as pass-through (never discard or alarm), the ST-GCN alone decides
+    "sim": ("pc3d_dt3_sim", "pc3d_tier3_sim", "stgcn_sim"),
 }
 
 

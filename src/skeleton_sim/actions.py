@@ -118,7 +118,7 @@ def walk(tl: Timeline, a: Actor, n_steps, turn_deg=0.0, step_len=None, step_time
         tl.move(0.8 * T, start=t0 + 0.1 * T, advance=False, **{"foot_" + order: foot})
         tl.move(T, start=t0, kind="stop" if last else "pass", advance=False, pelvis=pel, yaw=yaw)
         if arms:  # the arm opposite the stepping foot swings forward
-            sw = a.u(0.15, 0.3)
+            sw = a.u(0.15, 0.45)
             arm_fwd, arm_back = ("wr_L", "wr_R") if order == "R" else ("wr_R", "wr_L")
             for key, sgn in ((arm_fwd, 1), (arm_back, -1)):
                 amp = sw * (0.5 if key == K(a) else 1.0)
@@ -454,11 +454,91 @@ def n_hand_to_head(tl, a):
 
 
 def n_stretch(tl, a):
-    tl.move(a.d(1.0), **{K(a): aim(a.s, a.u(80, 95), a.u(-5, 20), a.u(0.95, 0.99)),
-                         F(a): aim(-a.s, a.u(80, 95), a.u(-5, 20), a.u(0.95, 0.99))})
-    tl.wait(a.d(0.8))
-    tl.move(a.d(1.0), **{K(a): rest_knife(a), F(a): free_pose(a, "hang")})
-    return "arms_out"
+    """Arms out, overhead stretch or side bend, at everyday speed."""
+    kind = a.rng.choice(["out", "up", "side"])
+    if kind == "out":
+        tgt = {K(a): aim(a.s, a.u(80, 95), a.u(-5, 20), a.u(0.95, 0.99)),
+               F(a): aim(-a.s, a.u(80, 95), a.u(-5, 20), a.u(0.95, 0.99))}
+        extra = {}
+    elif kind == "up":
+        tgt = {K(a): aim(a.s, a.u(0, 25), a.u(80, 100), a.u(0.9, 0.99)),
+               F(a): aim(-a.s, a.u(0, 25), a.u(80, 100), a.u(0.9, 0.99))}
+        extra = {"pitch": R(a.u(-12, 0))}
+    else:
+        tgt = {F(a): aim(-a.s, a.u(0, 30), a.u(70, 100), a.u(0.9, 0.99))}
+        extra = {"roll": R(a.u(10, 25)) * a.s}
+    tl.move(a.d(0.8), **tgt, **extra)
+    tl.wait(a.d(0.6))
+    tl.move(a.d(0.8), roll=0.0, pitch=0.0, **{K(a): rest_knife(a), F(a): free_pose(a, "hang")})
+    return "stretch_" + str(kind)
+
+
+def n_arm_circles(tl, a):
+    """Arm circles / shoulder rolls: big continuous arm motion that is not a strike."""
+    both = a.chance(0.6)
+    r_el, r_az = a.u(25, 60), a.u(20, 50)
+    per = a.u(0.5, 1.1) / a.sp
+    phases = np.linspace(0, 2 * np.pi * a.u(2, 4), int(a.u(2, 4) * 6))
+    sign = 1 if a.chance(0.5) else -1
+    for ph in phases[1:]:
+        el, az = r_el * np.sin(sign * ph), 85 + r_az * np.cos(ph) - r_az
+        tgt = {F(a): aim(-a.s, az, el, 0.97)}
+        if both:
+            tgt[K(a)] = aim(a.s, az, el, 0.97)
+        tl.move(per / 6, kind="pass", **tgt)
+    tl.move(a.d(0.6), **{K(a): rest_knife(a), F(a): free_pose(a, "hang")})
+    return "arm_circles"
+
+
+def n_wave(tl, a):
+    hand = F(a) if a.chance(0.7) else K(a)
+    side = -a.s if hand == F(a) else a.s
+    tl.move(a.d(0.5), **{hand: aim(side, a.u(20, 50), a.u(40, 80), a.u(0.75, 0.95))})
+    for i in range(int(a.rng.integers(3, 7))):
+        tl.move(a.u(0.15, 0.3), kind="pass", **{hand: aim(side, a.u(5, 25) if i % 2 else a.u(45, 70), a.u(45, 80), 0.9)})
+    tl.move(a.d(0.5), **{hand: free_pose(a, "hang") if hand == F(a) else rest_knife(a)})
+    return "wave"
+
+
+def n_reach(tl, a):
+    """Reaches forward / up / sideways for something and brings it back."""
+    hand = F(a) if a.chance(0.6) else K(a)
+    side = -a.s if hand == F(a) else a.s
+    tl.move(a.d(0.6), pitch=R(a.u(0, 20)), **{hand: aim(side, a.u(-30, 40), a.u(-40, 70), a.u(0.85, 0.99))})
+    tl.wait(a.d(0.3))
+    tl.move(a.d(0.6), pitch=0.0, **{hand: aim(side, a.u(-30, 0), a.u(-40, -10), a.u(0.4, 0.6))})
+    tl.move(a.d(0.5), **{hand: free_pose(a, "hang") if hand == F(a) else rest_knife(a)})
+    return "reach"
+
+
+def n_jog(tl, a):
+    """Jogging / hurrying: short fast steps, arms bent and pumping."""
+    n = int(a.rng.integers(3, 8))
+    walk(tl, a, n, turn_deg=a.u(-90, 90), step_len=a.u(0.5, 0.9), step_time=a.u(0.28, 0.38))
+    return "jog"
+
+
+def n_fidget(tl, a):
+    """Hands to waist, pocket, belt, hair, face, both hands, at a casual pace."""
+    for _ in range(int(a.rng.integers(2, 5))):
+        hand = F(a) if a.chance(0.6) else K(a)
+        side = -a.s if hand == F(a) else a.s
+        tgt = aim(side, a.u(-40, 10), a.u(-85, 70), a.u(0.35, 0.8))
+        tl.move(a.u(0.3, 0.7), **{hand: tgt, "swv_" + hand[-1]: R(a.u(0, 40))})
+        tl.wait(a.u(0.1, 0.6))
+    tl.move(a.d(0.5), **{K(a): rest_knife(a), F(a): free_pose(a, "hang"), "swv_R": 0.0, "swv_L": 0.0})
+    return "fidget"
+
+
+def n_look_around(tl, a):
+    """Quick head and torso turns, a step or two, as when searching for someone."""
+    for _ in range(int(a.rng.integers(2, 4))):
+        tl.move(a.u(0.3, 0.6), twist=R(a.u(-35, 35)), head_yaw=R(a.u(-60, 60)))
+        tl.wait(a.u(0.1, 0.5))
+    if a.chance(0.5):
+        turn_in_place(tl, a, R(a.u(45, 120)) * (1 if a.chance(0.5) else -1), a.u(0.5, 0.9))
+    tl.move(a.d(0.4), twist=0.0, head_yaw=0.0)
+    return "look_around"
 
 
 def n_pick_up(tl, a):
@@ -470,11 +550,17 @@ def n_pick_up(tl, a):
 
 
 def n_gesture(tl, a):
-    for _ in range(int(a.rng.integers(2, 5))):
-        tl.move(a.d(0.5), **{F(a): aim(-a.s, a.u(-30, 30), a.u(-50, -10), a.u(0.5, 0.8))})
-    tl.move(a.d(0.6), **{F(a): free_pose(a, "hang")})
+    """Talking with the hands: quick, mid-sized movements of one or both hands."""
+    for _ in range(int(a.rng.integers(3, 7))):
+        tl.move(a.u(0.2, 0.5), **{F(a): aim(-a.s, a.u(-40, 40), a.u(-55, 10), a.u(0.45, 0.85))})
+        if a.chance(0.4):
+            tl.move(a.u(0.2, 0.5), start=tl.t - 0.2,
+                    **{K(a): aim(a.s, a.u(-20, 30), a.u(-60, -10), a.u(0.5, 0.85))})
+    tl.move(a.d(0.5), **{K(a): rest_knife(a), F(a): free_pose(a, "hang")})
     return "talk_gesture"
 
 
 NORMALS = {"idle": n_idle, "walk": n_walk, "turn": n_turn, "point": n_point, "inspect": n_inspect,
-           "hand_to_head": n_hand_to_head, "stretch": n_stretch, "pick_up": n_pick_up, "gesture": n_gesture}
+           "hand_to_head": n_hand_to_head, "stretch": n_stretch, "arm_circles": n_arm_circles, "wave": n_wave,
+           "reach": n_reach, "jog": n_jog, "fidget": n_fidget, "look_around": n_look_around,
+           "pick_up": n_pick_up, "gesture": n_gesture}

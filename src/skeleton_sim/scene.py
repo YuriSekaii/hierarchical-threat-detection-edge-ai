@@ -47,6 +47,10 @@ def _postlude(tl, a):
 def build_motion(rng, action, hand=None, speed=None):
     """Returns (joints3d (T,17,3), timeline, actor, info) for one attack or normal activity."""
     shape = BodyShape.random(rng)
+    if speed is None and action not in A.ATTACKS:
+        # everyday movement is brisk: real normal activity in the lab takes moves the wrist at about half
+        # the speed of a strike, not a fifth of it
+        speed = float(np.clip(rng.lognormal(np.log(1.2), 0.25), 0.7, 2.0))
     a = A.Actor(rng, hand=hand, speed=speed)
     tl = Timeline(shape, rng)
     tl.set(0.0, **{A.K(a): A.rest_knife(a), A.F(a): A.free_pose(a, "hang")})

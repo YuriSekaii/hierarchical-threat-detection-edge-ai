@@ -103,5 +103,23 @@ def export_all():
     print("=" * 80 + "\n")
 
 
+def export_stage2b_sim():
+    """Exports only the Stage 2b models retrained on simulated skeletons (models/ensemble_super.py 'sim' set)."""
+    weights_dir = os.path.join(REPO_DIR, "weights")
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    jobs = [("pc3d_tier3_sim", "poseconv3d_tier3_sim_v2.onnx", "heatmap", (1, 17, 50, 56, 56)),
+            ("pc3d_dt3_sim", "poseconv3d_dt3_sim_v2.onnx", "heatmap", (1, 17, 50, 56, 56)),
+            ("stgcn_sim", "stgcn_sim_v2.onnx", "coords", (1, 2, 50, 17, 1))]
+    for key, name, input_name, shape in jobs:
+        out = os.path.join(weights_dir, name)
+        wrapper = ModelFeatureWrapper(load_model_instance(key, device)["model"]).eval()
+        torch.onnx.export(wrapper, torch.zeros(*shape, device=device), out, input_names=[input_name],
+                          output_names=["logits", "feats"], opset_version=17, dynamic_axes=None)
+        print(f"  {key}: {out} ({os.path.getsize(out) / (1024 * 1024):.2f} MB)")
+
+
 if __name__ == "__main__":
-    export_all()
+    if "--stage2-sim" in sys.argv:
+        export_stage2b_sim()
+    else:
+        export_all()

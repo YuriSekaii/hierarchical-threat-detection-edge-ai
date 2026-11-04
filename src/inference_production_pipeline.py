@@ -195,6 +195,7 @@ class ProductionHierarchicalPipeline:
         static_min_move: float = 0.15,
         hand_gate: bool = True,
         hand_max_dist: float = 0.5,
+        stage2_models: str = "live",
     ):
         self.camera_res = camera_res.lower()
         self.aspect_ratio = aspect_ratio.lower()
@@ -266,7 +267,12 @@ class ProductionHierarchicalPipeline:
         )
 
         # 4. Stage 2b Champion 2 Staircase Cascade Engine
+        from models.ensemble_super import STAGE2_MODEL_SETS
+        t1_key, t2_key, t3_key = STAGE2_MODEL_SETS[stage2_models]
         self.stage2b_engine = Stage2bStaircaseEngine(
+            tier1_key=t1_key,
+            tier2_key=t2_key,
+            tier3_key=t3_key,
             device=torch.device(self.device),
             backend=self.backend,
         )
@@ -1303,6 +1309,8 @@ if __name__ == "__main__":
                         help="Analyze clips even when the weapon is not near the actor's hand (gate on by default)")
     parser.add_argument("--hand-max-dist", type=float, default=0.5,
                         help="Max wrist-to-weapon-box distance in torso lengths for the weapon to count as held (default: 0.5)")
+    parser.add_argument("--stage2-models", choices=["live", "sim"], default="live",
+                        help="Stage 2b cascade weights: 'live' (original) or 'sim' (retrained on simulated skeletons)")
     parser.add_argument("--debug", action="store_true",
                         help="Run Stage 1/2 workers through src/debug_stage2_tracer.py (action log + analyzed-frame dumps in results/debug_stage2/)")
 
@@ -1327,6 +1335,7 @@ if __name__ == "__main__":
         static_min_move=args.static_min_move,
         hand_gate=not args.no_hand_gate,
         hand_max_dist=args.hand_max_dist,
+        stage2_models=args.stage2_models,
     )
 
     if args.dry_run:

@@ -235,6 +235,21 @@ class Stage2bStaircaseEngine:
                     "engine": os.path.join(weights_dir, "stgcn.engine"),
                     "input_name": "coords",
                 },
+                "pc3d_tier3_sim": {
+                    "onnx": os.path.join(weights_dir, "poseconv3d_tier3_sim_v2.onnx"),
+                    "engine": os.path.join(weights_dir, "poseconv3d_tier3_sim_v2.engine"),
+                    "input_name": "heatmap",
+                },
+                "pc3d_dt3_sim": {
+                    "onnx": os.path.join(weights_dir, "poseconv3d_dt3_sim_v2.onnx"),
+                    "engine": os.path.join(weights_dir, "poseconv3d_dt3_sim_v2.engine"),
+                    "input_name": "heatmap",
+                },
+                "stgcn_sim": {
+                    "onnx": os.path.join(weights_dir, "stgcn_sim_v2.onnx"),
+                    "engine": os.path.join(weights_dir, "stgcn_sim_v2.engine"),
+                    "input_name": "coords",
+                },
             }
 
             # Auto-compile engines if missing
