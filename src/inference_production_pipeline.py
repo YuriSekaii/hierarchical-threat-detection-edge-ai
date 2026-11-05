@@ -28,6 +28,7 @@ import json
 import time
 import argparse
 import threading
+import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from collections import deque
 from typing import Optional, Union, Tuple, Sequence, Callable
@@ -282,6 +283,7 @@ class ProductionHierarchicalPipeline:
 
         # Runtime & Threading State
         self.is_running = False
+        self.fatal_error = None
         self.gpu_lock = threading.Lock()
         self.weapon_active_until = 0.0
         self.last_weapon_bbox = None
@@ -309,6 +311,22 @@ class ProductionHierarchicalPipeline:
         self.last_confidence = 0.0
         self.pending_audit_frames = 0
         self.fps_telemetry = 0.0
+
+    def _guarded(self, worker):
+        """A dead worker leaves the pipeline blind, so its exception stops the whole run with an error exit."""
+        def run():
+            try:
+                worker()
+            except Exception as e:
+                traceback.print_exc()
+                self.fatal_error = f"{worker.__name__} failed: {type(e).__name__}: {e}"
+                self.is_running = False
+        return run
+
+    def _fit_engines(self):
+        """Engines have a fixed input size; make sure both YOLO engines take the size in use."""
+        self.stage1_detector.fit_engine(self.rect_imgsz)
+        self.stage2a_tracker.fit_engine(self.rect_imgsz)
 
     def weapon_scanner_worker(self):
         """Thread 2: 3 FPS lightweight Stage 1 weapon screening loop with zero-copy frame fetch."""
@@ -942,6 +960,7 @@ class ProductionHierarchicalPipeline:
 
         aspect_tag = " [4:3 Aspect Ratio]" if self.aspect_ratio in ("4:3", "4/3") else ""
         print(f"[CONFIG] Input Stream: {f_w}x{f_h}{aspect_tag} -> Inference Resolution: {self.rect_imgsz} (Native TensorRT Rectangular)")
+        self._fit_engines()
 
         # Fast camera discovery via DirectShow COM (pygrabber)
         available_cameras = [current_source] if isinstance(current_source, int) else []
@@ -1006,7 +1025,9 @@ class ProductionHierarchicalPipeline:
                         if crop_w <= new_w:
                             new_w = crop_w
                     if not self.imgsz_override and new_w > 0 and new_h > 0:
-                        self.rect_imgsz = calculate_rectangular_imgsz(new_h, new_w, base_dim=640)
+                        with self.gpu_lock:
+                            self.rect_imgsz = calculate_rectangular_imgsz(new_h, new_w, base_dim=640)
+                            self._fit_engines()
                     print(f"\n[CAMERA] Swapped to Camera {current_source} ({target_name}, {new_w}x{new_h}) successfully.")
                 else:
                     print(f"\n[CAMERA WARNING] Camera {target_idx} opened but produced no frames.")
@@ -1133,9 +1154,9 @@ class ProductionHierarchicalPipeline:
         self._warmup_pose(f_h, f_w)
 
         self.is_running = True
-        t_capture = threading.Thread(target=_camera_capture_worker, daemon=True)
-        t_weapon = threading.Thread(target=self.weapon_scanner_worker, daemon=True)
-        t_action = threading.Thread(target=self.action_auditing_worker, daemon=True)
+        t_capture = threading.Thread(target=self._guarded(_camera_capture_worker), daemon=True)
+        t_weapon = threading.Thread(target=self._guarded(self.weapon_scanner_worker), daemon=True)
+        t_action = threading.Thread(target=self._guarded(self.action_auditing_worker), daemon=True)
         t_capture.start()
         t_weapon.start()
         t_action.start()
@@ -1235,6 +1256,8 @@ class ProductionHierarchicalPipeline:
                 ctypes.windll.winmm.timeEndPeriod(1)
             except Exception:
                 pass
+        if self.fatal_error:
+            sys.exit(f"[FATAL] Pipeline stopped: {self.fatal_error}")
         print("[SHUTDOWN] Surveillance pipeline terminated cleanly.")
 
     def run_dry_run(self, num_frames: int = 120):

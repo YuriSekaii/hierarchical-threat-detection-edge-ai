@@ -24,9 +24,9 @@ cursor rules, the same calls into Stage 1 / 2a / 2b, the same status updates. No
 decision path is altered; the tracer only observes and records.
 
 Two deliberate, clearly-labelled differences from production:
-  1. Exceptions inside a worker loop are logged with a full traceback and the loop continues.
-     (In production an exception silently kills that daemon thread and Stage 2 stays dead
-     for the rest of the session.) Every such event is logged as `WORKER_EXCEPTION`.
+  1. Exceptions inside a worker loop are logged with a full traceback as `WORKER_EXCEPTION` and the
+     loop continues, until 5 in a row stop the run with an error exit. (In production the first
+     exception stops the run.)
   2. Optional diagnostic PROBE per clip (never used for the decision): evaluates all three
      cascade tiers on (a) the exact production input and (b) a "training-style" heatmap built
      from raw pixel skeletons with a single normalization, like `src/dataset.py` does.
@@ -353,7 +353,7 @@ class DebugTraceWriter:
         self.event(
             "WORKER_EXCEPTION",
             f"{where}: {type(exc).__name__}: {exc}  "
-            f"(in PRODUCTION this exception would have killed the '{where}' thread permanently)",
+            "(in PRODUCTION this exception would have stopped the pipeline)",
             console=True, where=where, traceback=tb,
         )
         with self._lock:
@@ -491,6 +491,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._dbg = DebugTraceWriter(save_frames=_env_flag("HTD_DEBUG_SAVE_FRAMES", True))
+        self._dbg_fail_streak = {}
         self._dbg_probe = _env_flag("HTD_DEBUG_PROBE", True)
         self._dbg_near_miss = _env_flag("HTD_DEBUG_NEAR_MISS", True)
         try:
@@ -581,6 +582,14 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
         while len(self._dbg_frame_src) > 5000:
             self._dbg_frame_src.popitem(last=False)
 
+    def _dbg_worker_failed(self, where: str, exc: Exception):
+        """Logs a worker exception and re-raises once they repeat, so a broken run cannot end as a clean exit."""
+        self._dbg.exception(where, exc)
+        self._dbg_fail_streak[where] = self._dbg_fail_streak.get(where, 0) + 1
+        if self._dbg_fail_streak[where] >= 5:
+            raise exc
+        time.sleep(0.1)
+
     # ------------------------------------------------------------------ Stage 1 (instrumented copy)
     def weapon_scanner_worker(self):
         """Thread 2: instrumented copy of the v6.20 Stage 1 loop (3 FPS)."""
@@ -610,6 +619,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                         else:
                             raw = None
                             det_res = self.stage1_detector.predict(frame, imgsz=self.rect_imgsz)
+                    self._dbg_fail_streak["weapon_scanner_worker"] = 0
 
                     if raw is not None:
                         # Rebuild the exact production result (conf >= threshold) from the low-conf call
@@ -704,8 +714,7 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                             )
                         self._dbg_weapon_seen_prev = False
             except Exception as e:
-                T.exception("weapon_scanner_worker", e)
-                time.sleep(0.1)
+                self._dbg_worker_failed("weapon_scanner_worker", e)
 
             elapsed = time.perf_counter() - t_start
             time.sleep(max(0.005, target_delay - elapsed))
@@ -1041,9 +1050,9 @@ class DebugHierarchicalPipeline(ProductionHierarchicalPipeline):
                 # ---------------- record ----------------
                 self._dbg_record_clip(clip_no, window, tags, ages, st, raw_seq, normed_coords,
                                       cascade_res, probe, t_clip, live_idx, pending)
+                self._dbg_fail_streak["action_auditing_worker"] = 0
             except Exception as e:
-                T.exception("action_auditing_worker", e)
-                time.sleep(0.1)
+                self._dbg_worker_failed("action_auditing_worker", e)
         if was_active:
             T.event("STAGE2_STOP", f"episode #{self._dbg_episode} still armed at shutdown after "
                                    f"{self._dbg_episode_clips} clip(s)", episode=self._dbg_episode,

@@ -25,7 +25,7 @@ from src.skeleton_utils import (
     smooth_kinematics,
     normalize_skeleton_clip,
 )
-from src.engine_builder import ensure_engine, get_hardware_precision
+from src.engine_builder import engine_for_imgsz, ensure_engine, get_hardware_precision
 
 
 def compute_iou(box1: List[float], box2: List[float]) -> float:
@@ -95,7 +95,8 @@ class Stage2aPoseTracker:
             onnx_path = os.path.join(weights_dir, "yolo26s-pose.onnx")
             engine_path = weights_path or os.path.join(weights_dir, "yolo26s-pose.engine")
 
-            metadata = {
+            self.base_engine_path = engine_path
+            self.engine_metadata = metadata = {
                 "description": "YOLO26s-Pose 17-Keypoint Extractor",
                 "author": "Ultralytics",
                 "date": "2026-09-19",
@@ -139,6 +140,16 @@ class Stage2aPoseTracker:
         self.active_threat_actor_id: Optional[int] = None
         self.last_actor_bbox: Optional[List[float]] = None
         self.last_weapon_bbox: Optional[List[float]] = None
+
+    def fit_engine(self, imgsz: Tuple[int, int]):
+        """A TensorRT engine has one fixed input size: switch to an engine built for imgsz before inference."""
+        if self.backend != "tensorrt":
+            return
+        pt_path = os.path.join(REPO_DIR, "weights", "yolo26s-pose.pt")
+        path = engine_for_imgsz(self.base_engine_path, pt_path, self.engine_metadata, imgsz)
+        if path != self.engine_path:
+            self.engine_path = path
+            self.pose_model = YOLO(path, task="pose")
 
     def reset_tracking(self):
         """Resets active tracking locks when threat clears."""

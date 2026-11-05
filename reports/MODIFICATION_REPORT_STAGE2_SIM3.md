@@ -114,7 +114,7 @@ The `e2e` live clips (7) may be real attacks: the live models alarm on 5 of them
 | Failure | What happened | State |
 |---|---|---|
 | TensorRT inference fails | A freshly compiled engine run on `cuda:1` failed on every clip. TensorRT only logged the error, the engine read uninitialised memory as scores, and `sim3` reported 0 attacks. | **Fixed:** `TensorRTActionModel` now raises an error. A fresh compile on `cuda:0` gives the correct result. Recompiled engines on `cuda:1` work once they exist. |
-| Stage 1 engine has the wrong input size | On the dev PC the Stage 1 engine is fixed at 384x640 and the 4:3 launcher setting sends 480x640. Every frame failed, 1,092 exceptions, yet the process ended with exit code 0 and 0 detections. | **Not fixed.** The `.onnx` files in git are 384x640, while an earlier report records the Edge PC at 480x640. Check the debug summary's "Worker exceptions" line on the Edge PC. |
+| Stage 1 engine has the wrong input size | On the dev PC the Stage 1 engine is fixed at 384x640 and the 4:3 launcher setting sends 480x640. Every frame failed, 1,092 exceptions, yet the process ended with exit code 0 and 0 detections. | **Fixed.** At startup the pipeline reads the input size from each YOLO engine. If it is wrong, it builds `<name>_480x640.engine` from the `.pt` (one time, about 2 minutes per engine) and uses that. A failed build stops the pipeline. A worker exception now stops the run with exit code 1 (debug mode: 5 in a row). How the Edge PC runs 480x640 is still unknown: the `.onnx` files in git are 384x640. Check the debug summary's "Worker exceptions" line there. |
 
 ### Blender
 
@@ -159,5 +159,4 @@ Real normals used by `mix`: first half of take 001, sessions s1031 and s110035 m
 2. Record a new labelled test with the live camera, with **varied normal activity** (gestures, bending, reaching, not only walking). This gives the unbiased number, and a better source for the alarm bound.
 3. Confirm what the known thrust clips really show.
 4. Decide what `sim3` should be tuned for. Validate Thrust and Stab stay at 0 %, while the corrected + mix blend keeps more of them at more false alarms.
-5. Make a Stage 1 failure stop the pipeline, and build its engine for the input size in use.
-6. Consider 3D lifting of real motion, or motion capture through Blender, if strikes remain the weak point. Both need downloads.
+5. Consider 3D lifting of real motion, or motion capture through Blender, if strikes remain the weak point. Both need downloads.

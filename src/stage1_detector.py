@@ -20,7 +20,7 @@ REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
 
-from src.engine_builder import ensure_engine, get_hardware_precision
+from src.engine_builder import engine_for_imgsz, ensure_engine, get_hardware_precision
 
 
 def calculate_rectangular_imgsz(frame_h: int, frame_w: int, base_dim: int = 640) -> Tuple[int, int]:
@@ -96,7 +96,8 @@ class Stage1WeaponDetector:
             onnx_path = os.path.join(weights_dir, "yolo_weapon_distilled.onnx")
             engine_path = weights_path or os.path.join(weights_dir, "yolo_weapon_distilled.engine")
 
-            metadata = {
+            self.base_engine_path = engine_path
+            self.engine_metadata = metadata = {
                 "description": "Distilled YOLO26s Weapon Detector",
                 "author": "Ultralytics",
                 "date": "2026-09-19",
@@ -134,6 +135,16 @@ class Stage1WeaponDetector:
                 )
                 self.model = YOLO(self.engine_path, task="detect")
             print(f"          -> Stage 1 Initialized (Conf={self.conf_threshold:.2f}, NMS-Free=True, Engine={os.path.basename(self.engine_path)})")
+
+    def fit_engine(self, imgsz: Tuple[int, int]):
+        """A TensorRT engine has one fixed input size: switch to an engine built for imgsz before inference."""
+        if self.backend != "tensorrt":
+            return
+        pt_path = os.path.join(REPO_DIR, "weights", "yolo_weapon_distilled.pt")
+        path = engine_for_imgsz(self.base_engine_path, pt_path, self.engine_metadata, imgsz)
+        if path != self.engine_path:
+            self.engine_path = path
+            self.model = YOLO(path, task="detect")
 
     def predict(self, frame: np.ndarray, custom_conf: Optional[float] = None, imgsz: Optional[Union[int, Tuple[int, int]]] = None) -> Dict:
         """
