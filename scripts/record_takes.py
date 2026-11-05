@@ -63,6 +63,31 @@ PLAN = [
     ("normal", "hand_over", 2, "Optional. Hand the knife over to someone / out of view.", "right", "", "", ""),
 ]
 
+_ATTACKS = [("thrust_chest", "Straight thrust at chest height"), ("thrust_low", "Thrust at hip height"),
+            ("overhand_stab", "Overhand stab: raise the knife, drive it down"), ("cut_down", "Big chop from above the head"),
+            ("slash", "Side-to-side slash"), ("walking_thrust", "Walk in and thrust without stopping")]
+_FACING = [("front", "Face the camera"), ("left", "Left side to the camera"), ("back", "Back to the camera"),
+           ("right", "Right side to the camera")]
+_NORMALS = [("walk", "Walk around, arms swinging"), ("turn", "Turn around on the spot, both ways"),
+            ("gesture", "Talk with your hands, big gestures"), ("bend_pick_up", "Bend down, pick something up, stand"),
+            ("reach", "Reach up, forward and sideways"), ("stretch", "Stretch, arm circles, wave"),
+            ("hand_to_head", "Touch your head, face and neck"), ("point", "Point with the knife, slowly"),
+            ("inspect_knife", "Look at the knife, turn it in your hand"), ("fidget", "Fidget, hands to belt and pockets"),
+            ("hurry", "Walk fast, change direction")]
+# Samples for the motion generator. test_* takes stay out of training; each test attack take holds exactly one attack,
+# so its label comes from the take itself.
+PLAN_SAMPLES = (
+    [("train_attack", f"{a}_{f}", 1, f"{d}. {fd}. About 5 times, pause between.", "right", "", "", f)
+     for a, d in _ATTACKS for f, fd in _FACING]
+    + [("train_attack", f"{a}_lefthand", 1, f"LEFT hand. {d}. Any direction. About 5 times.", "left", "", "", "")
+       for a, d in _ATTACKS]
+    + [("train_normal", n, 2, f"{d}. Hold the knife. About 20 s. No strikes.", "right", "", "", "") for n, d in _NORMALS]
+    + [("test_attack", f"test_{a}", 5, f"TEST, ONE attack only, any direction. {d}.", "right", "", "", "")
+       for a, d in _ATTACKS]
+    + [("test_normal", "test_normal_mixed", 2, "TEST, about 3 minutes of mixed normal activity. No strikes.", "right", "", "", "")]
+)
+PLANS = {"lab": PLAN, "samples": PLAN_SAMPLES}
+
 CSV_FIELDS = ["file", "status", "category", "label", "repeat", "hand", "height", "speed", "direction",
               "started", "duration_s", "frames", "fps", "dropped", "width", "height_px", "camera", "note"]
 
@@ -170,12 +195,12 @@ class TakeWriter:
 
 
 class Session:
-    def __init__(self, out_root: str):
+    def __init__(self, out_root: str, plan=PLAN):
         self.day_dir = os.path.join(out_root, dt.date.today().isoformat())
         os.makedirs(self.day_dir, exist_ok=True)
         self.csv_path = os.path.join(self.day_dir, "takes.csv")
         self.slots = [(cat, label, rep, instr, hand, height, speed, direction)
-                      for cat, label, n, instr, hand, height, speed, direction in PLAN for rep in range(1, n + 1)]
+                      for cat, label, n, instr, hand, height, speed, direction in plan for rep in range(1, n + 1)]
         self.rows = self._read_rows()
         self.pos = self._first_unfinished()
 
@@ -258,6 +283,7 @@ def main():
     ap.add_argument("--source", type=str, default=None, help="video file instead of a camera (testing)")
     ap.add_argument("--out", type=str, default=os.path.join(ROOT, "data", "lab_recordings"))
     ap.add_argument("--auto-test", type=int, default=0, help="headless test: record this many plan takes, 2 s each")
+    ap.add_argument("--plan", choices=list(PLANS), default="lab", help="take plan (samples: record_samples.bat)")
     args = ap.parse_args()
 
     cam_idx = args.camera
@@ -275,7 +301,7 @@ def main():
         src = Source(cap)
         cam_name = f"camera {cam_idx}"
 
-    sess = Session(args.out)
+    sess = Session(args.out, PLANS[args.plan])
     print(f"[REC] Saving to {sess.day_dir}")
     print(f"[REC] {sum(1 for sl in sess.slots if sess.done(sl[1], sl[2]))}/{len(sess.slots)} planned takes already done")
 
