@@ -1,6 +1,6 @@
 # Modification Report: Corrected Simulator and the sim3 Blend
 
-**Status: checkpoint, not finished.** `sim3` is an option (`run_webcam_tensorrt_sim3.bat`, `--stage2-models sim3`). The live models stay the default. `sim3` has not run on the Edge PC or on the live camera, and there is still no clean test.
+**Status: checkpoint, not finished.** `sim3` is an option (`run_webcam_tensorrt_sim3.bat`, `--stage2-models sim3`). The live models stay the default. `sim3` now runs on the Edge PC, from take 002 and from the live camera, with 0 worker exceptions. Its detection there is not scored, and there is still no clean test.
 
 ## 1. Result
 
@@ -156,8 +156,7 @@ Real normals used by `mix`: first half of take 001, sessions s1031 and s110035 m
 
 ## 5. Next steps
 
-1. On the Edge PC: `git pull`, then `run_webcam_tensorrt_sim3_debug.bat`. Engines compile on the first run. Check real-time speed, and that the summary shows "Worker exceptions: 0" and a non-zero Stage 1 detection count.
-2. Record a new labelled test with the live camera, with **varied normal activity** (gestures, bending, reaching, not only walking). This gives the unbiased number, and a better source for the alarm bound.
-3. Confirm what the known thrust clips really show.
-4. Decide what `sim3` should be tuned for. Validate Thrust and Stab stay at 0 %, while the corrected + mix blend keeps more of them at more false alarms.
-5. Consider 3D lifting of real motion, or motion capture through Blender, if strikes remain the weak point. Both need downloads.
+1. Record a new labelled test with the live camera, with **varied normal activity** (gestures, bending, reaching, not only walking). This gives the unbiased number, and a better source for the alarm bound.
+2. Confirm what the known thrust clips really show.
+3. Decide what `sim3` should be tuned for. Validate Thrust and Stab stay at 0 %, while the corrected + mix blend keeps more of them at more false alarms.
+4. Consider 3D lifting of real motion, or motion capture through Blender, if strikes remain the weak point. Both need downloads.
