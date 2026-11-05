@@ -3,8 +3,8 @@ Lab take recorder for the skeleton simulator data (calibration, check takes, tes
 
 Opens the camera exactly like the production pipeline (MSMF -> DSHOW -> ANY, MJPG, 30 fps, 2560x1440),
 walks through a fixed take plan, and saves every take as a near-lossless MJPG .avi plus one row in
-takes.csv. The full sensor frame is saved; the dashed lines in the preview show the 4:3 crop the
-pipeline actually analyzes.
+takes.csv. Only the 4:3 crop the pipeline analyzes is saved, shown by the dashed lines in the preview:
+on the Edge PC the full 2560x1440 frame encodes at only 30 fps, which drops frames in long takes.
 
 Keys (camera window):
     SPACE  start / stop recording the current take
@@ -155,6 +155,16 @@ class Source:
         self.cap.release()
 
 
+def crop_4_3(frame):
+    """Centre 4:3 crop of a wider frame, the same one the pipeline analyzes."""
+    h, w = frame.shape[:2]
+    cw = int(h * 4 / 3)
+    if cw >= w:
+        return frame
+    x = (w - cw) // 2
+    return frame[:, x:x + cw]
+
+
 class TakeWriter:
     """Encodes frames on its own thread so the camera never waits for the encoder."""
 
@@ -173,7 +183,7 @@ class TakeWriter:
 
     def push(self, frame):
         try:
-            self.q.put_nowait(frame)
+            self.q.put_nowait(crop_4_3(frame))
             self.t_last = time.time()
         except queue.Full:
             self.dropped += 1
@@ -327,7 +337,7 @@ def main():
         folder = os.path.join(sess.day_dir, cat)
         os.makedirs(folder, exist_ok=True)
         name = f"{sess.next_number():03d}_{label}_{dt.datetime.now():%H%M%S}.avi"
-        h, w = frame.shape[:2]
+        h, w = crop_4_3(frame).shape[:2]
         writer = TakeWriter(os.path.join(folder, name), (w, h))
         rec_meta = dict(file=os.path.relpath(writer.path, sess.day_dir), category=cat, label=label, repeat=rep,
                         hand=hand, height=height, speed=speed, direction=direction,
