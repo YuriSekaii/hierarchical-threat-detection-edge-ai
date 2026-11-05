@@ -45,7 +45,7 @@ from src.stage1_detector import Stage1WeaponDetector, calculate_rectangular_imgs
 from src.stage2a_pose_tracker import Stage2aPoseTracker
 from src.stage2b_staircase import Stage2bStaircaseEngine
 from src.weapon_gate import WeaponMotionGate, weapon_in_hand
-from src.engine_builder import get_hardware_precision
+from src.engine_builder import get_hardware_precision, shared_input_size
 
 
 def _detect_qt_binding():
@@ -267,6 +267,13 @@ class ProductionHierarchicalPipeline:
             backend=self.backend,
         )
 
+        if self.backend == "tensorrt":
+            # A compiled engine has one input size and frames are letterboxed to it. Newer Ultralytics silently
+            # ignores any other imgsz and older versions raise on it, so always ask for the real size.
+            self.imgsz_override = shared_input_size(self.stage1_detector.engine_path,
+                                                    self.stage2a_tracker.engine_path) or self.imgsz_override
+            self.rect_imgsz = self.imgsz_override or self.rect_imgsz
+
         # 4. Stage 2b Champion 2 Staircase Cascade Engine
         from models.ensemble_super import STAGE2_MODEL_SETS
         t1_key, t2_key, t3_key = STAGE2_MODEL_SETS[stage2_models]
@@ -322,11 +329,6 @@ class ProductionHierarchicalPipeline:
                 self.fatal_error = f"{worker.__name__} failed: {type(e).__name__}: {e}"
                 self.is_running = False
         return run
-
-    def _fit_engines(self):
-        """Engines have a fixed input size; make sure both YOLO engines take the size in use."""
-        self.stage1_detector.fit_engine(self.rect_imgsz)
-        self.stage2a_tracker.fit_engine(self.rect_imgsz)
 
     def weapon_scanner_worker(self):
         """Thread 2: 3 FPS lightweight Stage 1 weapon screening loop with zero-copy frame fetch."""
@@ -960,7 +962,6 @@ class ProductionHierarchicalPipeline:
 
         aspect_tag = " [4:3 Aspect Ratio]" if self.aspect_ratio in ("4:3", "4/3") else ""
         print(f"[CONFIG] Input Stream: {f_w}x{f_h}{aspect_tag} -> Inference Resolution: {self.rect_imgsz} (Native TensorRT Rectangular)")
-        self._fit_engines()
 
         # Fast camera discovery via DirectShow COM (pygrabber)
         available_cameras = [current_source] if isinstance(current_source, int) else []
@@ -1025,9 +1026,7 @@ class ProductionHierarchicalPipeline:
                         if crop_w <= new_w:
                             new_w = crop_w
                     if not self.imgsz_override and new_w > 0 and new_h > 0:
-                        with self.gpu_lock:
-                            self.rect_imgsz = calculate_rectangular_imgsz(new_h, new_w, base_dim=640)
-                            self._fit_engines()
+                        self.rect_imgsz = calculate_rectangular_imgsz(new_h, new_w, base_dim=640)
                     print(f"\n[CAMERA] Swapped to Camera {current_source} ({target_name}, {new_w}x{new_h}) successfully.")
                 else:
                     print(f"\n[CAMERA WARNING] Camera {target_idx} opened but produced no frames.")

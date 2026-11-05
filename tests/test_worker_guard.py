@@ -1,7 +1,6 @@
 """python tests/test_worker_guard.py"""
 import os
 import sys
-import tempfile
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import src.engine_builder as eb  # noqa: E402
@@ -35,21 +34,14 @@ try:
 except RuntimeError:
     pass
 
-# An engine of the right size is used as it is; a wrong one falls back to an existing <name>_<h>x<w>.engine
-accepted = {"a.engine", "a_480x640.engine"}
-eb.engine_accepts = lambda path, imgsz: os.path.basename(path) in accepted
-assert eb.engine_for_imgsz("a.engine", "a.pt", {}, (480, 640)) == "a.engine"
-with tempfile.TemporaryDirectory() as tmp:
-    base = os.path.join(tmp, "a.engine")
-    sized = os.path.join(tmp, "a_480x640.engine")
-    open(sized, "wb").close()
-    accepted = {"a_480x640.engine"}
-    assert eb.engine_for_imgsz(base, "a.pt", {}, (480, 640)) == sized
-    # ... and a sized engine that is still wrong is an error, not a silent run
-    accepted = set()
-    try:
-        eb.engine_for_imgsz(base, "a.pt", {}, (480, 640))
-        raise SystemExit("wrong-size engine was accepted")
-    except RuntimeError as e:
-        assert "does not take 480x640" in str(e)
+# The pipeline runs at the size both engines take; engines of different sizes stop it, not a silent run
+engine_sizes = {"weapon": (384, 640), "pose": (384, 640), "other": (480, 640), "dynamic": None}
+eb.engine_input_size = engine_sizes.get
+assert eb.shared_input_size("weapon", "pose") == (384, 640)
+assert eb.shared_input_size("dynamic") is None
+try:
+    eb.shared_input_size("weapon", "other")
+    raise SystemExit("engines of different sizes were accepted")
+except RuntimeError as e:
+    assert "different input sizes" in str(e)
 print("ok")

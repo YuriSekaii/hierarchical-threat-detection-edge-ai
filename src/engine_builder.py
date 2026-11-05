@@ -14,12 +14,9 @@ Enforces:
 import os
 import sys
 import json
-import shutil
-import tempfile
 import time
 from typing import Optional, Dict, Any, Tuple
 import torch
-from ultralytics import YOLO
 try:
     import tensorrt as trt
 except ImportError:
@@ -193,8 +190,8 @@ def ensure_engine(
     )
 
 
-def engine_accepts(engine_path: str, imgsz: Tuple[int, int]) -> bool:
-    """True if the compiled engine takes input of size imgsz (h, w). Reads the engine itself; its metadata can be wrong."""
+def engine_input_size(engine_path: str) -> Optional[Tuple[int, int]]:
+    """The (h, w) a compiled engine takes, or None if its size is dynamic. Reads the engine itself; its metadata can be wrong."""
     rt = ensure_tensorrt()
     with open(engine_path, "rb") as f, rt.Runtime(rt.Logger(rt.Logger.WARNING)) as runtime:
         try:
@@ -204,39 +201,15 @@ def engine_accepts(engine_path: str, imgsz: Tuple[int, int]) -> bool:
             f.seek(0)  # no metadata header
         engine = runtime.deserialize_cuda_engine(f.read())
     if engine is None:
-        return False
+        raise RuntimeError(f"[ENGINE BUILDER] Could not read {engine_path}. Delete it and run again to rebuild it.")
     h, w = engine.get_tensor_shape("images")[-2:]
-    return h in (-1, imgsz[0]) and w in (-1, imgsz[1])
+    return None if -1 in (h, w) else (h, w)
 
 
-def engine_for_imgsz(engine_path: str, pt_path: str, metadata: Dict[str, Any], imgsz: Tuple[int, int]) -> str:
-    """
-    Returns an engine that takes input of size imgsz (h, w): engine_path if it already does, otherwise
-    <name>_<h>x<w>.engine beside it, compiled from the .pt on first use. engine_path itself is left alone.
-    """
-    h, w = imgsz
-    if engine_accepts(engine_path, imgsz):
-        return engine_path
-
-    sized_path = f"{os.path.splitext(engine_path)[0]}_{h}x{w}.engine"
-    if not os.path.exists(sized_path):
-        print(f"[ENGINE BUILDER] {os.path.basename(engine_path)} does not take {h}x{w} input. "
-              f"Building {os.path.basename(sized_path)} from {os.path.basename(pt_path)} (one time, about 1-2 minutes)...")
-        try:
-            # Export writes beside its .pt, and the name beside the real .pt is the tracked 384x640 blueprint.
-            # Same drive as the weights, so an interrupted build never leaves a half-written engine.
-            with tempfile.TemporaryDirectory(dir=os.path.dirname(os.path.abspath(engine_path))) as tmp:
-                # Same settings as scripts/export_onnx_models.py, but simplify=False: simplifying makes
-                # Ultralytics pip-install onnxruntime-gpu during startup, and it barely changes the engine.
-                onnx_path = YOLO(shutil.copy(pt_path, tmp), task=metadata["task"]).export(
-                    format="onnx", imgsz=[h, w], half=True, dynamic=False, opset=17, simplify=False)
-                os.replace(build_engine_from_onnx(onnx_path, os.path.join(tmp, "sized.engine"),
-                                                  {**metadata, "imgsz": [h, w]}), sized_path)
-        except Exception as e:
-            raise RuntimeError(f"[ENGINE BUILDER] Could not build a {h}x{w} engine from {pt_path}: {e}\n"
-                               "The pipeline cannot run at this input size on TensorRT. "
-                               "Use --backend pytorch, or an --aspect setting that matches the engine.") from e
-
-    if not engine_accepts(sized_path, imgsz):
-        raise RuntimeError(f"[ENGINE BUILDER] {sized_path} does not take {h}x{w} input. Delete it and run again.")
-    return sized_path
+def shared_input_size(*engine_paths: str) -> Optional[Tuple[int, int]]:
+    """The input size all these engines take. The pipeline sends them the same frames, so a mismatch stops it."""
+    sizes = {path: engine_input_size(path) for path in engine_paths}
+    if len(set(sizes.values())) > 1:
+        raise RuntimeError(f"[ENGINE BUILDER] These engines take different input sizes: {sizes}\n"
+                           "Delete the one that is wrong and run again to rebuild it from its .onnx.")
+    return next(iter(sizes.values()))

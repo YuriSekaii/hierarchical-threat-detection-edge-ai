@@ -48,7 +48,7 @@ Production mode (no `--debug`) on the same video: 32 alarms, clean shutdown, no 
 
 ## 5. Follow-up: the real cause was the tracker, not the GPU
 
-A breakdown of one pose call on the Edge PC (RTX 3050, TensorRT FP16, 1920x1440 frame, imgsz 480x640):
+A breakdown of one pose call on the Edge PC (RTX 3050, TensorRT FP16, 1920x1440 frame, imgsz 384x640; this report first said 480x640, but that was only the requested size, which Ultralytics replaced with the engine's):
 
 | Call | Wall time | of which network inference |
 |---|---|---|

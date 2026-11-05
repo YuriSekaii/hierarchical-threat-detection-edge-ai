@@ -48,6 +48,7 @@ Saved skeletons, through the real engine code, TensorRT on the dev PC:
 - **The bound is thin.** It is the highest blended score of 191 held-out normal windows, which are mostly walking.
 - **Seeds:** `sim3` uses seed 1 for all three models, fixed before its own result was seen. Over seeds 1-3 this rule gives 15.3 +- 1.2 attacks and 0.14 +- 0.20 events/min.
 - **Labels** are by eye from event strips. The known thrust ranges are partly from memory.
+- **Input size:** the full-pipeline table used PyTorch, which runs a 4:3 frame at 480x640. TensorRT runs it at 384x640 with grey bars, so these numbers may differ on the Edge PC.
 
 ## 2. What was found
 
@@ -114,7 +115,7 @@ The `e2e` live clips (7) may be real attacks: the live models alarm on 5 of them
 | Failure | What happened | State |
 |---|---|---|
 | TensorRT inference fails | A freshly compiled engine run on `cuda:1` failed on every clip. TensorRT only logged the error, the engine read uninitialised memory as scores, and `sim3` reported 0 attacks. | **Fixed:** `TensorRTActionModel` now raises an error. A fresh compile on `cuda:0` gives the correct result. Recompiled engines on `cuda:1` work once they exist. |
-| Stage 1 engine has the wrong input size | On the dev PC the Stage 1 engine is fixed at 384x640 and the 4:3 launcher setting sends 480x640. Every frame failed, 1,092 exceptions, yet the process ended with exit code 0 and 0 detections. | **Fixed.** At startup the pipeline reads the input size from each YOLO engine. If it is wrong, it builds `<name>_480x640.engine` from the `.pt` (one time, about 2 minutes per engine) and uses that. A failed build stops the pipeline. A worker exception now stops the run with exit code 1 (debug mode: 5 in a row). How the Edge PC runs 480x640 is still unknown: the `.onnx` files in git are 384x640. Check the debug summary's "Worker exceptions" line there. |
+| Stage 1 engine has the wrong input size | On the dev PC the Stage 1 engine is fixed at 384x640 and the 4:3 launcher setting sends 480x640. Every frame failed, 1,092 exceptions, yet the process ended with exit code 0 and 0 detections. | **Fixed.** The Edge PC never ran 480x640. Its engines are 384x640 too, and its newer Ultralytics (8.4.178) silently replaces the requested size with the engine's, so its logs were wrong. The dev PC (Ultralytics 8.4.9) raises an error instead. Now, at startup, the pipeline reads the size from both YOLO engines and uses it on every PC, and engines of different sizes stop it. A 4:3 frame is scaled to 512x384 with grey bars on the sides. A worker exception stops the run with exit code 1 (debug mode: 5 in a row). |
 
 ### Blender
 
