@@ -156,6 +156,8 @@ Real normals used by `mix`: first half of take 001, sessions s1031 and s110035 m
 
 ## 5. Next steps
 
+Newer results and next steps: `reports/MODIFICATION_REPORT_STAGE2_SAMPLES.md`.
+
 1. Record a new labelled test with the live camera, with **varied normal activity** (gestures, bending, reaching, not only walking). This gives the unbiased number, and a better source for the alarm bound.
 2. Confirm what the known thrust clips really show.
 3. Decide what `sim3` should be tuned for. Validate Thrust and Stab stay at 0 %, while the corrected + mix blend keeps more of them at more false alarms.

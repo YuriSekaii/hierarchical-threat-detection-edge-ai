@@ -15,7 +15,7 @@ Keys (camera window):
     Q      quit
 
 Output: data/lab_recordings/<date>/<category>/<NNN>_<label>_<HHMMSS>.avi and data/lab_recordings/<date>/takes.csv
-Re-running on the same day resumes at the first unfinished take.
+Re-running on the same day resumes at the first unfinished take. The samples plan also counts takes from earlier days.
 
 Test without a camera:
     python scripts/record_takes.py --source video.mp4 --auto-test 3
@@ -24,6 +24,7 @@ Test without a camera:
 import argparse
 import csv
 import datetime as dt
+import glob
 import os
 import queue
 import shutil
@@ -205,27 +206,37 @@ class TakeWriter:
 
 
 class Session:
-    def __init__(self, out_root: str, plan=PLAN):
+    def __init__(self, out_root: str, plan=PLAN, across_days: bool = False):
         self.day_dir = os.path.join(out_root, dt.date.today().isoformat())
         os.makedirs(self.day_dir, exist_ok=True)
         self.csv_path = os.path.join(self.day_dir, "takes.csv")
         self.slots = [(cat, label, rep, instr, hand, height, speed, direction)
                       for cat, label, n, instr, hand, height, speed, direction in plan for rep in range(1, n + 1)]
-        self.rows = self._read_rows()
+        self.rows = self._read_rows(self.csv_path)
+        self.earlier = []  # kept takes from other days count as done, so a plan can span several days
+        if across_days:
+            for path in glob.glob(os.path.join(out_root, "*", "takes.csv")):
+                if os.path.abspath(path) != os.path.abspath(self.csv_path):
+                    self.earlier += self._kept(self._read_rows(path))
         self.pos = self._first_unfinished()
 
-    def _read_rows(self):
-        if not os.path.exists(self.csv_path):
+    @staticmethod
+    def _read_rows(path):
+        if not os.path.exists(path):
             return []
-        with open(self.csv_path, newline="", encoding="utf-8") as f:
+        with open(path, newline="", encoding="utf-8") as f:
             return list(csv.DictReader(f))
 
+    @staticmethod
+    def _kept(rows):
+        discarded = {r["file"] for r in rows if r["status"] == "discarded"}
+        return [r for r in rows if r["status"] == "ok" and r["file"] not in discarded]
+
     def kept(self):
-        discarded = {r["file"] for r in self.rows if r["status"] == "discarded"}
-        return [r for r in self.rows if r["status"] == "ok" and r["file"] not in discarded]
+        return self._kept(self.rows)
 
     def done(self, label: str, rep: int) -> bool:
-        return any(r["label"] == label and r["repeat"] == str(rep) for r in self.kept())
+        return any(r["label"] == label and r["repeat"] == str(rep) for r in self.kept() + self.earlier)
 
     def _first_unfinished(self) -> int:
         for i, s in enumerate(self.slots):
@@ -311,7 +322,7 @@ def main():
         src = Source(cap)
         cam_name = f"camera {cam_idx}"
 
-    sess = Session(args.out, PLANS[args.plan])
+    sess = Session(args.out, PLANS[args.plan], across_days=args.plan == "samples")
     print(f"[REC] Saving to {sess.day_dir}")
     print(f"[REC] {sum(1 for sl in sess.slots if sess.done(sl[1], sl[2]))}/{len(sess.slots)} planned takes already done")
 

@@ -285,7 +285,7 @@ def train(args):
     # batch mix: real + perturbed real 30 %, simulated attacks 45 %, normal activity 25 %
     pools = {k: tr[np.isin(c["source"][tr], v)] for k, v in
              {"real": ["real", "aug"], "sim": ["sim_attack"], "normal": ["sim_normal"],
-              "real_normal": ["real_normal"]}.items()}
+              "real_normal": ["real_normal"], "gen": ["gen_attack"], "gen_normal": ["gen_normal"]}.items()}
     mix = {k: int(v) for k, v in (kv.split(":") for kv in args.mix.split(","))}
     mix = {k: v for k, v in mix.items() if v > 0}
     rng = np.random.default_rng(args.seed)

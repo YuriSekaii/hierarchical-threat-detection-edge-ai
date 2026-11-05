@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
-from record_takes import TakeWriter, crop_4_3
+from record_takes import PLAN_SAMPLES, Session, TakeWriter, crop_4_3
 
 
 def test_crop_keeps_the_centre_of_wide_frames():
@@ -20,6 +20,21 @@ def test_crop_keeps_the_centre_of_wide_frames():
 def test_crop_leaves_4_3_and_narrower_frames_alone():
     for shape in ((1440, 1920, 3), (480, 480, 3)):
         assert crop_4_3(np.zeros(shape, np.uint8)).shape == shape
+
+
+def test_samples_plan_resumes_across_days(tmp_path):
+    first = Session(str(tmp_path), PLAN_SAMPLES).slots
+    old = tmp_path / "2000-01-01"
+    old.mkdir()
+    rows = ["file,status,label,repeat"]
+    rows += [f"a{i}.avi,ok,{s[1]},{s[2]}" for i, s in enumerate(first[:30])]
+    rows += ["a0.avi,discarded," + first[0][1] + "," + str(first[0][2])]  # a redo, so take 1 is not done
+    (old / "takes.csv").write_text("\n".join(rows) + "\n", encoding="utf-8")
+    assert Session(str(tmp_path), PLAN_SAMPLES).pos == 0  # same-day behaviour without the option
+    assert Session(str(tmp_path), PLAN_SAMPLES, across_days=True).pos == 0  # take 1 was discarded
+    rows.pop()
+    (old / "takes.csv").write_text("\n".join(rows) + "\n", encoding="utf-8")
+    assert Session(str(tmp_path), PLAN_SAMPLES, across_days=True).pos == 30
 
 
 def test_writer_saves_the_cropped_size(tmp_path):
