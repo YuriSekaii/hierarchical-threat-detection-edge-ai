@@ -934,8 +934,8 @@ class ProductionHierarchicalPipeline:
             cap = cv2.VideoCapture(current_source)
 
         if cap is None or not cap.isOpened():
-            print(f"[ERROR] Could not open video source: {current_source}")
-            return
+            sys.exit(f"[FATAL] Could not open video source: {current_source}. "
+                     "If this is a camera, check that it is plugged in and no other app is using it.")
 
         # Determine geometry from test frame or cap properties
         last_frame = None
