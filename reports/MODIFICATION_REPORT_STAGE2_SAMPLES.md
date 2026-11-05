@@ -4,7 +4,7 @@
 
 ## 1. What was recorded
 
-On 2026-11-05 the Edge PC recorded 30 of the 84 planned rows' worth of attack takes: 29 usable takes and one false start (file 026). About 1,500 s of video and 250 strikes. **`train_normal`, `test_attack` and `test_normal` are not recorded**, and neither is `walking_thrust_lefthand`.
+On 2026-11-05 the Edge PC recorded 29 of the 84 planned takes, plus one false start (file 026). All 29 are attack takes: about 1,500 s of video and 259 strikes found automatically. **`train_normal`, `test_attack` and `test_normal` are not recorded**, and neither is `walking_thrust_lefthand`.
 
 - Files 010-013 are labelled `overhand_stab` but show cut-downs, and files 014-017 the reverse. The user mixed them up. Hand travel confirms the swap (1.5-2.0 torso lengths against 0.6-1.3). The originals are not renamed; the script handles it.
 - The recorder dropped frames in long takes, because 2560x1440 encodes at only 30 fps on the Edge PC. It now saves the 1920x1440 crop (43 fps). A 3-minute camera test dropped 0 of 5,400 frames. Earlier takes with dropped frames use only their first 30 s.
@@ -67,8 +67,8 @@ TensorRT on the dev PC at the launcher's settings, with Stage 1, the gates, pose
 
 ## 4. What this shows
 
-- **The generator is not yet proven.** It raises take 002 ranking and steadies results across seeds (at the q98 bound, 25.7 +- 2.5 caught against 17.0 +- 11.9 for real windows alone). But it does not raise the number caught at a low false-alarm rate, and real windows rank the held-out strikes about as well (0.960 against 0.955).
-- **The network learned the new takes, and RMD loses part of that.** Held-out ranking goes from 0.86-0.90 with RMD to 0.94-0.96 with the output.
+- **The generator is not yet proven.** It raises take 002 ranking and steadies results across seeds (using the output at the q98 bound, 25.7 +- 2.5 caught against 17.0 +- 11.9 for real windows alone). But it does not raise the number caught at a low false-alarm rate, and real windows rank the held-out strikes about as well (0.960 against 0.955).
+- **The network learned the new takes, and RMD loses part of that.** Held-out ranking goes from 0.86-0.91 with RMD to 0.92-0.96 with the output.
 - **The output is not a free gain.** It catches far more only with far more false alarms. Its highest scores on normal activity are extreme, so at N=0-2 it catches almost nothing. This corrects the first reading of these results.
 - **False alarms come from specific activities**, not walking. The table gives the share of each activity's windows that score above the median attack window, on small counts (5-12 windows for the top rows):
 
@@ -95,7 +95,7 @@ These are the activities in the unrecorded `train_normal` takes. Training on the
 
 ## 6. An open crash
 
-The pipeline crashed once on the dev PC with `0xC0000409`, a native fail-fast crash, with no Python error and no summary saved. This was `sim3` on take 020, in 1 of 20 `sim3` runs and none of 8 live runs. The trace stops at the first cascade call after `HAND_CHECK`. Three reruns of that take did not crash, and crash tracing did not catch another. **The cause is unknown.** A live camera run could die the same way, and nothing restarts it.
+The pipeline crashed once on the dev PC with `0xC0000409`, a native fail-fast crash, with no Python error and no summary saved. This was `sim3` on take 020, in 1 of 12 `sim3` runs and none of 8 live runs. The trace stops at the first cascade call after `HAND_CHECK`. Three reruns of that take did not crash, and crash tracing did not catch another. **The cause is unknown.** A live camera run could die the same way, and nothing restarts it.
 
 ## 7. How far to trust the numbers
 
