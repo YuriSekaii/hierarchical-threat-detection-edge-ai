@@ -51,13 +51,14 @@ def load_takes():
             k = np.load(os.path.join(KP, name + ".npy"))
             here = np.where(k[..., 2].sum(-1) > 0)[0]
             a, b = here[0] + 60, here[-1] - 60  # walking to and from the desk
-            if int(r["dropped"]) > 0:  # the old recorder dropped frames after about 30 s
-                b = min(b, a + 900)
+            cut = int(r["dropped"]) > 0 and b > a + 900  # the old recorder dropped frames after about 30 s
+            if cut:
+                b = a + 900
             xy = T.interpolate_missing_joints(k[a:b, :, :2].astype(np.float32))
             hand = G.L_WR if r["hand"] == "left" else G.R_WR
             env = G.hand_speed(xy, hand)
             attack = next(v for lab, v in BY_LABEL.items() if r["label"].startswith(lab))
-            takes.append(dict(num=num, name=name, offset=a, cls=SWAPPED.get(num, attack), kind=r["label"].rsplit("_", 1)[0],
+            takes.append(dict(num=num, name=name, offset=a, cut=cut, cls=SWAPPED.get(num, attack), kind=r["label"].rsplit("_", 1)[0],
                               dir=r["direction"], xy=xy, missing=k[a:b, :, 2].sum(-1) == 0, env=env,
                               events=G.strike_events(env), pause=G.pause_frames(env), hand=hand))
     return takes

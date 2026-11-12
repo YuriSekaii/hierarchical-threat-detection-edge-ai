@@ -2,6 +2,8 @@
 
 **Status: unfinished, and nothing new is deployed.** No model trained on the new samples beats `sim3` at a low false-alarm rate, so `sim3` stays the opt-in set and the live models stay the default. The likely missing piece is real normal activity, which is not recorded yet.
 
+**Correction:** the strike labels in this report came from a speed-only finder that was later found to be wrong on some takes. See `reports/MODIFICATION_REPORT_STAGE2_EDITOR.md` for the corrected finder and newer results.
+
 ## 1. What was recorded
 
 On 2026-11-05 the Edge PC recorded 29 of the 84 planned takes, plus one false start (file 026). All 29 are attack takes: about 1,500 s of video and 259 strikes found automatically. **`train_normal`, `test_attack` and `test_normal` are not recorded**, and neither is `walking_thrust_lefthand`.
