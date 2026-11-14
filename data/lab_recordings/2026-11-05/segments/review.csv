@@ -37,3 +37,16 @@ take,event,action,value,note
 030_cut_down_lefthand_172533,4,reject,,walking
 030_cut_down_lefthand_172533,7,reject,,walking out
 030_cut_down_lefthand_172533,*,note,cut-downs end crouched low,
+006_thrust_low_front_164412,8,reject,,walking
+014_cut_down_front_170928,15,reject,,walking out
+016_cut_down_back_171111,8,reject,,walking out
+017_cut_down_right_171159,11,reject,,walking out
+019_slash_left_171349,8,reject,,walking out
+022_walking_thrust_front_171704,9,reject,,walking out
+022_walking_thrust_front_171704,10,reject,,person out of view
+024_walking_thrust_back_171913,11,reject,,walking out
+025_walking_thrust_right_172028,10,reject,,person out of view
+025_walking_thrust_right_172028,13,reject,,walking out
+027_thrust_chest_lefthand_172215,8,reject,,walking out
+028_thrust_low_lefthand_172335,8,reject,,walking out
+029_overhand_stab_lefthand_172441,8,reject,,walking out

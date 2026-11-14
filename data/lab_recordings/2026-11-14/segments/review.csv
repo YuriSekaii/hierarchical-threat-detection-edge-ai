@@ -9,3 +9,14 @@ take,event,action,value,note
 035_test_walking_thrust_140104,3,reject,,walking
 035_test_walking_thrust_140104,5,reject,,hand to head not a thrust
 036_test_normal_mixed_140220,*,note,mostly sitting in a swivel chair from about 25 s to 143 s,
+001_walking_thrust_lefthand_105208,4,reject,,walking
+001_walking_thrust_lefthand_105208,5,reject,,walking
+001_walking_thrust_lefthand_105208,6,reject,,walking
+001_walking_thrust_lefthand_105208,8,reject,,walking in
+001_walking_thrust_lefthand_105208,16,reject,,walking out
+001_walking_thrust_lefthand_105208,17,reject,,walking out
+034_test_slash_135927,*,note,slashes are small wrist flicks while walking; hard to tell from walking on video,
+037_overhand_bending_front_140817,10,reject,,hand to head
+038_thrust_low_knife_front_140947,3,reject,,small arm move not a thrust
+048_phone_strike_144106,2,reject,,walking in
+048_phone_strike_144106,6,reject,,walking

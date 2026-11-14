@@ -11,8 +11,8 @@ The takes recorded on Oct 31, Nov 5 and Nov 14 did not follow the recording guid
 | Day | Used by Stage 2 work | Cut version before today | Result |
 |---|---|---|---|
 | Oct 31 | `segments/` (59 hand-made clips) | yes | Checked with 8-frame samples per clip. Labels are right, except clip 043: it is a kick labelled `attack`. About 11 attack clips overlap their neighbours in time. Left unchanged (hand-made). |
-| Nov 5 | raw takes, trimmed only in code (60 frames off each end; first 30 s when frames dropped) | no | Cut now, see below |
-| Nov 14 | not used yet | no | Cut now, see below |
+| Nov 5 | 504 | 255 | 0 | 249 |
+| Nov 14 | 511 | 90 | 44 | 377 |
 
 ## 3. What was run
 
@@ -31,17 +31,17 @@ Output layout is the same as Oct 31: `<day>/segments/NNN_<category>_<label>.avi`
 
 | Day | Clips | attack | confuser | normal |
 |---|---|---|---|---|
-| Nov 5 | 526 | 268 | 0 | 258 |
-| Nov 14 | 530 | 98 | 46 | 386 |
+| Nov 5 | 504 | 255 | 0 | 249 |
+| Nov 14 | 511 | 90 | 44 | 377 |
 
 Corrections written in the review files:
 
-- **Nov 5:** 010–013 relabelled `cut_down_*` and 014–017 relabelled `overhand_stab_*` (the known label swap). 001 (calibration) and 026 (false start) dropped. 006–009 and 028 noted: thrust_low done with a phone in hand, not the knife. 16 strikes rejected as walking in or out, standing still or out of view. Clips that end after 30 s in takes with dropped frames carry a note that their timing is unreliable.
-- **Nov 14:** 004 dropped (camera recorded no frames). Test takes 025–035 hold several strikes each, not one; each strike is its own clip. 5 strikes rejected as walking or hand-to-head. 027 has no person from about 20 s to 103 s. 036 (`test_normal_mixed`) is mostly sitting in a swivel chair from about 25 s to 143 s.
+- **Nov 5:** 010–013 relabelled `cut_down_*` and 014–017 relabelled `overhand_stab_*` (the known label swap). 001 (calibration) and 026 (false start) dropped. 006–009 and 028 noted: thrust_low done with a phone in hand, not the knife. 29 strikes rejected as walking in or out, standing still or out of view. Clips that end after 30 s in takes with dropped frames carry a note that their timing is unreliable.
+- **Nov 14:** 004 dropped (camera recorded no frames). Test takes 025–035 hold several strikes each, not one; each strike is its own clip. 20 strikes rejected as walking, walking in or out, hand-to-head or small arm moves. 034 (slash) is noted: the slashes are small wrist flicks while walking and are hard to tell from walking on video. 027 has no person from about 20 s to 103 s. 036 (`test_normal_mixed`) is mostly sitting in a swivel chair from about 25 s to 143 s.
 
 ## 5. What was not checked
 
-- Strike strips of 034 (slash), 001, 037–041 and the confuser `*_strike` takes on Nov 14 were not checked strike by strike, and the second strip sheet of several Nov 5 takes was not either. A few `attack`/`confuser` clips may be walking.
+- Every detected strike was checked on strip images (6 frames each), not on the full video. Slow thrust_low strikes are often missed by the speed detector, so those takes have few attack clips.
 - Nov 14 normal takes 037–057 were checked only through the strip images, not 1 fps contact sheets.
 - The clip npz files have no `knife` key (Oct 31 has knife boxes); knife detection was not run.
 - `scripts/train_stage2_sim.py` still reads only Oct 31 (`LAB` is hardcoded). Using Nov 5 and Nov 14 clips in training needs a change there.
