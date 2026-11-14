@@ -67,3 +67,82 @@ More labels from the same recordings and more simulated data do not close the ga
 - The choice of `stretch_arms` and `knife_swing_low` as the violent labels was made by Claude; `arms_out` stayed normal.
 - Take 002 is used both to train (other folds) and to test, so these numbers are optimistic for a new recording.
 - Nothing was run through Stage 1, the gates or pose estimation.
+
+## 7. Retrained on the cut clips of all three days, scored on the Nov 14 test takes (2026-11-14 to 2026-11-15)
+
+**Status: measurements only. No shipped weight was changed.** Skeleton-only, dev PC, not the full pipeline.
+
+### Question
+
+The earlier runs used raw Nov 5 takes with swapped stab and cut-down labels and had no recorded normal activity. With the clips of `MODIFICATION_REPORT_LAB_SEGMENTS.md` (Oct 31, Nov 5, Nov 14), does the same three-model recipe give good results on takes it never saw?
+
+### What was run
+
+Script: `results/samples/poc/poc_segments.py` (same models, losses, 700 steps and batch 48 as `poc_relabel3.py`). `scripts/train_stage2_sim.py` got `lab_segments()`, which reads the `segments.csv` of every day.
+
+```bash
+DEV=cuda:1 .venv/Scripts/python.exe results/samples/poc/poc_segments.py . --train nov5|clips|all [--seeds 1,2,3] [--save]
+```
+
+| Role | Takes |
+|---|---|
+| Training, `nov5` | Nov 5 clips (labels fixed, clips with unreliable timing dropped) + Oct 31 take 001 |
+| Training, `clips` | the above + Nov 14 training takes (first repeat of each normal take, attack takes 001, 037–041) |
+| Training, `all` | the above + `data/Validate` clips + 3,000 + 3,000 simulated windows and the original clips of `exp_FH_all` |
+| Calibration, sets the alarm bound, never trained on | Nov 5 takes 003, 008, 010, 017, 020, 023, 028, 031; second repeat of each Nov 14 normal take |
+| Test, never trained on | Nov 14 `test_*` takes 025–036 (60 strikes, 6.1 min normal); Oct 31 take 002 without clip 043 (30 attacks, 2.3 min normal); Nov 14 object takes 048–057 (25 strikes with a phone, pen, wallet or remote) |
+
+- Whole takes are replayed like the live pipeline (50-frame windows, stride 10). A strike is caught if a window that overlaps its clip by 15 frames or more alarms. False alarms are counted as events (alarmed normal windows less than 5 s apart count once).
+- Windows within 1 s of a strike clip are neither trained as normal nor scored: they hold the wind-up or the recovery.
+- Shipped models on the same windows: the live cascade with its own thresholds, and the three `sim3` models with their shipped bound.
+- "Bound q99" is the 99 % quantile of the calibration normal windows; "strict bound" is above every calibration normal window. Retrained rows are means of seeds 1–3.
+
+### Results on the Nov 14 test takes (60 strikes)
+
+"Outside pauses" counts only take 036 (`test_normal_mixed`, 4.3 min), because the pauses inside attack takes were cut automatically.
+
+| Models | Window AUC (all / outside pauses) | Caught, false-alarm events (outside pauses) | Best caught at ≤ 2 events, threshold tuned on the test itself |
+|---|---|---|---|
+| Live cascade, shipped thresholds | 0.50 / 0.50 | 4, 8 (6) | 0 |
+| `sim3`, shipped bound | 0.765 / 0.819 | 31, 20 (6) | 0 |
+| `sim3`, bound q99 | same | 19, 8 (3) | same |
+| `nov5`, output blend, bound q99 | 0.611 / 0.579 | 1.3, 4.0 (3.3) | 0 |
+| `clips`, output blend, bound q99 | 0.761 / 0.796 | 37.3, 14.3 (3.3) | 4.7 |
+| `clips`, RMD blend, bound q99 | 0.764 / 0.811 | 24.0, 11.7 (3.0) | 3.3 |
+| **`all`, output blend, bound q99** | **0.813 / 0.839** | **40.0, 14.7 (5.3)** | 8.0 |
+| `all`, output blend, strict bound | same | 23.0, 8.3 (3.3) | same |
+| `all`, RMD blend, bound q99 | 0.808 / 0.832 | 33.3, 13.3 (5.3) | 9.3 |
+
+### Results on Oct 31 take 002 (30 attacks) and the object takes (25 strikes)
+
+| Models | Take 002 AUC | Take 002 caught, events | Object takes AUC (all / outside pauses) | Object strikes alarmed, events |
+|---|---|---|---|---|
+| Live cascade, shipped thresholds | 0.50 | 1, 2 | 0.49 / 0.49 | 2, 5 |
+| `sim3`, shipped bound | 0.880 | 15, 0 | 0.756 / 0.826 | 11, 12 |
+| `nov5`, output blend, bound q99 | 0.874 | 0.3, 1.7 | 0.886 / 0.936 | 1.7, 0 |
+| `clips`, output blend, bound q99 | 0.876 | 18.7, 5.0 | 0.926 / 0.976 | 22.7, 8.3 |
+| `all`, output blend, bound q99 | 0.905 | 23.3, 3.7 | 0.898 / 0.970 | 23.0, 8.7 |
+| `all`, RMD blend, bound q99 | 0.896 | 20.3, 3.0 | 0.874 / 0.950 | 20.0, 11.0 |
+
+### Findings
+
+- **The complete dataset helps, but the result is not good.** Best retrained set: 40 of 60 test strikes caught with about 15 false-alarm events in 6 minutes, against 31 with 20 for `sim3`. Ranking rises from 0.765 to 0.813. No setting catches most strikes at a low false-alarm rate: with at most 2 events, 8 of 60.
+- **The Nov 14 normal takes are what helps.** Without them (`nov5`) the model ranks the Nov 14 test near chance (0.61); with them 0.76; with the other datasets and simulation 0.81.
+- **On take 002 `sim3` is still the only model that catches attacks with no false alarm** (15 of 30). The retrained models catch more (23) with 3–4 events, and 4 at zero events.
+- **Stage 2 alarms on strikes with a phone, pen, wallet or remote as on knife strikes** (23 of 25), as expected from a skeleton. Rejecting those is Stage 1's job.
+- **What the highest-scoring "normal" windows of the test show** (frames checked by eye for six of them): take 036 at 261–270 s is overhead arm stretching and wide arm swings, which the project owner decided on 2026-11-13 should be flagged; take 036 at 165 s is bending to pick the knife up from the floor; take 032 at 14 s is an overhand strike seen from behind that has no attack clip. So part of the counted false alarms are label gaps, and bend-and-pick-up stays a real one.
+- Weakest strike types at the strict bound: walking thrust (0.7 of 8 caught) and overhand stab (1.7 of 4).
+
+### Not checked
+
+- Take 036 has one label for 5 minutes of mixed activity (mostly sitting in a swivel chair, which no training take shows). Stretches inside it are counted as normal here. It was not relabelled.
+- Pauses inside attack takes may hold strikes the cutter missed or rejected; only six windows were looked at.
+- One person, one room. Test takes were recorded on the same day as part of the training takes.
+- The calibration takes are held out of training, so the models saw only one repeat of each Nov 14 normal activity. Training on both repeats was not tried.
+- Nothing ran through Stage 1, the gates, pose estimation or TensorRT. The cascade's five thresholds were not fitted; one blended score and one bound were used.
+- The Nov 5 `thrust_low` clips done with a phone in hand are trained as attacks (the motion is a strike).
+
+### Files
+
+- `results/samples/poc/poc_segments.py`; `scripts/train_stage2_sim.py` (`lab_segments`, `LAB_DAYS`).
+- Raw results and logs: `results/stage2_segments/{nov5,clips,all}.json` and `.log`; per-window scores of seed 1: `scores_all_*.npz`. Seed-1 models of `all`: `results/train_sim/exp_segments_all/` (dev PC only).

@@ -534,6 +534,27 @@ def lab_windows():
     return out, takes
 
 
+# take skeletons per recording day: Oct 31 has analysis npz files, later days the output of extract_take_skeletons.py
+LAB_DAYS = {"2026-10-31": None, "2026-11-05": os.path.join("results", "samples", "kp"),
+            "2026-11-14": os.path.join("results", "samples", "kp_1114")}
+
+
+def lab_segments():
+    """segments.csv rows of every recording day, each with day, f0, f1 (frames in its take) added, plus the take
+    skeletons {(day, take): (N,17,2)}. Callers decide what is training and what is test."""
+    import csv
+    rows, takes = [], {}
+    for day, kp in LAB_DAYS.items():
+        root = os.path.join(REPO_DIR, "data", "lab_recordings", day)
+        with open(os.path.join(root, "segments", "segments.csv"), encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                if (day, r["take"]) not in takes:
+                    takes[day, r["take"]] = (np.load(os.path.join(REPO_DIR, kp, r["take"] + ".npy")) if kp else np.load(
+                        os.path.join(root, "analysis", r["take"] + "_analysis.npz"))["kpts"])[..., :2]
+                rows.append(dict(r, day=day, f0=int(round(float(r["start_s"]) * 30)), f1=int(round(float(r["end_s"]) * 30))))
+    return rows, takes
+
+
 def take_replay(takes):
     """Slides over each whole lab take like the live pipeline (stride 10) and labels each window by
     its overlap with the hand-labelled attack segments."""

@@ -1,0 +1,1842 @@
+{
+ "live cascade, shipped thresholds": {
+  "test14": [
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.4975547457981728,
+    "pure_min": 4.33,
+    "auc_pure": 0.49646366149896315,
+    "shipped": {
+     "caught": 4,
+     "fa_events": 8,
+     "fa_per_min": 1.31,
+     "fa_pure": 6,
+     "caught_by_label": {
+      "test_thrust_chest": 2,
+      "test_cut_down": 1,
+      "test_slash": 1
+     },
+     "fa_labels": {
+      "between_strikes": 3,
+      "test_normal_mixed": 13
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 0
+   }
+  ],
+  "test31": [
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.5002960837982945,
+    "pure_min": 2.29,
+    "auc_pure": 0.5002960837982945,
+    "shipped": {
+     "caught": 1,
+     "fa_events": 2,
+     "fa_per_min": 0.87,
+     "fa_pure": 2,
+     "caught_by_label": {
+      "thrust_low_walking": 1
+     },
+     "fa_labels": {
+      "walk_turn": 1,
+      "stretch_arms": 1
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 1
+   }
+  ],
+  "confuser": [
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.4893979260176443,
+    "pure_min": 2.04,
+    "auc_pure": 0.48647276636407066,
+    "shipped": {
+     "caught": 2,
+     "fa_events": 5,
+     "fa_per_min": 1.81,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "pen_strike": 1,
+      "remote_strike": 1
+     },
+     "fa_labels": {
+      "phone_use": 6,
+      "between_strikes": 2,
+      "phone2_use": 5,
+      "walk": 1,
+      "remote_use": 2
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 0
+   }
+  ]
+ },
+ "live models, mean score": {
+  "test14": [
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.6541578038914848,
+    "pure_min": 4.33,
+    "auc_pure": 0.6968870346598204,
+    "normal_bound": {
+     "caught": 0,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {},
+     "fa_labels": {}
+    },
+    "normal_q99": {
+     "caught": 1,
+     "fa_events": 4,
+     "fa_per_min": 0.65,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "test_thrust_chest": 1
+     },
+     "fa_labels": {
+      "test_normal_mixed": 10
+     }
+    },
+    "attack_bound": {
+     "caught": 56,
+     "fa_events": 40,
+     "fa_per_min": 6.53,
+     "fa_pure": 10,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 12,
+      "test_walking_thrust": 8
+     },
+     "fa_labels": {
+      "between_strikes": 181,
+      "walk": 3,
+      "test_normal_mixed": 285
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 0
+   }
+  ],
+  "test31": [
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.6378960943257186,
+    "pure_min": 2.29,
+    "auc_pure": 0.6378960943257186,
+    "normal_bound": {
+     "caught": 0,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {},
+     "fa_labels": {}
+    },
+    "normal_q99": {
+     "caught": 0,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {},
+     "fa_labels": {}
+    },
+    "attack_bound": {
+     "caught": 25,
+     "fa_events": 8,
+     "fa_per_min": 3.49,
+     "fa_pure": 8,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "overhand_cut_down": 1,
+      "thrust_low_stepping": 1,
+      "overhand_big_windup": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 1,
+      "overhand_stab_slow_windup": 1,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "walk_knife_low": 35,
+      "walk_turn": 51,
+      "hand_to_head_bend": 3,
+      "hand_to_chest": 3,
+      "point_with_knife": 2,
+      "knife_swing_low": 1,
+      "stretch_arms": 17,
+      "walk_idle_turn": 29
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 1
+   }
+  ],
+  "confuser": [
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.4975899352156897,
+    "pure_min": 2.04,
+    "auc_pure": 0.5353111562350693,
+    "normal_bound": {
+     "caught": 0,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {},
+     "fa_labels": {}
+    },
+    "normal_q99": {
+     "caught": 0,
+     "fa_events": 2,
+     "fa_per_min": 0.72,
+     "fa_pure": 1,
+     "caught_by_label": {},
+     "fa_labels": {
+      "between_strikes": 3,
+      "phone2_use": 1
+     }
+    },
+    "attack_bound": {
+     "caught": 15,
+     "fa_events": 22,
+     "fa_per_min": 7.97,
+     "fa_pure": 10,
+     "caught_by_label": {
+      "phone_strike": 3,
+      "phone2_strike": 4,
+      "wallet_strike": 2,
+      "pen_strike": 4,
+      "remote_strike": 2
+     },
+     "fa_labels": {
+      "between_strikes": 78,
+      "walk": 4,
+      "phone_use": 47,
+      "phone2_use": 27,
+      "wallet_use": 7,
+      "pen_use": 31,
+      "remote_use": 14
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 0
+   }
+  ]
+ },
+ "sim3": {
+  "test14": [
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.7652141885766093,
+    "pure_min": 4.33,
+    "auc_pure": 0.8185111582897205,
+    "shipped": {
+     "caught": 31,
+     "fa_events": 20,
+     "fa_per_min": 3.26,
+     "fa_pure": 6,
+     "caught_by_label": {
+      "test_thrust_chest": 11,
+      "test_thrust_low": 6,
+      "test_overhand_stab": 4,
+      "test_cut_down": 6,
+      "test_slash": 3,
+      "test_walking_thrust": 1
+     },
+     "fa_labels": {
+      "between_strikes": 57,
+      "walk": 2,
+      "test_normal_mixed": 51
+     }
+    },
+    "normal_bound": {
+     "caught": 0,
+     "fa_events": 2,
+     "fa_per_min": 0.33,
+     "fa_pure": 2,
+     "caught_by_label": {},
+     "fa_labels": {
+      "test_normal_mixed": 8
+     }
+    },
+    "normal_q99": {
+     "caught": 19,
+     "fa_events": 8,
+     "fa_per_min": 1.31,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "test_thrust_chest": 5,
+      "test_thrust_low": 6,
+      "test_overhand_stab": 4,
+      "test_cut_down": 3,
+      "test_slash": 1
+     },
+     "fa_labels": {
+      "between_strikes": 14,
+      "test_normal_mixed": 20
+     }
+    },
+    "attack_bound": {
+     "caught": 58,
+     "fa_events": 37,
+     "fa_per_min": 6.04,
+     "fa_pure": 10,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 14,
+      "test_walking_thrust": 8
+     },
+     "fa_labels": {
+      "between_strikes": 173,
+      "walk": 4,
+      "test_normal_mixed": 184
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 0
+   }
+  ],
+  "test31": [
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.8799873670912728,
+    "pure_min": 2.29,
+    "auc_pure": 0.8799873670912728,
+    "shipped": {
+     "caught": 15,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "overhand_cut_down": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "overhand_strike_turning": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1
+     },
+     "fa_labels": {}
+    },
+    "normal_bound": {
+     "caught": 0,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {},
+     "fa_labels": {}
+    },
+    "normal_q99": {
+     "caught": 2,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "lunge_thrust_chest": 1,
+      "overhand_windup": 1
+     },
+     "fa_labels": {}
+    },
+    "attack_bound": {
+     "caught": 29,
+     "fa_events": 9,
+     "fa_per_min": 3.92,
+     "fa_pure": 9,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "slash_horizontal": 1,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "overhand_big_windup": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "walk_knife_low": 9,
+      "hand_to_face": 5,
+      "inspect_knife": 1,
+      "walk_turn": 10,
+      "hand_to_head_bend": 7,
+      "hand_to_chest": 5,
+      "point_with_knife": 2,
+      "pick_up_from_floor": 4,
+      "arms_out": 2,
+      "knife_swing_low": 1,
+      "stretch_arms": 2,
+      "walk_idle_turn": 2
+     }
+    },
+    "oracle_fa0": 15,
+    "oracle_fa2": 19
+   }
+  ],
+  "confuser": [
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.7563291838945762,
+    "pure_min": 2.04,
+    "auc_pure": 0.8259376493072146,
+    "shipped": {
+     "caught": 11,
+     "fa_events": 12,
+     "fa_per_min": 4.35,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "phone_strike": 1,
+      "phone2_strike": 3,
+      "wallet_strike": 1,
+      "pen_strike": 4,
+      "remote_strike": 2
+     },
+     "fa_labels": {
+      "walk": 1,
+      "phone_use": 4,
+      "phone2_use": 11,
+      "between_strikes": 14,
+      "wallet_use": 3
+     }
+    },
+    "normal_bound": {
+     "caught": 0,
+     "fa_events": 2,
+     "fa_per_min": 0.72,
+     "fa_pure": 1,
+     "caught_by_label": {},
+     "fa_labels": {
+      "phone2_use": 4,
+      "between_strikes": 1
+     }
+    },
+    "normal_q99": {
+     "caught": 2,
+     "fa_events": 3,
+     "fa_per_min": 1.09,
+     "fa_pure": 1,
+     "caught_by_label": {
+      "phone2_strike": 1,
+      "wallet_strike": 1
+     },
+     "fa_labels": {
+      "phone2_use": 5,
+      "between_strikes": 4
+     }
+    },
+    "attack_bound": {
+     "caught": 22,
+     "fa_events": 22,
+     "fa_per_min": 7.97,
+     "fa_pure": 11,
+     "caught_by_label": {
+      "phone_strike": 4,
+      "phone2_strike": 5,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 3
+     },
+     "fa_labels": {
+      "between_strikes": 75,
+      "walk": 7,
+      "phone_use": 22,
+      "phone2_use": 17,
+      "wallet_use": 13,
+      "pen_use": 4,
+      "remote_use": 9
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 1
+   }
+  ]
+ },
+ "all: output blend": {
+  "test14": [
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.8171594950833391,
+    "pure_min": 4.33,
+    "auc_pure": 0.8491501678680754,
+    "normal_bound": {
+     "caught": 27,
+     "fa_events": 10,
+     "fa_per_min": 1.63,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "test_thrust_chest": 6,
+      "test_thrust_low": 5,
+      "test_overhand_stab": 2,
+      "test_cut_down": 6,
+      "test_slash": 7,
+      "test_walking_thrust": 1
+     },
+     "fa_labels": {
+      "between_strikes": 27,
+      "test_normal_mixed": 12
+     }
+    },
+    "normal_q99": {
+     "caught": 45,
+     "fa_events": 17,
+     "fa_per_min": 2.77,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "test_thrust_chest": 16,
+      "test_thrust_low": 5,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 8,
+      "test_walking_thrust": 5
+     },
+     "fa_labels": {
+      "between_strikes": 65,
+      "test_normal_mixed": 53
+     }
+    },
+    "attack_bound": {
+     "caught": 60,
+     "fa_events": 28,
+     "fa_per_min": 4.57,
+     "fa_pure": 5,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 16,
+      "test_walking_thrust": 8
+     },
+     "fa_labels": {
+      "between_strikes": 115,
+      "test_normal_mixed": 160
+     }
+    },
+    "oracle_fa0": 3,
+    "oracle_fa2": 7
+   },
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.8119137492154264,
+    "pure_min": 4.33,
+    "auc_pure": 0.8336594006122248,
+    "normal_bound": {
+     "caught": 27,
+     "fa_events": 9,
+     "fa_per_min": 1.47,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "test_thrust_chest": 5,
+      "test_thrust_low": 5,
+      "test_overhand_stab": 2,
+      "test_cut_down": 7,
+      "test_slash": 7,
+      "test_walking_thrust": 1
+     },
+     "fa_labels": {
+      "between_strikes": 17,
+      "test_normal_mixed": 16
+     }
+    },
+    "normal_q99": {
+     "caught": 39,
+     "fa_events": 15,
+     "fa_per_min": 2.45,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "test_thrust_chest": 9,
+      "test_thrust_low": 5,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 10,
+      "test_walking_thrust": 4
+     },
+     "fa_labels": {
+      "between_strikes": 39,
+      "test_normal_mixed": 38
+     }
+    },
+    "attack_bound": {
+     "caught": 58,
+     "fa_events": 31,
+     "fa_per_min": 5.06,
+     "fa_pure": 9,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 15,
+      "test_walking_thrust": 7
+     },
+     "fa_labels": {
+      "between_strikes": 117,
+      "walk": 3,
+      "test_normal_mixed": 209
+     }
+    },
+    "oracle_fa0": 6,
+    "oracle_fa2": 9
+   },
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.809631947834577,
+    "pure_min": 4.33,
+    "auc_pure": 0.8340944998518811,
+    "normal_bound": {
+     "caught": 15,
+     "fa_events": 6,
+     "fa_per_min": 0.98,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "test_thrust_chest": 4,
+      "test_thrust_low": 3,
+      "test_overhand_stab": 1,
+      "test_cut_down": 5,
+      "test_slash": 2
+     },
+     "fa_labels": {
+      "between_strikes": 7,
+      "test_normal_mixed": 13
+     }
+    },
+    "normal_q99": {
+     "caught": 36,
+     "fa_events": 12,
+     "fa_per_min": 1.96,
+     "fa_pure": 5,
+     "caught_by_label": {
+      "test_thrust_chest": 10,
+      "test_thrust_low": 5,
+      "test_overhand_stab": 3,
+      "test_cut_down": 7,
+      "test_slash": 8,
+      "test_walking_thrust": 3
+     },
+     "fa_labels": {
+      "between_strikes": 38,
+      "test_normal_mixed": 40
+     }
+    },
+    "attack_bound": {
+     "caught": 59,
+     "fa_events": 30,
+     "fa_per_min": 4.9,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 16,
+      "test_walking_thrust": 7
+     },
+     "fa_labels": {
+      "between_strikes": 129,
+      "test_normal_mixed": 209
+     }
+    },
+    "oracle_fa0": 4,
+    "oracle_fa2": 8
+   }
+  ],
+  "test31": [
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.9118854616275397,
+    "pure_min": 2.29,
+    "auc_pure": 0.9118854616275397,
+    "normal_bound": {
+     "caught": 20,
+     "fa_events": 3,
+     "fa_per_min": 1.31,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "overhand_cut_down": 2,
+      "cut_down_and_slash_combo": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "overhand_strike_turning": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "inspect_knife": 2,
+      "hand_to_head_bend": 6,
+      "pick_up_from_floor": 2
+     }
+    },
+    "normal_q99": {
+     "caught": 25,
+     "fa_events": 4,
+     "fa_per_min": 1.74,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "hand_to_face": 2,
+      "inspect_knife": 3,
+      "hand_to_head_bend": 9,
+      "pick_up_from_floor": 4
+     }
+    },
+    "attack_bound": {
+     "caught": 28,
+     "fa_events": 7,
+     "fa_per_min": 3.05,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "slash_horizontal": 1,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "walk_knife_low": 3,
+      "hand_to_face": 4,
+      "inspect_knife": 5,
+      "walk_turn": 4,
+      "hand_to_head_bend": 11,
+      "knife_point_down": 2,
+      "pick_up_from_floor": 5,
+      "arms_out": 2
+     }
+    },
+    "oracle_fa0": 6,
+    "oracle_fa2": 16
+   },
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.9086088009264133,
+    "pure_min": 2.29,
+    "auc_pure": 0.9086088009264133,
+    "normal_bound": {
+     "caught": 15,
+     "fa_events": 3,
+     "fa_per_min": 1.31,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "overhand_cut_down": 2,
+      "cut_down_and_slash_combo": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2
+     },
+     "fa_labels": {
+      "inspect_knife": 2,
+      "hand_to_head_bend": 6,
+      "pick_up_from_floor": 4
+     }
+    },
+    "normal_q99": {
+     "caught": 24,
+     "fa_events": 3,
+     "fa_per_min": 1.31,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "inspect_knife": 3,
+      "hand_to_head_bend": 7,
+      "pick_up_from_floor": 4
+     }
+    },
+    "attack_bound": {
+     "caught": 30,
+     "fa_events": 8,
+     "fa_per_min": 3.49,
+     "fa_pure": 8,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "slash_horizontal": 1,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "overhand_big_windup": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "overhand_stab_slow_windup": 1,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "walk_knife_low": 7,
+      "hand_to_face": 4,
+      "inspect_knife": 5,
+      "walk_turn": 2,
+      "hand_to_head_bend": 11,
+      "knife_point_down": 2,
+      "pick_up_from_floor": 6,
+      "arms_out": 2,
+      "stretch_arms": 5
+     }
+    },
+    "oracle_fa0": 4,
+    "oracle_fa2": 12
+   },
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.893844088851458,
+    "pure_min": 2.29,
+    "auc_pure": 0.893844088851458,
+    "normal_bound": {
+     "caught": 14,
+     "fa_events": 4,
+     "fa_per_min": 1.74,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "overhand_cut_down": 2,
+      "cut_down_and_slash_combo": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2
+     },
+     "fa_labels": {
+      "inspect_knife": 1,
+      "hand_to_head_bend": 4,
+      "pick_up_from_floor": 3
+     }
+    },
+    "normal_q99": {
+     "caught": 21,
+     "fa_events": 4,
+     "fa_per_min": 1.74,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "overhand_cut_down": 2,
+      "cut_down_and_slash_combo": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "overhand_strike_turning": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "hand_to_face": 2,
+      "inspect_knife": 3,
+      "hand_to_head_bend": 7,
+      "pick_up_from_floor": 4
+     }
+    },
+    "attack_bound": {
+     "caught": 29,
+     "fa_events": 9,
+     "fa_per_min": 3.92,
+     "fa_pure": 9,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "slash_horizontal": 1,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "overhand_big_windup": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "hand_to_face": 5,
+      "inspect_knife": 5,
+      "walk_turn": 4,
+      "hand_to_head_bend": 11,
+      "walk_knife_low": 5,
+      "knife_point_down": 2,
+      "pick_up_from_floor": 5,
+      "arms_out": 2,
+      "stretch_arms": 3
+     }
+    },
+    "oracle_fa0": 3,
+    "oracle_fa2": 13
+   }
+  ],
+  "confuser": [
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.8976717447542397,
+    "pure_min": 2.04,
+    "auc_pure": 0.97354276158624,
+    "normal_bound": {
+     "caught": 13,
+     "fa_events": 6,
+     "fa_per_min": 2.17,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "phone_strike": 1,
+      "phone2_strike": 1,
+      "wallet_strike": 2,
+      "pen_strike": 6,
+      "remote_strike": 3
+     },
+     "fa_labels": {
+      "between_strikes": 21
+     }
+    },
+    "normal_q99": {
+     "caught": 24,
+     "fa_events": 10,
+     "fa_per_min": 3.62,
+     "fa_pure": 1,
+     "caught_by_label": {
+      "phone_strike": 5,
+      "phone2_strike": 5,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 46,
+      "pen_use": 3
+     }
+    },
+    "attack_bound": {
+     "caught": 25,
+     "fa_events": 17,
+     "fa_per_min": 6.16,
+     "fa_pure": 6,
+     "caught_by_label": {
+      "phone_strike": 5,
+      "phone2_strike": 6,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 81,
+      "phone_use": 2,
+      "phone2_use": 2,
+      "pen_use": 17,
+      "walk": 2,
+      "remote_use": 3
+     }
+    },
+    "oracle_fa0": 5,
+    "oracle_fa2": 5
+   },
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.9004908572313,
+    "pure_min": 2.04,
+    "auc_pure": 0.9692725752508361,
+    "normal_bound": {
+     "caught": 16,
+     "fa_events": 7,
+     "fa_per_min": 2.54,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "phone_strike": 2,
+      "phone2_strike": 2,
+      "wallet_strike": 3,
+      "pen_strike": 6,
+      "remote_strike": 3
+     },
+     "fa_labels": {
+      "between_strikes": 21
+     }
+    },
+    "normal_q99": {
+     "caught": 23,
+     "fa_events": 8,
+     "fa_per_min": 2.9,
+     "fa_pure": 1,
+     "caught_by_label": {
+      "phone_strike": 4,
+      "phone2_strike": 5,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 33,
+      "pen_use": 3
+     }
+    },
+    "attack_bound": {
+     "caught": 25,
+     "fa_events": 16,
+     "fa_per_min": 5.79,
+     "fa_pure": 6,
+     "caught_by_label": {
+      "phone_strike": 5,
+      "phone2_strike": 6,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 82,
+      "phone2_use": 3,
+      "wallet_use": 2,
+      "pen_use": 14,
+      "walk": 3,
+      "remote_use": 10
+     }
+    },
+    "oracle_fa0": 3,
+    "oracle_fa2": 5
+   },
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.8956817830057267,
+    "pure_min": 2.04,
+    "auc_pure": 0.9669284519827998,
+    "normal_bound": {
+     "caught": 14,
+     "fa_events": 5,
+     "fa_per_min": 1.81,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "phone_strike": 2,
+      "phone2_strike": 1,
+      "wallet_strike": 2,
+      "pen_strike": 6,
+      "remote_strike": 3
+     },
+     "fa_labels": {
+      "between_strikes": 11
+     }
+    },
+    "normal_q99": {
+     "caught": 22,
+     "fa_events": 8,
+     "fa_per_min": 2.9,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "phone_strike": 3,
+      "phone2_strike": 5,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 45
+     }
+    },
+    "attack_bound": {
+     "caught": 25,
+     "fa_events": 17,
+     "fa_per_min": 6.16,
+     "fa_pure": 6,
+     "caught_by_label": {
+      "phone_strike": 5,
+      "phone2_strike": 6,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 84,
+      "phone_use": 1,
+      "phone2_use": 4,
+      "wallet_use": 2,
+      "pen_use": 22,
+      "walk": 4,
+      "remote_use": 9
+     }
+    },
+    "oracle_fa0": 7,
+    "oracle_fa2": 8
+   }
+  ]
+ },
+ "all: RMD blend": {
+  "test14": [
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.813524304344794,
+    "pure_min": 4.33,
+    "auc_pure": 0.8432500987459267,
+    "normal_bound": {
+     "caught": 2,
+     "fa_events": 2,
+     "fa_per_min": 0.33,
+     "fa_pure": 2,
+     "caught_by_label": {
+      "test_cut_down": 2
+     },
+     "fa_labels": {
+      "test_normal_mixed": 9
+     }
+    },
+    "normal_q99": {
+     "caught": 42,
+     "fa_events": 19,
+     "fa_per_min": 3.1,
+     "fa_pure": 5,
+     "caught_by_label": {
+      "test_thrust_chest": 14,
+      "test_thrust_low": 6,
+      "test_overhand_stab": 3,
+      "test_cut_down": 7,
+      "test_slash": 8,
+      "test_walking_thrust": 4
+     },
+     "fa_labels": {
+      "between_strikes": 47,
+      "test_normal_mixed": 47
+     }
+    },
+    "attack_bound": {
+     "caught": 60,
+     "fa_events": 33,
+     "fa_per_min": 5.39,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 16,
+      "test_walking_thrust": 8
+     },
+     "fa_labels": {
+      "between_strikes": 146,
+      "walk": 2,
+      "test_normal_mixed": 201
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 7
+   },
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.8023920775507357,
+    "pure_min": 4.33,
+    "auc_pure": 0.820720598400316,
+    "normal_bound": {
+     "caught": 6,
+     "fa_events": 2,
+     "fa_per_min": 0.33,
+     "fa_pure": 2,
+     "caught_by_label": {
+      "test_thrust_chest": 1,
+      "test_cut_down": 5
+     },
+     "fa_labels": {
+      "test_normal_mixed": 11
+     }
+    },
+    "normal_q99": {
+     "caught": 34,
+     "fa_events": 13,
+     "fa_per_min": 2.12,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "test_thrust_chest": 9,
+      "test_thrust_low": 5,
+      "test_overhand_stab": 2,
+      "test_cut_down": 6,
+      "test_slash": 8,
+      "test_walking_thrust": 4
+     },
+     "fa_labels": {
+      "between_strikes": 24,
+      "test_normal_mixed": 45
+     }
+    },
+    "attack_bound": {
+     "caught": 59,
+     "fa_events": 35,
+     "fa_per_min": 5.71,
+     "fa_pure": 12,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 15,
+      "test_walking_thrust": 8
+     },
+     "fa_labels": {
+      "between_strikes": 121,
+      "test_normal_mixed": 218
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 14
+   },
+   {
+    "strikes": 60,
+    "normal_min": 6.13,
+    "auc_window": 0.8090391589371644,
+    "pure_min": 4.33,
+    "auc_pure": 0.8312370395971166,
+    "normal_bound": {
+     "caught": 1,
+     "fa_events": 1,
+     "fa_per_min": 0.16,
+     "fa_pure": 1,
+     "caught_by_label": {
+      "test_cut_down": 1
+     },
+     "fa_labels": {
+      "test_normal_mixed": 3
+     }
+    },
+    "normal_q99": {
+     "caught": 24,
+     "fa_events": 8,
+     "fa_per_min": 1.31,
+     "fa_pure": 4,
+     "caught_by_label": {
+      "test_thrust_chest": 7,
+      "test_thrust_low": 3,
+      "test_overhand_stab": 2,
+      "test_cut_down": 6,
+      "test_slash": 6
+     },
+     "fa_labels": {
+      "between_strikes": 12,
+      "test_normal_mixed": 34
+     }
+    },
+    "attack_bound": {
+     "caught": 60,
+     "fa_events": 34,
+     "fa_per_min": 5.55,
+     "fa_pure": 9,
+     "caught_by_label": {
+      "test_thrust_chest": 18,
+      "test_thrust_low": 7,
+      "test_overhand_stab": 4,
+      "test_cut_down": 7,
+      "test_slash": 16,
+      "test_walking_thrust": 8
+     },
+     "fa_labels": {
+      "between_strikes": 140,
+      "walk": 1,
+      "test_normal_mixed": 226
+     }
+    },
+    "oracle_fa0": 0,
+    "oracle_fa2": 7
+   }
+  ],
+  "test31": [
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.900147383935151,
+    "pure_min": 2.29,
+    "auc_pure": 0.900147383935151,
+    "normal_bound": {
+     "caught": 6,
+     "fa_events": 2,
+     "fa_per_min": 0.87,
+     "fa_pure": 2,
+     "caught_by_label": {
+      "lunge_thrust_chest": 3,
+      "overhand_cut_down": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1
+     },
+     "fa_labels": {
+      "hand_to_head_bend": 1,
+      "pick_up_from_floor": 2
+     }
+    },
+    "normal_q99": {
+     "caught": 23,
+     "fa_events": 3,
+     "fa_per_min": 1.31,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "overhand_strike_turning": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "inspect_knife": 3,
+      "hand_to_head_bend": 8,
+      "pick_up_from_floor": 4
+     }
+    },
+    "attack_bound": {
+     "caught": 29,
+     "fa_events": 7,
+     "fa_per_min": 3.05,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "slash_horizontal": 1,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "overhand_big_windup": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "walk_knife_low": 9,
+      "hand_to_face": 5,
+      "inspect_knife": 5,
+      "walk_turn": 3,
+      "hand_to_head_bend": 10,
+      "knife_point_down": 3,
+      "pick_up_from_floor": 6,
+      "arms_out": 2,
+      "knife_swing_low": 1
+     }
+    },
+    "oracle_fa0": 6,
+    "oracle_fa2": 20
+   },
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.8976339614696284,
+    "pure_min": 2.29,
+    "auc_pure": 0.8976339614696284,
+    "normal_bound": {
+     "caught": 11,
+     "fa_events": 2,
+     "fa_per_min": 0.87,
+     "fa_pure": 2,
+     "caught_by_label": {
+      "overhand_cut_down": 2,
+      "cut_down_and_slash_combo": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 2,
+      "lunge_thrust_and_overhand": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2
+     },
+     "fa_labels": {
+      "hand_to_head_bend": 7,
+      "pick_up_from_floor": 4
+     }
+    },
+    "normal_q99": {
+     "caught": 22,
+     "fa_events": 3,
+     "fa_per_min": 1.31,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "inspect_knife": 3,
+      "hand_to_head_bend": 8,
+      "pick_up_from_floor": 4
+     }
+    },
+    "attack_bound": {
+     "caught": 29,
+     "fa_events": 8,
+     "fa_per_min": 3.49,
+     "fa_pure": 8,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "slash_horizontal": 1,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "overhand_big_windup": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "walk_knife_low": 9,
+      "hand_to_face": 4,
+      "inspect_knife": 5,
+      "walk_turn": 2,
+      "hand_to_head_bend": 10,
+      "knife_point_down": 3,
+      "pick_up_from_floor": 5,
+      "arms_out": 2,
+      "knife_swing_low": 1
+     }
+    },
+    "oracle_fa0": 2,
+    "oracle_fa2": 14
+   },
+   {
+    "strikes": 30,
+    "normal_min": 2.29,
+    "auc_window": 0.8891988630382145,
+    "pure_min": 2.29,
+    "auc_pure": 0.8891988630382145,
+    "normal_bound": {
+     "caught": 3,
+     "fa_events": 2,
+     "fa_per_min": 0.87,
+     "fa_pure": 2,
+     "caught_by_label": {
+      "lunge_thrust_mid": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1
+     },
+     "fa_labels": {
+      "hand_to_head_bend": 1,
+      "pick_up_from_floor": 1
+     }
+    },
+    "normal_q99": {
+     "caught": 16,
+     "fa_events": 3,
+     "fa_per_min": 1.31,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "overhand_cut_down": 2,
+      "cut_down_and_slash_combo": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 4,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "overhand_strike_turning": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "inspect_knife": 3,
+      "hand_to_head_bend": 7,
+      "pick_up_from_floor": 4
+     }
+    },
+    "attack_bound": {
+     "caught": 28,
+     "fa_events": 9,
+     "fa_per_min": 3.92,
+     "fa_pure": 9,
+     "caught_by_label": {
+      "overhand_strike_turning": 2,
+      "overhand_cut_down": 3,
+      "cut_down_and_slash_combo": 1,
+      "diagonal_cut_down_then_slash": 1,
+      "lunge_thrust_mid": 1,
+      "lunge_thrust_chest": 5,
+      "lunge_thrust_chest_low": 1,
+      "lunge_thrust_low": 1,
+      "lunge_thrust_and_overhand": 1,
+      "thrust_low_stepping": 1,
+      "overhand_big_windup": 1,
+      "deep_lunge_thrust_horizontal": 1,
+      "thrust_low_walking": 1,
+      "thrust_chest_short": 1,
+      "backhand_slash": 1,
+      "overhand_strike_from_back": 1,
+      "overhand_windup": 1,
+      "overhand_then_crouch_strike": 1,
+      "overhand_stab_bending": 2,
+      "crouch_thrust_low": 1
+     },
+     "fa_labels": {
+      "walk_knife_low": 7,
+      "hand_to_face": 5,
+      "inspect_knife": 5,
+      "walk_turn": 6,
+      "hand_to_head_bend": 10,
+      "knife_point_down": 4,
+      "pick_up_from_floor": 5,
+      "arms_out": 2,
+      "stretch_arms": 1
+     }
+    },
+    "oracle_fa0": 3,
+    "oracle_fa2": 14
+   }
+  ],
+  "confuser": [
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.865500696486612,
+    "pure_min": 2.04,
+    "auc_pure": 0.9492504777830865,
+    "normal_bound": {
+     "caught": 4,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "pen_strike": 4
+     },
+     "fa_labels": {}
+    },
+    "normal_q99": {
+     "caught": 21,
+     "fa_events": 13,
+     "fa_per_min": 4.71,
+     "fa_pure": 3,
+     "caught_by_label": {
+      "phone_strike": 4,
+      "phone2_strike": 3,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 46,
+      "phone2_use": 4,
+      "wallet_use": 1,
+      "pen_use": 1
+     }
+    },
+    "attack_bound": {
+     "caught": 25,
+     "fa_events": 20,
+     "fa_per_min": 7.24,
+     "fa_pure": 8,
+     "caught_by_label": {
+      "phone_strike": 5,
+      "phone2_strike": 6,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 94,
+      "phone_use": 7,
+      "phone2_use": 8,
+      "wallet_use": 3,
+      "pen_use": 22,
+      "walk": 3,
+      "remote_use": 6
+     }
+    },
+    "oracle_fa0": 4,
+    "oracle_fa2": 5
+   },
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.8862515753863842,
+    "pure_min": 2.04,
+    "auc_pure": 0.9545210224558051,
+    "normal_bound": {
+     "caught": 9,
+     "fa_events": 7,
+     "fa_per_min": 2.54,
+     "fa_pure": 1,
+     "caught_by_label": {
+      "wallet_strike": 2,
+      "pen_strike": 6,
+      "remote_strike": 1
+     },
+     "fa_labels": {
+      "between_strikes": 11,
+      "phone2_use": 4
+     }
+    },
+    "normal_q99": {
+     "caught": 21,
+     "fa_events": 10,
+     "fa_per_min": 3.62,
+     "fa_pure": 2,
+     "caught_by_label": {
+      "phone_strike": 4,
+      "phone2_strike": 4,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 3
+     },
+     "fa_labels": {
+      "between_strikes": 30,
+      "phone2_use": 4,
+      "pen_use": 3
+     }
+    },
+    "attack_bound": {
+     "caught": 25,
+     "fa_events": 19,
+     "fa_per_min": 6.88,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "phone_strike": 5,
+      "phone2_strike": 6,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 91,
+      "phone_use": 4,
+      "phone2_use": 5,
+      "wallet_use": 3,
+      "pen_use": 22,
+      "walk": 3,
+      "remote_use": 9
+     }
+    },
+    "oracle_fa0": 3,
+    "oracle_fa2": 6
+   },
+   {
+    "strikes": 25,
+    "normal_min": 2.76,
+    "auc_window": 0.8709620359519755,
+    "pure_min": 2.04,
+    "auc_pure": 0.946025441949355,
+    "normal_bound": {
+     "caught": 4,
+     "fa_events": 0,
+     "fa_per_min": 0.0,
+     "fa_pure": 0,
+     "caught_by_label": {
+      "wallet_strike": 1,
+      "pen_strike": 3
+     },
+     "fa_labels": {}
+    },
+    "normal_q99": {
+     "caught": 18,
+     "fa_events": 10,
+     "fa_per_min": 3.62,
+     "fa_pure": 1,
+     "caught_by_label": {
+      "phone_strike": 3,
+      "phone2_strike": 3,
+      "wallet_strike": 3,
+      "pen_strike": 6,
+      "remote_strike": 3
+     },
+     "fa_labels": {
+      "between_strikes": 33,
+      "phone2_use": 3
+     }
+    },
+    "attack_bound": {
+     "caught": 25,
+     "fa_events": 19,
+     "fa_per_min": 6.88,
+     "fa_pure": 7,
+     "caught_by_label": {
+      "phone_strike": 5,
+      "phone2_strike": 6,
+      "wallet_strike": 3,
+      "pen_strike": 7,
+      "remote_strike": 4
+     },
+     "fa_labels": {
+      "between_strikes": 93,
+      "phone_use": 2,
+      "phone2_use": 8,
+      "wallet_use": 3,
+      "pen_use": 25,
+      "walk": 4,
+      "remote_use": 16
+     }
+    },
+    "oracle_fa0": 4,
+    "oracle_fa2": 7
+   }
+  ]
+ }
+}
