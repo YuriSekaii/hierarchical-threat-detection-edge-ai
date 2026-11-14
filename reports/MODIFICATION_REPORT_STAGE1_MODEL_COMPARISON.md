@@ -167,7 +167,37 @@ The original set and script are in `D:\Intern AI Project\Clean\Weapon_Detection_
 
 - The script's `KnowledgeDistillationTrainer` loads the YOLO26x teacher and freezes it, but nothing uses it in the loss. The older copies in `Messy (Don't Touch)` are the same. The shipped "distilled" student is a plain YOLO26s trained for up to 250 epochs (patience 30, batch 32, 640 px, rotation 15°, mixup 0.1).
 - So the student did not beat its teacher through distillation; the smaller model simply did better on 752 images.
-- The retrains in section 2 used 20–80 epochs and default augmentation, not this recipe. `results/samples/poc/train_stage1_distill_phone.py <REPO> ft_phonecls|ft` repeats the original student recipe on the phone-class and the phone-negative sets. Results are added below when the runs finish.
+- The retrains in section 2 used 20–80 epochs and default augmentation, not this recipe. `results/samples/poc/train_stage1_distill_phone.py <REPO> ft_phonecls|ft` repeats the original student recipe on the phone-class and the phone-negative sets. Results are below.
+
+
+### Result: the original recipe with phone data still loses recall
+
+Both runs stopped early (patience 30): phone as its own class after 91 epochs (best at 61, 1.9 h), phone as background after 144 epochs (best at 114, 3.0 h). Benchmarked with `bench_stage1.py`, at 384x640 and with `IMGSZ=416,640`.
+
+| System | Conf | Size | Precision | Recall | F1 | OOD FP | Phone 008 | Phone 006/007/009 | Knife frames, mean |
+|---|---|---|---|---|---|---|---|---|---|
+| Shipped detector | 0.45 | 384x640 | 78.8 % | 74.2 % | 76.4 % | 19 | 19 % | 35 % | 61 % |
+| Shipped detector | 0.25 | 416x640 | 73.4 % | 90.8 % | 81.2 % | 44 | 24.3 % | 41.2 % | |
+| Shipped 0.25 + crop classifier 0.3 | | 416x640 | 78.8 % | 88.3 % | 83.3 % | 25 | 2.0 % | 2.0 % | |
+| `stage1_distill_ft_phonecls.pt` (phone as class) | 0.15 | 384x640 | 73.0 % | 67.5 % | 70.1 % | 21 | 3.1 % | 1.9 % | 52.3 % |
+| | 0.25 | 384x640 | 79.3 % | 59.2 % | 67.8 % | 11 | 2.6 % | 1.2 % | 48.6 % |
+| | 0.45 | 384x640 | 90.8 % | 49.2 % | 63.8 % | 5 | 1.5 % | 0.8 % | 43.5 % |
+| | 0.15 | 416x640 | 72.6 % | 65.0 % | 68.6 % | 22 | 1.5 % | 1.9 % | 47.7 % |
+| | 0.25 | 416x640 | 79.8 % | 55.8 % | 65.7 % | 10 | 0.4 % | 1.1 % | 44.7 % |
+| | 0.45 | 416x640 | 88.8 % | 46.3 % | 60.8 % | 4 | 0.2 % | 0.4 % | 38.5 % |
+| `stage1_distill_ft.pt` (phone as background) | 0.15 | 384x640 | 71.6 % | 57.9 % | 64.1 % | 36 | 5.9 % | 2.7 % | 62.7 % |
+| | 0.25 | 384x640 | 79.3 % | 55.8 % | 65.5 % | 21 | 4.2 % | 1.8 % | 58.4 % |
+| | 0.45 | 384x640 | 89.1 % | 47.5 % | 62.0 % | 7 | 2.0 % | 0.9 % | 52.1 % |
+| | 0.15 | 416x640 | 67.6 % | 59.2 % | 63.1 % | 47 | 6.6 % | 2.6 % | 64.4 % |
+| | 0.25 | 416x640 | 74.0 % | 53.3 % | 62.0 % | 31 | 5.9 % | 1.8 % | 59.6 % |
+| | 0.45 | 416x640 | 86.3 % | 44.6 % | 58.8 % | 7 | 2.6 % | 0.9 % | 53.3 % |
+| `stage1_distill_ft.pt` 0.15 + crop classifier 0.3 | | 416x640 | 75.5 % | 57.9 % | 65.6 % | 24 | 3.1 % | 2.0 % | 61.9 % |
+
+- Negative result. Even at confidence 0.15 the best retrain reaches 67.5 % recall, against 74.2 % (0.45) and 83.8 % (0.25) for the shipped detector at the same size. The short recipe was not the reason the earlier retrains lost recall.
+- The phone false detections do drop, to 0–7 % of frames, as in every other retrain.
+- These detectors do not gain from 416x640; the 0.25 shrink effect of section 4b is specific to the shipped weights.
+- Not checked: whether this recipe on the original 752 images alone reproduces the shipped recall. Without that control it is not known whether the added lab frames or run-to-run difference causes the loss. The control (`train_stage1_distill_phone.py <REPO> orig`) is the next run.
+- Raw tables: `results/stage1_phoneneg/bench_distill_384.md`, and the rows in `bench.jsonl`.
 
 ## 5. Not checked
 

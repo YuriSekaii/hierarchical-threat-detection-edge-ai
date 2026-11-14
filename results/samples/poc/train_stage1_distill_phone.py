@@ -7,7 +7,7 @@ changed; the trainer class, hyper-parameters, epochs, imgsz and loss setup are k
 
 Usage: python train_stage1_distill_phone.py <REPO> <dataset>
   <dataset> is `ft_phonecls` (3 classes, phone as class 2) or `ft` (2 classes, phone frames
-  as background); the data yaml is <REPO>/data/stage1_negatives/<dataset>/data.yaml.
+  as background) or `orig` (control: the original 752 training images only); the data yaml is <REPO>/data/stage1_negatives/<dataset>/data.yaml.
   The distilled student is copied to <REPO>/weights/stage1_distill_<dataset>.pt.
 """
 import os
@@ -62,8 +62,8 @@ if __name__ == '__main__':
 
     REPO = os.path.abspath(sys.argv[1])
     DATASET = sys.argv[2]
-    if DATASET not in ("ft_phonecls", "ft"):
-        print(f"unknown dataset: {DATASET} (expected ft_phonecls or ft)")
+    if DATASET not in ("ft_phonecls", "ft", "orig"):
+        print(f"unknown dataset: {DATASET} (expected ft_phonecls, ft or orig)")
         sys.exit(1)
 
     # ---------------------------------------------------------
