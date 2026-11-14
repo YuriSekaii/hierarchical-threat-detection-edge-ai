@@ -196,8 +196,27 @@ Both runs stopped early (patience 30): phone as its own class after 91 epochs (b
 - Negative result. Even at confidence 0.15 the best retrain reaches 67.5 % recall, against 74.2 % (0.45) and 83.8 % (0.25) for the shipped detector at the same size. The short recipe was not the reason the earlier retrains lost recall.
 - The phone false detections do drop, to 0–7 % of frames, as in every other retrain.
 - These detectors do not gain from 416x640; the 0.25 shrink effect of section 4b is specific to the shipped weights.
-- Not checked: whether this recipe on the original 752 images alone reproduces the shipped recall. Without that control it is not known whether the added lab frames or run-to-run difference causes the loss. The control (`train_stage1_distill_phone.py <REPO> orig`) is the next run.
 - Raw tables: `results/stage1_phoneneg/bench_distill_384.md`, and the rows in `bench.jsonl`.
+
+### Control: the same recipe on the original 752 images alone
+
+`train_stage1_distill_phone.py <REPO> orig` (data yaml `data/stage1_negatives/orig/data.yaml`, pointing at `D:\Backup\Weapon_Detection_Split`). Stopped after 177 epochs (best at 147, 1.6 h). Weights: `weights/stage1_distill_orig.pt`.
+
+| System | Conf | Size | Precision | Recall | F1 | OOD FP | Phone 008 | Phone 006/007/009 | Knife frames, mean |
+|---|---|---|---|---|---|---|---|---|---|
+| Shipped detector | 0.45 | 384x640 | 78.8 % | 74.2 % | 76.4 % | 19 | 19 % | 35 % | 61 % |
+| `stage1_distill_orig.pt` | 0.15 | 384x640 | 76.2 % | 65.4 % | 70.4 % | 16 | 14.0 % | 23.1 % | 59.1 % |
+| | 0.25 | 384x640 | 80.3 % | 59.6 % | 68.4 % | 13 | 11.2 % | 17.9 % | 53.8 % |
+| | 0.45 | 384x640 | 90.8 % | 49.2 % | 63.8 % | 5 | 7.2 % | 12.5 % | 45.8 % |
+| | 0.15 | 416x640 | 74.2 % | 60.0 % | 66.4 % | 17 | 15.8 % | 22.2 % | 57.7 % |
+| | 0.25 | 416x640 | 82.1 % | 57.5 % | 67.7 % | 10 | 12.1 % | 17.3 % | 53.2 % |
+| | 0.45 | 416x640 | 87.8 % | 47.9 % | 61.99 % | 4 | 9.2 % | 10.8 % | 45.8 % |
+| `stage1_distill_orig.pt` 0.25 + crop classifier 0.3 | | 384x640 | 83.4 % | 58.8 % | 69.0 % | 8 | 0.9 % | 2.3 % | 47.4 % |
+
+- The control does not reproduce the shipped detector: 49.2 % recall at 0.45 against 74.2 %. The recipe and the 752 images found on disk do not give the shipped weights.
+- Adding the phone as a class costs no recall against this like-for-like control (49.2 % at 0.45 and 59.2 % against 59.6 % at 0.25 for both), and removes the phone detections (7–23 % of frames down to 1–3 %). So the phone data works as intended; the recall gap is between any retrain here and the shipped weights.
+- One visible difference: the shipped weights have two classes (`hand_grip_knife`, `knife`); the original set on disk has one (`knife`). The shipped detector was therefore trained on a different labelling, and possibly more images, than the set found. That set was not located.
+- Not checked: a second seed of the control, and where the two-class training set is.
 
 ## 5. Not checked
 
