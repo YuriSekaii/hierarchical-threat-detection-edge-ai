@@ -8,6 +8,7 @@ Operating point: Conf = 0.45, 3.27 ms latency on RTX 3090, 86.88% F1.
 Strict GPU enforcement (No CPU fallback).
 """
 
+import math
 import os
 import sys
 import time
@@ -31,12 +32,12 @@ def calculate_rectangular_imgsz(frame_h: int, frame_w: int, base_dim: int = 640)
     if frame_w >= frame_h:
         new_w = base_dim
         raw_h = (frame_h / frame_w) * base_dim
-        new_h = int(round(raw_h / 32.0)) * 32
+        new_h = math.ceil(raw_h / 32.0) * 32  # up, never down: 16:10 -> 416, not 384 (keeps the 640-wide scale)
         return (new_h, new_w)
     else:
         new_h = base_dim
         raw_w = (frame_w / frame_h) * base_dim
-        new_w = int(round(raw_w / 32.0)) * 32
+        new_w = math.ceil(raw_w / 32.0) * 32
         return (new_h, new_w)
 
 

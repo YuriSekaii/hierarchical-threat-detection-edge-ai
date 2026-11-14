@@ -4,6 +4,7 @@
 
 - When you test a new approach or run a benchmark, write the result back as a report in `reports/` before you finish, even when the result is negative.
 - One report file covers one finding, approach or method. A completely new idea or a new kind of work gets a new file named `MODIFICATION_REPORT_<TOPIC>.md`; more results on the same approach go into its existing file.
+- Do not split a finding out of a report it is already written in. Fewer files is better; a new file is only for a topic no existing report covers.
 - Small things need no report: typos, small bug fixes, renames, formatting.
 - A report states the question, what was run (script and command), the numbers in a table, what was not checked, and where the files are.
 
