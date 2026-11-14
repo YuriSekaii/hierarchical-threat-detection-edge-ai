@@ -161,6 +161,14 @@ Main rows re-run at 416x640 (`IMGSZ=416,640` before the benchmark command):
 
 The order is the same as at 384x640: the crop classifier behind the shipped detector keeps the recall and removes the phone, and every retrained detector is below the shipped one. At this size the shipped detector at 0.45 has the highest F1 (86.1 %); the classifier setting trades 10 points of precision for 4.5 points of recall and the phone rejection.
 
+## 4c. The original training recipe, and what "distilled" meant (2026-11-14)
+
+The original set and script are in `D:\Intern AI Project\Clean\Weapon_Detection_SingleGPU` (`training/train_yolo_distill.py`, `Weapon_Detection_Split`): 941 images (752 train, 189 validation), one class, all 2560x1600. It is the same set as the backup used above.
+
+- The script's `KnowledgeDistillationTrainer` loads the YOLO26x teacher and freezes it, but nothing uses it in the loss. The older copies in `Messy (Don't Touch)` are the same. The shipped "distilled" student is a plain YOLO26s trained for up to 250 epochs (patience 30, batch 32, 640 px, rotation 15°, mixup 0.1).
+- So the student did not beat its teacher through distillation; the smaller model simply did better on 752 images.
+- The retrains in section 2 used 20–80 epochs and default augmentation, not this recipe. `results/samples/poc/train_stage1_distill_phone.py <REPO> ft_phonecls|ft` repeats the original student recipe on the phone-class and the phone-negative sets. Results are added below when the runs finish.
+
 ## 5. Not checked
 
 - The classifier's lab knife crops are the shipped detector's own boxes, not hand labels.
@@ -168,7 +176,7 @@ The order is the same as at 384x640: the crop classifier behind the shipped dete
 - The classifier was not exported to TensorRT or timed on the Edge PC (RTX 3050), and the system was not run with the hand gate, static filter and Stage 2.
 - Only one confuser object (one phone, one session) was tested. Other handheld objects are untested.
 - Two harness limits: the confirm system counts a `phone` box of a three-class confirmer as a confirmation, and the crop system does not apply the phone-class filter. Rows affected by this (confirm with `stage1_big.pt`, crop behind a phone-class detector) are left out of the table.
-- Not tried: the Sohas phone and wallet dataset, cross-fitted teacher distillation, a focal-type loss, retraining the detector on wrist crops. The first needs a download, the others a rebuilt teacher.
+- Not tried: the Sohas phone and wallet dataset (needs a download), real teacher distillation (the original never had one, see 4c), a focal-type loss, retraining the detector on wrist crops.
 
 ## 6. Files
 
