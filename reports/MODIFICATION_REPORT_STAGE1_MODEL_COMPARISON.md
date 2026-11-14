@@ -215,8 +215,89 @@ Both runs stopped early (patience 30): phone as its own class after 91 epochs (b
 
 - The control does not reproduce the shipped detector: 49.2 % recall at 0.45 against 74.2 %. The recipe and the 752 images found on disk do not give the shipped weights.
 - Adding the phone as a class costs no recall against this like-for-like control (49.2 % at 0.45 and 59.2 % against 59.6 % at 0.25 for both), and removes the phone detections (7–23 % of frames down to 1–3 %). So the phone data works as intended; the recall gap is between any retrain here and the shipped weights.
-- One visible difference: the shipped weights have two classes (`hand_grip_knife`, `knife`); the original set on disk has one (`knife`). The shipped detector was therefore trained on a different labelling, and possibly more images, than the set found. That set was not located.
-- Not checked: a second seed of the control, and where the two-class training set is.
+- Correction (2026-11-15): an earlier version of this section said the shipped weights have two classes. They have one (`{0: 'knife'}`); the checkpoint is dated 2026-01-22, Ultralytics 8.4.6, student recipe, data `D:\Weapon_Detection_SingleGPU\Weapon_Detection_Split`, a folder that no longer exists. So the class list does not explain the gap; the image set at that path may have differed from the copy on disk.
+- Not checked: a second seed of the control.
+
+## 4d. A real teacher and real distillation, with Nov 14 lab frames (2026-11-15)
+
+**Status: test only. No shipped weight was changed. Result: better on the lab camera, worse on the ground-truth set; not a replacement yet.**
+
+### Question
+
+The intended recipe was: fine-tune YOLO26x as teacher, distil it into YOLO26s. The original script never used the teacher (4c). Does the recipe, done for real and with lab frames of Nov 14 added, beat the shipped detector on data no detector here was trained on? Also: is YOLO27 usable?
+
+- **YOLO27:** no. The Ultralytics page (https://docs.ultralytics.com/models/yolo27, read 2026-11-15) says the model is not released: no weights, no date. It points to YOLO26.
+
+### What was run
+
+Script `results/samples/poc/train_stage1_kd.py` (new), each with `DEV=<gpu> .venv/Scripts/python.exe results/samples/poc/train_stage1_kd.py . <mode>`:
+
+| Mode | What | Result |
+|---|---|---|
+| `build` | Set `data/stage1_negatives/lab1114` = `ft_phonecls` + every 15th frame of the Nov 14 `train_attack`, `train_normal` and `confuser` takes. Knife takes: frame kept when the shipped detector fires at 0.5 or more, box = class `knife`. Object takes: box at 0.25 or more = class `phone`, other frames as background. Takes 020, 041, 050, 056 go to validation. | 3565 train, 369 validation images |
+| `teacher` | YOLO26x, original teacher recipe (200 epochs, patience 20, batch 12, 640 px, rotation 15°, mixup 0.1) | stopped at epoch 72, best 52, validation mAP50 0.855 → `weights/stage1_kd_teacher.pt` |
+| `student 0` | YOLO26s, original student recipe (250 epochs, patience 30, batch 32), no teacher | stopped at 147, best 117, mAP50 0.860 → `weights/stage1_kd_control.pt` |
+| `student` | Same, plus a distillation loss (weight 1.0): on every anchor of both heads, the teacher's class scores as soft targets and the distance to the teacher's box, weighted by the teacher's score | stopped at 121, best 91, mAP50 0.839 → `weights/stage1_kd_student.pt` |
+
+Scoring, all at 384x640: `bench_stage1.py "det,<weights>,<conf>" ...` (ground-truth set, Nov 5 takes) and `bench_stage1_holdout.py` (new, same arguments): share of frames with a knife detection on the Nov 14 test takes 025–036 and Oct 31 take 002, and on the Nov 14 object takes 050 (second phone) and 056 (remote), where lower is better.
+
+### Results
+
+Ground-truth set (715 images, original camera) and Nov 5 takes:
+
+| System | Conf | Precision | Recall | F1 | OOD FP | Phone 008 | Phone 006/007/009 | Nov 5 knife frames, mean |
+|---|---|---|---|---|---|---|---|---|
+| Shipped | 0.15 | 61.3 % | 87.1 % | 71.9 % | 61 | 27.4 % | 49.3 % | 70.6 % |
+| | 0.25 | 69.3 % | 83.8 % | 75.8 % | 44 | 23.5 % | 43.1 % | 67.9 % |
+| | 0.45 | 78.8 % | 74.2 % | 76.4 % | 19 | 19 % | 35 % | 61 % |
+| Teacher (YOLO26x) | 0.15 | 74.6 % | 79.6 % | 77.0 % | 17 | 4.0 % | 0.6 % | 67.6 % |
+| | 0.25 | 79.4 % | 77.1 % | 78.2 % | 9 | 3.3 % | 0.5 % | 65.8 % |
+| | 0.45 | 87.0 % | 72.5 % | 79.1 % | 3 | 1.5 % | 0.3 % | 61.7 % |
+| Student, no teacher | 0.15 | 60.3 % | 80.8 % | 69.0 % | 54 | 2.0 % | 1.0 % | 66.2 % |
+| | 0.25 | 73.1 % | 77.9 % | 75.4 % | 16 | 1.3 % | 0.8 % | 63.7 % |
+| | 0.45 | 83.3 % | 70.8 % | 76.6 % | 6 | 0.7 % | 0.8 % | 59.4 % |
+| Student, distilled | 0.15 | 68.1 % | 80.0 % | 73.6 % | 16 | 7.9 % | 0.3 % | 77.0 % |
+| | 0.25 | 80.7 % | 72.9 % | 76.6 % | 4 | 4.8 % | 0.3 % | 74.6 % |
+| | 0.45 | 90.9 % | 57.9 % | 70.7 % | 0 | 1.5 % | 0.0 % | 66.1 % |
+
+Lab takes none of these detectors was trained on:
+
+| System | Conf | Nov 14 test takes, frames (mean / worst take) | ~1 s windows (mean / worst) | Oct 31 take 002 | Second phone 050 | Remote 056 |
+|---|---|---|---|---|---|---|
+| Shipped | 0.15 | 50 % / 29 % | 68 % / 49 % | 65 % | 19 % | 22 % |
+| | 0.25 | 47 % / 27 % | 66 % / 43 % | 61 % | 13 % | 19 % |
+| | 0.45 | 39 % / 21 % | 59 % / 35 % | 54 % | 8 % | 13 % |
+| Shipped 0.25 + crop classifier v2 0.3 | | 45 % / 26 % | 64 % / 42 % | 58 % | 13 % | 16 % |
+| Teacher (YOLO26x) | 0.15 | 55 % / 35 % | 70 % / 53 % | 72 % | 6 % | 6 % |
+| | 0.25 | 53 % / 33 % | 68 % / 50 % | 70 % | 5 % | 5 % |
+| | 0.45 | 49 % / 28 % | 64 % / 46 % | 65 % | 3 % | 4 % |
+| Student, no teacher | 0.15 | 56 % / 35 % | 71 % / 52 % | 73 % | 6 % | 4 % |
+| | 0.25 | 54 % / 30 % | 69 % / 45 % | 70 % | 3 % | 3 % |
+| | 0.45 | 49 % / 25 % | 65 % / 40 % | 66 % | 3 % | 3 % |
+| Student, distilled | 0.15 | 58 % / 36 % | 72 % / 56 % | 75 % | 4 % | 5 % |
+| | 0.25 | 54 % / 34 % | 69 % / 52 % | 71 % | 3 % | 5 % |
+| | 0.45 | 47 % / 26 % | 62 % / 41 % | 62 % | 1 % | 4 % |
+
+### Findings
+
+- **Lab camera: all three retrains beat the shipped detector.** At 0.25 they see the knife in 53–54 % of the Nov 14 test frames against 47 %, and in 70–71 % of Oct 31 take 002 against 61 %. They fire on the second phone and the remote in 3–5 % of frames against 13–19 %; the crop classifier of section 3 does not reject these two objects.
+- **Ground-truth set: recall is still lower than shipped**, 80–81 % at 0.15 against 87 %, and 73–78 % at 0.25 against 84 %. The gap is smaller than in 4c (best there 67.5 % at 0.15) and precision is higher: at about 80 % recall the teacher and the distilled student have 17 and 16 OOD false detections, the shipped detector at 84 % recall has 44.
+- **Distillation gives a small gain, not a clear one.** Against the no-teacher student, the distilled one is better on the worst Nov 14 test take (34 % against 30 % of frames at 0.25) and on Nov 5 knife frames (74.6 % against 63.7 %), with fewer OOD false detections. But its ground-truth recall falls faster with confidence (57.9 % against 70.8 % at 0.45), and it is one run per model. The teacher is no better than the students on lab takes, so there is little for the student to learn from it there.
+- **Still far from enough on the lab camera:** the best system sees the knife in 58 % of the Nov 14 test frames and 36 % of the worst take.
+
+### Not checked
+
+- The lab boxes are the shipped detector's own detections, not hand labels. Lab knives the shipped detector misses are not in the training set, and frames where the knife is hidden were not separated, so the frame shares are not recall. Hand-labelled lab frames are the missing piece.
+- The Nov 14 test takes are held-out takes of the same person, room and day as the Nov 14 training frames. Oct 31 take 002 is another day; no other person or room was tested.
+- The Nov 5 knife takes and phone takes 006, 007, 009 are in the training set of the three new models, so those two columns are not held-out for them.
+- One run per model, one distillation weight (1.0). The confidence each model would run at was not tuned.
+- No TensorRT export, no timing on the Edge PC, no run of the full pipeline (hand gate, static filter, Stage 2).
+
+### Files
+
+- Scripts: `results/samples/poc/train_stage1_kd.py`, `results/samples/poc/bench_stage1_holdout.py`.
+- Rows: `results/stage1_kd/holdout.jsonl` (in git); logs and training runs in `results/stage1_kd/`, benchmark rows in `results/stage1_phoneneg/bench.jsonl` (dev PC only).
+- Data `data/stage1_negatives/lab1114` and weights `weights/stage1_kd_{teacher,control,student}.pt`: dev PC only.
 
 ## 5. Not checked
 
@@ -225,7 +306,7 @@ Both runs stopped early (patience 30): phone as its own class after 91 epochs (b
 - The classifier was not exported to TensorRT or timed on the Edge PC (RTX 3050), and the system was not run with the hand gate, static filter and Stage 2.
 - Only one confuser object (one phone, one session) was tested. Other handheld objects are untested.
 - Two harness limits: the confirm system counts a `phone` box of a three-class confirmer as a confirmation, and the crop system does not apply the phone-class filter. Rows affected by this (confirm with `stage1_big.pt`, crop behind a phone-class detector) are left out of the table.
-- Not tried: the Sohas phone and wallet dataset (needs a download), real teacher distillation (the original never had one, see 4c), a focal-type loss, retraining the detector on wrist crops.
+- Not tried: the Sohas phone and wallet dataset (needs a download), a focal-type loss, retraining the detector on wrist crops.
 
 ## 6. Files
 
