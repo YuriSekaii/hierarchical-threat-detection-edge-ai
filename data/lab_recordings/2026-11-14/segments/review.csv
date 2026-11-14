@@ -1,0 +1,11 @@
+take,event,action,value,note
+004_turn_110011,*,drop,,camera recorded no frames
+025_test_thrust_chest_112732,*,note,test take holds several thrusts (guide asked for one),
+025_test_thrust_chest_112732,5,reject,,walking
+027_test_thrust_chest_112832,0,reject,,walking in
+027_test_thrust_chest_112832,2,reject,,walking
+027_test_thrust_chest_112832,3,reject,,walking
+027_test_thrust_chest_112832,*,note,person out of view from about 20 s to 103 s,
+035_test_walking_thrust_140104,3,reject,,walking
+035_test_walking_thrust_140104,5,reject,,hand to head not a thrust
+036_test_normal_mixed_140220,*,note,mostly sitting in a swivel chair from about 25 s to 143 s,

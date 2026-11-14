@@ -45,7 +45,7 @@ def extract(path, model, device):
             k[:, 2] = r.keypoints.conf[i].cpu().numpy()
         out.append(k)
     cap.release()
-    return np.stack(out)
+    return np.stack(out) if out else np.zeros((0, 17, 3), np.float32)  # empty take (camera failed)
 
 
 def main():

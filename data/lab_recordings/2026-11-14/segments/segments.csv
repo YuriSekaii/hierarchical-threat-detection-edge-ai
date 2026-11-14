@@ -1,0 +1,531 @@
+id,file,skeleton,take,start_s,end_s,frames,category,label,knife_hand,view,knife_seen,note
+000,000_normal_between_strikes.avi,000_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,0.00,4.50,135,normal,between_strikes,L,mixed,,
+001,001_attack_walking_thrust_lefthand.avi,001_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,4.50,6.20,51,attack,walking_thrust_lefthand,L,mixed,,strike 0
+002,002_normal_between_strikes.avi,002_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,6.20,12.10,177,normal,between_strikes,L,mixed,,
+003,003_attack_walking_thrust_lefthand.avi,003_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,12.10,13.80,51,attack,walking_thrust_lefthand,L,mixed,,strike 1
+004,004_normal_between_strikes.avi,004_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,13.80,18.27,134,normal,between_strikes,L,mixed,,
+005,005_attack_walking_thrust_lefthand.avi,005_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,18.27,19.97,51,attack,walking_thrust_lefthand,L,mixed,,strike 2
+006,006_normal_between_strikes.avi,006_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,19.97,25.03,152,normal,between_strikes,L,mixed,,
+007,007_attack_walking_thrust_lefthand.avi,007_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,25.03,26.73,51,attack,walking_thrust_lefthand,L,mixed,,strike 3
+008,008_normal_between_strikes.avi,008_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,26.73,31.53,144,normal,between_strikes,L,mixed,,
+009,009_attack_walking_thrust_lefthand.avi,009_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,31.53,33.23,51,attack,walking_thrust_lefthand,L,mixed,,strike 4
+010,010_normal_between_strikes.avi,010_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,33.23,39.50,188,normal,between_strikes,L,mixed,,
+011,011_attack_walking_thrust_lefthand.avi,011_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,39.50,41.20,51,attack,walking_thrust_lefthand,L,mixed,,strike 5
+012,012_normal_between_strikes.avi,012_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,41.20,42.90,51,normal,between_strikes,L,mixed,,
+013,013_attack_walking_thrust_lefthand.avi,013_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,42.90,44.60,51,attack,walking_thrust_lefthand,L,mixed,,strike 6
+014,014_normal_between_strikes.avi,014_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,44.60,46.53,58,normal,between_strikes,L,mixed,,
+015,015_attack_walking_thrust_lefthand.avi,015_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,46.53,48.23,51,attack,walking_thrust_lefthand,L,mixed,,strike 7
+016,016_normal_between_strikes.avi,016_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,48.23,51.20,89,normal,between_strikes,L,mixed,,
+017,017_attack_walking_thrust_lefthand.avi,017_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,51.20,52.90,51,attack,walking_thrust_lefthand,L,mixed,,strike 8
+018,018_attack_walking_thrust_lefthand.avi,018_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,52.90,54.60,51,attack,walking_thrust_lefthand,L,mixed,,strike 9
+019,019_normal_between_strikes.avi,019_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,54.60,61.63,211,normal,between_strikes,L,mixed,,
+020,020_attack_walking_thrust_lefthand.avi,020_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,61.63,63.33,51,attack,walking_thrust_lefthand,L,mixed,,strike 10
+021,021_normal_between_strikes.avi,021_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,63.33,68.70,161,normal,between_strikes,L,mixed,,
+022,022_attack_walking_thrust_lefthand.avi,022_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,68.70,70.40,51,attack,walking_thrust_lefthand,L,mixed,,strike 11
+023,023_normal_between_strikes.avi,023_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,70.40,84.53,424,normal,between_strikes,L,mixed,,
+024,024_attack_walking_thrust_lefthand.avi,024_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,84.53,86.23,51,attack,walking_thrust_lefthand,L,mixed,,strike 12
+025,025_normal_between_strikes.avi,025_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,86.23,90.47,127,normal,between_strikes,L,mixed,,
+026,026_attack_walking_thrust_lefthand.avi,026_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,90.47,92.17,51,attack,walking_thrust_lefthand,L,mixed,,strike 13
+027,027_normal_between_strikes.avi,027_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,92.17,95.77,108,normal,between_strikes,L,mixed,,
+028,028_attack_walking_thrust_lefthand.avi,028_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,95.77,97.47,51,attack,walking_thrust_lefthand,L,mixed,,strike 14
+029,029_normal_between_strikes.avi,029_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,97.47,101.57,123,normal,between_strikes,L,mixed,,
+030,030_attack_walking_thrust_lefthand.avi,030_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,101.57,103.27,51,attack,walking_thrust_lefthand,L,mixed,,strike 15
+031,031_normal_between_strikes.avi,031_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,103.27,107.23,119,normal,between_strikes,L,mixed,,
+032,032_attack_walking_thrust_lefthand.avi,032_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,107.23,108.93,51,attack,walking_thrust_lefthand,L,mixed,,strike 16
+033,033_normal_between_strikes.avi,033_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,108.93,112.67,112,normal,between_strikes,L,mixed,,
+034,034_attack_walking_thrust_lefthand.avi,034_attack_walking_thrust_lefthand.npz,001_walking_thrust_lefthand_105208,112.67,114.37,51,attack,walking_thrust_lefthand,L,mixed,,strike 17
+035,035_normal_between_strikes.avi,035_normal_between_strikes.npz,001_walking_thrust_lefthand_105208,114.37,116.80,73,normal,between_strikes,L,mixed,,
+036,036_normal_walk.avi,036_normal_walk.npz,002_walk_105425,0.00,2.00,60,normal,walk,R,mixed,,
+037,037_normal_walk.avi,037_normal_walk.npz,002_walk_105425,2.00,12.00,300,normal,walk,R,mixed,,
+038,038_normal_walk.avi,038_normal_walk.npz,002_walk_105425,12.00,17.10,153,normal,walk,R,mixed,,
+039,039_normal_walk.avi,039_normal_walk.npz,002_walk_105425,19.10,29.10,300,normal,walk,R,mixed,,
+040,040_normal_walk.avi,040_normal_walk.npz,002_walk_105425,29.10,39.10,300,normal,walk,R,mixed,,
+041,041_normal_walk.avi,041_normal_walk.npz,002_walk_105425,39.10,49.10,300,normal,walk,R,mixed,,
+042,042_normal_walk.avi,042_normal_walk.npz,002_walk_105425,49.10,59.10,300,normal,walk,R,mixed,,
+043,043_normal_walk.avi,043_normal_walk.npz,002_walk_105425,59.10,69.10,300,normal,walk,R,mixed,,
+044,044_normal_walk.avi,044_normal_walk.npz,002_walk_105425,69.10,76.70,228,normal,walk,R,mixed,,
+045,045_normal_walk.avi,045_normal_walk.npz,002_walk_105425,79.67,89.67,300,normal,walk,R,mixed,,
+046,046_normal_walk.avi,046_normal_walk.npz,002_walk_105425,89.67,99.67,300,normal,walk,R,mixed,,
+047,047_normal_walk.avi,047_normal_walk.npz,002_walk_105425,99.67,109.67,300,normal,walk,R,mixed,,
+048,048_normal_walk.avi,048_normal_walk.npz,002_walk_105425,109.67,119.67,300,normal,walk,R,mixed,,
+049,049_normal_walk.avi,049_normal_walk.npz,002_walk_105425,119.67,129.67,300,normal,walk,R,mixed,,
+050,050_normal_walk.avi,050_normal_walk.npz,002_walk_105425,129.67,139.80,304,normal,walk,R,mixed,,
+051,051_normal_walk.avi,051_normal_walk.npz,002_walk_105425,139.80,141.80,60,normal,walk,R,mixed,,
+052,052_normal_walk.avi,052_normal_walk.npz,003_walk_105653,0.00,2.00,60,normal,walk,R,mixed,,
+053,053_normal_walk.avi,053_normal_walk.npz,003_walk_105653,2.00,8.03,181,normal,walk,R,mixed,,
+054,054_normal_walk.avi,054_normal_walk.npz,003_walk_105653,9.77,19.77,300,normal,walk,R,mixed,,
+055,055_normal_walk.avi,055_normal_walk.npz,003_walk_105653,19.77,29.77,300,normal,walk,R,mixed,,
+056,056_normal_walk.avi,056_normal_walk.npz,003_walk_105653,29.77,33.90,124,normal,walk,R,mixed,,
+057,057_normal_walk.avi,057_normal_walk.npz,003_walk_105653,36.27,46.27,300,normal,walk,R,mixed,,
+058,058_normal_walk.avi,058_normal_walk.npz,003_walk_105653,46.27,56.27,300,normal,walk,R,mixed,,
+059,059_normal_walk.avi,059_normal_walk.npz,003_walk_105653,56.27,66.27,300,normal,walk,R,mixed,,
+060,060_normal_walk.avi,060_normal_walk.npz,003_walk_105653,66.27,76.27,300,normal,walk,R,mixed,,
+061,061_normal_walk.avi,061_normal_walk.npz,003_walk_105653,76.27,87.63,341,normal,walk,R,mixed,,
+062,062_normal_walk.avi,062_normal_walk.npz,003_walk_105653,88.97,94.20,157,normal,walk,R,mixed,,
+063,063_normal_walk.avi,063_normal_walk.npz,003_walk_105653,94.20,96.20,60,normal,walk,R,mixed,,
+064,064_normal_walk.avi,064_normal_walk.npz,005_turn_110126,0.00,2.00,60,normal,walk,R,mixed,,
+065,065_normal_turn.avi,065_normal_turn.npz,005_turn_110126,2.00,12.00,300,normal,turn,R,mixed,,
+066,066_normal_turn.avi,066_normal_turn.npz,005_turn_110126,12.00,22.00,300,normal,turn,R,mixed,,
+067,067_normal_turn.avi,067_normal_turn.npz,005_turn_110126,22.00,32.00,300,normal,turn,R,mixed,,
+068,068_normal_turn.avi,068_normal_turn.npz,005_turn_110126,32.00,38.27,188,normal,turn,R,mixed,,
+069,069_normal_walk.avi,069_normal_walk.npz,005_turn_110126,38.27,40.27,60,normal,walk,R,mixed,,
+070,070_normal_walk.avi,070_normal_walk.npz,006_turn_110210,0.00,2.00,60,normal,walk,R,mixed,,
+071,071_normal_turn.avi,071_normal_turn.npz,006_turn_110210,2.00,12.00,300,normal,turn,R,mixed,,
+072,072_normal_turn.avi,072_normal_turn.npz,006_turn_110210,12.00,22.00,300,normal,turn,R,mixed,,
+073,073_normal_turn.avi,073_normal_turn.npz,006_turn_110210,22.00,30.67,260,normal,turn,R,mixed,,
+074,074_normal_walk.avi,074_normal_walk.npz,006_turn_110210,30.67,32.67,60,normal,walk,R,mixed,,
+075,075_normal_walk.avi,075_normal_walk.npz,007_gesture_110417,0.00,2.00,60,normal,walk,R,mixed,,
+076,076_normal_gesture.avi,076_normal_gesture.npz,007_gesture_110417,2.00,12.00,300,normal,gesture,R,mixed,,
+077,077_normal_gesture.avi,077_normal_gesture.npz,007_gesture_110417,12.00,22.00,300,normal,gesture,R,mixed,,
+078,078_normal_gesture.avi,078_normal_gesture.npz,007_gesture_110417,22.00,32.00,300,normal,gesture,R,mixed,,
+079,079_normal_gesture.avi,079_normal_gesture.npz,007_gesture_110417,32.00,42.00,300,normal,gesture,R,mixed,,
+080,080_normal_gesture.avi,080_normal_gesture.npz,007_gesture_110417,42.00,53.80,354,normal,gesture,R,mixed,,
+081,081_normal_walk.avi,081_normal_walk.npz,007_gesture_110417,53.80,55.80,60,normal,walk,R,mixed,,
+082,082_normal_walk.avi,082_normal_walk.npz,008_gesture_110515,0.00,2.00,60,normal,walk,R,mixed,,
+083,083_normal_gesture.avi,083_normal_gesture.npz,008_gesture_110515,2.00,12.00,300,normal,gesture,R,mixed,,
+084,084_normal_gesture.avi,084_normal_gesture.npz,008_gesture_110515,12.00,22.00,300,normal,gesture,R,mixed,,
+085,085_normal_gesture.avi,085_normal_gesture.npz,008_gesture_110515,22.00,32.00,300,normal,gesture,R,mixed,,
+086,086_normal_gesture.avi,086_normal_gesture.npz,008_gesture_110515,32.00,42.00,300,normal,gesture,R,mixed,,
+087,087_normal_gesture.avi,087_normal_gesture.npz,008_gesture_110515,42.00,48.13,184,normal,gesture,R,mixed,,
+088,088_normal_walk.avi,088_normal_walk.npz,008_gesture_110515,48.13,50.13,60,normal,walk,R,mixed,,
+089,089_normal_walk.avi,089_normal_walk.npz,009_bend_pick_up_110611,0.00,2.00,60,normal,walk,R,mixed,,
+090,090_normal_bend_pick_up.avi,090_normal_bend_pick_up.npz,009_bend_pick_up_110611,2.00,12.00,300,normal,bend_pick_up,R,mixed,,
+091,091_normal_bend_pick_up.avi,091_normal_bend_pick_up.npz,009_bend_pick_up_110611,12.00,22.00,300,normal,bend_pick_up,R,mixed,,
+092,092_normal_bend_pick_up.avi,092_normal_bend_pick_up.npz,009_bend_pick_up_110611,22.00,32.00,300,normal,bend_pick_up,R,mixed,,
+093,093_normal_bend_pick_up.avi,093_normal_bend_pick_up.npz,009_bend_pick_up_110611,32.00,35.47,104,normal,bend_pick_up,R,mixed,,
+094,094_normal_walk.avi,094_normal_walk.npz,009_bend_pick_up_110611,35.47,37.47,60,normal,walk,R,mixed,,
+095,095_normal_walk.avi,095_normal_walk.npz,010_bend_pick_up_110650,0.00,2.00,60,normal,walk,R,mixed,,
+096,096_normal_bend_pick_up.avi,096_normal_bend_pick_up.npz,010_bend_pick_up_110650,2.00,12.00,300,normal,bend_pick_up,R,mixed,,
+097,097_normal_bend_pick_up.avi,097_normal_bend_pick_up.npz,010_bend_pick_up_110650,12.00,22.00,300,normal,bend_pick_up,R,mixed,,
+098,098_normal_bend_pick_up.avi,098_normal_bend_pick_up.npz,010_bend_pick_up_110650,22.00,24.87,86,normal,bend_pick_up,R,mixed,,
+099,099_normal_walk.avi,099_normal_walk.npz,010_bend_pick_up_110650,24.87,26.87,60,normal,walk,R,mixed,,
+100,100_normal_walk.avi,100_normal_walk.npz,011_reach_110821,0.00,2.00,60,normal,walk,R,mixed,,
+101,101_normal_reach.avi,101_normal_reach.npz,011_reach_110821,2.00,12.00,300,normal,reach,R,mixed,,
+102,102_normal_reach.avi,102_normal_reach.npz,011_reach_110821,12.00,22.00,300,normal,reach,R,mixed,,
+103,103_normal_reach.avi,103_normal_reach.npz,011_reach_110821,22.00,32.00,300,normal,reach,R,mixed,,
+104,104_normal_reach.avi,104_normal_reach.npz,011_reach_110821,32.00,42.00,300,normal,reach,R,mixed,,
+105,105_normal_reach.avi,105_normal_reach.npz,011_reach_110821,42.00,52.00,300,normal,reach,R,mixed,,
+106,106_normal_reach.avi,106_normal_reach.npz,011_reach_110821,52.00,62.00,300,normal,reach,R,mixed,,
+107,107_normal_reach.avi,107_normal_reach.npz,011_reach_110821,62.00,70.17,245,normal,reach,R,mixed,,
+108,108_normal_walk.avi,108_normal_walk.npz,011_reach_110821,70.17,72.17,60,normal,walk,R,mixed,,
+109,109_normal_walk.avi,109_normal_walk.npz,012_reach_110935,0.00,2.00,60,normal,walk,R,mixed,,
+110,110_normal_reach.avi,110_normal_reach.npz,012_reach_110935,2.00,12.00,300,normal,reach,R,mixed,,
+111,111_normal_reach.avi,111_normal_reach.npz,012_reach_110935,12.00,22.00,300,normal,reach,R,mixed,,
+112,112_normal_reach.avi,112_normal_reach.npz,012_reach_110935,22.00,32.00,300,normal,reach,R,mixed,,
+113,113_normal_reach.avi,113_normal_reach.npz,012_reach_110935,32.00,42.00,300,normal,reach,R,mixed,,
+114,114_normal_reach.avi,114_normal_reach.npz,012_reach_110935,42.00,52.00,300,normal,reach,R,mixed,,
+115,115_normal_reach.avi,115_normal_reach.npz,012_reach_110935,52.00,63.60,348,normal,reach,R,mixed,,
+116,116_normal_walk.avi,116_normal_walk.npz,012_reach_110935,63.60,65.60,60,normal,walk,R,mixed,,
+117,117_normal_walk.avi,117_normal_walk.npz,013_stretch_111421,0.00,2.00,60,normal,walk,R,mixed,,
+118,118_normal_stretch.avi,118_normal_stretch.npz,013_stretch_111421,2.00,12.00,300,normal,stretch,R,mixed,,
+119,119_normal_stretch.avi,119_normal_stretch.npz,013_stretch_111421,12.00,22.00,300,normal,stretch,R,mixed,,
+120,120_normal_stretch.avi,120_normal_stretch.npz,013_stretch_111421,22.00,32.00,300,normal,stretch,R,mixed,,
+121,121_normal_stretch.avi,121_normal_stretch.npz,013_stretch_111421,32.00,39.20,216,normal,stretch,R,mixed,,
+122,122_normal_walk.avi,122_normal_walk.npz,013_stretch_111421,39.20,41.20,60,normal,walk,R,mixed,,
+123,123_normal_walk.avi,123_normal_walk.npz,014_stretch_111505,0.00,2.00,60,normal,walk,R,mixed,,
+124,124_normal_stretch.avi,124_normal_stretch.npz,014_stretch_111505,2.00,12.00,300,normal,stretch,R,mixed,,
+125,125_normal_stretch.avi,125_normal_stretch.npz,014_stretch_111505,12.00,22.00,300,normal,stretch,R,mixed,,
+126,126_normal_stretch.avi,126_normal_stretch.npz,014_stretch_111505,22.00,29.60,228,normal,stretch,R,mixed,,
+127,127_normal_walk.avi,127_normal_walk.npz,014_stretch_111505,29.60,31.60,60,normal,walk,R,mixed,,
+128,128_normal_walk.avi,128_normal_walk.npz,015_hand_to_head_111553,0.00,2.00,60,normal,walk,R,mixed,,
+129,129_normal_hand_to_head.avi,129_normal_hand_to_head.npz,015_hand_to_head_111553,2.00,12.00,300,normal,hand_to_head,R,mixed,,
+130,130_normal_hand_to_head.avi,130_normal_hand_to_head.npz,015_hand_to_head_111553,12.00,22.00,300,normal,hand_to_head,R,mixed,,
+131,131_normal_hand_to_head.avi,131_normal_hand_to_head.npz,015_hand_to_head_111553,22.00,32.00,300,normal,hand_to_head,R,mixed,,
+132,132_normal_hand_to_head.avi,132_normal_hand_to_head.npz,015_hand_to_head_111553,32.00,34.80,84,normal,hand_to_head,R,mixed,,
+133,133_normal_walk.avi,133_normal_walk.npz,015_hand_to_head_111553,34.80,36.80,60,normal,walk,R,mixed,,
+134,134_normal_walk.avi,134_normal_walk.npz,016_hand_to_head_111633,0.00,2.00,60,normal,walk,R,mixed,,
+135,135_normal_hand_to_head.avi,135_normal_hand_to_head.npz,016_hand_to_head_111633,2.00,12.00,300,normal,hand_to_head,R,mixed,,
+136,136_normal_hand_to_head.avi,136_normal_hand_to_head.npz,016_hand_to_head_111633,12.00,22.00,300,normal,hand_to_head,R,mixed,,
+137,137_normal_hand_to_head.avi,137_normal_hand_to_head.npz,016_hand_to_head_111633,22.00,32.00,300,normal,hand_to_head,R,mixed,,
+138,138_normal_hand_to_head.avi,138_normal_hand_to_head.npz,016_hand_to_head_111633,32.00,42.97,329,normal,hand_to_head,R,mixed,,
+139,139_normal_walk.avi,139_normal_walk.npz,016_hand_to_head_111633,42.97,44.97,60,normal,walk,R,mixed,,
+140,140_normal_walk.avi,140_normal_walk.npz,017_point_111724,0.00,2.00,60,normal,walk,R,mixed,,
+141,141_normal_point.avi,141_normal_point.npz,017_point_111724,2.00,12.00,300,normal,point,R,mixed,,
+142,142_normal_point.avi,142_normal_point.npz,017_point_111724,12.00,22.00,300,normal,point,R,mixed,,
+143,143_normal_point.avi,143_normal_point.npz,017_point_111724,22.00,32.00,300,normal,point,R,mixed,,
+144,144_normal_point.avi,144_normal_point.npz,017_point_111724,32.00,40.97,269,normal,point,R,mixed,,
+145,145_normal_walk.avi,145_normal_walk.npz,017_point_111724,40.97,42.97,60,normal,walk,R,mixed,,
+146,146_normal_walk.avi,146_normal_walk.npz,018_point_111809,0.00,2.00,60,normal,walk,R,mixed,,
+147,147_normal_point.avi,147_normal_point.npz,018_point_111809,2.00,12.00,300,normal,point,R,mixed,,
+148,148_normal_point.avi,148_normal_point.npz,018_point_111809,12.00,22.00,300,normal,point,R,mixed,,
+149,149_normal_point.avi,149_normal_point.npz,018_point_111809,22.00,32.00,300,normal,point,R,mixed,,
+150,150_normal_point.avi,150_normal_point.npz,018_point_111809,32.00,37.00,150,normal,point,R,mixed,,
+151,151_normal_walk.avi,151_normal_walk.npz,018_point_111809,37.00,39.00,60,normal,walk,R,mixed,,
+152,152_normal_walk.avi,152_normal_walk.npz,019_inspect_knife_111905,0.00,2.00,60,normal,walk,R,mixed,,
+153,153_normal_inspect_knife.avi,153_normal_inspect_knife.npz,019_inspect_knife_111905,2.00,12.00,300,normal,inspect_knife,R,mixed,,
+154,154_normal_inspect_knife.avi,154_normal_inspect_knife.npz,019_inspect_knife_111905,12.00,22.00,300,normal,inspect_knife,R,mixed,,
+155,155_normal_inspect_knife.avi,155_normal_inspect_knife.npz,019_inspect_knife_111905,22.00,32.00,300,normal,inspect_knife,R,mixed,,
+156,156_normal_inspect_knife.avi,156_normal_inspect_knife.npz,019_inspect_knife_111905,32.00,37.37,161,normal,inspect_knife,R,mixed,,
+157,157_normal_walk.avi,157_normal_walk.npz,019_inspect_knife_111905,37.37,39.37,60,normal,walk,R,mixed,,
+158,158_normal_walk.avi,158_normal_walk.npz,020_inspect_knife_111947,0.00,2.00,60,normal,walk,R,mixed,,
+159,159_normal_inspect_knife.avi,159_normal_inspect_knife.npz,020_inspect_knife_111947,2.00,12.00,300,normal,inspect_knife,R,mixed,,
+160,160_normal_inspect_knife.avi,160_normal_inspect_knife.npz,020_inspect_knife_111947,12.00,22.00,300,normal,inspect_knife,R,mixed,,
+161,161_normal_inspect_knife.avi,161_normal_inspect_knife.npz,020_inspect_knife_111947,22.00,32.00,300,normal,inspect_knife,R,mixed,,
+162,162_normal_inspect_knife.avi,162_normal_inspect_knife.npz,020_inspect_knife_111947,32.00,34.30,69,normal,inspect_knife,R,mixed,,
+163,163_normal_walk.avi,163_normal_walk.npz,020_inspect_knife_111947,34.30,36.30,60,normal,walk,R,mixed,,
+164,164_normal_walk.avi,164_normal_walk.npz,021_fidget_112039,0.00,2.00,60,normal,walk,R,mixed,,
+165,165_normal_fidget.avi,165_normal_fidget.npz,021_fidget_112039,2.00,12.00,300,normal,fidget,R,mixed,,
+166,166_normal_fidget.avi,166_normal_fidget.npz,021_fidget_112039,12.00,22.00,300,normal,fidget,R,mixed,,
+167,167_normal_fidget.avi,167_normal_fidget.npz,021_fidget_112039,22.00,29.27,218,normal,fidget,R,mixed,,
+168,168_normal_walk.avi,168_normal_walk.npz,021_fidget_112039,29.27,31.27,60,normal,walk,R,mixed,,
+169,169_normal_walk.avi,169_normal_walk.npz,022_fidget_112113,0.00,2.00,60,normal,walk,R,mixed,,
+170,170_normal_fidget.avi,170_normal_fidget.npz,022_fidget_112113,2.00,12.00,300,normal,fidget,R,mixed,,
+171,171_normal_fidget.avi,171_normal_fidget.npz,022_fidget_112113,12.00,22.00,300,normal,fidget,R,mixed,,
+172,172_normal_fidget.avi,172_normal_fidget.npz,022_fidget_112113,22.00,32.00,300,normal,fidget,R,mixed,,
+173,173_normal_fidget.avi,173_normal_fidget.npz,022_fidget_112113,32.00,35.57,107,normal,fidget,R,mixed,,
+174,174_normal_walk.avi,174_normal_walk.npz,022_fidget_112113,35.57,37.57,60,normal,walk,R,mixed,,
+175,175_normal_walk.avi,175_normal_walk.npz,023_hurry_112619,0.00,2.00,60,normal,walk,R,mixed,,
+176,176_normal_hurry.avi,176_normal_hurry.npz,023_hurry_112619,2.00,12.00,300,normal,hurry,R,mixed,,
+177,177_normal_hurry.avi,177_normal_hurry.npz,023_hurry_112619,12.00,22.00,300,normal,hurry,R,mixed,,
+178,178_normal_hurry.avi,178_normal_hurry.npz,023_hurry_112619,22.00,28.90,207,normal,hurry,R,mixed,,
+179,179_normal_walk.avi,179_normal_walk.npz,023_hurry_112619,28.90,30.90,60,normal,walk,R,mixed,,
+180,180_normal_walk.avi,180_normal_walk.npz,024_hurry_112652,0.00,2.00,60,normal,walk,R,mixed,,
+181,181_normal_hurry.avi,181_normal_hurry.npz,024_hurry_112652,2.00,12.00,300,normal,hurry,R,mixed,,
+182,182_normal_hurry.avi,182_normal_hurry.npz,024_hurry_112652,12.00,22.00,300,normal,hurry,R,mixed,,
+183,183_normal_hurry.avi,183_normal_hurry.npz,024_hurry_112652,22.00,26.23,127,normal,hurry,R,mixed,,
+184,184_normal_walk.avi,184_normal_walk.npz,024_hurry_112652,26.23,28.23,60,normal,walk,R,mixed,,
+185,185_normal_between_strikes.avi,185_normal_between_strikes.npz,025_test_thrust_chest_112732,0.00,5.40,162,normal,between_strikes,R,mixed,,test take holds several thrusts (guide asked for one)
+186,186_attack_test_thrust_chest.avi,186_attack_test_thrust_chest.npz,025_test_thrust_chest_112732,5.40,7.10,51,attack,test_thrust_chest,R,mixed,,test take holds several thrusts (guide asked for one)
+187,187_normal_between_strikes.avi,187_normal_between_strikes.npz,025_test_thrust_chest_112732,7.10,10.13,91,normal,between_strikes,R,mixed,,test take holds several thrusts (guide asked for one)
+188,188_attack_test_thrust_chest.avi,188_attack_test_thrust_chest.npz,025_test_thrust_chest_112732,10.13,11.83,51,attack,test_thrust_chest,R,mixed,,test take holds several thrusts (guide asked for one)
+189,189_normal_between_strikes.avi,189_normal_between_strikes.npz,025_test_thrust_chest_112732,11.83,14.03,66,normal,between_strikes,R,mixed,,test take holds several thrusts (guide asked for one)
+190,190_attack_test_thrust_chest.avi,190_attack_test_thrust_chest.npz,025_test_thrust_chest_112732,14.03,15.73,51,attack,test_thrust_chest,R,mixed,,test take holds several thrusts (guide asked for one)
+191,191_normal_between_strikes.avi,191_normal_between_strikes.npz,025_test_thrust_chest_112732,15.73,19.03,99,normal,between_strikes,R,mixed,,test take holds several thrusts (guide asked for one)
+192,192_attack_test_thrust_chest.avi,192_attack_test_thrust_chest.npz,025_test_thrust_chest_112732,19.03,20.73,51,attack,test_thrust_chest,R,mixed,,test take holds several thrusts (guide asked for one)
+193,193_normal_between_strikes.avi,193_normal_between_strikes.npz,025_test_thrust_chest_112732,20.73,24.43,111,normal,between_strikes,R,mixed,,test take holds several thrusts (guide asked for one)
+194,194_attack_test_thrust_chest.avi,194_attack_test_thrust_chest.npz,025_test_thrust_chest_112732,24.43,26.13,51,attack,test_thrust_chest,R,mixed,,test take holds several thrusts (guide asked for one)
+195,195_normal_between_strikes.avi,195_normal_between_strikes.npz,025_test_thrust_chest_112732,26.13,27.87,52,normal,between_strikes,R,mixed,,test take holds several thrusts (guide asked for one)
+196,196_attack_test_thrust_chest.avi,196_attack_test_thrust_chest.npz,025_test_thrust_chest_112732,27.87,29.57,51,attack,test_thrust_chest,R,mixed,,test take holds several thrusts (guide asked for one)
+197,197_normal_between_strikes.avi,197_normal_between_strikes.npz,025_test_thrust_chest_112732,29.57,32.27,81,normal,between_strikes,R,mixed,,test take holds several thrusts (guide asked for one)
+198,198_normal_between_strikes.avi,198_normal_between_strikes.npz,026_test_thrust_chest_112806,0.00,2.70,81,normal,between_strikes,R,mixed,,
+199,199_attack_test_thrust_chest.avi,199_attack_test_thrust_chest.npz,026_test_thrust_chest_112806,2.70,4.40,51,attack,test_thrust_chest,R,mixed,,strike 0
+200,200_attack_test_thrust_chest.avi,200_attack_test_thrust_chest.npz,026_test_thrust_chest_112806,5.30,7.00,51,attack,test_thrust_chest,R,mixed,,strike 1
+201,201_normal_between_strikes.avi,201_normal_between_strikes.npz,026_test_thrust_chest_112806,7.00,11.40,132,normal,between_strikes,R,mixed,,
+202,202_attack_test_thrust_chest.avi,202_attack_test_thrust_chest.npz,026_test_thrust_chest_112806,11.40,13.10,51,attack,test_thrust_chest,R,mixed,,strike 2
+203,203_attack_test_thrust_chest.avi,203_attack_test_thrust_chest.npz,026_test_thrust_chest_112806,13.93,15.63,51,attack,test_thrust_chest,R,mixed,,strike 3
+204,204_normal_between_strikes.avi,204_normal_between_strikes.npz,026_test_thrust_chest_112806,15.63,17.77,64,normal,between_strikes,R,mixed,,
+205,205_normal_between_strikes.avi,205_normal_between_strikes.npz,027_test_thrust_chest_112832,0.00,8.20,246,normal,between_strikes,R,mixed,,person out of view from about 20 s to 103 s
+206,206_attack_test_thrust_chest.avi,206_attack_test_thrust_chest.npz,027_test_thrust_chest_112832,8.20,9.90,51,attack,test_thrust_chest,R,mixed,,person out of view from about 20 s to 103 s
+207,207_normal_between_strikes.avi,207_normal_between_strikes.npz,027_test_thrust_chest_112832,9.90,19.67,293,normal,between_strikes,R,mixed,,person out of view from about 20 s to 103 s
+208,208_normal_between_strikes.avi,208_normal_between_strikes.npz,027_test_thrust_chest_112832,49.47,53.07,108,normal,between_strikes,R,mixed,,person out of view from about 20 s to 103 s
+209,209_normal_between_strikes.avi,209_normal_between_strikes.npz,027_test_thrust_chest_112832,102.53,107.67,154,normal,between_strikes,R,mixed,,person out of view from about 20 s to 103 s
+210,210_normal_between_strikes.avi,210_normal_between_strikes.npz,028_test_thrust_chest_125605,6.83,11.83,150,normal,between_strikes,R,mixed,,
+211,211_attack_test_thrust_chest.avi,211_attack_test_thrust_chest.npz,028_test_thrust_chest_125605,11.83,13.53,51,attack,test_thrust_chest,R,mixed,,strike 1
+212,212_normal_between_strikes.avi,212_normal_between_strikes.npz,028_test_thrust_chest_125605,13.53,19.63,183,normal,between_strikes,R,mixed,,
+213,213_attack_test_thrust_chest.avi,213_attack_test_thrust_chest.npz,028_test_thrust_chest_125605,19.63,21.33,51,attack,test_thrust_chest,R,mixed,,strike 2
+214,214_attack_test_thrust_chest.avi,214_attack_test_thrust_chest.npz,028_test_thrust_chest_125605,21.97,23.67,51,attack,test_thrust_chest,R,mixed,,strike 3
+215,215_normal_between_strikes.avi,215_normal_between_strikes.npz,028_test_thrust_chest_125605,23.67,28.50,145,normal,between_strikes,R,mixed,,
+216,216_normal_between_strikes.avi,216_normal_between_strikes.npz,029_test_thrust_chest_125644,6.27,10.70,133,normal,between_strikes,R,mixed,,
+217,217_attack_test_thrust_chest.avi,217_attack_test_thrust_chest.npz,029_test_thrust_chest_125644,10.70,12.40,51,attack,test_thrust_chest,R,mixed,,strike 0
+218,218_normal_between_strikes.avi,218_normal_between_strikes.npz,029_test_thrust_chest_125644,12.40,19.90,225,normal,between_strikes,R,mixed,,
+219,219_attack_test_thrust_chest.avi,219_attack_test_thrust_chest.npz,029_test_thrust_chest_125644,19.90,21.60,51,attack,test_thrust_chest,R,mixed,,strike 1
+220,220_normal_between_strikes.avi,220_normal_between_strikes.npz,029_test_thrust_chest_125644,21.60,22.87,38,normal,between_strikes,R,mixed,,
+221,221_attack_test_thrust_chest.avi,221_attack_test_thrust_chest.npz,029_test_thrust_chest_125644,22.87,24.57,51,attack,test_thrust_chest,R,mixed,,strike 2
+222,222_normal_between_strikes.avi,222_normal_between_strikes.npz,029_test_thrust_chest_125644,24.57,25.83,38,normal,between_strikes,R,mixed,,
+223,223_attack_test_thrust_chest.avi,223_attack_test_thrust_chest.npz,029_test_thrust_chest_125644,25.83,27.53,51,attack,test_thrust_chest,R,mixed,,strike 3
+224,224_normal_between_strikes.avi,224_normal_between_strikes.npz,029_test_thrust_chest_125644,27.53,31.00,104,normal,between_strikes,R,mixed,,
+225,225_normal_between_strikes.avi,225_normal_between_strikes.npz,030_test_thrust_low_125734,7.03,11.43,132,normal,between_strikes,R,mixed,,
+226,226_attack_test_thrust_low.avi,226_attack_test_thrust_low.npz,030_test_thrust_low_125734,11.43,13.13,51,attack,test_thrust_low,R,mixed,,strike 0
+227,227_normal_between_strikes.avi,227_normal_between_strikes.npz,030_test_thrust_low_125734,13.13,17.37,127,normal,between_strikes,R,mixed,,
+228,228_attack_test_thrust_low.avi,228_attack_test_thrust_low.npz,030_test_thrust_low_125734,17.37,19.07,51,attack,test_thrust_low,R,mixed,,strike 1
+229,229_normal_between_strikes.avi,229_normal_between_strikes.npz,030_test_thrust_low_125734,19.07,22.33,98,normal,between_strikes,R,mixed,,
+230,230_attack_test_thrust_low.avi,230_attack_test_thrust_low.npz,030_test_thrust_low_125734,22.33,24.03,51,attack,test_thrust_low,R,mixed,,strike 2
+231,231_normal_between_strikes.avi,231_normal_between_strikes.npz,030_test_thrust_low_125734,24.03,27.60,107,normal,between_strikes,R,mixed,,
+232,232_attack_test_thrust_low.avi,232_attack_test_thrust_low.npz,030_test_thrust_low_125734,27.60,29.30,51,attack,test_thrust_low,R,mixed,,strike 3
+233,233_normal_between_strikes.avi,233_normal_between_strikes.npz,030_test_thrust_low_125734,29.30,33.27,119,normal,between_strikes,R,mixed,,
+234,234_attack_test_thrust_low.avi,234_attack_test_thrust_low.npz,030_test_thrust_low_125734,33.27,34.97,51,attack,test_thrust_low,R,mixed,,strike 4
+235,235_normal_between_strikes.avi,235_normal_between_strikes.npz,030_test_thrust_low_125734,34.97,40.27,159,normal,between_strikes,R,mixed,,
+236,236_normal_between_strikes.avi,236_normal_between_strikes.npz,031_test_thrust_low_125824,7.17,12.80,169,normal,between_strikes,R,mixed,,
+237,237_attack_test_thrust_low.avi,237_attack_test_thrust_low.npz,031_test_thrust_low_125824,12.80,14.50,51,attack,test_thrust_low,R,mixed,,strike 1
+238,238_normal_between_strikes.avi,238_normal_between_strikes.npz,031_test_thrust_low_125824,14.50,23.07,257,normal,between_strikes,R,mixed,,
+239,239_attack_test_thrust_low.avi,239_attack_test_thrust_low.npz,031_test_thrust_low_125824,23.07,24.77,51,attack,test_thrust_low,R,mixed,,strike 2
+240,240_normal_between_strikes.avi,240_normal_between_strikes.npz,031_test_thrust_low_125824,24.77,31.53,203,normal,between_strikes,R,mixed,,
+241,241_normal_between_strikes.avi,241_normal_between_strikes.npz,032_test_overhand_stab_125921,6.73,17.70,329,normal,between_strikes,R,mixed,,
+242,242_attack_test_overhand_stab.avi,242_attack_test_overhand_stab.npz,032_test_overhand_stab_125921,17.70,19.40,51,attack,test_overhand_stab,R,mixed,,strike 1
+243,243_normal_between_strikes.avi,243_normal_between_strikes.npz,032_test_overhand_stab_125921,19.40,22.30,87,normal,between_strikes,R,mixed,,
+244,244_attack_test_overhand_stab.avi,244_attack_test_overhand_stab.npz,032_test_overhand_stab_125921,22.30,24.00,51,attack,test_overhand_stab,R,mixed,,strike 2
+245,245_normal_between_strikes.avi,245_normal_between_strikes.npz,032_test_overhand_stab_125921,24.00,27.90,117,normal,between_strikes,R,mixed,,
+246,246_attack_test_overhand_stab.avi,246_attack_test_overhand_stab.npz,032_test_overhand_stab_125921,27.90,29.60,51,attack,test_overhand_stab,R,mixed,,strike 3
+247,247_normal_between_strikes.avi,247_normal_between_strikes.npz,032_test_overhand_stab_125921,29.60,37.83,247,normal,between_strikes,R,mixed,,
+248,248_attack_test_overhand_stab.avi,248_attack_test_overhand_stab.npz,032_test_overhand_stab_125921,37.83,39.53,51,attack,test_overhand_stab,R,mixed,,strike 4
+249,249_normal_between_strikes.avi,249_normal_between_strikes.npz,032_test_overhand_stab_125921,39.53,43.70,125,normal,between_strikes,R,mixed,,
+250,250_normal_between_strikes.avi,250_normal_between_strikes.npz,033_test_cut_down_130017,4.63,9.10,134,normal,between_strikes,R,mixed,,
+251,251_attack_test_cut_down.avi,251_attack_test_cut_down.npz,033_test_cut_down_130017,9.10,10.80,51,attack,test_cut_down,R,mixed,,strike 0
+252,252_normal_between_strikes.avi,252_normal_between_strikes.npz,033_test_cut_down_130017,10.80,14.30,105,normal,between_strikes,R,mixed,,
+253,253_attack_test_cut_down.avi,253_attack_test_cut_down.npz,033_test_cut_down_130017,14.30,16.00,51,attack,test_cut_down,R,mixed,,strike 1
+254,254_attack_test_cut_down.avi,254_attack_test_cut_down.npz,033_test_cut_down_130017,16.00,17.70,51,attack,test_cut_down,R,mixed,,strike 2
+255,255_attack_test_cut_down.avi,255_attack_test_cut_down.npz,033_test_cut_down_130017,17.77,19.47,51,attack,test_cut_down,R,mixed,,strike 3
+256,256_attack_test_cut_down.avi,256_attack_test_cut_down.npz,033_test_cut_down_130017,19.50,21.17,50,attack,test_cut_down,R,mixed,,strike 4
+257,257_attack_test_cut_down.avi,257_attack_test_cut_down.npz,033_test_cut_down_130017,21.17,22.87,51,attack,test_cut_down,R,mixed,,strike 5
+258,258_attack_test_cut_down.avi,258_attack_test_cut_down.npz,033_test_cut_down_130017,23.13,24.83,51,attack,test_cut_down,R,mixed,,strike 6
+259,259_normal_between_strikes.avi,259_normal_between_strikes.npz,033_test_cut_down_130017,24.83,29.67,145,normal,between_strikes,R,mixed,,
+260,260_normal_between_strikes.avi,260_normal_between_strikes.npz,033_test_cut_down_130017,30.87,32.47,48,normal,between_strikes,R,mixed,,
+261,261_normal_between_strikes.avi,261_normal_between_strikes.npz,034_test_slash_135927,7.53,30.33,684,normal,between_strikes,R,mixed,,
+262,262_attack_test_slash.avi,262_attack_test_slash.npz,034_test_slash_135927,30.33,32.03,51,attack,test_slash,R,mixed,,strike 0
+263,263_attack_test_slash.avi,263_attack_test_slash.npz,034_test_slash_135927,32.70,34.40,51,attack,test_slash,R,mixed,,strike 1
+264,264_normal_between_strikes.avi,264_normal_between_strikes.npz,034_test_slash_135927,34.40,35.53,34,normal,between_strikes,R,mixed,,
+265,265_attack_test_slash.avi,265_attack_test_slash.npz,034_test_slash_135927,35.53,37.23,51,attack,test_slash,R,mixed,,strike 2
+266,266_normal_between_strikes.avi,266_normal_between_strikes.npz,034_test_slash_135927,37.23,38.30,32,normal,between_strikes,R,mixed,,
+267,267_attack_test_slash.avi,267_attack_test_slash.npz,034_test_slash_135927,38.30,40.00,51,attack,test_slash,R,mixed,,strike 3
+268,268_normal_between_strikes.avi,268_normal_between_strikes.npz,034_test_slash_135927,40.00,41.33,40,normal,between_strikes,R,mixed,,
+269,269_attack_test_slash.avi,269_attack_test_slash.npz,034_test_slash_135927,41.33,43.03,51,attack,test_slash,R,mixed,,strike 4
+270,270_attack_test_slash.avi,270_attack_test_slash.npz,034_test_slash_135927,43.33,45.03,51,attack,test_slash,R,mixed,,strike 5
+271,271_attack_test_slash.avi,271_attack_test_slash.npz,034_test_slash_135927,45.57,47.27,51,attack,test_slash,R,mixed,,strike 6
+272,272_attack_test_slash.avi,272_attack_test_slash.npz,034_test_slash_135927,47.73,49.43,51,attack,test_slash,R,mixed,,strike 7
+273,273_normal_between_strikes.avi,273_normal_between_strikes.npz,034_test_slash_135927,49.43,54.43,150,normal,between_strikes,R,mixed,,
+274,274_attack_test_slash.avi,274_attack_test_slash.npz,034_test_slash_135927,54.43,56.13,51,attack,test_slash,R,mixed,,strike 8
+275,275_attack_test_slash.avi,275_attack_test_slash.npz,034_test_slash_135927,56.53,58.23,51,attack,test_slash,R,mixed,,strike 9
+276,276_normal_between_strikes.avi,276_normal_between_strikes.npz,034_test_slash_135927,58.23,61.37,94,normal,between_strikes,R,mixed,,
+277,277_attack_test_slash.avi,277_attack_test_slash.npz,034_test_slash_135927,61.37,63.07,51,attack,test_slash,R,mixed,,strike 10
+278,278_normal_between_strikes.avi,278_normal_between_strikes.npz,034_test_slash_135927,63.07,64.77,51,normal,between_strikes,R,mixed,,
+279,279_attack_test_slash.avi,279_attack_test_slash.npz,034_test_slash_135927,64.77,66.47,51,attack,test_slash,R,mixed,,strike 11
+280,280_attack_test_slash.avi,280_attack_test_slash.npz,034_test_slash_135927,67.40,69.10,51,attack,test_slash,R,mixed,,strike 12
+281,281_attack_test_slash.avi,281_attack_test_slash.npz,034_test_slash_135927,69.63,71.33,51,attack,test_slash,R,mixed,,strike 13
+282,282_normal_between_strikes.avi,282_normal_between_strikes.npz,034_test_slash_135927,71.33,73.60,68,normal,between_strikes,R,mixed,,
+283,283_attack_test_slash.avi,283_attack_test_slash.npz,034_test_slash_135927,73.60,75.30,51,attack,test_slash,R,mixed,,strike 14
+284,284_normal_between_strikes.avi,284_normal_between_strikes.npz,034_test_slash_135927,75.30,79.53,127,normal,between_strikes,R,mixed,,
+285,285_attack_test_slash.avi,285_attack_test_slash.npz,034_test_slash_135927,79.53,81.23,51,attack,test_slash,R,mixed,,strike 15
+286,286_normal_between_strikes.avi,286_normal_between_strikes.npz,034_test_slash_135927,81.23,83.03,54,normal,between_strikes,R,mixed,,
+287,287_normal_between_strikes.avi,287_normal_between_strikes.npz,035_test_walking_thrust_140104,8.27,13.90,169,normal,between_strikes,R,mixed,,
+288,288_attack_test_walking_thrust.avi,288_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,13.90,15.60,51,attack,test_walking_thrust,R,mixed,,strike 0
+289,289_normal_between_strikes.avi,289_normal_between_strikes.npz,035_test_walking_thrust_140104,15.60,18.47,86,normal,between_strikes,R,mixed,,
+290,290_attack_test_walking_thrust.avi,290_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,18.47,20.17,51,attack,test_walking_thrust,R,mixed,,strike 1
+291,291_normal_between_strikes.avi,291_normal_between_strikes.npz,035_test_walking_thrust_140104,20.17,24.77,138,normal,between_strikes,R,mixed,,
+292,292_attack_test_walking_thrust.avi,292_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,24.77,26.47,51,attack,test_walking_thrust,R,mixed,,strike 2
+293,293_normal_between_strikes.avi,293_normal_between_strikes.npz,035_test_walking_thrust_140104,26.47,32.20,172,normal,between_strikes,R,mixed,,
+294,294_attack_test_walking_thrust.avi,294_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,32.20,33.90,51,attack,test_walking_thrust,R,mixed,,strike 4
+295,295_normal_between_strikes.avi,295_normal_between_strikes.npz,035_test_walking_thrust_140104,33.90,42.13,247,normal,between_strikes,R,mixed,,
+296,296_attack_test_walking_thrust.avi,296_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,42.13,43.83,51,attack,test_walking_thrust,R,mixed,,strike 6
+297,297_normal_between_strikes.avi,297_normal_between_strikes.npz,035_test_walking_thrust_140104,43.83,46.93,93,normal,between_strikes,R,mixed,,
+298,298_attack_test_walking_thrust.avi,298_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,46.93,48.63,51,attack,test_walking_thrust,R,mixed,,strike 7
+299,299_normal_between_strikes.avi,299_normal_between_strikes.npz,035_test_walking_thrust_140104,48.63,53.30,140,normal,between_strikes,R,mixed,,
+300,300_attack_test_walking_thrust.avi,300_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,53.30,55.00,51,attack,test_walking_thrust,R,mixed,,strike 8
+301,301_normal_between_strikes.avi,301_normal_between_strikes.npz,035_test_walking_thrust_140104,55.00,57.67,80,normal,between_strikes,R,mixed,,
+302,302_attack_test_walking_thrust.avi,302_attack_test_walking_thrust.npz,035_test_walking_thrust_140104,57.67,59.37,51,attack,test_walking_thrust,R,mixed,,strike 9
+303,303_normal_between_strikes.avi,303_normal_between_strikes.npz,035_test_walking_thrust_140104,59.37,61.97,78,normal,between_strikes,R,mixed,,
+304,304_normal_walk.avi,304_normal_walk.npz,036_test_normal_mixed_140220,8.27,10.27,60,normal,walk,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+305,305_normal_test_normal_mixed.avi,305_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,10.27,20.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+306,306_normal_test_normal_mixed.avi,306_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,20.27,30.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+307,307_normal_test_normal_mixed.avi,307_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,30.27,40.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+308,308_normal_test_normal_mixed.avi,308_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,40.27,50.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+309,309_normal_test_normal_mixed.avi,309_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,50.27,60.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+310,310_normal_test_normal_mixed.avi,310_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,60.27,70.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+311,311_normal_test_normal_mixed.avi,311_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,70.27,80.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+312,312_normal_test_normal_mixed.avi,312_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,80.27,90.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+313,313_normal_test_normal_mixed.avi,313_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,90.27,100.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+314,314_normal_test_normal_mixed.avi,314_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,100.27,110.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+315,315_normal_test_normal_mixed.avi,315_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,110.27,120.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+316,316_normal_test_normal_mixed.avi,316_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,120.27,130.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+317,317_normal_test_normal_mixed.avi,317_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,130.27,140.27,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+318,318_normal_test_normal_mixed.avi,318_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,140.27,144.60,130,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+319,319_normal_test_normal_mixed.avi,319_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,156.40,166.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+320,320_normal_test_normal_mixed.avi,320_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,166.40,176.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+321,321_normal_test_normal_mixed.avi,321_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,176.40,186.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+322,322_normal_test_normal_mixed.avi,322_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,186.40,196.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+323,323_normal_test_normal_mixed.avi,323_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,196.40,206.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+324,324_normal_test_normal_mixed.avi,324_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,206.40,216.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+325,325_normal_test_normal_mixed.avi,325_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,216.40,226.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+326,326_normal_test_normal_mixed.avi,326_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,226.40,236.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+327,327_normal_test_normal_mixed.avi,327_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,236.40,246.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+328,328_normal_test_normal_mixed.avi,328_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,246.40,256.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+329,329_normal_test_normal_mixed.avi,329_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,256.40,266.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+330,330_normal_test_normal_mixed.avi,330_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,266.40,276.40,300,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+331,331_normal_test_normal_mixed.avi,331_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,276.40,281.90,165,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+332,332_normal_test_normal_mixed.avi,332_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,283.03,284.03,30,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+333,333_normal_test_normal_mixed.avi,333_normal_test_normal_mixed.npz,036_test_normal_mixed_140220,285.77,288.13,71,normal,test_normal_mixed,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+334,334_normal_walk.avi,334_normal_walk.npz,036_test_normal_mixed_140220,288.13,290.13,60,normal,walk,R,mixed,,mostly sitting in a swivel chair from about 25 s to 143 s
+335,335_normal_between_strikes.avi,335_normal_between_strikes.npz,037_overhand_bending_front_140817,7.80,20.63,385,normal,between_strikes,R,front,,
+336,336_attack_overhand_bending_front.avi,336_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,20.63,22.33,51,attack,overhand_bending_front,R,front,,strike 0
+337,337_normal_between_strikes.avi,337_normal_between_strikes.npz,037_overhand_bending_front_140817,22.33,25.10,83,normal,between_strikes,R,front,,
+338,338_attack_overhand_bending_front.avi,338_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,25.10,26.80,51,attack,overhand_bending_front,R,front,,strike 1
+339,339_normal_between_strikes.avi,339_normal_between_strikes.npz,037_overhand_bending_front_140817,26.80,28.80,60,normal,between_strikes,R,front,,
+340,340_attack_overhand_bending_front.avi,340_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,28.80,30.50,51,attack,overhand_bending_front,R,front,,strike 2
+341,341_normal_between_strikes.avi,341_normal_between_strikes.npz,037_overhand_bending_front_140817,30.50,31.83,40,normal,between_strikes,R,front,,
+342,342_attack_overhand_bending_front.avi,342_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,31.83,33.53,51,attack,overhand_bending_front,R,front,,strike 3
+343,343_normal_between_strikes.avi,343_normal_between_strikes.npz,037_overhand_bending_front_140817,33.53,34.87,40,normal,between_strikes,R,front,,
+344,344_attack_overhand_bending_front.avi,344_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,34.87,36.57,51,attack,overhand_bending_front,R,front,,strike 4
+345,345_normal_between_strikes.avi,345_normal_between_strikes.npz,037_overhand_bending_front_140817,36.57,38.13,47,normal,between_strikes,R,front,,
+346,346_attack_overhand_bending_front.avi,346_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,38.13,39.83,51,attack,overhand_bending_front,R,front,,strike 5
+347,347_normal_between_strikes.avi,347_normal_between_strikes.npz,037_overhand_bending_front_140817,39.83,41.97,64,normal,between_strikes,R,front,,
+348,348_attack_overhand_bending_front.avi,348_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,41.97,43.67,51,attack,overhand_bending_front,R,front,,strike 6
+349,349_normal_between_strikes.avi,349_normal_between_strikes.npz,037_overhand_bending_front_140817,43.67,47.57,117,normal,between_strikes,R,front,,
+350,350_attack_overhand_bending_front.avi,350_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,47.57,49.27,51,attack,overhand_bending_front,R,front,,strike 7
+351,351_normal_between_strikes.avi,351_normal_between_strikes.npz,037_overhand_bending_front_140817,49.27,50.73,44,normal,between_strikes,R,front,,
+352,352_attack_overhand_bending_front.avi,352_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,50.73,52.43,51,attack,overhand_bending_front,R,front,,strike 8
+353,353_normal_between_strikes.avi,353_normal_between_strikes.npz,037_overhand_bending_front_140817,52.43,56.00,107,normal,between_strikes,R,front,,
+354,354_attack_overhand_bending_front.avi,354_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,56.00,57.70,51,attack,overhand_bending_front,R,front,,strike 9
+355,355_normal_between_strikes.avi,355_normal_between_strikes.npz,037_overhand_bending_front_140817,57.70,61.03,100,normal,between_strikes,R,front,,
+356,356_attack_overhand_bending_front.avi,356_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,61.03,62.73,51,attack,overhand_bending_front,R,front,,strike 10
+357,357_normal_between_strikes.avi,357_normal_between_strikes.npz,037_overhand_bending_front_140817,62.73,68.30,167,normal,between_strikes,R,front,,
+358,358_attack_overhand_bending_front.avi,358_attack_overhand_bending_front.npz,037_overhand_bending_front_140817,68.30,70.00,51,attack,overhand_bending_front,R,front,,strike 11
+359,359_normal_between_strikes.avi,359_normal_between_strikes.npz,037_overhand_bending_front_140817,70.00,74.30,129,normal,between_strikes,R,front,,
+360,360_normal_between_strikes.avi,360_normal_between_strikes.npz,037_overhand_bending_front_140817,75.63,77.43,54,normal,between_strikes,R,front,,
+361,361_normal_between_strikes.avi,361_normal_between_strikes.npz,038_thrust_low_knife_front_140947,3.30,5.70,72,normal,between_strikes,R,front,,
+362,362_normal_between_strikes.avi,362_normal_between_strikes.npz,038_thrust_low_knife_front_140947,6.97,10.87,117,normal,between_strikes,R,front,,
+363,363_attack_thrust_low_knife_front.avi,363_attack_thrust_low_knife_front.npz,038_thrust_low_knife_front_140947,10.87,12.57,51,attack,thrust_low_knife_front,R,front,,strike 1
+364,364_normal_between_strikes.avi,364_normal_between_strikes.npz,038_thrust_low_knife_front_140947,12.57,16.73,125,normal,between_strikes,R,front,,
+365,365_attack_thrust_low_knife_front.avi,365_attack_thrust_low_knife_front.npz,038_thrust_low_knife_front_140947,16.73,18.43,51,attack,thrust_low_knife_front,R,front,,strike 2
+366,366_normal_between_strikes.avi,366_normal_between_strikes.npz,038_thrust_low_knife_front_140947,18.43,23.07,139,normal,between_strikes,R,front,,
+367,367_attack_thrust_low_knife_front.avi,367_attack_thrust_low_knife_front.npz,038_thrust_low_knife_front_140947,23.07,24.77,51,attack,thrust_low_knife_front,R,front,,strike 3
+368,368_normal_between_strikes.avi,368_normal_between_strikes.npz,038_thrust_low_knife_front_140947,24.77,32.40,229,normal,between_strikes,R,front,,
+369,369_normal_between_strikes.avi,369_normal_between_strikes.npz,038_thrust_low_knife_front_140947,33.50,34.70,36,normal,between_strikes,R,front,,
+370,370_normal_between_strikes.avi,370_normal_between_strikes.npz,038_thrust_low_knife_front_140947,35.97,39.73,113,normal,between_strikes,R,front,,
+371,371_normal_between_strikes.avi,371_normal_between_strikes.npz,039_thrust_low_knife_left_141032,0.43,3.73,99,normal,between_strikes,R,left,,
+372,372_normal_between_strikes.avi,372_normal_between_strikes.npz,039_thrust_low_knife_left_141032,6.40,13.87,224,normal,between_strikes,R,left,,
+373,373_attack_thrust_low_knife_left.avi,373_attack_thrust_low_knife_left.npz,039_thrust_low_knife_left_141032,13.87,15.57,51,attack,thrust_low_knife_left,R,left,,strike 0
+374,374_normal_between_strikes.avi,374_normal_between_strikes.npz,039_thrust_low_knife_left_141032,15.57,29.90,430,normal,between_strikes,R,left,,
+375,375_normal_between_strikes.avi,375_normal_between_strikes.npz,039_thrust_low_knife_left_141032,33.00,34.57,47,normal,between_strikes,R,left,,
+376,376_normal_between_strikes.avi,376_normal_between_strikes.npz,040_thrust_low_knife_back_141110,5.77,9.30,106,normal,between_strikes,R,back,,
+377,377_attack_thrust_low_knife_back.avi,377_attack_thrust_low_knife_back.npz,040_thrust_low_knife_back_141110,9.30,11.00,51,attack,thrust_low_knife_back,R,back,,strike 1
+378,378_normal_between_strikes.avi,378_normal_between_strikes.npz,040_thrust_low_knife_back_141110,11.00,19.07,242,normal,between_strikes,R,back,,
+379,379_attack_thrust_low_knife_back.avi,379_attack_thrust_low_knife_back.npz,040_thrust_low_knife_back_141110,19.07,20.77,51,attack,thrust_low_knife_back,R,back,,strike 2
+380,380_normal_between_strikes.avi,380_normal_between_strikes.npz,040_thrust_low_knife_back_141110,20.77,24.27,105,normal,between_strikes,R,back,,
+381,381_normal_between_strikes.avi,381_normal_between_strikes.npz,040_thrust_low_knife_back_141110,25.67,31.00,160,normal,between_strikes,R,back,,
+382,382_normal_between_strikes.avi,382_normal_between_strikes.npz,041_thrust_low_knife_right_141143,0.00,5.83,175,normal,between_strikes,R,right,,
+383,383_normal_between_strikes.avi,383_normal_between_strikes.npz,041_thrust_low_knife_right_141143,7.30,15.97,260,normal,between_strikes,R,right,,
+384,384_attack_thrust_low_knife_right.avi,384_attack_thrust_low_knife_right.npz,041_thrust_low_knife_right_141143,15.97,17.67,51,attack,thrust_low_knife_right,R,right,,strike 0
+385,385_normal_between_strikes.avi,385_normal_between_strikes.npz,041_thrust_low_knife_right_141143,17.67,26.47,264,normal,between_strikes,R,right,,
+386,386_attack_thrust_low_knife_right.avi,386_attack_thrust_low_knife_right.npz,041_thrust_low_knife_right_141143,26.47,28.17,51,attack,thrust_low_knife_right,R,right,,strike 1
+387,387_normal_between_strikes.avi,387_normal_between_strikes.npz,041_thrust_low_knife_right_141143,28.17,30.60,73,normal,between_strikes,R,right,,
+388,388_normal_between_strikes.avi,388_normal_between_strikes.npz,041_thrust_low_knife_right_141143,34.50,38.23,112,normal,between_strikes,R,right,,
+389,389_normal_walk.avi,389_normal_walk.npz,042_put_down_table_141355,2.13,4.13,60,normal,walk,R,mixed,,
+390,390_normal_put_down_table.avi,390_normal_put_down_table.npz,042_put_down_table_141355,4.13,14.13,300,normal,put_down_table,R,mixed,,
+391,391_normal_put_down_table.avi,391_normal_put_down_table.npz,042_put_down_table_141355,14.13,24.13,300,normal,put_down_table,R,mixed,,
+392,392_normal_put_down_table.avi,392_normal_put_down_table.npz,042_put_down_table_141355,24.13,34.13,300,normal,put_down_table,R,mixed,,
+393,393_normal_put_down_table.avi,393_normal_put_down_table.npz,042_put_down_table_141355,34.13,44.13,300,normal,put_down_table,R,mixed,,
+394,394_normal_put_down_table.avi,394_normal_put_down_table.npz,042_put_down_table_141355,44.13,54.13,300,normal,put_down_table,R,mixed,,
+395,395_normal_put_down_table.avi,395_normal_put_down_table.npz,042_put_down_table_141355,54.13,64.13,300,normal,put_down_table,R,mixed,,
+396,396_normal_put_down_table.avi,396_normal_put_down_table.npz,042_put_down_table_141355,64.13,74.13,300,normal,put_down_table,R,mixed,,
+397,397_normal_put_down_table.avi,397_normal_put_down_table.npz,042_put_down_table_141355,74.13,84.13,300,normal,put_down_table,R,mixed,,
+398,398_normal_put_down_table.avi,398_normal_put_down_table.npz,042_put_down_table_141355,84.13,94.13,300,normal,put_down_table,R,mixed,,
+399,399_normal_put_down_table.avi,399_normal_put_down_table.npz,042_put_down_table_141355,94.13,104.13,300,normal,put_down_table,R,mixed,,
+400,400_normal_put_down_table.avi,400_normal_put_down_table.npz,042_put_down_table_141355,104.13,108.70,137,normal,put_down_table,R,mixed,,
+401,401_normal_put_down_table.avi,401_normal_put_down_table.npz,042_put_down_table_141355,111.93,112.93,30,normal,put_down_table,R,mixed,,
+402,402_normal_walk.avi,402_normal_walk.npz,043_hand_to_hand_141558,0.00,2.00,60,normal,walk,R,mixed,,
+403,403_normal_hand_to_hand.avi,403_normal_hand_to_hand.npz,043_hand_to_hand_141558,2.00,12.00,300,normal,hand_to_hand,R,mixed,,
+404,404_normal_hand_to_hand.avi,404_normal_hand_to_hand.npz,043_hand_to_hand_141558,12.00,22.00,300,normal,hand_to_hand,R,mixed,,
+405,405_normal_hand_to_hand.avi,405_normal_hand_to_hand.npz,043_hand_to_hand_141558,22.00,32.00,300,normal,hand_to_hand,R,mixed,,
+406,406_normal_hand_to_hand.avi,406_normal_hand_to_hand.npz,043_hand_to_hand_141558,32.00,42.00,300,normal,hand_to_hand,R,mixed,,
+407,407_normal_hand_to_hand.avi,407_normal_hand_to_hand.npz,043_hand_to_hand_141558,42.00,52.00,300,normal,hand_to_hand,R,mixed,,
+408,408_normal_hand_to_hand.avi,408_normal_hand_to_hand.npz,043_hand_to_hand_141558,52.00,62.00,300,normal,hand_to_hand,R,mixed,,
+409,409_normal_hand_to_hand.avi,409_normal_hand_to_hand.npz,043_hand_to_hand_141558,62.00,71.83,295,normal,hand_to_hand,R,mixed,,
+410,410_normal_hand_to_hand.avi,410_normal_hand_to_hand.npz,043_hand_to_hand_141558,73.10,76.80,111,normal,hand_to_hand,R,mixed,,
+411,411_normal_walk.avi,411_normal_walk.npz,044_sit_stand_141724,2.37,4.37,60,normal,walk,R,mixed,,
+412,412_normal_sit_stand.avi,412_normal_sit_stand.npz,044_sit_stand_141724,4.37,14.37,300,normal,sit_stand,R,mixed,,
+413,413_normal_sit_stand.avi,413_normal_sit_stand.npz,044_sit_stand_141724,14.37,24.37,300,normal,sit_stand,R,mixed,,
+414,414_normal_sit_stand.avi,414_normal_sit_stand.npz,044_sit_stand_141724,24.37,34.37,300,normal,sit_stand,R,mixed,,
+415,415_normal_sit_stand.avi,415_normal_sit_stand.npz,044_sit_stand_141724,34.37,44.37,300,normal,sit_stand,R,mixed,,
+416,416_normal_sit_stand.avi,416_normal_sit_stand.npz,044_sit_stand_141724,44.37,54.37,300,normal,sit_stand,R,mixed,,
+417,417_normal_sit_stand.avi,417_normal_sit_stand.npz,044_sit_stand_141724,54.37,64.37,300,normal,sit_stand,R,mixed,,
+418,418_normal_sit_stand.avi,418_normal_sit_stand.npz,044_sit_stand_141724,64.37,72.07,231,normal,sit_stand,R,mixed,,
+419,419_normal_sit_stand.avi,419_normal_sit_stand.npz,044_sit_stand_141724,75.23,77.97,82,normal,sit_stand,R,mixed,,
+420,420_normal_idle.avi,420_normal_idle.npz,045_idle_141903,0.13,1.13,30,normal,idle,R,mixed,,
+421,421_normal_idle.avi,421_normal_idle.npz,045_idle_141903,2.40,12.40,300,normal,idle,R,mixed,,
+422,422_normal_idle.avi,422_normal_idle.npz,045_idle_141903,12.40,22.40,300,normal,idle,R,mixed,,
+423,423_normal_idle.avi,423_normal_idle.npz,045_idle_141903,22.40,32.40,300,normal,idle,R,mixed,,
+424,424_normal_idle.avi,424_normal_idle.npz,045_idle_141903,32.40,42.40,300,normal,idle,R,mixed,,
+425,425_normal_idle.avi,425_normal_idle.npz,045_idle_141903,42.40,50.47,242,normal,idle,R,mixed,,
+426,426_normal_walk.avi,426_normal_walk.npz,045_idle_141903,50.47,52.47,60,normal,walk,R,mixed,,
+427,427_normal_walk.avi,427_normal_walk.npz,046_arms_out_143822,0.13,2.13,60,normal,walk,R,mixed,,
+428,428_normal_arms_out.avi,428_normal_arms_out.npz,046_arms_out_143822,2.13,12.13,300,normal,arms_out,R,mixed,,
+429,429_normal_arms_out.avi,429_normal_arms_out.npz,046_arms_out_143822,12.13,22.13,300,normal,arms_out,R,mixed,,
+430,430_normal_arms_out.avi,430_normal_arms_out.npz,046_arms_out_143822,22.13,32.13,300,normal,arms_out,R,mixed,,
+431,431_normal_arms_out.avi,431_normal_arms_out.npz,046_arms_out_143822,32.13,42.13,300,normal,arms_out,R,mixed,,
+432,432_normal_arms_out.avi,432_normal_arms_out.npz,046_arms_out_143822,42.13,52.13,300,normal,arms_out,R,mixed,,
+433,433_normal_arms_out.avi,433_normal_arms_out.npz,046_arms_out_143822,52.13,56.23,123,normal,arms_out,R,mixed,,
+434,434_normal_walk.avi,434_normal_walk.npz,046_arms_out_143822,56.23,58.23,60,normal,walk,R,mixed,,
+435,435_normal_hand_to_face.avi,435_normal_hand_to_face.npz,047_hand_to_face_143929,0.07,4.53,134,normal,hand_to_face,R,mixed,,
+436,436_normal_hand_to_face.avi,436_normal_hand_to_face.npz,047_hand_to_face_143929,5.87,15.87,300,normal,hand_to_face,R,mixed,,
+437,437_normal_hand_to_face.avi,437_normal_hand_to_face.npz,047_hand_to_face_143929,15.87,25.87,300,normal,hand_to_face,R,mixed,,
+438,438_normal_hand_to_face.avi,438_normal_hand_to_face.npz,047_hand_to_face_143929,25.87,27.93,62,normal,hand_to_face,R,mixed,,
+439,439_normal_walk.avi,439_normal_walk.npz,047_hand_to_face_143929,27.93,29.93,60,normal,walk,R,mixed,,
+440,440_normal_between_strikes.avi,440_normal_between_strikes.npz,048_phone_strike_144106,3.27,13.83,317,normal,between_strikes,R,mixed,,
+441,441_confuser_phone_strike.avi,441_confuser_phone_strike.npz,048_phone_strike_144106,13.83,15.53,51,confuser,phone_strike,R,mixed,,strike 0
+442,442_normal_between_strikes.avi,442_normal_between_strikes.npz,048_phone_strike_144106,15.53,16.80,38,normal,between_strikes,R,mixed,,
+443,443_confuser_phone_strike.avi,443_confuser_phone_strike.npz,048_phone_strike_144106,16.80,18.50,51,confuser,phone_strike,R,mixed,,strike 1
+444,444_normal_between_strikes.avi,444_normal_between_strikes.npz,048_phone_strike_144106,18.50,20.73,67,normal,between_strikes,R,mixed,,
+445,445_normal_between_strikes.avi,445_normal_between_strikes.npz,048_phone_strike_144106,23.07,27.03,119,normal,between_strikes,R,mixed,,
+446,446_confuser_phone_strike.avi,446_confuser_phone_strike.npz,048_phone_strike_144106,27.03,28.73,51,confuser,phone_strike,R,mixed,,strike 2
+447,447_normal_between_strikes.avi,447_normal_between_strikes.npz,048_phone_strike_144106,28.73,31.87,94,normal,between_strikes,R,mixed,,
+448,448_confuser_phone_strike.avi,448_confuser_phone_strike.npz,048_phone_strike_144106,31.87,33.57,51,confuser,phone_strike,R,mixed,,strike 3
+449,449_normal_between_strikes.avi,449_normal_between_strikes.npz,048_phone_strike_144106,33.57,35.77,66,normal,between_strikes,R,mixed,,
+450,450_confuser_phone_strike.avi,450_confuser_phone_strike.npz,048_phone_strike_144106,35.77,37.47,51,confuser,phone_strike,R,mixed,,strike 4
+451,451_normal_between_strikes.avi,451_normal_between_strikes.npz,048_phone_strike_144106,37.47,43.10,169,normal,between_strikes,R,mixed,,
+452,452_confuser_phone_strike.avi,452_confuser_phone_strike.npz,048_phone_strike_144106,43.10,44.80,51,confuser,phone_strike,R,mixed,,strike 5
+453,453_normal_between_strikes.avi,453_normal_between_strikes.npz,048_phone_strike_144106,44.80,47.17,71,normal,between_strikes,R,mixed,,
+454,454_confuser_phone_strike.avi,454_confuser_phone_strike.npz,048_phone_strike_144106,47.17,48.87,51,confuser,phone_strike,R,mixed,,strike 6
+455,455_normal_between_strikes.avi,455_normal_between_strikes.npz,048_phone_strike_144106,48.87,56.10,217,normal,between_strikes,R,mixed,,
+456,456_normal_walk.avi,456_normal_walk.npz,049_phone_use_144212,6.30,8.30,60,normal,walk,R,mixed,,
+457,457_confuser_phone_use.avi,457_confuser_phone_use.npz,049_phone_use_144212,8.30,18.30,300,confuser,phone_use,R,mixed,,
+458,458_confuser_phone_use.avi,458_confuser_phone_use.npz,049_phone_use_144212,18.30,28.30,300,confuser,phone_use,R,mixed,,
+459,459_confuser_phone_use.avi,459_confuser_phone_use.npz,049_phone_use_144212,28.30,38.30,300,confuser,phone_use,R,mixed,,
+460,460_confuser_phone_use.avi,460_confuser_phone_use.npz,049_phone_use_144212,38.30,44.67,191,confuser,phone_use,R,mixed,,
+461,461_confuser_phone_use.avi,461_confuser_phone_use.npz,049_phone_use_144212,46.03,50.00,119,confuser,phone_use,R,mixed,,
+462,462_normal_between_strikes.avi,462_normal_between_strikes.npz,050_phone2_strike_144316,0.07,3.73,110,normal,between_strikes,R,mixed,,
+463,463_normal_between_strikes.avi,463_normal_between_strikes.npz,050_phone2_strike_144316,4.87,8.10,97,normal,between_strikes,R,mixed,,
+464,464_confuser_phone2_strike.avi,464_confuser_phone2_strike.npz,050_phone2_strike_144316,8.10,9.80,51,confuser,phone2_strike,R,mixed,,strike 0
+465,465_confuser_phone2_strike.avi,465_confuser_phone2_strike.npz,050_phone2_strike_144316,10.70,12.40,51,confuser,phone2_strike,R,mixed,,strike 1
+466,466_normal_between_strikes.avi,466_normal_between_strikes.npz,050_phone2_strike_144316,12.40,14.67,68,normal,between_strikes,R,mixed,,
+467,467_confuser_phone2_strike.avi,467_confuser_phone2_strike.npz,050_phone2_strike_144316,14.67,16.37,51,confuser,phone2_strike,R,mixed,,strike 2
+468,468_confuser_phone2_strike.avi,468_confuser_phone2_strike.npz,050_phone2_strike_144316,17.23,18.93,51,confuser,phone2_strike,R,mixed,,strike 3
+469,469_normal_between_strikes.avi,469_normal_between_strikes.npz,050_phone2_strike_144316,18.93,20.53,48,normal,between_strikes,R,mixed,,
+470,470_confuser_phone2_strike.avi,470_confuser_phone2_strike.npz,050_phone2_strike_144316,20.53,22.23,51,confuser,phone2_strike,R,mixed,,strike 4
+471,471_normal_between_strikes.avi,471_normal_between_strikes.npz,050_phone2_strike_144316,22.23,23.80,47,normal,between_strikes,R,mixed,,
+472,472_confuser_phone2_strike.avi,472_confuser_phone2_strike.npz,050_phone2_strike_144316,23.80,25.50,51,confuser,phone2_strike,R,mixed,,strike 5
+473,473_normal_between_strikes.avi,473_normal_between_strikes.npz,050_phone2_strike_144316,25.50,32.27,203,normal,between_strikes,R,mixed,,
+474,474_normal_between_strikes.avi,474_normal_between_strikes.npz,050_phone2_strike_144316,33.27,35.17,57,normal,between_strikes,R,mixed,,
+475,475_normal_between_strikes.avi,475_normal_between_strikes.npz,050_phone2_strike_144316,36.43,38.77,70,normal,between_strikes,R,mixed,,
+476,476_confuser_phone2_use.avi,476_confuser_phone2_use.npz,051_phone2_use_144411,0.60,1.63,31,confuser,phone2_use,R,mixed,,
+477,477_confuser_phone2_use.avi,477_confuser_phone2_use.npz,051_phone2_use_144411,2.70,4.23,46,confuser,phone2_use,R,mixed,,
+478,478_confuser_phone2_use.avi,478_confuser_phone2_use.npz,051_phone2_use_144411,5.23,15.23,300,confuser,phone2_use,R,mixed,,
+479,479_confuser_phone2_use.avi,479_confuser_phone2_use.npz,051_phone2_use_144411,15.23,25.23,300,confuser,phone2_use,R,mixed,,
+480,480_confuser_phone2_use.avi,480_confuser_phone2_use.npz,051_phone2_use_144411,25.23,34.90,290,confuser,phone2_use,R,mixed,,
+481,481_confuser_phone2_use.avi,481_confuser_phone2_use.npz,051_phone2_use_144411,36.33,40.13,114,confuser,phone2_use,R,mixed,,
+482,482_normal_between_strikes.avi,482_normal_between_strikes.npz,052_wallet_strike_144502,5.20,10.77,167,normal,between_strikes,R,mixed,,
+483,483_confuser_wallet_strike.avi,483_confuser_wallet_strike.npz,052_wallet_strike_144502,10.77,12.47,51,confuser,wallet_strike,R,mixed,,strike 0
+484,484_normal_between_strikes.avi,484_normal_between_strikes.npz,052_wallet_strike_144502,12.47,21.00,256,normal,between_strikes,R,mixed,,
+485,485_confuser_wallet_strike.avi,485_confuser_wallet_strike.npz,052_wallet_strike_144502,21.00,22.70,51,confuser,wallet_strike,R,mixed,,strike 1
+486,486_normal_between_strikes.avi,486_normal_between_strikes.npz,052_wallet_strike_144502,22.70,25.83,94,normal,between_strikes,R,mixed,,
+487,487_confuser_wallet_strike.avi,487_confuser_wallet_strike.npz,052_wallet_strike_144502,25.83,27.53,51,confuser,wallet_strike,R,mixed,,strike 2
+488,488_normal_between_strikes.avi,488_normal_between_strikes.npz,052_wallet_strike_144502,27.53,32.17,139,normal,between_strikes,R,mixed,,
+489,489_normal_between_strikes.avi,489_normal_between_strikes.npz,052_wallet_strike_144502,33.57,37.60,121,normal,between_strikes,R,mixed,,
+490,490_confuser_wallet_use.avi,490_confuser_wallet_use.npz,053_wallet_use_144542,1.97,4.97,90,confuser,wallet_use,R,mixed,,
+491,491_confuser_wallet_use.avi,491_confuser_wallet_use.npz,053_wallet_use_144542,6.40,16.40,300,confuser,wallet_use,R,mixed,,
+492,492_confuser_wallet_use.avi,492_confuser_wallet_use.npz,053_wallet_use_144542,16.40,28.30,357,confuser,wallet_use,R,mixed,,
+493,493_normal_walk.avi,493_normal_walk.npz,053_wallet_use_144542,28.30,30.30,60,normal,walk,R,mixed,,
+494,494_normal_between_strikes.avi,494_normal_between_strikes.npz,054_pen_strike_144622,0.17,11.47,339,normal,between_strikes,R,mixed,,
+495,495_confuser_pen_strike.avi,495_confuser_pen_strike.npz,054_pen_strike_144622,11.47,13.17,51,confuser,pen_strike,R,mixed,,strike 0
+496,496_normal_between_strikes.avi,496_normal_between_strikes.npz,054_pen_strike_144622,13.17,15.57,72,normal,between_strikes,R,mixed,,
+497,497_confuser_pen_strike.avi,497_confuser_pen_strike.npz,054_pen_strike_144622,15.57,17.27,51,confuser,pen_strike,R,mixed,,strike 1
+498,498_normal_between_strikes.avi,498_normal_between_strikes.npz,054_pen_strike_144622,17.27,24.93,230,normal,between_strikes,R,mixed,,
+499,499_confuser_pen_strike.avi,499_confuser_pen_strike.npz,054_pen_strike_144622,24.93,26.63,51,confuser,pen_strike,R,mixed,,strike 2
+500,500_normal_between_strikes.avi,500_normal_between_strikes.npz,054_pen_strike_144622,26.63,32.20,167,normal,between_strikes,R,mixed,,
+501,501_confuser_pen_strike.avi,501_confuser_pen_strike.npz,054_pen_strike_144622,32.20,33.90,51,confuser,pen_strike,R,mixed,,strike 3
+502,502_normal_between_strikes.avi,502_normal_between_strikes.npz,054_pen_strike_144622,33.90,41.53,229,normal,between_strikes,R,mixed,,
+503,503_confuser_pen_strike.avi,503_confuser_pen_strike.npz,054_pen_strike_144622,41.53,43.23,51,confuser,pen_strike,R,mixed,,strike 4
+504,504_normal_between_strikes.avi,504_normal_between_strikes.npz,054_pen_strike_144622,43.23,47.00,113,normal,between_strikes,R,mixed,,
+505,505_confuser_pen_strike.avi,505_confuser_pen_strike.npz,054_pen_strike_144622,47.00,48.70,51,confuser,pen_strike,R,mixed,,strike 5
+506,506_normal_between_strikes.avi,506_normal_between_strikes.npz,054_pen_strike_144622,48.70,50.97,68,normal,between_strikes,R,mixed,,
+507,507_confuser_pen_strike.avi,507_confuser_pen_strike.npz,054_pen_strike_144622,50.97,52.67,51,confuser,pen_strike,R,mixed,,strike 6
+508,508_normal_between_strikes.avi,508_normal_between_strikes.npz,054_pen_strike_144622,52.67,55.07,72,normal,between_strikes,R,mixed,,
+509,509_normal_between_strikes.avi,509_normal_between_strikes.npz,054_pen_strike_144622,56.37,60.10,112,normal,between_strikes,R,mixed,,
+510,510_normal_walk.avi,510_normal_walk.npz,055_pen_use_144725,0.13,2.13,60,normal,walk,R,mixed,,
+511,511_confuser_pen_use.avi,511_confuser_pen_use.npz,055_pen_use_144725,2.13,12.13,300,confuser,pen_use,R,mixed,,
+512,512_confuser_pen_use.avi,512_confuser_pen_use.npz,055_pen_use_144725,12.13,22.13,300,confuser,pen_use,R,mixed,,
+513,513_confuser_pen_use.avi,513_confuser_pen_use.npz,055_pen_use_144725,22.13,33.23,333,confuser,pen_use,R,mixed,,
+514,514_normal_walk.avi,514_normal_walk.npz,055_pen_use_144725,33.23,35.23,60,normal,walk,R,mixed,,
+515,515_normal_between_strikes.avi,515_normal_between_strikes.npz,056_remote_strike_144804,0.23,1.90,50,normal,between_strikes,R,mixed,,
+516,516_normal_between_strikes.avi,516_normal_between_strikes.npz,056_remote_strike_144804,3.07,7.00,118,normal,between_strikes,R,mixed,,
+517,517_normal_between_strikes.avi,517_normal_between_strikes.npz,056_remote_strike_144804,8.30,11.23,88,normal,between_strikes,R,mixed,,
+518,518_confuser_remote_strike.avi,518_confuser_remote_strike.npz,056_remote_strike_144804,11.23,12.93,51,confuser,remote_strike,R,mixed,,strike 1
+519,519_confuser_remote_strike.avi,519_confuser_remote_strike.npz,056_remote_strike_144804,13.43,15.13,51,confuser,remote_strike,R,mixed,,strike 2
+520,520_normal_between_strikes.avi,520_normal_between_strikes.npz,056_remote_strike_144804,15.13,17.70,77,normal,between_strikes,R,mixed,,
+521,521_confuser_remote_strike.avi,521_confuser_remote_strike.npz,056_remote_strike_144804,17.70,19.40,51,confuser,remote_strike,R,mixed,,strike 3
+522,522_normal_between_strikes.avi,522_normal_between_strikes.npz,056_remote_strike_144804,19.40,21.20,54,normal,between_strikes,R,mixed,,
+523,523_confuser_remote_strike.avi,523_confuser_remote_strike.npz,056_remote_strike_144804,21.20,22.90,51,confuser,remote_strike,R,mixed,,strike 4
+524,524_normal_between_strikes.avi,524_normal_between_strikes.npz,056_remote_strike_144804,22.90,24.80,57,normal,between_strikes,R,mixed,,
+525,525_normal_between_strikes.avi,525_normal_between_strikes.npz,056_remote_strike_144804,26.67,28.17,45,normal,between_strikes,R,mixed,,
+526,526_normal_walk.avi,526_normal_walk.npz,057_remote_use_144835,6.23,8.23,60,normal,walk,R,mixed,,
+527,527_confuser_remote_use.avi,527_confuser_remote_use.npz,057_remote_use_144835,8.23,18.23,300,confuser,remote_use,R,mixed,,
+528,528_confuser_remote_use.avi,528_confuser_remote_use.npz,057_remote_use_144835,18.23,28.80,317,confuser,remote_use,R,mixed,,
+529,529_normal_walk.avi,529_normal_walk.npz,057_remote_use_144835,28.80,30.80,60,normal,walk,R,mixed,,
