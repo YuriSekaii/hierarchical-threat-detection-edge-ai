@@ -124,7 +124,7 @@ The pipeline crashed once on the dev PC with `0xC0000409`, a native fail-fast cr
 
 ## 9. Next steps
 
-1. On the Edge PC: `git pull`, then `record_samples.bat`. It resumes at take 30. The plan was extended on 2026-11-14 to 179 takes (150 left): the knife version of `thrust_low` (the Nov 5 takes used a phone), missed attack types, more normal movement, other objects without a knife, other knives, and 30-second test sessions. New takes have new labels, so recorded takes stay done. Record the rest, 55 takes: `walking_thrust_lefthand`, `train_normal`, then the `test_*` takes, in other clothes or with another person if possible.
+1. On the Edge PC: `git pull`, then `record_samples.bat`. It resumes at take 30. The plan was extended on 2026-11-14 to 179 takes (150 left): the knife version of `thrust_low` (the Nov 5 takes used a phone), missed attack types, more normal movement, other objects without a knife, other knives, and 30-second test sessions. New takes have new labels, so recorded takes stay done. Record the rest, 150 takes: `walking_thrust_lefthand`, `train_normal`, then the `test_*` takes, in other clothes or with another person if possible.
 2. Train with the normal takes, and set the bound on real varied normals. This tests whether the false alarms in section 4 fall.
 3. Score on the `test_*` takes only, through the full pipeline. That is the first clean number.
 4. Then decide whether to use the output instead of RMD. Both need checking at a fixed false-alarm rate.
