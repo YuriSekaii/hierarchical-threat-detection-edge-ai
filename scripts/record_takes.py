@@ -75,6 +75,19 @@ _NORMALS = [("walk", "Walk around, arms swinging"), ("turn", "Turn around on the
             ("hand_to_head", "Touch your head, face and neck"), ("point", "Point with the knife, slowly"),
             ("inspect_knife", "Look at the knife, turn it in your hand"), ("fidget", "Fidget, hands to belt and pockets"),
             ("hurry", "Walk fast, change direction")]
+_ATTACKS2 = [("overhand_slow_windup", "Overhand stab with a SLOW, long wind-up"),
+             ("overhand_big_windup", "Overhand stab, knife raised high behind the head first"),
+             ("overhand_bending", "Overhand stab while bending forward"), ("swing_low", "Low swing of the knife at hip height"),
+             ("stretch_knife", "Stretch both arms wide and up with the knife in hand (counted as violent)")]
+_NORMALS2 = [("walk_knife_down", "Walk through the view, knife held low, pointing down"),
+             ("put_down_table", "Put the knife down on a table or chair, pick it up again"),
+             ("hand_to_hand", "Pass the knife from hand to hand"), ("sit_stand", "Sit down and stand up"),
+             ("idle", "Stand still, shift your weight, look around"), ("arms_out", "Hold your arms out to the side, lower them"),
+             ("hand_to_face", "Touch your face, scratch, adjust glasses or clothing")]
+_OBJECTS = [("phone", "a PHONE"), ("phone2", "a SECOND phone or a tablet"), ("wallet", "a WALLET"), ("pen", "a PEN or marker"),
+            ("remote", "a TV REMOTE or similar"), ("keys", "KEYS"), ("bottle", "a BOTTLE"), ("ruler", "a RULER or umbrella"),
+            ("empty_fist", "NOTHING, closed fist")]
+_KNIVES = [("knife2", "SECOND knife"), ("knife3", "THIRD knife")]
 # Samples for the motion generator. test_* takes stay out of training; each test attack take holds exactly one attack,
 # so its label comes from the take itself.
 PLAN_SAMPLES = (
@@ -86,6 +99,27 @@ PLAN_SAMPLES = (
     + [("test_attack", f"test_{a}", 5, f"TEST, ONE attack only, any direction. {d}.", "right", "", "", "")
        for a, d in _ATTACKS]
     + [("test_normal", "test_normal_mixed", 2, "TEST, about 3 minutes of mixed normal activity. No strikes.", "right", "", "", "")]
+    # Added 2026-11-14. New labels only, appended at the end: takes already recorded stay done (resume is by label).
+    # On Nov 5 thrust_low_* was performed with a phone, so the knife version is recorded again under a new label.
+    + [("train_attack", f"thrust_low_knife_{f}", 1, f"KNIFE (not the phone). Thrust at hip height. {fd}. About 5 times.",
+        "right", "low", "", f) for f, fd in _FACING]
+    + [("train_attack", f"{a}_{f}", 1, f"{d}. {fd}. About 5 times, pause between.", "right", "", "", f)
+       for a, d in _ATTACKS2 for f, fd in _FACING]
+    + [("train_normal", n, 2, f"{d}. Hold the knife. About 20 s. No strikes.", "right", "", "", "") for n, d in _NORMALS2]
+    + [("confuser", f"{o}_{m}", 1, f"NO KNIFE. Hold {od}. {md} About 20 s.", "right", "", "", "")
+       for o, od in _OBJECTS for m, md in (("strike", "Thrust, stab and chop with it, turning to face all four directions."),
+                                           ("use", "Use and carry it normally, walk, turn."))]
+    + [("knife_variety", f"{k}_{c}", 1, f"{kd}, {cd}. Thrust, stab, chop, turning to all four directions, near the camera "
+        "then far. About 25 s.", "right", "", "", "") for k, kd in _KNIVES for c, cd in (("coat", "WITH coat"), ("nocoat", "NO coat"))]
+    + [("knife_variety", "knife1_dim_light", 1, "Usual knife, dimmer light if possible. Thrust, stab, chop, all four "
+        "directions. About 25 s.", "right", "", "", "")]
+    # Never used for training. 30 s pieces: longer takes dropped frames on Nov 5.
+    + [("test_session", "test_mixed_30s", 8, "TEST. About 30 s: normal movement, 2 or 3 attacks, say each attack aloud. "
+        "Knife in some takes, phone in others.", "right", "", "", "")]
+    + [("test_session", "test_normal_30s", 20, "TEST. About 30 s of normal activity holding the knife. No strikes.",
+        "right", "", "", "")]
+    + [("test_session", "test_other_person_30s", 6, "OPTIONAL, another person. About 30 s: normal movement and 2 or 3 "
+        "attacks with the knife.", "right", "", "", "")]
 )
 PLANS = {"lab": PLAN, "samples": PLAN_SAMPLES}
 
