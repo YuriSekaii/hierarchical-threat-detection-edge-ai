@@ -81,6 +81,20 @@ Systems without new training: confidence threshold, a second detector that must 
 
 All rows above were measured at 384x640, which shrinks the 16:10 test images by 0.24. The detector scores about 10 F1 points higher at exactly 0.25 (416x640). See `MODIFICATION_REPORT_STAGE1_INPUT_SIZE_GAP.md`.
 
+Main rows re-run at 416x640 (`IMGSZ=416,640` before the benchmark command):
+
+| System | Precision | Recall | F1 | OOD false detections | Phone frames |
+|---|---|---|---|---|---|
+| Shipped, 0.45 | 88.6 % | 83.8 % | 86.1 % | 18 | 18 % / 33 % |
+| Shipped, 0.25 | 73.4 % | 90.8 % | 81.2 % | 44 | 24 % / 41 % |
+| Shipped 0.25 + crop classifier v2 at 0.3 | 78.8 % | 88.3 % | 83.3 % | 25 | 2 % / 2 % |
+| Shipped 0.45 + crop classifier v2 at 0.5 | 93.4 % | 76.7 % | 84.2 % | 6 | 0 % / 1 % |
+| Phone class added to shipped, 0.25 | 75.6 % | 78.8 % | 77.1 % | 18 | 3 % / 3 % |
+| Extra-large phone class, 0.15 | 70.7 % | 71.3 % | 71.0 % | 17 | 0 % / 2 % |
+| Phone negatives, 0.45 | 91.5 % | 53.8 % | 67.7 % | 2 | 2 % / 2 % |
+
+The order is the same as at 384x640: the crop classifier behind the shipped detector keeps the recall and removes the phone, and every retrained detector is below the shipped one. At this size the shipped detector at 0.45 has the highest F1 (86.1 %); the classifier setting trades 10 points of precision for 4.5 points of recall and the phone rejection.
+
 ## 5. Not checked
 
 - The classifier's lab knife crops are the shipped detector's own boxes, not hand labels.
