@@ -10,6 +10,8 @@ Ideas came from the first phone-negative test and from `Edge Knife Detection Lit
 
 ## 2. What was run
 
+**Note (2026-11-16): all detector retrains below ran under Ultralytics 8.4.9 and lost recall for that reason, see 4e. The crop classifier results are not affected.**
+
 **Benchmark:** `results/samples/poc/bench_stage1.py`. Every system gets the same three measurements. All detectors run at 384x640.
 
 ```bash
@@ -163,6 +165,8 @@ The order is the same as at 384x640: the crop classifier behind the shipped dete
 
 ## 4c. The original training recipe, and what "distilled" meant (2026-11-14)
 
+**Superseded by 4e (2026-11-16): the retrains in this section ran under Ultralytics 8.4.9, whose optimizer differs from the shipped run. Their recall loss comes from that, not from the data.**
+
 The original set and script are in `D:\Intern AI Project\Clean\Weapon_Detection_SingleGPU` (`training/train_yolo_distill.py`, `Weapon_Detection_Split`): 941 images (752 train, 189 validation), one class, all 2560x1600. It is the same set as the backup used above.
 
 - The script's `KnowledgeDistillationTrainer` loads the YOLO26x teacher and freezes it, but nothing uses it in the loss. The older copies in `Messy (Don't Touch)` are the same. The shipped "distilled" student is a plain YOLO26s trained for up to 250 epochs (patience 30, batch 32, 640 px, rotation 15°, mixup 0.1).
@@ -219,6 +223,8 @@ Both runs stopped early (patience 30): phone as its own class after 91 epochs (b
 - Not checked: a second seed of the control.
 
 ## 4d. A real teacher and real distillation, with Nov 14 lab frames (2026-11-15)
+
+**Superseded by 4e (2026-11-16): the retrains in this section ran under Ultralytics 8.4.9, whose optimizer differs from the shipped run. Their recall loss comes from that, not from the data.**
 
 **Status: test only. No shipped weight was changed. Result: better on the lab camera, worse on the ground-truth set; not a replacement yet.**
 
@@ -298,6 +304,90 @@ Lab takes none of these detectors was trained on:
 - Scripts: `results/samples/poc/train_stage1_kd.py`, `results/samples/poc/bench_stage1_holdout.py`.
 - Rows: `results/stage1_kd/holdout.jsonl` (in git); logs and training runs in `results/stage1_kd/`, benchmark rows in `results/stage1_phoneneg/bench.jsonl` (dev PC only).
 - Data `data/stage1_negatives/lab1114` and weights `weights/stage1_kd_{teacher,control,student}.pt`: dev PC only.
+
+## 4e. Why every retrain lost recall: the Ultralytics version (2026-11-15 to 2026-11-16)
+
+**Status: cause found and fixed in the training script. No shipped weight was changed. The retrains of sections 2, 4c and 4d ran with the wrong optimizer; their recall numbers do not describe the data.**
+
+### Question
+
+With more data, every retrain scored below the shipped detector on the ground-truth set. Is the dataset wrong, the benchmark wrong, or the training wrong?
+
+### What was checked
+
+| Check | How | Result |
+|---|---|---|
+| Benchmark | `bench_stage1.py` on the shipped weights | 74.2 % recall at 0.45 and 384x640; at 640x640 the README's 84 %. The test set has one class and 240 boxes in 715 images. No fault found. |
+| Original dataset | Label cache in `Clean\Weapon_Detection_SingleGPU\Weapon_Detection_Split\labels\train.cache`, written at the original path `D:\Weapon_Detection_SingleGPU` | Same as on disk: 752 images, 485 label files, 450 boxes. The data was not lost or changed. |
+| Shipped weights | md5 | Identical to `D:\Backup\YOLO_Weapon_Training_Results\distilled_yolo26s_from_yolo26x\weights\best.pt`. Three old runs with the same arguments have the same curve (best epoch 98, mAP50 0.90426), so the original training repeats itself. |
+| Training arguments | `args.yaml` of that run against ours | The same. |
+| Training curve | `results.csv` of that run against the control of 4c | **Different.** Epoch 98: box loss 1.21 against 1.73. The learning-rate columns differ: 8 parameter groups, peak 0.0055 and 0.0018, against 3 groups at 0.0018. |
+| Optimizer code | `ultralytics/engine/trainer.py`, 8.4.6 against 8.4.9 | **The cause.** With `optimizer=auto`, 8.4.6 (shipped run) uses MuSGD at lr 0.002 with muon 0.5 / sgd 0.5 on a set under 10 000 iterations. 8.4.9 (`.venv`) uses AdamW at 0.002 there, and MuSGD at lr 0.01 with muon 0.2 / sgd 1.0 above 10 000 iterations. |
+| Lab labels | 24 random knife boxes and 24 object boxes of `lab1114` drawn on the frames | Object boxes all right. Knife boxes: 20 of 24 show a knife in the hand, about 4 are on a hand with no knife visible. |
+
+So the control of 4c trained with AdamW, and the three runs of 4d with MuSGD at five times the learning rate. None used the optimizer of the shipped run.
+
+### What was run
+
+`results/samples/poc/train_stage1_repro.py` (new). It loads Ultralytics 8.4.6 from `.ul846/` (install once: `.venv/Scripts/python.exe -m pip install --no-deps --target .ul846 ultralytics==8.4.6`). For the lab set, which has more than 10 000 iterations, it forces the small-set values (MuSGD, lr 0.002, muon 0.5, sgd 0.5).
+
+```bash
+DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . orig      # original 752 images, original arguments
+DEV=1 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . lab       # lab1114 set of 4d, YOLO26s
+DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . teacher   # lab1114, YOLO26x
+DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . kd        # lab1114, YOLO26s + distillation loss of 4d
+```
+
+### Results
+
+**Reproduction.** `orig` gives the original `results.csv` line for line (all 127 epochs, five decimals) and the same benchmark numbers as the shipped weights (78.76 % precision, 74.17 % recall, 19 OOD false detections at 0.45). The shipped detector is reproducible.
+
+Ground-truth set and Nov 5 takes, 384x640:
+
+| System | Conf | Precision | Recall | F1 | OOD FP | Phone 008 | Phone 006/007/009 | Nov 5 knife frames, mean |
+|---|---|---|---|---|---|---|---|---|
+| Shipped (= `stage1_repro846_orig.pt`) | 0.15 | 61.3 % | 87.1 % | 71.9 % | 61 | 27.4 % | 49.3 % | 70.6 % |
+| | 0.25 | 69.3 % | 83.8 % | 75.8 % | 44 | 23.5 % | 43.1 % | 67.9 % |
+| | 0.45 | 78.8 % | 74.2 % | 76.4 % | 19 | 18.9 % | 34.7 % | 61.4 % |
+| Student on lab set, 8.4.9 (4d control) | 0.15 | 60.3 % | 80.8 % | 69.0 % | 54 | 2.0 % | 1.0 % | 66.2 % |
+| | 0.45 | 83.3 % | 70.8 % | 76.6 % | 6 | 0.7 % | 0.8 % | 59.4 % |
+| **Student on lab set, shipped optimizer** (`stage1_repro846_lab.pt`) | 0.15 | 56.4 % | 91.3 % | 69.8 % | 77 | 4.4 % | 0.9 % | 63.7 % |
+| | 0.25 | 63.2 % | 86.7 % | 73.1 % | 51 | 3.3 % | 0.7 % | 61.8 % |
+| | 0.45 | 70.9 % | 80.0 % | 75.2 % | 30 | 2.9 % | 0.4 % | 58.8 % |
+
+Lab takes none of these detectors was trained on:
+
+| System | Conf | Nov 14 test takes, frames (mean / worst take) | ~1 s windows (mean / worst) | Oct 31 take 002 | Second phone 050 | Remote 056 |
+|---|---|---|---|---|---|---|
+| Shipped | 0.15 | 50 % / 29 % | 68 % / 49 % | 65 % | 19 % | 22 % |
+| | 0.25 | 47 % / 27 % | 66 % / 43 % | 61 % | 13 % | 19 % |
+| | 0.45 | 39 % / 21 % | 59 % / 35 % | 54 % | 8 % | 13 % |
+| **Student on lab set, shipped optimizer** | 0.15 | 53 % / 34 % | 69 % / 51 % | 73 % | 11 % | 11 % |
+| | 0.25 | 51 % / 30 % | 66 % / 46 % | 70 % | 5 % | 4 % |
+| | 0.45 | 47 % / 26 % | 63 % / 40 % | 67 % | 3 % | 3 % |
+
+Training: student stopped at epoch 111 (best 81, validation mAP50 0.855); teacher stopped at 37 (best 17, mAP50 0.887).
+
+### Findings
+
+- **The dataset and the benchmark are right; the training was wrong.** The retrains ran under a newer Ultralytics that silently picks another optimizer. With the shipped run's optimizer the shipped detector comes back exactly.
+- **With that fixed, more data helps.** The student trained on the lab set has higher ground-truth recall than the shipped detector at every confidence (80.0 % against 74.2 % at 0.45, 91.3 % against 87.1 % at 0.15). Its precision at the same confidence is lower; at equal recall the two are close (86.7 % recall at 63.2 % precision against 87.1 % at 61.3 %).
+- It sees the lab knife more often (Nov 14 test frames 47 % against 39 % at 0.45, Oct 31 take 002 67 % against 54 %) and fires far less on the phone, the second phone and the remote (3 % of frames against 8–35 %).
+- The 8.4.9 runs of 4d scored a little higher on lab frames (54 % against 51 % at 0.25) and lower on the ground-truth set. Both sets of numbers come from one run each.
+- Teacher and distilled student under the shipped optimizer: rows to follow.
+
+### Not checked
+
+- The lab boxes are still the shipped detector's own detections; about 1 in 6 knife boxes sampled is on an empty hand. Hand-labelled lab frames were not made.
+- One run per model. The forced small-set optimizer values on the larger lab set are a choice, not a tuned setting.
+- The phone-class, phone-background and crop-classifier runs of sections 2 to 4c were not repeated under 8.4.6.
+- No TensorRT export, no Edge PC timing, no full-pipeline run. The Edge PC has its own Ultralytics version; only training depends on 8.4.6.
+
+### Files
+
+- Script: `results/samples/poc/train_stage1_repro.py`. Ultralytics 8.4.6: `.ul846/` (not in git).
+- Weights (dev PC only): `weights/stage1_repro846_{orig,lab,teacher,kd}.pt`. Runs and logs: `results/stage1_kd/repro846_*`.
+- Rows: `results/stage1_kd/holdout.jsonl`.
 
 ## 5. Not checked
 
