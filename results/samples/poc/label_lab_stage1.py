@@ -10,7 +10,7 @@
          ("n" no knife in the tile, "u" cannot tell, "k" knife but no box fits, a list = box in 330-px tile pixels).
          Writes data/lab_stage1_gt/{labels,test.txt,train.txt,data.yaml} and lab_label/lab_labels.json. An image with no box
          and a "u", "k" or missing tile is left out.
-  MAXS=<n> python label_lab_stage1.py <REPO> suspects
+  [SKIP=<ids.json>] MAXS=<n> python label_lab_stage1.py <REPO> suspects
       -> lab_label/review/review_NN.jpg (6x6) of the tiles where the decision and the detector scores disagree.
 
 Test split: Nov 14 test takes and Oct 31 take 002, every 10th frame. Train split: Nov 5 and Nov 14 attack takes every 20th
@@ -280,8 +280,10 @@ def apply():
 
 def suspects():
     items, dec = json.load(open(os.path.join(OUT, "lab_items.json"))), decisions()
-    sus = {}
+    sus, skip = {}, set(json.load(open(os.environ["SKIP"]))) if os.environ.get("SKIP") else set()  # SKIP=<json id list>: tiles already checked
     for it in items:
+        if it["id"] in skip:
+            continue
         v, src = dec.get(it["id"]), lambda p, n: p["src"].get(n, 0.0)
         if v is None:
             sus[it["id"]] = "missing"
