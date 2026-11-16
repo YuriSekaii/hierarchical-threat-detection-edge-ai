@@ -557,6 +557,7 @@ Box by box (`analyse_stage1_misses.py`), 342 boxes, 384x640. "No box" = detectio
 | `stage1_repro846_clean_p100.pt` | 85 doubtful images removed, 250 epochs | 63.2 % | 70.8 % | 73.4 % | 83.0 % | 13 (7) | 39 (29) |
 | **`stage1_repro846_v2_p100.pt`** | **relabelled set `orig_v2`, 250 epochs** | **66.1 %** | **72.5 %** | **75.7 %** | **88.9 %** | 30 (15) | 49 (28) |
 | `stage1_repro846_lab.pt` | lab set, old labels | 67.3 % | 74.0 % | 78.7 % | 89.8 % | 35 (30) | 60 (51) |
+| `stage1_repro846_labv2_p50.pt` | lab set on `orig_v2` (`lab_v2`), patience 50, stopped at 95 (best 45) | 69.3 % | 76.9 % | 80.7 % | 90.1 % | 30 (20) | 62 (48) |
 | `stage1_repro846_teacher.pt` (YOLO26x) | lab set, old labels | 63.5 % | 77.8 % | 83.0 % | 93.3 % | 2 (0) | 6 (2) |
 | `stage1_repro846_kd.pt` | lab set + teacher | 50.0 % | 67.0 % | 73.1 % | 91.5 % | 6 (2) | 12 (3) |
 
@@ -573,6 +574,8 @@ With `bench_stage1.py` (one detection per box, OOD false detections count agains
 | | 0.45 | 87.8 % | 64.9 % | 74.6 % | 15 |
 | Lab student | 0.25 | 78.3 % | 72.8 % | 75.5 % | 51 |
 | | 0.45 | 84.9 % | 65.8 % | 74.1 % | 30 |
+| Lab student on `lab_v2` | 0.25 | 79.6 % | 75.2 % | 77.3 % | 48 |
+| | 0.45 | 88.6 % | 67.8 % | 76.8 % | 20 |
 | Teacher (YOLO26x) | 0.25 | 95.6 % | 76.3 % | 84.9 % | 2 |
 | | 0.45 | 98.2 % | 62.0 % | 76.0 % | 0 |
 | Distilled student | 0.10 | 70.6 % | 78.1 % | 74.2 % | 20 |
@@ -590,10 +593,12 @@ Lab takes none of these detectors was trained on (`bench_stage1_holdout.py`); th
 | **`v2_p100`** | 0.25 | 51 % / 34 % | 76 % | 25 % | 22 % |
 | | 0.45 | 48 % / 29 % | 72 % | 18 % | 15 % |
 | Lab student | 0.45 | 47 % / 26 % | 67 % | 3 % | 3 % |
+| Lab student on `lab_v2` | 0.25 | 46 % / 25 % | 66 % | 3 % | 2 % |
+| | 0.45 | 39 % / 21 % | 61 % | 2 % | 1 % |
 | Teacher (YOLO26x) | 0.25 | 54 % / 33 % | 68 % | 4 % | 3 % |
 | | 0.45 | 49 % / 28 % | 62 % | 2 % | 2 % |
 
-The lab student on `lab_v2` (`labv2`) was still training when this was written; its rows are added below when it is done.
+Lab student on `lab_v2`: `PATIENCE=50 DEV=1 ... train_stage1_repro.py . labv2`, stopped early at epoch 95 (best validation epoch 45); logs `results/stage1_kd/{misses_labv2_p50_v2,bench_gtv2_labv2p50,holdout_repro846_labv2_p50}.log`.
 
 ### Findings
 
@@ -601,6 +606,7 @@ The lab student on `lab_v2` (`labv2`) was still training when this was written; 
 - **Precision was never the problem.** On knife frames the shipped detector has 7 detections without a box at 0.45, the teacher 2. Almost all false detections are on the OOD images.
 - **Completing the training labels helps a little:** same recipe, same 250 epochs, 66.1 % found at 0.45 against 62.3 % with the old labels and 63.2 % with the doubtful images removed. It has more detections without a box on knife frames (15 against 6).
 - **Completed labels also carry over to the lab camera, with old data only:** `v2_p100` sees the knife in 48 % of the Nov 14 test frames at 0.45 against 38 % with the old labels, and in 72 % of Oct 31 take 002 against 59 %. It also fires more on the second phone and the remote (18 % and 15 % of frames against 8 % and 12 %): a dark object in a fist now counts as a knife, and the old data has no phone examples.
+- **Completed labels in the lab set help on the test set but not on the lab camera:** the lab student on `lab_v2` finds 69.3 % at 0.45 (best of all YOLO26s models, 88.6 % precision, 20 OOD false detections) against 67.3 % on the old lab set. On the Nov 14 test takes it drops to 39 % of frames at 0.45 against 47 %, and on take 002 to 61 % against 67 %. It stopped early with its best validation epoch at 45, so this run is not at a fixed epoch count (5 below) and may be undertrained; the lab frames it adds are still only frames the shipped detector already finds (3 below).
 - **The teacher is the best detector at any threshold below 0.45:** 77.8 % found at 0.25 with 6 detections without a box, 83.0 % at 0.15 with 15. The shipped detector at 0.45 finds 58.2 % with 26.
 - **The detectors are confidently wrong on one thing:** with the coat on, the empty left sleeve end is scored up to 0.88.
 
