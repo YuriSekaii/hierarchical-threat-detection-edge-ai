@@ -407,6 +407,104 @@ Training: student stopped at epoch 111 (best 81, validation mAP50 0.855); teache
 - Weights (dev PC only): `weights/stage1_repro846_{orig,lab,teacher,kd}.pt`. Runs and logs: `results/stage1_kd/repro846_*`.
 - Rows: `results/stage1_kd/holdout.jsonl`.
 
+## 4f. Why one class does not reach 90–100 % here: labels, knife size, early stopping (2026-11-16)
+
+**Status: investigation. No shipped weight and no label was changed. Main result: the test set and the original training set are labelled incompletely, so the precision and F1 numbers of every section above are too low, and recall is measured only on knives an earlier detector had already found.**
+
+### Question
+
+The detector has one class, yet no model reaches 90–100 % recall, and more data helps little. Is the data fed in wrong? Is the benchmark right? Detectors with 100 classes reach a high F1; why not this one?
+
+Short answers to the side questions:
+
+- The pipeline runs Stage 1 at confidence 0.45 (`src/stage1_detector.py:54`). The 0.45 rows are in every table; lower thresholds are shown because recall comes first for Stage 1.
+- The shipped detector was trained on the original 752 images (450 knife boxes) only. The lab models of 4d and 4e were trained on those 752 images plus Nov 5 and Nov 14 lab frames (3565 images).
+
+### What was run
+
+`results/samples/poc/analyse_stage1_misses.py` (new):
+
+```bash
+DEV=0 .venv/Scripts/python.exe results/samples/poc/analyse_stage1_misses.py . run shipped=weights/yolo_weapon_distilled.pt teacher=weights/stage1_repro846_teacher.pt ...
+DEV=0 IMGSZ=800,1280 .venv/Scripts/python.exe results/samples/poc/analyse_stage1_misses.py . run shipped=... teacher=...    # also 1600,2560
+.venv/Scripts/python.exe results/samples/poc/analyse_stage1_misses.py . sheet results/stage1_kd/misses/teacher_384x640.json fp 0.25 out.jpg   # and: miss 0.25
+DEV=0 .venv/Scripts/python.exe results/samples/poc/analyse_stage1_misses.py . trainneg weights/stage1_repro846_teacher.pt weights/yolo_weapon_distilled.pt weights/stage1_repro846_lab.pt
+DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . clean                  # original recipe on the cleaned set
+PATIENCE=100 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . clean     # and: orig
+```
+
+`run` writes one row per ground-truth box (best score of a knife detection that overlaps it at IoU 0.20) and one per detection that overlaps no box. `sheet` draws those boxes for checking by eye. `trainneg` builds `data/stage1_negatives/orig_clean`.
+
+### What was checked
+
+| Check | Result |
+|---|---|
+| How the test labels were made (`D:\Backup\auto_label.py`) | An earlier YOLO26s student marked knives at confidence 0.4 on every 10th frame of the validation videos; the boxes were then checked by hand. A frame where that detector found nothing got an empty label file. |
+| Test frames with a box | All 596 non-OOD frames come from knife-attack videos. With a box: cut-down 41 of 189, stab 97 of 200, thrust 97 of 207. **361 frames of a person holding a knife have no box.** |
+| Detections with no box, by eye | Teacher at 0.25: 65 such detections on non-OOD frames, 63 of them on frames with no label at all. Of the 48 drawn, about 40 show the blade clearly and the rest are the knife hand blurred by motion; none is on another object. Shipped at 0.45: 27 such detections, 23 on frames with no label. |
+| Missed boxes, by eye | Teacher at 0.25 misses 25 boxes. All show a knife: dark blade against dark trousers, or motion blur. |
+| Knife size as the network sees it | Test images are 2560x1600 and are shrunk to 384x640. Longer side of the knife box: median 26 px (10th–90th percentile 20–36). Original training set 30 px, lab frames 32–34 px. |
+| Larger input | Worse, not better. Boxes found at 0.45: shipped 76.2 % at 384x640, 54.2 % at 800x1280, 4.2 % at 1600x2560; teacher 78.3 %, 72.1 %, 22.1 %. The detectors only know the knife at the size they were trained on. |
+| Lowest threshold | At 0.01 every detector finds 95–98 % of the labelled boxes. The knives are seen, but many with a low score. |
+| Original training set | 302 of the 752 images have no box and are trained as "no knife". In 85 of them a detector (teacher, shipped or lab student) sees a knife at 0.05 or more. Of the teacher's 30 detections at 0.25 or more, about 25 show a knife or its handle in the hand. |
+| Early stopping | The validation set has 189 images and 119 boxes. The shipped run stopped at epoch 127 of 250 (best 98). The first run on the cleaned set stopped at 47 (best 17). With patience 100 both sets train all 250 epochs, best at 237 and 238. Where patience 30 stops is partly chance. |
+| What the lab frames add | A lab knife frame is in the training set only when the shipped detector fires on it at 0.5 or more (4d). So the lab data holds knives the shipped detector already finds, not the ones it misses. |
+
+### Results
+
+Counted box by box at 384x640. "Found" = a knife detection at that score or more overlaps the box. (`bench_stage1.py` matches one detection to one box in detection order and gives slightly lower recall: 74.2 % for the shipped detector at 0.45.)
+
+| Detector | Trained on | Found at 0.45 | at 0.25 | at 0.15 | at 0.01 | Detections with no box at 0.45 (of them OOD) | at 0.25 |
+|---|---|---|---|---|---|---|---|
+| Shipped | 752 images, stopped at 127 | 76.2 % | 85.8 % | 89.2 % | 96.7 % | 46 (19) | 85 (44) |
+| `stage1_repro846_orig_p100.pt` | 752 images, 250 epochs | 78.8 % | 83.3 % | 86.7 % | 96.7 % | 67 (30) | 109 (60) |
+| `stage1_repro846_clean.pt` | 667 images, stopped at 47 | 57.9 % | 73.8 % | 82.9 % | 97.9 % | 46 (22) | 109 (50) |
+| `stage1_repro846_clean_p100.pt` | 667 images, 250 epochs | 79.6 % | 86.7 % | 88.8 % | 95.4 % | 39 (7) | 79 (29) |
+| `stage1_repro846_lab.pt` | lab set | 82.1 % | 88.3 % | 92.9 % | 97.5 % | 75 (30) | 113 (51) |
+| `stage1_repro846_teacher.pt` (YOLO26x) | lab set | 78.3 % | 89.6 % | 92.5 % | 97.1 % | 33 (0) | 67 (2) |
+| `stage1_repro846_kd.pt` | lab set + teacher | 64.6 % | 79.2 % | 85.4 % | 96.2 % | 22 (2) | 56 (3) |
+
+Same detectors with the benchmark of the other sections (`bench_stage1.py`, `bench_stage1_holdout.py`), 384x640:
+
+| Detector | Conf | Precision | Recall | F1 | OOD FP | Nov 14 test takes, frames (mean / worst take) | Oct 31 take 002 | Second phone 050 | Remote 056 |
+|---|---|---|---|---|---|---|---|---|---|
+| Shipped | 0.25 | 69.3 % | 83.8 % | 75.8 % | 44 | 47 % / 27 % | 61 % | 13 % | 19 % |
+| | 0.45 | 78.8 % | 74.2 % | 76.4 % | 19 | 39 % / 21 % | 54 % | 8 % | 13 % |
+| Original set, 250 epochs (`orig_p100`) | 0.25 | 63.8 % | 81.7 % | 71.7 % | 60 | 44 % / 27 % | 64 % | 16 % | 17 % |
+| | 0.45 | 73.4 % | 77.1 % | 75.2 % | 30 | 38 % / 22 % | 59 % | 8 % | 12 % |
+| Cleaned set, 250 epochs (`clean_p100`) | 0.25 | 72.1 % | 85.0 % | 78.0 % | 29 | 45 % / 28 % | 67 % | 14 % | 17 % |
+| | 0.45 | 82.7 % | 77.9 % | 80.3 % | 7 | 37 % / 25 % | 62 % | 9 % | 13 % |
+| Cleaned set, stopped at 47 (`clean`) | 0.25 | 59.4 % | 72.5 % | 65.3 % | 50 | 54 % / 35 % | 69 % | 20 % | 21 % |
+| | 0.45 | 73.9 % | 56.7 % | 64.2 % | 22 | 42 % / 25 % | 55 % | 11 % | 13 % |
+
+### Findings
+
+- **The benchmark code is right, the test labels are not complete.** Most detections counted as false on the non-OOD frames are real knives with no label. So precision and F1 on this set are too low for every detector, and more so for a better one: the teacher's 33 "false" detections at 0.45 are all on knife frames, none on the OOD images. Only the OOD count is a clean false-detection number.
+- **Recall on this set is recall on the knives an earlier detector found at 0.4**, plus what was added by hand. The real recall over all frames with a visible knife is not known; 361 knife-video frames have no box.
+- **Why not 90–100 %:** the knife is about 26 px long and often dark on dark; there are 450 training boxes; and the training set tells the detector "no knife" on frames that show one. A 100-class detector with a high F1 has large objects, thousands of hand-made boxes per class and a completely labelled test set. Here the detector does find 95–98 % of the labelled knives, but with scores below the threshold.
+- **Removing the 85 wrong negatives helps precision, not recall.** With the same 250 epochs and old data only, the cleaned set at 0.45 has 77.9 % recall, 82.7 % precision and 7 OOD false detections; the uncleaned set has 77.1 %, 73.4 % and 30; the shipped detector 74.2 %, 78.8 % and 19. The recall difference is 2 boxes, inside the noise. On the lab takes all three are the same (37–39 % of Nov 14 test frames at 0.45). One run each.
+- **Early stopping decides more than it should.** The first cleaned run stopped after 17 useful epochs and lost 20 points of recall. Any comparison of two runs here must fix the number of epochs or use a long patience.
+- **More lab data cannot fix what the shipped detector misses**, because the lab frames are chosen and boxed by the shipped detector itself.
+
+### What this means for the next step
+
+1. Label the 361 test frames without a box by hand (the detections at 0.05 can be shown as suggestions to accept or delete). Until then, compare detectors by labelled-box recall and OOD false detections, not by precision or F1.
+2. Label lab frames by hand, including frames where no detector fires.
+3. Label or remove the knife frames without a box in the training set, and train with a fixed number of epochs.
+
+### Not checked
+
+- The by-eye counts are from picture sheets of the detections, not a relabel of the set. Frames where no detector fires were not looked at.
+- The validation set (189 images) was made the same way as the training set and was not checked.
+- One run per setting. The cleaned set drops frames by detector score; a frame with a knife no detector sees stays in as "no knife".
+- The lab models of 4e were not retrained with a long patience or on a cleaned set.
+
+### Files
+
+- Scripts: `results/samples/poc/analyse_stage1_misses.py`, `results/samples/poc/train_stage1_repro.py` (modes `clean`, `PATIENCE`).
+- Rows per box: `results/stage1_kd/misses/*.json`; cleaned set and scores: `data/stage1_negatives/orig_clean` (both dev PC only). Lab-take rows: `results/stage1_kd/holdout.jsonl`.
+- Weights (dev PC only): `weights/stage1_repro846_{clean,clean_p100,orig_p100}.pt`. Runs and logs: `results/stage1_kd/repro846_*`.
+
 ## 5. Not checked
 
 - The classifier's lab knife crops are the shipped detector's own boxes, not hand labels.

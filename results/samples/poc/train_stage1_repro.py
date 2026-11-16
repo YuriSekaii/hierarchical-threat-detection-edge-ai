@@ -6,6 +6,8 @@ means MuSGD(lr 0.002, muon 0.5, sgd 0.5). 8.4.9 (in .venv) picks AdamW(0.002) or
   DEV=1 python train_stage1_repro.py <REPO> lab    # lab1114 set, same optimizer forced     -> weights/stage1_repro846_lab.pt
   python train_stage1_repro.py <REPO> teacher      # YOLO26x on the lab set, same optimizer -> weights/stage1_repro846_teacher.pt
   python train_stage1_repro.py <REPO> kd           # as lab, plus the KD loss of train_stage1_kd.py -> weights/stage1_repro846_kd.pt
+  python train_stage1_repro.py <REPO> clean        # as orig, on data/stage1_negatives/orig_clean (analyse_stage1_misses.py trainneg)
+  PATIENCE=100 python train_stage1_repro.py <REPO> clean   # same with early-stopping patience 100 -> ..._clean_p100.pt
 """
 import os, shutil, sys
 
@@ -17,9 +19,11 @@ if __name__ == "__main__":
     from ultralytics import YOLO
     from ultralytics.engine.trainer import BaseTrainer
     assert ultralytics.__version__ == "8.4.6", ultralytics.__version__
-    out = os.path.join(REPO, "weights", f"stage1_repro846_{MODE}.pt")
+    PAT = os.environ.get("PATIENCE")  # the validation set is small: patience 30 can stop on a chance peak (clean stopped at 47, best 17)
+    TAG = MODE + (f"_p{PAT}" if PAT else "")
+    out = os.path.join(REPO, "weights", f"stage1_repro846_{TAG}.pt")
     assert not os.path.exists(out), out + " exists"
-    extra, lab = {}, MODE != "orig"
+    extra, lab = {}, MODE not in ("orig", "clean")
     if lab:
         # the lab set has more than 10000 iterations, where auto switches to lr 0.01 and muon 0.1 / sgd 1.0: keep the small-set values
         build = BaseTrainer.build_optimizer
@@ -27,6 +31,8 @@ if __name__ == "__main__":
         extra = dict(optimizer="MuSGD", lr0=0.002, momentum=0.9, warmup_bias_lr=0.0)
     teacher_pt = os.path.join(REPO, "weights", "stage1_repro846_teacher.pt")
     size = dict(epochs=200, patience=20, batch=12, nbs=64) if MODE == "teacher" else dict(epochs=250, patience=30, batch=32)
+    if PAT:
+        size["patience"] = int(PAT)
     model = YOLO(r"D:/Backup/yolo26x.pt" if MODE == "teacher" else r"D:/Backup/yolo26s.pt")
     if MODE == "kd":
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -36,7 +42,7 @@ if __name__ == "__main__":
             q.requires_grad = False
         model.add_callback("on_train_start", lambda t: setattr(t.model, "criterion", KD(t.model.init_criterion(), teacher, 1.0)))
     r = model.train(
-        data=os.path.join(REPO, "data", "stage1_negatives", "lab1114" if lab else "orig", "data.yaml"), imgsz=640,
+        data=os.path.join(REPO, "data", "stage1_negatives", "lab1114" if lab else {"orig": "orig", "clean": "orig_clean"}[MODE], "data.yaml"), imgsz=640,
         workers=4, device=int(os.environ.get("DEV", 0)), degrees=15.0, mosaic=1.0, mixup=0.1, plots=False, exist_ok=True,
-        project=os.path.join(REPO, "results", "stage1_kd"), name=f"repro846_{MODE}", **size, **extra)
+        project=os.path.join(REPO, "results", "stage1_kd"), name=f"repro846_{TAG}", **size, **extra)
     shutil.copy2(os.path.join(str(r.save_dir), "weights", "best.pt"), out)
