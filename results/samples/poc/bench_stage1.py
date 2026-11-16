@@ -88,7 +88,7 @@ def _find_data(*relparts):
     return os.path.join(HERE, *([".."] * (2 + len(relparts))), "data", *relparts)
 
 
-GT_DIR = _find_data("Ground_Truth_Dataset")
+GT_DIR = os.environ.get("GT_DIR") or _find_data("Ground_Truth_Dataset")  # GT_DIR=<abs path of data/Ground_Truth_Dataset_v2>: relabelled set
 TAKES_DIR = _find_data("lab_recordings", "2026-11-05", "train_attack")
 
 # Reuse helpers from scripts/validate_stage1_ground_truth.py (importable without

@@ -17,7 +17,7 @@ import cv2
 import numpy as np
 
 REPO, MODE = os.path.abspath(sys.argv[1]), sys.argv[2]
-GT = os.path.join(REPO, "data", "Ground_Truth_Dataset")
+GT = os.environ.get("GT_DIR") or os.path.join(REPO, "data", "Ground_Truth_Dataset")  # GT_DIR=data/Ground_Truth_Dataset_v2: relabelled set
 OUT = os.path.join(REPO, "results", "stage1_kd", "misses")
 IMGSZ = tuple(int(x) for x in os.environ.get("IMGSZ", "384,640").split(","))
 

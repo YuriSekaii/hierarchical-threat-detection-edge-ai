@@ -505,6 +505,128 @@ Same detectors with the benchmark of the other sections (`bench_stage1.py`, `ben
 - Rows per box: `results/stage1_kd/misses/*.json`; cleaned set and scores: `data/stage1_negatives/orig_clean` (both dev PC only). Lab-take rows: `results/stage1_kd/holdout.jsonl`.
 - Weights (dev PC only): `weights/stage1_repro846_{clean,clean_p100,orig_p100}.pt`. Runs and logs: `results/stage1_kd/repro846_*`.
 
+## 4g. Relabelled test set and training set (2026-11-16)
+
+**Status: new label sets written next to the old ones; no old label and no shipped weight was changed. Main result: on the completed test set the shipped detector finds 58 % of the visible knives at 0.45, not 74 %, and nearly all its detections on knife frames are right. The labels were completed by Claude by eye, not by the project owner.**
+
+### Question
+
+4f found that frames with a visible knife have no box in the test set and in the original training set. What do the detectors score once those frames are labelled, and does training on completed labels help?
+
+### What was run
+
+`results/samples/poc/relabel_stage1.py` (new):
+
+```bash
+DEV=0 .venv/Scripts/python.exe results/samples/poc/relabel_stage1.py . propose test <5 detector weights>           # hand tiles + detector boxes as suggestions
+DEV=0 .venv/Scripts/python.exe results/samples/poc/relabel_stage1.py . hand test                                    # drop decisions on the left hand
+.venv/Scripts/python.exe results/samples/poc/relabel_stage1.py . apply test                                          # -> data/Ground_Truth_Dataset_v2
+HAND=R DEV=0 .venv/Scripts/python.exe results/samples/poc/relabel_stage1.py . propose train <weights>               # and: val
+.venv/Scripts/python.exe results/samples/poc/relabel_stage1.py . apply train                                         # and: val -> data/stage1_negatives/orig_v2
+.venv/Scripts/python.exe results/samples/poc/relabel_stage1.py . lab all                                             # -> data/stage1_negatives/lab_v2
+PATIENCE=100 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . v2                           # original recipe on orig_v2
+PATIENCE=50 DEV=1 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . labv2                         # lab student on lab_v2
+GT_DIR=<repo>/data/Ground_Truth_Dataset_v2 DEV=0 .venv/Scripts/python.exe results/samples/poc/analyse_stage1_misses.py . run name=weights ...
+GT_DIR=<repo>/data/Ground_Truth_Dataset_v2 DEV=0 .venv/Scripts/python.exe results/samples/poc/bench_stage1.py "det,<weights>,<conf>" ...
+```
+
+How the labels were completed:
+
+- For every image without a box, the script cuts a 300-pixel tile around each hand (pose wrists) at full resolution and draws the boxes of five detectors (teacher, lab student, shipped, cleaned-set student, distilled student; score 0.02 or more) into it.
+- Each tile was looked at and given one of three decisions: knife (a suggested box, or a box drawn by eye when no detector had one), no visible knife, or cannot tell. An image with a "cannot tell" tile and no accepted box is left out of the new set, so it counts neither for nor against a detector.
+- Check against the old labels: in the hand-checked boxes the knife is in the right hand in 230 of 234 test boxes and 436 of 446 training boxes (nearest wrist of the pose model). So a decision on a left-hand tile is dropped. This removed 6 of the 109 boxes accepted by eye on the test set; three of them were sleeve ends the detectors score at 0.78 to 0.88.
+
+### Label counts
+
+| Set | Images without a box | Get a knife box | Cannot tell (left out) | Stay "no visible knife" | Boxes before → after |
+|---|---|---|---|---|---|
+| Test (With_Coat, Without_Coat) | 361 | 102 | 90 | 169 | 240 → 342 |
+| Original training set | 302 | 80 | 93 | 129 | 450 → 530 |
+| Original validation set | 70 | 20 | 19 | 31 | 119 → 139 |
+
+The 119 OOD test images are unchanged. Of the 102 new test boxes, 11 were drawn by eye where no detector had a box.
+
+### Results on the relabelled test set
+
+Box by box (`analyse_stage1_misses.py`), 342 boxes, 384x640. "No box" = detections that overlap no knife box; the number in brackets is how many of them are on the OOD images.
+
+| Detector | Trained on | Found at 0.45 | at 0.25 | at 0.15 | at 0.01 | No box at 0.45 | at 0.25 |
+|---|---|---|---|---|---|---|---|
+| Shipped | 752 images, old labels, stopped at 127 | 58.2 % | 67.0 % | 71.1 % | 84.5 % | 26 (19) | 51 (44) |
+| `stage1_repro846_orig_p100.pt` | old labels, 250 epochs | 62.3 % | 67.5 % | 71.3 % | 84.8 % | 36 (30) | 66 (60) |
+| `stage1_repro846_clean_p100.pt` | 85 doubtful images removed, 250 epochs | 63.2 % | 70.8 % | 73.4 % | 83.0 % | 13 (7) | 39 (29) |
+| **`stage1_repro846_v2_p100.pt`** | **relabelled set `orig_v2`, 250 epochs** | **66.1 %** | **72.5 %** | **75.7 %** | **88.9 %** | 30 (15) | 49 (28) |
+| `stage1_repro846_lab.pt` | lab set, old labels | 67.3 % | 74.0 % | 78.7 % | 89.8 % | 35 (30) | 60 (51) |
+| `stage1_repro846_teacher.pt` (YOLO26x) | lab set, old labels | 63.5 % | 77.8 % | 83.0 % | 93.3 % | 2 (0) | 6 (2) |
+| `stage1_repro846_kd.pt` | lab set + teacher | 50.0 % | 67.0 % | 73.1 % | 91.5 % | 6 (2) | 12 (3) |
+
+With `bench_stage1.py` (one detection per box, OOD false detections count against precision):
+
+| Detector | Conf | Precision | Recall | F1 | OOD FP |
+|---|---|---|---|---|---|
+| Shipped | 0.25 | 80.3 % | 65.5 % | 72.1 % | 44 |
+| | 0.45 | 87.4 % | 56.7 % | 68.8 % | 19 |
+| `orig_p100` | 0.45 | 85.0 % | 61.1 % | 71.1 % | 30 |
+| `clean_p100` | 0.25 | 85.9 % | 69.6 % | 76.9 % | 29 |
+| | 0.45 | 94.2 % | 62.0 % | 74.8 % | 7 |
+| **`v2_p100`** | 0.25 | 81.9 % | 71.3 % | 76.3 % | 28 |
+| | 0.45 | 87.8 % | 64.9 % | 74.6 % | 15 |
+| Lab student | 0.25 | 78.3 % | 72.8 % | 75.5 % | 51 |
+| | 0.45 | 84.9 % | 65.8 % | 74.1 % | 30 |
+| Teacher (YOLO26x) | 0.25 | 95.6 % | 76.3 % | 84.9 % | 2 |
+| | 0.45 | 98.2 % | 62.0 % | 76.0 % | 0 |
+| Distilled student | 0.10 | 70.6 % | 78.1 % | 74.2 % | 20 |
+| | 0.25 | 87.6 % | 66.1 % | 75.3 % | 3 |
+| | 0.45 | 96.0 % | 49.4 % | 65.3 % | 2 |
+
+Lab takes none of these detectors was trained on (`bench_stage1_holdout.py`); the first three trained rows use old data only:
+
+| Detector | Conf | Nov 14 test takes, frames (mean / worst take) | Oct 31 take 002 | Second phone 050 | Remote 056 |
+|---|---|---|---|---|---|
+| Shipped | 0.25 | 47 % / 27 % | 61 % | 13 % | 19 % |
+| | 0.45 | 39 % / 21 % | 54 % | 8 % | 13 % |
+| `orig_p100` | 0.45 | 38 % / 22 % | 59 % | 8 % | 12 % |
+| `clean_p100` | 0.45 | 37 % / 25 % | 62 % | 9 % | 13 % |
+| **`v2_p100`** | 0.25 | 51 % / 34 % | 76 % | 25 % | 22 % |
+| | 0.45 | 48 % / 29 % | 72 % | 18 % | 15 % |
+| Lab student | 0.45 | 47 % / 26 % | 67 % | 3 % | 3 % |
+| Teacher (YOLO26x) | 0.25 | 54 % / 33 % | 68 % | 4 % | 3 % |
+| | 0.45 | 49 % / 28 % | 62 % | 2 % | 2 % |
+
+The lab student on `lab_v2` (`labv2`) was still training when this was written; its rows are added below when it is done.
+
+### Findings
+
+- **The shipped detector's real recall at 0.45 is about 58 %.** The 74 % of the old test set came from counting only the knives an earlier detector had found. At the lowest threshold it reaches 84.5 %, so about one visible knife in six is not seen at all.
+- **Precision was never the problem.** On knife frames the shipped detector has 7 detections without a box at 0.45, the teacher 2. Almost all false detections are on the OOD images.
+- **Completing the training labels helps a little:** same recipe, same 250 epochs, 66.1 % found at 0.45 against 62.3 % with the old labels and 63.2 % with the doubtful images removed. It has more detections without a box on knife frames (15 against 6).
+- **Completed labels also carry over to the lab camera, with old data only:** `v2_p100` sees the knife in 48 % of the Nov 14 test frames at 0.45 against 38 % with the old labels, and in 72 % of Oct 31 take 002 against 59 %. It also fires more on the second phone and the remote (18 % and 15 % of frames against 8 % and 12 %): a dark object in a fist now counts as a knife, and the old data has no phone examples.
+- **The teacher is the best detector at any threshold below 0.45:** 77.8 % found at 0.25 with 6 detections without a box, 83.0 % at 0.15 with 15. The shipped detector at 0.45 finds 58.2 % with 26.
+- **The detectors are confidently wrong on one thing:** with the coat on, the empty left sleeve end is scored up to 0.88.
+
+### Proposed solution
+
+1. **Use the completed sets from now on**: `Ground_Truth_Dataset_v2` to compare detectors, `orig_v2` / `lab_v2` to train. They should be checked by the project owner first; the decisions are in `results/stage1_kd/relabel/` and can be changed tile by tile.
+2. **Run Stage 1 at a lower confidence with a detector that has few false detections.** Recall comes first for Stage 1 and the later stages remove false detections. The teacher at 0.15 finds 83 % against 58 % for the shipped detector at 0.45, with fewer false detections. Whether YOLO26x is fast enough on the Edge PC has to be measured; if not, a YOLO26m student is the next size to try.
+3. **Label lab frames the same way**, including frames where no detector fires: hand tiles, suggestions from the teacher at 0.02, decisions by eye. The lab set now only holds knives the shipped detector already finds.
+4. **Look at the hand, not the whole frame.** The knife is 25 px long in a 384x640 frame, and one visible knife in six gets no detection at all. In a 300-pixel tile around the right hand at full resolution it is about 110 px, large enough to label by eye. A small detector trained on hand tiles (wrists from the pose model) is the change most likely to move recall towards 90 %. Not tested yet.
+5. Train with a fixed number of epochs under Ultralytics 8.4.6 (4e, 4f).
+
+### Not checked
+
+- The new labels are one pass by Claude from picture tiles, with detector boxes shown. They are not checked by a person. Boxes drawn by eye are approximate.
+- The new boxes come mostly from detector suggestions, so the completed test set still favours the detectors that made them, above all the lab-trained ones. Frames where a knife is visible but no detector fires and the eye missed it are still "no knife".
+- 90 test frames are left out as "cannot tell"; they are the hard ones (blade tip under a sleeve, motion blur), so real recall over all knife frames is lower than the numbers above.
+- A training image with no right wrist found shows only the frame centre in its tile; it stays "no knife" unless a detector has a box of 0.10 or more elsewhere (3 images).
+- One run per setting. No TensorRT export, no Edge PC timing, no full-pipeline run.
+
+### Files
+
+- Scripts: `results/samples/poc/relabel_stage1.py`; `GT_DIR` in `analyse_stage1_misses.py` and `bench_stage1.py`; modes `v2`, `labv2` in `train_stage1_repro.py`.
+- Decisions and new boxes (in git): `results/stage1_kd/relabel/{test,train,val}_{items,decisions,labels_v2}.json`, `test_decisions_before_hand.json`, `test_knife_hand_votes.json`. Tile sheets `*_sheet_NN.jpg` are rebuilt by `propose` (dev PC only).
+- Sets (dev PC only): `data/Ground_Truth_Dataset_v2`, `data/stage1_negatives/orig_v2`, `data/stage1_negatives/lab_v2`.
+- Weights (dev PC only): `weights/stage1_repro846_v2_p100.pt`, `weights/stage1_repro846_labv2_p50.pt`.
+
 ## 5. Not checked
 
 - The classifier's lab knife crops are the shipped detector's own boxes, not hand labels.

@@ -1,0 +1,912 @@
+{
+"new": {
+"With_Coat/images/Cut_Down_10_frame_120.jpg": [
+[
+1428.1251220703125,
+585.9375610351562,
+1501.041748046875,
+689.5833740234375
+]
+],
+"With_Coat/images/Cut_Down_11_frame_100.jpg": [
+[
+1335.416748046875,
+633.3333740234375,
+1411.45849609375,
+735.416748046875
+]
+],
+"With_Coat/images/Cut_Down_11_frame_110.jpg": [
+[
+1249.4545454545455,
+685.3636363636364,
+1286.7272727272727,
+764.4545454545455
+]
+],
+"With_Coat/images/Cut_Down_14_frame_100.jpg": [
+[
+1040.6251220703125,
+576.5625610351562,
+1096.8751220703125,
+658.3333740234375
+]
+],
+"With_Coat/images/Cut_Down_1_frame_110.jpg": [
+[
+513.5416870117188,
+628.1250610351562,
+600.0000610351562,
+745.8333740234375
+]
+],
+"With_Coat/images/Cut_Down_2_frame_110.jpg": [
+[
+614.5833740234375,
+839.5833740234375,
+745.8333740234375,
+940.6250610351562
+]
+],
+"With_Coat/images/Cut_Down_2_frame_130.jpg": [
+[
+646.5454545454545,
+707.4545454545455,
+692.9090909090909,
+782.0
+]
+],
+"With_Coat/images/Cut_Down_5_frame_130.jpg": [
+[
+977.0834350585938,
+613.5416870117188,
+1046.8751220703125,
+716.666748046875
+]
+],
+"With_Coat/images/Stab_10_frame_40.jpg": [
+[
+778.1250610351562,
+504.9479675292969,
+897.916748046875,
+614.5833740234375
+]
+],
+"With_Coat/images/Stab_10_frame_60.jpg": [
+[
+926.0,
+39.09090909090909,
+1028.7272727272727,
+103.63636363636364
+]
+],
+"With_Coat/images/Stab_11_frame_90.jpg": [
+[
+1126.041748046875,
+561.4583740234375,
+1229.166748046875,
+663.5416870117188
+]
+],
+"With_Coat/images/Stab_12_frame_20.jpg": [
+[
+1016.666748046875,
+522.3958740234375,
+1108.3333740234375,
+632.2916870117188
+]
+],
+"With_Coat/images/Stab_12_frame_30.jpg": [
+[
+1101.8181818181818,
+0.9090909090909091,
+1148.1818181818182,
+51.81818181818182
+]
+],
+"With_Coat/images/Stab_12_frame_40.jpg": [
+[
+1126.041748046875,
+61.19792175292969,
+1203.1251220703125,
+151.56251525878906
+]
+],
+"With_Coat/images/Stab_12_frame_70.jpg": [
+[
+1046.8751220703125,
+557.2916870117188,
+1138.541748046875,
+677.604248046875
+]
+],
+"With_Coat/images/Stab_2_frame_30.jpg": [
+[
+1460.8181818181818,
+651.2727272727273,
+1525.3636363636365,
+684.0
+]
+],
+"With_Coat/images/Stab_3_frame_100.jpg": [
+[
+1202.0833740234375,
+567.1875610351562,
+1281.2501220703125,
+649.4791870117188
+]
+],
+"With_Coat/images/Stab_3_frame_60.jpg": [
+[
+1090.6251220703125,
+24.934898376464844,
+1165.6251220703125,
+114.97396850585938
+]
+],
+"With_Coat/images/Stab_4_frame_100.jpg": [
+[
+1198.9583740234375,
+505.2083740234375,
+1284.3751220703125,
+576.0416870117188
+]
+],
+"With_Coat/images/Stab_4_frame_30.jpg": [
+[
+1404.166748046875,
+651.0416870117188,
+1463.541748046875,
+721.354248046875
+]
+],
+"With_Coat/images/Stab_4_frame_70.jpg": [
+[
+757.291748046875,
+79.62239837646484,
+823.9583740234375,
+210.54689025878906
+]
+],
+"With_Coat/images/Stab_5_frame_10.jpg": [
+[
+1412.5001220703125,
+803.6458740234375,
+1462.5001220703125,
+878.1250610351562
+]
+],
+"With_Coat/images/Stab_5_frame_100.jpg": [
+[
+1181.2501220703125,
+559.8958740234375,
+1281.2501220703125,
+630.7291870117188
+]
+],
+"With_Coat/images/Stab_5_frame_20.jpg": [
+[
+1393.7501220703125,
+756.7708740234375,
+1468.7501220703125,
+820.3125610351562
+]
+],
+"With_Coat/images/Stab_5_frame_30.jpg": [
+[
+1288.541748046875,
+683.3333740234375,
+1348.95849609375,
+761.979248046875
+]
+],
+"With_Coat/images/Stab_6_frame_10.jpg": [
+[
+1043.7501220703125,
+848.4375610351562,
+1119.791748046875,
+951.041748046875
+]
+],
+"With_Coat/images/Stab_6_frame_100.jpg": [
+[
+1130.2083740234375,
+511.7187805175781,
+1184.3751220703125,
+581.2500610351562
+]
+],
+"With_Coat/images/Stab_7_frame_50.jpg": [
+[
+1327.0833740234375,
+11.555990219116211,
+1379.166748046875,
+99.08854675292969
+]
+],
+"With_Coat/images/Stab_8_frame_10.jpg": [
+[
+394.01043701171875,
+765.104248046875,
+510.4167175292969,
+838.541748046875
+]
+],
+"With_Coat/images/Stab_8_frame_90.jpg": [
+[
+1212.5001220703125,
+521.8750610351562,
+1331.2501220703125,
+625.0000610351562
+]
+],
+"With_Coat/images/Stab_9_frame_10.jpg": [
+[
+294.79168701171875,
+601.5625610351562,
+460.9375305175781,
+694.791748046875
+]
+],
+"With_Coat/images/Stab_9_frame_20.jpg": [
+[
+483.8542175292969,
+628.6458740234375,
+638.0208740234375,
+708.854248046875
+]
+],
+"With_Coat/images/Stab_9_frame_30.jpg": [
+[
+563.5416870117188,
+600.0000610351562,
+691.666748046875,
+663.0208740234375
+]
+],
+"With_Coat/images/Thrust_10_frame_50.jpg": [
+[
+773.4375610351562,
+83.00782012939453,
+853.1250610351562,
+157.55209350585938
+]
+],
+"With_Coat/images/Thrust_12_frame_20.jpg": [
+[
+1155.7272727272727,
+813.0909090909091,
+1197.5454545454545,
+869.4545454545455
+]
+],
+"With_Coat/images/Thrust_12_frame_60.jpg": [
+[
+1102.0833740234375,
+24.902345657348633,
+1161.4583740234375,
+85.87240600585938
+]
+],
+"With_Coat/images/Thrust_12_frame_90.jpg": [
+[
+1162.5001220703125,
+505.4687805175781,
+1220.8333740234375,
+602.0833740234375
+]
+],
+"With_Coat/images/Thrust_13_frame_40.jpg": [
+[
+1104.166748046875,
+403.6458740234375,
+1158.3333740234375,
+474.2187805175781
+]
+],
+"With_Coat/images/Thrust_14_frame_110.jpg": [
+[
+1013.541748046875,
+572.9166870117188,
+1114.5833740234375,
+646.3541870117188
+]
+],
+"With_Coat/images/Thrust_14_frame_30.jpg": [
+[
+853.1250610351562,
+683.3333740234375,
+915.6250610351562,
+734.3750610351562
+]
+],
+"With_Coat/images/Thrust_14_frame_40.jpg": [
+[
+952.0834350585938,
+560.9375610351562,
+1028.1251220703125,
+621.3541870117188
+]
+],
+"With_Coat/images/Thrust_15_frame_100.jpg": [
+[
+955.2727272727273,
+592.2727272727273,
+1010.7272727272727,
+652.2727272727273
+]
+],
+"With_Coat/images/Thrust_15_frame_40.jpg": [
+[
+875.4545454545455,
+552.1818181818182,
+940.0,
+594.0
+]
+],
+"With_Coat/images/Thrust_15_frame_50.jpg": [
+[
+1115.6251220703125,
+393.4896240234375,
+1229.166748046875,
+465.88543701171875
+]
+],
+"With_Coat/images/Thrust_15_frame_90.jpg": [
+[
+993.229248046875,
+536.9791870117188,
+1098.9583740234375,
+605.2083740234375
+]
+],
+"With_Coat/images/Thrust_16_frame_20.jpg": [
+[
+694.1818181818182,
+549.7272727272727,
+745.0909090909091,
+614.2727272727273
+]
+],
+"With_Coat/images/Thrust_16_frame_30.jpg": [
+[
+874.6363636363636,
+514.1818181818182,
+930.0909090909091,
+579.6363636363636
+]
+],
+"With_Coat/images/Thrust_16_frame_40.jpg": [
+[
+962.5000610351562,
+504.4271240234375,
+1078.1251220703125,
+590.6250610351562
+]
+],
+"With_Coat/images/Thrust_16_frame_80.jpg": [
+[
+1060.416748046875,
+581.2500610351562,
+1167.7083740234375,
+671.8750610351562
+]
+],
+"With_Coat/images/Thrust_17_frame_10.jpg": [
+[
+925.5208740234375,
+416.66668701171875,
+992.1875610351562,
+521.0938110351562
+]
+],
+"With_Coat/images/Thrust_18_frame_20.jpg": [
+[
+1121.8751220703125,
+459.8958740234375,
+1193.7501220703125,
+560.4166870117188
+]
+],
+"With_Coat/images/Thrust_18_frame_50.jpg": [
+[
+977.604248046875,
+623.4375610351562,
+1054.166748046875,
+735.416748046875
+]
+],
+"With_Coat/images/Thrust_18_frame_60.jpg": [
+[
+1030.2083740234375,
+670.8333740234375,
+1105.2083740234375,
+771.354248046875
+]
+],
+"With_Coat/images/Thrust_18_frame_90.jpg": [
+[
+1066.666748046875,
+606.7708740234375,
+1125.0001220703125,
+704.6875610351562
+]
+],
+"With_Coat/images/Thrust_19_frame_130.jpg": [
+[
+937.5000610351562,
+538.5416870117188,
+1036.4583740234375,
+645.8333740234375
+]
+],
+"With_Coat/images/Thrust_1_frame_100.jpg": [
+[
+886.4583740234375,
+619.7916870117188,
+979.6875610351562,
+719.791748046875
+]
+],
+"With_Coat/images/Thrust_1_frame_20.jpg": [
+[
+627.6041870117188,
+414.0625305175781,
+698.4375610351562,
+527.8646240234375
+]
+],
+"With_Coat/images/Thrust_1_frame_60.jpg": [
+[
+768.7500610351562,
+491.1458740234375,
+855.2083740234375,
+604.1666870117188
+]
+],
+"With_Coat/images/Thrust_2_frame_10.jpg": [
+[
+821.8750610351562,
+399.47918701171875,
+896.8750610351562,
+497.9167175292969
+]
+],
+"With_Coat/images/Thrust_3_frame_20.jpg": [
+[
+1007.8125610351562,
+460.6771240234375,
+1063.541748046875,
+557.2916870117188
+]
+],
+"With_Coat/images/Thrust_3_frame_50.jpg": [
+[
+1002.0834350585938,
+634.8958740234375,
+1087.5001220703125,
+753.1250610351562
+]
+],
+"With_Coat/images/Thrust_3_frame_90.jpg": [
+[
+1077.0833740234375,
+569.7916870117188,
+1133.3333740234375,
+661.4583740234375
+]
+],
+"With_Coat/images/Thrust_4_frame_10.jpg": [
+[
+1237.5001220703125,
+384.63543701171875,
+1314.5833740234375,
+480.9896240234375
+]
+],
+"With_Coat/images/Thrust_4_frame_20.jpg": [
+[
+1221.8751220703125,
+433.07293701171875,
+1283.3333740234375,
+535.4166870117188
+]
+],
+"With_Coat/images/Thrust_4_frame_30.jpg": [
+[
+1180.2083740234375,
+469.5312805175781,
+1247.916748046875,
+570.8333740234375
+]
+],
+"With_Coat/images/Thrust_6_frame_50.jpg": [
+[
+955.2084350585938,
+485.9375305175781,
+1081.2501220703125,
+558.8541870117188
+]
+],
+"Without_Coat/images/Cut_Down_frame_40.jpg": [
+[
+886.4583740234375,
+621.8750610351562,
+1007.291748046875,
+719.791748046875
+]
+],
+"Without_Coat/images/Cut_Down_frame_70.jpg": [
+[
+1008.3334350585938,
+1245.8333740234375,
+1080.2083740234375,
+1388.541748046875
+]
+],
+"Without_Coat/images/Cut_Down_frame_90.jpg": [
+[
+931.2500610351562,
+1022.916748046875,
+1012.5000610351562,
+1157.291748046875
+]
+],
+"Without_Coat/images/Cut_down_10_frame_70.jpg": [
+[
+1435.416748046875,
+0.0,
+1486.45849609375,
+70.76823425292969
+]
+],
+"Without_Coat/images/Cut_down_10_frame_80.jpg": [
+[
+1376.041748046875,
+122.52605438232422,
+1429.166748046875,
+221.35418701171875
+]
+],
+"Without_Coat/images/Cut_down_12_frame_110.jpg": [
+[
+1085.416748046875,
+506.2500305175781,
+1128.1251220703125,
+577.0833740234375
+]
+],
+"Without_Coat/images/Cut_down_12_frame_70.jpg": [
+[
+1209.3751220703125,
+750.5208740234375,
+1281.2501220703125,
+829.166748046875
+]
+],
+"Without_Coat/images/Cut_down_13_frame_100.jpg": [
+[
+1118.7501220703125,
+604.1666870117188,
+1176.041748046875,
+690.104248046875
+]
+],
+"Without_Coat/images/Cut_down_13_frame_40.jpg": [
+[
+1097.916748046875,
+654.1666870117188,
+1202.0833740234375,
+732.291748046875
+]
+],
+"Without_Coat/images/Cut_down_13_frame_70.jpg": [
+[
+1223.9583740234375,
+723.9583740234375,
+1283.3333740234375,
+775.5208740234375
+]
+],
+"Without_Coat/images/Cut_down_13_frame_90.jpg": [
+[
+1177.0833740234375,
+596.8750610351562,
+1259.3751220703125,
+689.5833740234375
+]
+],
+"Without_Coat/images/Cut_down_14_frame_10.jpg": [
+[
+651.0416870117188,
+833.3333740234375,
+713.0208740234375,
+909.8958740234375
+]
+],
+"Without_Coat/images/Cut_down_14_frame_20.jpg": [
+[
+749.0909090909091,
+817.2727272727273,
+800.0,
+881.8181818181818
+]
+],
+"Without_Coat/images/Cut_down_14_frame_30.jpg": [
+[
+830.2083740234375,
+725.0000610351562,
+882.8125610351562,
+804.6875610351562
+]
+],
+"Without_Coat/images/Cut_down_14_frame_80.jpg": [
+[
+1163.541748046875,
+657.2916870117188,
+1243.7501220703125,
+732.8125610351562
+]
+],
+"Without_Coat/images/Cut_down_14_frame_90.jpg": [
+[
+1080.2083740234375,
+558.8541870117188,
+1143.7501220703125,
+642.1875610351562
+]
+],
+"Without_Coat/images/Cut_down_1_frame_10.jpg": [
+[
+123.17709350585938,
+473.6979675292969,
+189.45314025878906,
+572.3958740234375
+]
+],
+"Without_Coat/images/Cut_down_1_frame_90.jpg": [
+[
+708.854248046875,
+868.7500610351562,
+790.6250610351562,
+992.7084350585938
+]
+],
+"Without_Coat/images/Cut_down_2_frame_90.jpg": [
+[
+808.3333740234375,
+1189.5833740234375,
+855.729248046875,
+1300.0001220703125
+]
+],
+"Without_Coat/images/Cut_down_3_frame_110.jpg": [
+[
+851.041748046875,
+662.5000610351562,
+919.2708740234375,
+769.2708740234375
+]
+],
+"Without_Coat/images/Cut_down_3_frame_70.jpg": [
+[
+794.2708740234375,
+954.166748046875,
+865.104248046875,
+1031.7708740234375
+]
+],
+"Without_Coat/images/Cut_down_4_frame_20.jpg": [
+[
+1127.0833740234375,
+440.10418701171875,
+1187.5001220703125,
+522.9166870117188
+]
+],
+"Without_Coat/images/Cut_down_4_frame_50.jpg": [
+[
+686.979248046875,
+138.9322967529297,
+794.2708740234375,
+292.7083435058594
+]
+],
+"Without_Coat/images/Cut_down_5_frame_10.jpg": [
+[
+1391.666748046875,
+406.7708740234375,
+1453.1251220703125,
+502.6042175292969
+]
+],
+"Without_Coat/images/Cut_down_5_frame_20.jpg": [
+[
+1377.08349609375,
+407.29168701171875,
+1440.6251220703125,
+511.1979675292969
+]
+],
+"Without_Coat/images/Cut_down_5_frame_30.jpg": [
+[
+1316.666748046875,
+423.9583740234375,
+1385.416748046875,
+526.5625610351562
+]
+],
+"Without_Coat/images/Cut_down_6_frame_70.jpg": [
+[
+742.7083740234375,
+1010.416748046875,
+807.8125610351562,
+1121.8751220703125
+]
+],
+"Without_Coat/images/Cut_down_7_frame_100.jpg": [
+[
+818.229248046875,
+630.2083740234375,
+894.791748046875,
+731.2500610351562
+]
+],
+"Without_Coat/images/Cut_down_8_frame_90.jpg": [
+[
+675.5208740234375,
+942.1875610351562,
+755.2083740234375,
+1033.3333740234375
+]
+],
+"Without_Coat/images/Stab_15_frame_40.jpg": [
+[
+798.4375610351562,
+584.3750610351562,
+869.791748046875,
+642.7083740234375
+]
+],
+"Without_Coat/images/Stab_15_frame_50.jpg": [
+[
+794.791748046875,
+76.49739837646484,
+894.2708740234375,
+188.28126525878906
+]
+],
+"Without_Coat/images/Stab_17_frame_100.jpg": [
+[
+918.229248046875,
+638.0208740234375,
+980.2084350585938,
+734.3750610351562
+]
+],
+"Without_Coat/images/Stab_17_frame_60.jpg": [
+[
+1043.7501220703125,
+304.94793701171875,
+1168.7501220703125,
+492.4479675292969
+]
+],
+"Without_Coat/images/Stab_frame_110.jpg": [
+[
+686.979248046875,
+612.5000610351562,
+776.5625610351562,
+732.8125610351562
+]
+],
+"Without_Coat/images/Stab_frame_130.jpg": [
+[
+713.541748046875,
+634.8958740234375,
+821.8750610351562,
+776.041748046875
+]
+],
+"Without_Coat/images/Thrust_frame_130.jpg": [
+[
+656.2500610351562,
+616.1458740234375,
+745.3125610351562,
+727.604248046875
+]
+]
+},
+"unsure": [
+"With_Coat/images/Stab_10_frame_90.jpg",
+"With_Coat/images/Stab_11_frame_10.jpg",
+"With_Coat/images/Stab_11_frame_100.jpg",
+"With_Coat/images/Stab_11_frame_20.jpg",
+"With_Coat/images/Stab_11_frame_50.jpg",
+"With_Coat/images/Stab_12_frame_80.jpg",
+"With_Coat/images/Stab_13_frame_40.jpg",
+"With_Coat/images/Stab_13_frame_60.jpg",
+"With_Coat/images/Stab_13_frame_80.jpg",
+"With_Coat/images/Stab_1_frame_50.jpg",
+"With_Coat/images/Stab_4_frame_80.jpg",
+"With_Coat/images/Stab_6_frame_50.jpg",
+"With_Coat/images/Stab_6_frame_60.jpg",
+"With_Coat/images/Stab_6_frame_70.jpg",
+"With_Coat/images/Stab_6_frame_80.jpg",
+"With_Coat/images/Stab_7_frame_40.jpg",
+"With_Coat/images/Stab_7_frame_60.jpg",
+"With_Coat/images/Stab_8_frame_50.jpg",
+"With_Coat/images/Stab_9_frame_50.jpg",
+"With_Coat/images/Stab_9_frame_60.jpg",
+"With_Coat/images/Thrust_11_frame_90.jpg",
+"With_Coat/images/Thrust_12_frame_10.jpg",
+"With_Coat/images/Thrust_12_frame_70.jpg",
+"With_Coat/images/Thrust_13_frame_100.jpg",
+"With_Coat/images/Thrust_13_frame_20.jpg",
+"With_Coat/images/Thrust_13_frame_30.jpg",
+"With_Coat/images/Thrust_13_frame_60.jpg",
+"With_Coat/images/Thrust_14_frame_10.jpg",
+"With_Coat/images/Thrust_15_frame_20.jpg",
+"With_Coat/images/Thrust_15_frame_30.jpg",
+"With_Coat/images/Thrust_18_frame_40.jpg",
+"With_Coat/images/Thrust_19_frame_100.jpg",
+"With_Coat/images/Thrust_19_frame_50.jpg",
+"With_Coat/images/Thrust_1_frame_10.jpg",
+"With_Coat/images/Thrust_2_frame_30.jpg",
+"With_Coat/images/Thrust_2_frame_50.jpg",
+"With_Coat/images/Thrust_2_frame_90.jpg",
+"With_Coat/images/Thrust_3_frame_30.jpg",
+"With_Coat/images/Thrust_4_frame_50.jpg",
+"With_Coat/images/Thrust_6_frame_90.jpg",
+"Without_Coat/images/Cut_Down_frame_30.jpg",
+"Without_Coat/images/Cut_Down_frame_60.jpg",
+"Without_Coat/images/Cut_down_10_frame_50.jpg",
+"Without_Coat/images/Cut_down_11_frame_20.jpg",
+"Without_Coat/images/Cut_down_12_frame_10.jpg",
+"Without_Coat/images/Cut_down_12_frame_100.jpg",
+"Without_Coat/images/Cut_down_12_frame_20.jpg",
+"Without_Coat/images/Cut_down_12_frame_30.jpg",
+"Without_Coat/images/Cut_down_12_frame_40.jpg",
+"Without_Coat/images/Cut_down_12_frame_80.jpg",
+"Without_Coat/images/Cut_down_12_frame_90.jpg",
+"Without_Coat/images/Cut_down_13_frame_10.jpg",
+"Without_Coat/images/Cut_down_13_frame_20.jpg",
+"Without_Coat/images/Cut_down_13_frame_30.jpg",
+"Without_Coat/images/Cut_down_13_frame_50.jpg",
+"Without_Coat/images/Cut_down_13_frame_80.jpg",
+"Without_Coat/images/Cut_down_14_frame_50.jpg",
+"Without_Coat/images/Cut_down_14_frame_70.jpg",
+"Without_Coat/images/Cut_down_15_frame_100.jpg",
+"Without_Coat/images/Cut_down_15_frame_20.jpg",
+"Without_Coat/images/Cut_down_15_frame_30.jpg",
+"Without_Coat/images/Cut_down_15_frame_50.jpg",
+"Without_Coat/images/Cut_down_15_frame_70.jpg",
+"Without_Coat/images/Cut_down_15_frame_80.jpg",
+"Without_Coat/images/Cut_down_16_frame_50.jpg",
+"Without_Coat/images/Cut_down_16_frame_60.jpg",
+"Without_Coat/images/Cut_down_1_frame_50.jpg",
+"Without_Coat/images/Cut_down_2_frame_30.jpg",
+"Without_Coat/images/Cut_down_3_frame_20.jpg",
+"Without_Coat/images/Cut_down_3_frame_30.jpg",
+"Without_Coat/images/Cut_down_3_frame_80.jpg",
+"Without_Coat/images/Cut_down_4_frame_10.jpg",
+"Without_Coat/images/Cut_down_4_frame_100.jpg",
+"Without_Coat/images/Cut_down_4_frame_110.jpg",
+"Without_Coat/images/Cut_down_4_frame_60.jpg",
+"Without_Coat/images/Cut_down_5_frame_50.jpg",
+"Without_Coat/images/Cut_down_5_frame_70.jpg",
+"Without_Coat/images/Cut_down_5_frame_90.jpg",
+"Without_Coat/images/Cut_down_6_frame_10.jpg",
+"Without_Coat/images/Cut_down_6_frame_20.jpg",
+"Without_Coat/images/Cut_down_6_frame_60.jpg",
+"Without_Coat/images/Cut_down_7_frame_50.jpg",
+"Without_Coat/images/Cut_down_8_frame_60.jpg",
+"Without_Coat/images/Cut_down_8_frame_80.jpg",
+"Without_Coat/images/Stab_17_frame_50.jpg",
+"Without_Coat/images/Stab_frame_60.jpg",
+"Without_Coat/images/Stab_frame_70.jpg",
+"Without_Coat/images/Thrust_frame_30.jpg",
+"Without_Coat/images/Thrust_frame_40.jpg",
+"Without_Coat/images/Thrust_frame_90.jpg"
+]
+}
