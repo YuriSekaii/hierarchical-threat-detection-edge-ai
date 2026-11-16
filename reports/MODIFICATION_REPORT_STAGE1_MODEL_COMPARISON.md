@@ -354,6 +354,14 @@ Ground-truth set and Nov 5 takes, 384x640:
 | **Student on lab set, shipped optimizer** (`stage1_repro846_lab.pt`) | 0.15 | 56.4 % | 91.3 % | 69.8 % | 77 | 4.4 % | 0.9 % | 63.7 % |
 | | 0.25 | 63.2 % | 86.7 % | 73.1 % | 51 | 3.3 % | 0.7 % | 61.8 % |
 | | 0.45 | 70.9 % | 80.0 % | 75.2 % | 30 | 2.9 % | 0.4 % | 58.8 % |
+| **Teacher, YOLO26x, shipped optimizer** (`stage1_repro846_teacher.pt`) | 0.15 | 69.6 % | 90.4 % | 78.6 % | 7 | 6.4 % | 0.1 % | 64.6 % |
+| | 0.25 | 74.2 % | 87.5 % | 80.3 % | 2 | 5.7 % | 0.0 % | 62.8 % |
+| | 0.45 | 83.9 % | 76.3 % | 79.9 % | 0 | 4.2 % | 0.0 % | 59.0 % |
+| **Student distilled from that teacher** (`stage1_repro846_kd.pt`) | 0.05 | 41.3 % | 93.3 % | 57.2 % | 59 | 1.8 % | 0.1 % | 70.9 % |
+| | 0.10 | 54.8 % | 88.3 % | 67.6 % | 20 | 1.3 % | 0.0 % | 67.8 % |
+| | 0.15 | 63.6 % | 84.6 % | 72.6 % | 9 | 0.9 % | 0.0 % | 65.9 % |
+| | 0.25 | 71.7 % | 77.9 % | 74.7 % | 3 | 0.2 % | 0.0 % | 62.7 % |
+| | 0.45 | 86.9 % | 63.8 % | 73.6 % | 2 | 0.0 % | 0.0 % | 51.5 % |
 
 Lab takes none of these detectors was trained on:
 
@@ -365,8 +373,16 @@ Lab takes none of these detectors was trained on:
 | **Student on lab set, shipped optimizer** | 0.15 | 53 % / 34 % | 69 % / 51 % | 73 % | 11 % | 11 % |
 | | 0.25 | 51 % / 30 % | 66 % / 46 % | 70 % | 5 % | 4 % |
 | | 0.45 | 47 % / 26 % | 63 % / 40 % | 67 % | 3 % | 3 % |
+| **Teacher, YOLO26x, shipped optimizer** | 0.15 | 57 % / 37 % | 71 % / 53 % | 71 % | 5 % | 4 % |
+| | 0.25 | 54 % / 33 % | 69 % / 48 % | 68 % | 4 % | 3 % |
+| | 0.45 | 49 % / 28 % | 66 % / 43 % | 62 % | 2 % | 2 % |
+| **Student distilled from that teacher** | 0.05 | 62 % / 43 % | 74 % / 60 % | 75 % | 7 % | 5 % |
+| | 0.10 | 58 % / 38 % | 72 % / 54 % | 73 % | 5 % | 4 % |
+| | 0.15 | 55 % / 34 % | 70 % / 50 % | 71 % | 4 % | 3 % |
+| | 0.25 | 51 % / 28 % | 65 % / 43 % | 66 % | 2 % | 2 % |
+| | 0.45 | 43 % / 21 % | 59 % / 33 % | 54 % | 1 % | 2 % |
 
-Training: student stopped at epoch 111 (best 81, validation mAP50 0.855); teacher stopped at 37 (best 17, mAP50 0.887).
+Training: student stopped at epoch 111 (best 81, validation mAP50 0.855); teacher stopped at 37 (best 17, mAP50 0.887); distilled student stopped at 138 (best 108, mAP50 0.851).
 
 ### Findings
 
@@ -374,14 +390,16 @@ Training: student stopped at epoch 111 (best 81, validation mAP50 0.855); teache
 - **With that fixed, more data helps.** The student trained on the lab set has higher ground-truth recall than the shipped detector at every confidence (80.0 % against 74.2 % at 0.45, 91.3 % against 87.1 % at 0.15). Its precision at the same confidence is lower; at equal recall the two are close (86.7 % recall at 63.2 % precision against 87.1 % at 61.3 %).
 - It sees the lab knife more often (Nov 14 test frames 47 % against 39 % at 0.45, Oct 31 take 002 67 % against 54 %) and fires far less on the phone, the second phone and the remote (3 % of frames against 8–35 %).
 - The 8.4.9 runs of 4d scored a little higher on lab frames (54 % against 51 % at 0.25) and lower on the ground-truth set. Both sets of numbers come from one run each.
-- Teacher and distilled student under the shipped optimizer: rows to follow.
+- **The teacher is now the best detector measured here.** At 0.25 it has 87.5 % ground-truth recall at 74.2 % precision with 2 OOD false detections; the shipped detector has 83.8 %, 69.3 % and 44. On the Nov 14 test takes it sees the knife in 54 % of frames against 47 %. It is YOLO26x, about six times the parameters of YOLO26s; its speed on the Edge PC was not measured.
+- **Distillation does not bring the student up to the teacher.** The distilled student gives lower scores, so its recall falls fast with confidence (63.8 % at 0.45). At a lower threshold it matches the shipped detector's recall with fewer false detections outside the set: at 0.10, 88.3 % recall and 20 OOD false detections against 87.1 % and 61 for the shipped detector at 0.15, and 58 % of Nov 14 test frames against 50 %. Its precision inside the ground-truth set is lower there (54.8 % against 61.3 %).
+- **Between the two students there is no clear winner.** At about 87 % recall the plain lab student (0.25) has the higher precision (63.2 % against 54.8 %), the distilled one (0.10) the fewer OOD false detections (20 against 51) and more lab frames (58 % against 51 %). One run each.
 
 ### Not checked
 
 - The lab boxes are still the shipped detector's own detections; about 1 in 6 knife boxes sampled is on an empty hand. Hand-labelled lab frames were not made.
-- One run per model. The forced small-set optimizer values on the larger lab set are a choice, not a tuned setting.
+- One run per model, one distillation weight (1.0). The forced small-set optimizer values on the larger lab set are a choice, not a tuned setting.
 - The phone-class, phone-background and crop-classifier runs of sections 2 to 4c were not repeated under 8.4.6.
-- No TensorRT export, no Edge PC timing, no full-pipeline run. The Edge PC has its own Ultralytics version; only training depends on 8.4.6.
+- No TensorRT export, no Edge PC timing (the teacher's above all), no full-pipeline run. The Edge PC has its own Ultralytics version; only training depends on 8.4.6.
 
 ### Files
 
