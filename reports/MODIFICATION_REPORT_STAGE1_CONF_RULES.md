@@ -98,12 +98,31 @@ The same student + hand gate rules on `Ground_Truth_Dataset_v2`:
 - **The two high numbers belong to different boxes and different cameras, so no rule gets both.** The 92–95 % recall at 0.01 comes with 34–59 % precision; the teacher's 96–98 % precision at 0.45 is measured on `Ground_Truth_Dataset_v2` only. On the lab camera the teacher has 65 % precision at 0.45 (85 % without the cart shadow): it fires on empty hands and chair armrests.
 - **Teacher confirmation works on the internet test set and fails on the lab camera.** On GT v2, "student ≥ 0.70, or student ≥ 0.05 confirmed by the teacher at 0.10" keeps the student's 89 % precision and raises recall from 68 % to 78 %. Picked there and applied to the lab frames it gives 61.8 % precision. On GT v2 the teacher alone is still better than any student + teacher rule (92.4 % / 81.6 % at 0.15), so running both models buys nothing over running the teacher.
 - **The pipeline's hand gate is the filter that holds precision while the threshold drops.** It removes the cart shadow and most no-knife detections on the lab camera: the student at 0.45 goes from 75.0 % to 88.4 % precision for 1 point of recall. With the gate on, lowering the threshold costs precision slowly: 0.45 → 0.25 gives +6.3 points recall for −3.7 points precision on the lab frames (+7.0 / −6.6 on GT v2).
-- **The crop classifier and a tighter gate (0.25 torso) do not help:** at equal precision they keep fewer knives than a lower threshold with the plain gate.
+- **The crop classifier and a tighter gate (0.25 torso) do not help when every box must pass them** (hi = never): at equal precision they keep fewer knives than a lower threshold with the plain gate. They do help as the check for low-score boxes only (next section).
 - **Sweet spot: lab student at 0.30 with the hand gate on.** Lab frames: 85.8 % precision, 81.9 % recall (against 88.4 % / 77.3 % at 0.45). GT v2: 84.6 % / 72.2 % (against 89.8 % / 66.7 %). If precision must stay at the 0.45 level, 0.35 keeps about 87 % and still gains 3–4 points of recall. Below 0.25 each extra point of recall costs about two points of precision.
+
+## Highest F1: a bridge between high and low scores (added 2026-11-17)
+
+Student rules ranked by mean F1 over both sets, from the same `sweep_*.jsonl` (no new run):
+
+| Rule (lab student) | GT v2 P / R / F1 | Lab P / R / F1 |
+|---|---|---|
+| 0.45, no gate (today's threshold) | 88.5 / 67.8 / 76.8 | 75.0 / 78.3 / 76.6 |
+| 0.45 + hand gate 0.5 (today's pipeline) | 89.8 / 66.7 / 76.5 | 88.4 / 77.3 / 82.5 |
+| 0.30 + hand gate 0.5 | 84.6 / 72.2 / 77.9 | 85.8 / 81.9 / 83.8 |
+| **≥ 0.70 kept; 0.15–0.70 kept only if a wrist is within 0.25 torso and the crop classifier says knife ≥ 0.5** | **86.4 / 77.8 / 81.8** | **82.9 / 84.7 / 83.8** |
+| same, classifier ≥ 0.7 | 87.1 / 76.9 / 81.7 | 83.4 / 83.9 / 83.6 |
+
+Best F1 per set when the teacher may be used: GT v2 teacher 0.30/0.15 + hand gate, F1 86.9; the same rule on the lab frames gives 72.4. Best lab rule with the teacher: teacher 0.45 + hand gate, F1 83.3, which gives 74.9 on GT v2. Only the student bridge rule is near the top on both sets.
+
+- The bridge rule raises F1 by 5 points on GT v2 over today's pipeline and by 1.3 on the lab frames; it ties 0.30 + hand gate on the lab frames and beats it by 3.9 on GT v2.
+- The ten best student rules are all this shape (hi 0.6–0.7, lo 0.10–0.20, wrist 0.25 + classifier 0.3–0.7) and lie within 0.4 F1 of each other, so the result does not hang on one exact setting. The rule was still chosen on these two sets, with no third set to confirm it.
+- Cost: the classifier runs only on boxes scored 0.15–0.70 near a wrist, not on every box.
 
 ## Proposed solution
 
-1. Run Stage 1 with the lab student at conf 0.30 and keep `hand_gate` (0.5 torso) and `static_filter` on, as `inference_production_pipeline.py` already does. This changes only the `--conf` value.
+1. Simplest step: run Stage 1 with the lab student at conf 0.30 and keep `hand_gate` (0.5 torso) and `static_filter` on, as `inference_production_pipeline.py` already does. This changes only the `--conf` value.
+1b. For the highest F1: the bridge rule above (keep ≥ 0.70; keep 0.15–0.70 only near a wrist (0.25 torso) with crop classifier ≥ 0.5). Needs code in Stage 1 and the classifier on the Edge PC.
 2. Do not add the teacher as a confirmer: it costs a YOLO26x pass per frame and does not raise precision on the lab camera.
 3. Next lever for recall without precision loss: a temporal rule (a track opened by one box at ≥ 0.45 near a wrist is kept at ≥ 0.15 in the next frames). Not tested here: the labelled lab frames are every 10th frame, so a track cannot be followed.
 
