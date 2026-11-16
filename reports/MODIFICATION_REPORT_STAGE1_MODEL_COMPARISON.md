@@ -633,6 +633,69 @@ Lab student on `lab_v2`: `PATIENCE=50 DEV=1 ... train_stage1_repro.py . labv2`, 
 - Sets (dev PC only): `data/Ground_Truth_Dataset_v2`, `data/stage1_negatives/orig_v2`, `data/stage1_negatives/lab_v2`.
 - Weights (dev PC only): `weights/stage1_repro846_v2_p100.pt`, `weights/stage1_repro846_labv2_p50.pt`.
 
+## 4h. Knife labels for the lab recordings (2026-11-17)
+
+**Status: new label set `data/lab_stage1_gt` (dev PC only); decisions in git. No old label, recording or weight changed. Labels are by Claude agents (Haiku first pass, Sonnet review), not by a person.**
+
+### Question
+
+The lab set used so far only holds knives the shipped detector already found (4g, point 3). How do the detectors score on lab frames labelled independently of them, including frames where no detector fires?
+
+### What was run
+
+`results/samples/poc/label_lab_stage1.py`:
+
+```bash
+DEV=0 .venv/Scripts/python.exe results/samples/poc/label_lab_stage1.py . propose     # 6968 frames -> 8370 hand tiles, 524 sheets
+DEV=0 .venv/Scripts/python.exe results/samples/poc/label_lab_stage1.py . persons     # 685 whole-person tiles where no wrist was found, sheets 524-566
+.venv/Scripts/python.exe results/samples/poc/label_lab_stage1.py . apply
+SKIP=results/stage1_kd/lab_label/cart_shadow_ids.json .venv/Scripts/python.exe results/samples/poc/label_lab_stage1.py . suspects   # 31 review sheets
+.venv/Scripts/python.exe results/samples/poc/label_lab_stage1.py . apply             # with lab_decisions_fix.json
+```
+
+- Frames: test split = Nov 14 test takes (attack and normal) and Oct 31 take 002, every 10th frame (3,250 frames); train split = Nov 5 and Nov 14 training takes, every 20th / 45th frame (3,718 frames).
+- First pass: 29 Haiku agents, one decision per tile with `labeller_prompt.md` (knife box a/b/c, `k` knife but no box, `n` no knife, `u` cannot tell).
+- Suspect tiles (label and detector scores disagree): 1,813. 730 of them are one spot, a knife-shaped shadow on the white cart that the detectors score 0.55–0.88 even in an empty room (26 takes); a random sheet of 36 was checked by eye, all 36 are the shadow, so they stay "no knife". The other 1,083 were re-judged by four Sonnet agents (`reviewer_prompt.md`): 155 labels changed, most of them to "cannot tell" (n→u 53, a→u 20, n→a 20, b→a 13). Five misread tile ids were remapped by hand.
+- Audit: 36 random test tiles still labelled "no knife" though the teacher scores ≥ 0.5 or the shipped detector ≥ 0.7 were checked by eye. About 31 are right (empty hand, hand on a chair armrest, seated person); about 5 may be a knife.
+
+### Label counts
+
+| Split | Frames | With a knife box | No knife | Left out (cannot tell) | Knife boxes |
+|---|---|---|---|---|---|
+| Test | 3,250 | 1,061 | 1,422 | 767 | 1,069 |
+| Train | 3,718 | 1,555 | 1,465 | 698 | – |
+
+### Detectors on the lab test labels
+
+Box by box as `bench_stage1.py` (IoU 0.2), from `sweep_stage1_rules.py` (`MODIFICATION_REPORT_STAGE1_CONF_RULES.md`). "Hand gate" = the pipeline's gate (`src/weapon_gate.py`): keep a box only if a wrist is within 0.5 torso lengths of it.
+
+| Detector | Conf | Precision | Recall | With hand gate: precision | recall |
+|---|---|---|---|---|---|
+| Lab student `labv2_p50` | 0.45 | 75.0 % | 78.3 % | 88.4 % | 77.3 % |
+| | 0.25 | 66.5 % | 84.8 % | 84.7 % | 83.6 % |
+| Teacher (YOLO26x) | 0.45 | 64.9 % | 82.8 % | – | – |
+| | 0.25 | 62.2 % | 87.6 % | 79.5 % | 86.2 % |
+| Shipped | 0.45 | 69.2 % | 72.5 % | 86.6 % | 71.7 % |
+| Distilled student `kd` | 0.45 | 63.3 % | 73.7 % | – | – |
+
+### Findings
+
+- **On the lab camera the teacher is not the most precise detector.** At 0.45 it has 64.9 % precision against 75.0 % for the lab student; with the cart shadow removed, 85.2 % against 88.3 %. Its 98 % on `Ground_Truth_Dataset_v2` does not carry over: it fires on empty hands and chair armrests.
+- **The cart shadow is the largest single false-alarm source on the lab camera**, and the hand gate already removes it.
+- Recall at 0.45 is higher here (78 % lab student) than on `Ground_Truth_Dataset_v2` (68 %), because 767 hard frames are left out as "cannot tell".
+
+### Not checked
+
+- No person checked these labels. About 1 in 7 high-score "no knife" tiles may be a knife (audit above), so lab precision is a little too low.
+- The labels started from detector suggestions; a knife no detector boxed and no agent saw stays "no knife".
+- The train split was labelled but no detector was retrained on it yet.
+
+### Files
+
+- Script: `results/samples/poc/label_lab_stage1.py` (`SKIP=` in `suspects`).
+- In git: `results/stage1_kd/lab_label/{lab_items.json, decisions/, review_fix/, lab_decisions_fix.json, lab_labels.json, cart_shadow_ids.json, labeller_prompt.md, reviewer_prompt.md}`.
+- Dev PC only: `data/lab_stage1_gt` (images, labels, `test.txt`, `train.txt`, `data.yaml`); sheets in `results/stage1_kd/lab_label/{sheets,review_all,review_round1,review_audit,review_cart_sample}`.
+
 ## 5. Not checked
 
 - The classifier's lab knife crops are the shipped detector's own boxes, not hand labels.
