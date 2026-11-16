@@ -219,7 +219,7 @@ def persons():
 
 def decisions():
     dec = {}
-    for p in sorted(glob.glob(os.path.join(OUT, "decisions", "*.json"))) + [os.path.join(OUT, "lab_decisions_fix.json")]:
+    for p in sorted(glob.glob(os.path.join(OUT, "decisions", "*.json"))) + [os.path.join(OUT, "lab_decisions_fix.json"), os.path.join(OUT, "lab_decisions_final.json")]:
         if os.path.exists(p):
             dec.update({int(k): v for k, v in json.load(open(p)).items()})
     return dec

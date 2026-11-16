@@ -420,6 +420,20 @@ def filter_boxes(rec, det_name, rule):
         if rule["kind"] == "single":
             if conf >= rule["t"]:
                 kept.append(b["xyxy"] + [conf])
+        elif rule["kind"] == "tier3":  # >= hi kept; [mid, hi) needs a wrist; [lo, mid) needs a closer wrist and the classifier
+            if (conf >= rule["hi"]
+                    or (conf >= rule["mid"] and gate_passes(rec, b["xyxy"], det_name, {"kind": "wrist@k", "k": rule["k1"]}))
+                    or (conf >= rule["lo"] and gate_passes(rec, b["xyxy"], det_name, {"kind": "wrist@k+cls@p", "k": rule["k2"], "p": rule["p"]}))):
+                kept.append(b["xyxy"] + [conf])
+        elif rule["kind"] == "fuse":  # >= hi kept; else sqrt(conf * classifier) >= t, optionally near a wrist
+            if conf >= rule["hi"]:
+                kept.append(b["xyxy"] + [conf])
+            elif conf >= rule["lo"] and (rule["k"] is None or gate_passes(rec, b["xyxy"], det_name, {"kind": "wrist@k", "k": rule["k"]})):
+                probs = rec["cls_prob"][det_name]
+                idx = box_index(det_boxes, b["xyxy"])
+                pk = probs[idx] if 0 <= idx < len(probs) and probs[idx] is not None else 0.0
+                if (conf * pk) ** 0.5 >= rule["t"]:
+                    kept.append(b["xyxy"] + [conf])
         else:  # hyst
             keep = False
             if conf >= rule["hi"]:
@@ -509,6 +523,20 @@ def build_rules(det_name):
                     rules.append({"kind": "hyst", "det": det_name, "hi": hi, "lo": lo,
                                   "gate": {"kind": "cls@p", "p": p},
                                   "desc": "hyst %s %.2f %.2f cls@%.2f" % (det_name, hi, lo, p)})
+    if det_name in cls_dets:
+        for hi in (0.6, 0.7):
+            for mid in (0.25, 0.35, 0.45):
+                for lo in (0.01, 0.02, 0.05, 0.1):
+                    for k2 in (0.25, 0.5):
+                        for p in (0.3, 0.5, 0.7, 0.9):
+                            rules.append({"kind": "tier3", "det": det_name, "hi": hi, "mid": mid, "lo": lo, "k1": 0.5, "k2": k2, "p": p,
+                                          "desc": "tier3 %s %.2f %.2f %.2f wrist@0.50 | wrist@%.2f+cls@%.2f" % (det_name, hi, mid, lo, k2, p)})
+        for hi in (0.6, 0.7, 1.01):
+            for lo in (0.01, 0.05):
+                for k in (None, 0.25, 0.5):
+                    for t in (0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6):
+                        rules.append({"kind": "fuse", "det": det_name, "hi": hi, "lo": lo, "k": k, "t": t,
+                                      "desc": "fuse %s %.2f %.2f %s t%.2f" % (det_name, hi, lo, "any" if k is None else "wrist@%.2f" % k, t)})
     return rules
 
 
@@ -632,7 +660,7 @@ def apply_to(setA, setB, min_precision):
             continue
         best = max(cand, key=lambda r: (r["recall"], r["precision"]))
         # parse rule back from desc is awkward; instead re-find the rule object by desc
-        rule = _rule_from_desc(det_name, best["desc"])
+        rule = next(r for r in build_rules(det_name) if r["desc"] == best["desc"])
         rowsB = sweep_set(setB, {det_name: [rule]})
         rb = rowsB[0]
         print("det=%s rule=%s -> setB %s: P=%.4f R=%.4f F1=%.4f TP=%d FP=%d FN=%d FP_special=%d" % (
