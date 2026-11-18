@@ -10,7 +10,7 @@ means MuSGD(lr 0.002, muon 0.5, sgd 0.5). 8.4.9 (in .venv) picks AdamW(0.002) or
   PATIENCE=100 python train_stage1_repro.py <REPO> clean   # same with early-stopping patience 100 -> ..._clean_p100.pt
   PATIENCE=100 python train_stage1_repro.py <REPO> v2      # as orig, on the relabelled set orig_v2 (relabel_stage1.py)
   PATIENCE=100 python train_stage1_repro.py <REPO> labv2   # as lab, on lab_v2 = lab frames + orig_v2
-  PATIENCE=200 python train_stage1_repro.py <REPO> teachergt   # YOLO26x teacher on lab_gt
+  EPOCHS=250 PATIENCE=250 python train_stage1_repro.py <REPO> teachergt   # YOLO26x teacher on lab_gt, 250 epochs like the students
   TEACHER=weights/x.pt SUFFIX=_x PATIENCE=250 python train_stage1_repro.py <REPO> kdgt   # lab_gt + distillation from TEACHER
   PATIENCE=250 python train_stage1_repro.py <REPO> labgt   # as lab, on lab_gt = person-checked lab frames (label_lab_stage1.py trainset) + orig_v2
 """
@@ -38,6 +38,8 @@ if __name__ == "__main__":
     size = dict(epochs=200, patience=20, batch=12, nbs=64) if MODE.startswith("teacher") else dict(epochs=250, patience=30, batch=32)
     if PAT:
         size["patience"] = int(PAT)
+    if os.environ.get("EPOCHS"):  # the teacher recipe is 200; EPOCHS=250 matches the students
+        size["epochs"] = int(os.environ["EPOCHS"])
     model = YOLO(r"D:/Backup/yolo26x.pt" if MODE.startswith("teacher") else r"D:/Backup/yolo26s.pt")
     if MODE.startswith("kd"):
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
