@@ -696,6 +696,47 @@ Box by box as `bench_stage1.py` (IoU 0.2), from `sweep_stage1_rules.py` (`MODIFI
 - In git: `results/stage1_kd/lab_label/{lab_items.json, decisions/, review_fix/, lab_decisions_fix.json, lab_labels.json, cart_shadow_ids.json, labeller_prompt.md, reviewer_prompt.md}`.
 - Dev PC only: `data/lab_stage1_gt` (images, labels, `test.txt`, `train.txt`, `data.yaml`); sheets in `results/stage1_kd/lab_label/{sheets,review_all,review_round1,review_audit,review_cart_sample}`.
 
+### Three-voter check of these labels (2026-11-17 to 2026-11-18)
+
+**Question:** how many first-pass labels does a second and third independent vote agree with, and can Claude settle the rest without a person?
+
+**What was run** (`results/samples/poc/vote_lab_labels.py`):
+
+```bash
+.venv/Scripts/python.exe results/samples/poc/vote_lab_labels.py tally    # first pass + haiku1 + haiku2 -> votes.csv, 68 check sheets of disagreements
+# Opus agents answer claude_check/sheets/check_NN.jpg with checker_prompt.md -> claude_check/answers/check_NN.json (label + confidence)
+.venv/Scripts/python.exe results/samples/poc/vote_lab_labels.py claude   # merge answers into votes.csv
+.venv/Scripts/python.exe results/samples/poc/vote_lab_labels.py final    # -> lab_decisions_final.json
+```
+
+- Two more Haiku votes per tile on all 567 sheets, next to the first pass. Tiles where the three disagree go to a Claude checker (Opus).
+- Claude settles a tile alone at confidence ≥ 0.8, or at ≥ 0.6 when two of the three earlier votes say the same. The rest wait for a person in `label_review_ui.py`.
+- The Opus run stopped at the weekly limit with sheets 07, 14 and 62 not done; they were finished by hand in a later session, so all 68 sheets (2,425 tiles) have an answer.
+
+| Outcome | Tiles |
+|---|---|
+| All three votes agree | 6,630 |
+| Disagreement, settled by Claude | 945 |
+| Disagreement, waits for a person (Claude < 0.6, or 0.6–0.8 against the majority) | 1,480 |
+| **Total** | **9,055** |
+
+Claude's answers on the 2,425 checked tiles: 1,002 a knife box, 43 knife with no box, 784 no knife, 596 cannot tell; 1,012 are below 0.6 confidence.
+
+`lab_decisions_final.json` (tiles still waiting count as "cannot tell", so they are left out): 2,689 knife box, 11 knife with no box, 4,048 no knife, 2,307 cannot tell.
+
+**Findings**
+
+- **Three in four tiles (73 %) get the same label from all three votes.** The disagreements are mostly fast swings with motion blur, hands cut off by the frame, and fists holding a small dark object.
+- **Claude settles only 39 % of the disagreements.** The rest are too blurred to call from the tile; a person is needed for them, or they stay out of the label set.
+
+**Not checked**
+
+- `data/lab_stage1_gt` was not rebuilt from `lab_decisions_final.json`, and the detectors were not re-scored on it; the numbers above still use the 4h labels.
+- No person has reviewed the 1,480 waiting tiles yet.
+- Claude's confidence is self-reported and not calibrated against a person.
+
+**Files:** `results/samples/poc/vote_lab_labels.py`, `label_review_ui.py`; `results/stage1_kd/lab_label/{votes.csv, lab_decisions_final.json, claude_check/}`; Haiku votes in `results/stage1_kd/lab_label/votes/`.
+
 ## 5. Not checked
 
 - The classifier's lab knife crops are the shipped detector's own boxes, not hand labels.

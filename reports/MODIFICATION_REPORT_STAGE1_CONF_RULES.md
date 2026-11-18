@@ -119,6 +119,26 @@ Best F1 per set when the teacher may be used: GT v2 teacher 0.30/0.15 + hand gat
 - The ten best student rules are all this shape (hi 0.6–0.7, lo 0.10–0.20, wrist 0.25 + classifier 0.3–0.7) and lie within 0.4 F1 of each other, so the result does not hang on one exact setting. The rule was still chosen on these two sets, with no third set to confirm it.
 - Cost: the classifier runs only on boxes scored 0.15–0.70 near a wrist, not on every box.
 
+### More rule families, down to conf 0.01 (added 2026-11-18)
+
+Two more families were added to `sweep_stage1_rules.py` (7,338 rules per set now):
+
+- **tier3:** keep ≥ hi; keep [mid, hi) near a wrist (0.5 torso); keep [lo, mid) only near a wrist (k2) **and** with classifier ≥ p. hi 0.6/0.7, mid 0.25–0.45, lo 0.01–0.10.
+- **fuse:** keep ≥ hi; otherwise keep when √(detector score × classifier score) ≥ t, optionally near a wrist. hi 0.6/0.7/never, lo 0.01/0.05, t 0.20–0.60.
+
+Best of each family for the lab student, by mean F1 over both sets (P / R / F1):
+
+| Family | Best rule | GT v2 | Lab |
+|---|---|---|---|
+| single threshold | 0.50 | 89.5 / 64.9 / 75.3 | 83.9 / 77.0 / 80.3 |
+| hi/lo + gate | ≥ 0.70; 0.15–0.70 with wrist 0.25 + classifier 0.5 | 86.4 / 77.8 / 81.8 | 82.9 / 84.7 / 83.8 |
+| tier3 | ≥ 0.70; 0.35–0.70 wrist 0.5; 0.10–0.35 wrist 0.25 + classifier 0.7 | 82.5 / 78.7 / 80.5 | 80.7 / 86.8 / 83.6 |
+| fuse | ≥ 0.70; from 0.01, wrist 0.25 and √(score × classifier) ≥ 0.35 | 85.0 / 78.1 / 81.4 | 82.2 / 86.1 / 84.1 |
+
+- **All three bridge families reach the same ceiling, mean F1 ≈ 82.7–82.8.** The shape of the rule does not matter much once low-score boxes need a hand and the classifier.
+- **Going down to 0.01 adds nothing.** The fuse rule gives the same numbers with lo 0.01 and lo 0.05: boxes below about 0.05 never pass the classifier check. The 89–93 % recall at 0.01 cannot be kept with any of these filters; the best rules keep 78 % (GT v2) and 85–87 % (lab).
+- The ceiling is set by the detector and the classifier, not by the rule. Raising it needs a better model (cleaner training labels), not another filter.
+
 ## Proposed solution
 
 1. Simplest step: run Stage 1 with the lab student at conf 0.30 and keep `hand_gate` (0.5 torso) and `static_filter` on, as `inference_production_pipeline.py` already does. This changes only the `--conf` value.
