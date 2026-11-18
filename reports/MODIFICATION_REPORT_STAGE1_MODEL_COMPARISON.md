@@ -805,7 +805,7 @@ Oct 31 take 002 alone (572 frames, 499 boxes), 0.25 + gate: new labels 94.6 / 83
 ### Proposed next steps
 
 1. Try `stage1_repro846_labgt_p250_last.pt` as the lab-camera student at 0.25 with the hand gate (or about 0.10 without it: 81.2 % recall at 85 % precision). Export to TensorRT at 384x640 and run the whole pipeline on the Nov 14 test takes and take 002 before shipping it. If recall behind the gate matters most, `stage1_repro846_labv2_p250_last.pt` at 0.30 is the alternative.
-2. Retrain the teacher (YOLO26x) on `lab_gt`: best on the original camera but least precise on the lab camera. About 10 h on one RTX 3090.
+2. Retrain the teacher (YOLO26x) on `lab_gt`: best on the original camera but least precise on the lab camera. About 10 h on one RTX 3090. Done below: it is now the best lab detector.
 3. Train with no early stop and keep the final epoch from now on (`PATIENCE=250`).
 
 ### Not checked
@@ -819,6 +819,44 @@ Oct 31 take 002 alone (572 frames, 499 boxes), 0.25 + gate: new labels 94.6 / 83
 - Scripts: `results/samples/poc/label_lab_stage1.py` (`trainset`), `train_stage1_repro.py` (mode `labgt`), `sweep_stage1_rules.py` (`EXTRA_DETS`), `compare_stage1_cached.py`.
 - In git: `results/stage1_kd/lab_label/{votes.csv, lab_decisions_final.json, lab_labels.json}`, `results/stage1_kd/rules/sweep_lab_final.jsonl`.
 - Dev PC only: `data/lab_stage1_gt`, `data/stage1_negatives/lab_gt`, `results/stage1_kd/rules/compare_labgt.log`, caches `results/stage1_kd/rules/cache_{lab,gtv2}.json`, runs `results/stage1_kd/repro846_{labgt,labv2}_p250/`, weights `weights/stage1_repro846_{labgt,labv2}_p250{,_last}.pt`.
+
+### Teacher retrained on the new labels, and distillation (2026-11-19)
+
+**Question:** step 2 above. Does a YOLO26x teacher trained on `lab_gt` fix the old teacher's lab-camera false boxes, and does distilling a teacher into YOLO26s on `lab_gt` beat the plain student `labgtL`?
+
+**What was run** (same recipe as above: Ultralytics 8.4.6, MuSGD lr 0.002, 250 epochs, no early stop; the teacher at batch 12, nbs 64; the KD runs pin the GPU with `CUDA_VISIBLE_DEVICES`, because the teacher is loaded before Ultralytics picks the device):
+
+```bash
+CUDA_VISIBLE_DEVICES=0 EPOCHS=250 PATIENCE=250 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . teachergt
+CUDA_VISIBLE_DEVICES=1 SUFFIX=_oldteacher PATIENCE=250 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . kdgt
+CUDA_VISIBLE_DEVICES=0 TEACHER=weights/stage1_repro846_teachergt_p250_last.pt SUFFIX=_newteacher PATIENCE=250 DEV=0 \
+  .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . kdgt
+EXTRA_DETS="teachergt=...;teachergtL=...;kdgtO=...;kdgtOL=..." DEV=0 .venv/Scripts/python.exe results/samples/poc/sweep_stage1_rules.py . cache lab   # and gtv2
+```
+
+The teacher took 11.5 h on one RTX 3090; `best.pt` is epoch 132. The old-teacher KD `best.pt` is epoch 143.
+
+Lab camera (2,842 frames, 1,376 boxes):
+
+| Detector | 0.45: P / R | false boxes | 0.25 + gate: P / R | P ≥ 0.90, no gate | P ≥ 0.90, gate | P ≥ 0.92, gate |
+|---|---|---|---|---|---|---|
+| Old teacher | 69.9 / 76.7 | 455 | 83.9 / 80.7 | not reached | 71.7 % (0.55) | 64.0 % (0.70) |
+| **New teacher, last** | **92.0 / 77.4** | 93 | 90.4 / 78.3 | **79.6 % (0.25)** | 78.3 % (0.25) | **75.5 % (0.50)** |
+| New teacher, `best.pt` | 91.5 / 78.1 | 100 | 88.2 / 80.2 | 79.7 % (0.35) | **78.5 % (0.35)** | 74.9 % (0.55) |
+| Student, new labels, last (`labgtL`) | 92.8 / 74.8 | 80 | 90.8 / 75.9 | 77.3 % (0.25) | 75.9 % (0.25) | 74.8 % (0.35) |
+| Control, old labels, last (`labv2L`) | 73.8 / 77.2 | 378 | 89.7 / 79.1 | not reached | 78.2 % (0.30) | 73.8 % (0.60) |
+| KD from old teacher, last | 70.1 / 63.5 | 373 | 84.4 / 76.1 | not reached | 69.4 % (0.35) | 66.6 % (0.40) |
+
+`Ground_Truth_Dataset_v2` (625 images, 342 boxes), best recall at P ≥ 0.90 with the gate: old teacher 81.3 %, new teacher `best.pt` 74.9 %, last 72.5 %, `labgtL` 65.5 %, KD from old teacher 62.3 %.
+
+**Findings:**
+
+- **The new labels fix the teacher too.** On the lab camera its precision without the gate goes from 69.9 % to 92.0 % at 0.45 (false boxes 455 to 93), and it is now the best lab detector: 79.6 % recall at 90 % precision without the gate, 2.3 points above `labgtL`.
+- **It loses some of the old teacher's lead on the original camera** (81.3 % to 72.5–74.9 % at 90 % gated precision), but stays well above every YOLO26s.
+- **Distilling the old teacher hurts on the lab camera.** The student copies the old teacher's lab false boxes: 70 % precision without the gate, against 92.8 % for `labgtL` trained on the same data without a teacher. On the original camera it is no better than `labgtL` at 90 % precision. Distill only from a teacher trained on the lab labels.
+- KD from the new teacher: training (7.5 h); results go here.
+
+Logs (dev PC only, gitignored): `results/stage1_kd/rules/compare_{kdgtO,teachergt}.log`. Weights (dev PC only): `weights/stage1_repro846_teachergt_p250{,_last}.pt`, `weights/stage1_repro846_kdgt_p250_oldteacher{,_last}.pt`.
 
 ## 5. Not checked
 
