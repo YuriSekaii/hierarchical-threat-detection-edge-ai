@@ -315,5 +315,43 @@ def suspects():
     print(len(sus), "suspect tiles", reasons, "->", n, "review sheets of", len(ids))
 
 
+def trainset():
+    """data/stage1_negatives/lab_gt: lab_v2 with its old lab knife frames (shipped-detector boxes) replaced by the
+    lab_stage1_gt train split (class 1 = knife). Keeps the orig_v2 images and the phone frames; val.txt is lab_v2's, and
+    train frames from the val takes are left out so validation stays independent."""
+    import re, _winapi
+    neg = os.path.join(REPO, "data", "stage1_negatives").replace("\\", "/")
+    stem = lambda p: re.sub(r"^(n14_|\d{4}-\d\d-\d\d_)", "", os.path.basename(p)).rsplit("_f", 1)[0]
+    def classes(p):
+        f = p.replace("/images/", "/labels/").rsplit(".", 1)[0] + ".txt"
+        return {l.split()[0] for l in open(f) if l.strip()} if os.path.exists(f) else set()
+    val = [l.strip() for l in open(f"{neg}/lab_v2/val.txt") if l.strip()]
+    val_takes = {stem(p) for p in val if "/lab_v2/" not in p}
+    new = [p for p in (l.strip() for l in open(os.path.join(DST, "train.txt"))) if p]
+    frame = lambda p: re.sub(r"^(n14_|\d{4}-\d\d-\d\d_)", "", os.path.basename(p))
+    relabelled = {frame(p) for p in new}  # a phone frame that is also in the new set keeps only its person-checked copy
+    keep = [p for p in (l.strip() for l in open(f"{neg}/lab_v2/train.txt"))
+            if p and ("/lab_v2/" in p or ("2" in classes(p) and frame(p) not in relabelled))]
+    assert not any("_test_" in p or "2026-10-31" in p for p in new)  # test takes and Oct 31 take 002 never train
+    dst = f"{neg}/lab_gt"
+    os.makedirs(f"{dst}/labels/train", exist_ok=True)
+    if not os.path.exists(f"{dst}/images/train"):
+        os.makedirs(f"{dst}/images", exist_ok=True)
+        _winapi.CreateJunction(os.path.join(DST, "images"), f"{dst}/images/train")
+    added = []
+    for p in new:
+        if stem(p) in val_takes:
+            continue
+        name = os.path.splitext(os.path.basename(p))[0]
+        rows = open(os.path.join(DST, "labels", name + ".txt")).read().split("\n")
+        open(f"{dst}/labels/train/{name}.txt", "w").write("".join("1 " + r.split(" ", 1)[1] + "\n" for r in rows if r.strip()))
+        added.append(f"{dst}/images/train/{os.path.basename(p)}")
+    open(f"{dst}/train.txt", "w").write("".join(l + "\n" for l in keep + added))
+    open(f"{dst}/val.txt", "w").write("".join(l + "\n" for l in val))
+    open(f"{dst}/data.yaml", "w").write(f"path: {dst}\ntrain: train.txt\nval: val.txt\nnames:\n  0: hand_grip_knife\n  1: knife\n  2: phone\n")
+    print(f"lab_gt: kept {len(keep)} (orig_v2 + phone frames), added {len(added)} of {len(new)} lab frames "
+          f"({len(new) - len(added)} from val takes {sorted(val_takes)}), val {len(val)}")
+
+
 if __name__ == "__main__":
-    {"propose": propose, "persons": persons, "apply": apply, "suspects": suspects}[MODE]()
+    {"propose": propose, "persons": persons, "apply": apply, "suspects": suspects, "trainset": trainset}[MODE]()
