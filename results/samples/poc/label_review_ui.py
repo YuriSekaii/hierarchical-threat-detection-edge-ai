@@ -100,41 +100,89 @@ def tile_box(it, v):
     return [it["x0"] + v[0] * s, it["y0"] + v[1] * s, it["x0"] + v[2] * s, it["y0"] + v[3] * s]
 
 
-def draw_tile(img, it, extra_box=None):
-    s = TILE / it["crop"]
-    tile = cv2.resize(img[it["y0"]:it["y0"] + it["crop"], it["x0"]:it["x0"] + it["crop"]], (TILE, TILE))
+def screen_size():
+    try:
+        import ctypes
+        u = ctypes.windll.user32
+        u.SetProcessDPIAware()  # 1 window px = 1 screen px, no blurry Windows scaling
+        return u.GetSystemMetrics(0), u.GetSystemMetrics(1)
+    except Exception:
+        return 1366, 768
+
+
+FONT = cv2.FONT_HERSHEY_SIMPLEX
+
+
+def label(img, txt, org, col, scale=0.6, th=1):
+    # text on a dark backing so it reads on any background
+    (w, h), base = cv2.getTextSize(txt, FONT, scale, th)
+    x, y = org
+    cv2.rectangle(img, (x - 2, y - h - 3), (x + w + 2, y + base), (0, 0, 0), -1)
+    cv2.putText(img, txt, (x, y), FONT, scale, col, th, cv2.LINE_AA)
+
+
+def draw_zoom(img, it, size, extra_box=None):
+    """Crop around the hand, scaled to size x size; boxes drawn after scaling so lines stay thin and sharp."""
+    c = it["crop"]
+    crop = img[it["y0"]:it["y0"] + c, it["x0"]:it["x0"] + c]
+    zoom = cv2.resize(crop, (size, size), interpolation=cv2.INTER_CUBIC)
+    s = size / c
     for p, col in zip(it.get("props", []), COLORS):
         b = p["box"]
-        p1 = (int((b[0] - it["x0"]) * s) - 4, int((b[1] - it["y0"]) * s) - 4)
-        p2 = (int((b[2] - it["x0"]) * s) + 4, int((b[3] - it["y0"]) * s) + 4)
-        cv2.rectangle(tile, p1, p2, col, 1)
-        cv2.putText(tile, p.get("letter", ""), (p1[0], max(14, p1[1] - 3)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, col, 2)
-    if extra_box and len(extra_box) == 4:
-        p1 = (int(extra_box[0]), int(extra_box[1]))
-        p2 = (int(extra_box[2]), int(extra_box[3]))
-        cv2.rectangle(tile, p1, p2, (0, 0, 255), 2)
-    return tile
+        p1 = (int((b[0] - it["x0"]) * s) - 3, int((b[1] - it["y0"]) * s) - 3)
+        p2 = (int((b[2] - it["x0"]) * s) + 3, int((b[3] - it["y0"]) * s) + 3)
+        cv2.rectangle(zoom, p1, p2, col, 2)
+        label(zoom, p.get("letter", ""), (max(2, p1[0]), max(22, p1[1] - 4)), col, 0.8, 2)
+    if extra_box and len(extra_box) == 4:  # human box, stored in 330-px tile coords
+        k = size / TILE
+        cv2.rectangle(zoom, (int(extra_box[0] * k), int(extra_box[1] * k)),
+                      (int(extra_box[2] * k), int(extra_box[3] * k)), (0, 0, 255), 2)
+    return zoom
 
 
-def draw_frame(img, it):
-    vis = img.copy()
+def draw_frame(img, it, max_w, max_h):
+    """Whole frame scaled to fit max_w x max_h; yellow square = the zoomed area."""
+    h, w = img.shape[:2]
+    s = min(max_w / w, max_h / h)
+    vis = cv2.resize(img, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA)
     x0, y0, c = it["x0"], it["y0"], it["crop"]
-    cv2.rectangle(vis, (x0, y0), (x0 + c, y0 + c), (0, 255, 255), 2)
-    s = 1.0  # full-frame coords
-    for p, col in zip(it.get("props", []), COLORS):
-        b = p["box"]
-        p1 = (int(b[0]), int(b[1]))
-        p2 = (int(b[2]), int(b[3]))
-        cv2.rectangle(vis, p1, p2, col, 2)
-        cv2.putText(vis, p.get("letter", ""), (p1[0], max(20, p1[1] - 5)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, col, 2)
-    # scale to fit ~1280x720
-    h, w = vis.shape[:2]
-    scale = min(1280 / max(w, 1), 720 / max(h, 1), 1.0)
-    if scale < 1.0:
-        vis = cv2.resize(vis, (int(w * scale), int(h * scale)))
+    cv2.rectangle(vis, (int(x0 * s), int(y0 * s)), (int((x0 + c) * s), int((y0 + c) * s)), (0, 255, 255), 2)
     return vis
+
+
+def render(img, it, row, vcols, pos, total, extra_box=None, draw_mode=False, screen=(1366, 768)):
+    """One window image sized to the screen: zoom on the left, frame and text on the right."""
+    sw, sh = screen
+    z = max(TILE, min(sh - 110, (sw - 30) // 2))  # leaves room for the title bar and taskbar
+    rw = sw - 30 - z
+    zoom = draw_zoom(img, it, z, extra_box)
+    frame = draw_frame(img, it, rw, z * 0.56)
+    canvas = np.full((z, z + rw, 3), 30, np.uint8)
+    canvas[:, :z] = zoom
+    canvas[:frame.shape[0], z:z + frame.shape[1]] = frame
+
+    y = frame.shape[0] + 26
+    x = z + 12
+    def put(txt, col=(230, 230, 230), scale=0.55):
+        nonlocal y
+        cv2.putText(canvas, str(txt), (x, y), FONT, scale, col, 1, cv2.LINE_AA)
+        y += 23
+    put(f"{pos} / {total}    tile {row.get('tile_id', '')}    {row.get('split', '')}", (0, 255, 255), 0.65)
+    put(os.path.basename(row.get("img", "")), (170, 170, 170), 0.45)
+    put("Votes:  " + "   ".join(f"{vn} {row.get(vn, '') or '-'}" for vn in vcols))
+    put(f"Claude: {row.get('claude_label', '') or '-'}  (conf {row.get('claude_conf', '') or '-'})")
+    if row.get("human_label"):
+        put(f"Your answer: {row['human_label']}", (80, 255, 80))
+    for p, col in zip(it.get("props", []), COLORS):
+        sc = max(p.get("src", {}).values(), default=0)
+        put(f"box {p.get('letter')}: best detector score {sc:.2f}", col, 0.5)
+    y += 6
+    put("a / b / c  this box has the knife     k  knife, no box fits", (255, 255, 0), 0.5)
+    put("n  no knife     u  cannot tell     d  draw a box (drag on zoom)", (255, 255, 0), 0.5)
+    put("space / right  next     p / left  back     z  undo     q  quit", (255, 255, 0), 0.5)
+    if draw_mode:
+        label(canvas, "DRAW MODE: drag a box on the zoom", (12, z - 16), (0, 0, 255), 0.8, 2)
+    return canvas
 
 
 def voter_columns(fields):
@@ -180,7 +228,9 @@ def run_ui(lab_label=LAB_LABEL, repo=REPO, all_flagged=False):
     history = []
     draw_state = {"active": False, "start": None, "box": None}
     window = "label_review_ui"
-    cv2.namedWindow(window, cv2.WINDOW_NORMAL)
+    screen = screen_size()
+    cv2.namedWindow(window, cv2.WINDOW_AUTOSIZE)  # shown 1:1, never squashed
+    cv2.moveWindow(window, 0, 0)  # sized to the screen, so it must start at the corner
 
     def mouse_cb(event, x, y, flags, param):
         if not draw_state["active"]:
@@ -243,49 +293,8 @@ def run_ui(lab_label=LAB_LABEL, repo=REPO, all_flagged=False):
         if draw_state.get("box"):
             extra = draw_state["box"]
 
-        left = draw_frame(img, it)
-        zoom = draw_tile(img, it, extra_box=extra)
-        zoom = cv2.resize(zoom, (TILE * 2, TILE * 2), interpolation=cv2.INTER_NEAREST)
-
-        # text panel
-        panel_w = 520
-        panel_h = max(left.shape[0], zoom.shape[0], 720)
-        panel = np.full((panel_h, panel_w, 3), 30, np.uint8)
-        y = 28
-        def put(txt, color=(220, 220, 220), scale=0.5):
-            nonlocal y
-            cv2.putText(panel, str(txt)[:60], (10, y), cv2.FONT_HERSHEY_SIMPLEX, scale, color, 1)
-            y += 22
-        put(f"{idx + 1} / {len(queue)}  id={tid}  split={row.get('split','')}  {row.get('kind','')}", (0, 255, 255), 0.55)
-        put(f"img: {os.path.basename(row.get('img',''))}", (180,180,180), 0.45)
-        put("--- voters ---", (255,255,0))
-        for vn in vcols:
-            put(f"{vn}: {row.get(vn,'')}")
-        put("--- claude ---", (255,255,0))
-        put(f"label: {row.get('claude_label','')}  conf: {row.get('claude_conf','')}")
-        put(f"final: {row.get('final_label','')} ({row.get('final_source','')})")
-        put("--- detector scores ---", (255,255,0))
-        for p in it.get("props", []):
-            srcs = " ".join(f"{k}:{v:.2f}" for k, v in sorted(p.get("src", {}).items()))
-            put(f"{p.get('letter')}: {srcs}", (180,220,180), 0.45)
-        put("--- keys ---", (255,255,0))
-        put("a/b/c box  k knife  n no  u unsure")
-        put("d draw box (drag on zoom)  z undo")
-        put("left/right or p/space nav  q quit")
-        if draw_state["active"]:
-            put("DRAW MODE: drag on zoom, release to set", (0, 0, 255))
-
-        # compose canvas
-        lh, lw = left.shape[:2]
-        zh, zw = zoom.shape[:2]
-        top_h = max(lh, zh)
-        canvas_w = lw + zw + panel_w
-        canvas = np.full((top_h, canvas_w, 3), 20, np.uint8)
-        canvas[0:lh, 0:lw] = left
-        canvas[0:zh, lw:lw+zw] = zoom
-        canvas[0:panel_h if panel_h <= top_h else top_h, lw+zw:lw+zw+panel_w] = panel[0:top_h]
-
-        mouse_param["origin"] = (lw, 0, 2.0)
+        canvas = render(img, it, row, vcols, idx + 1, len(queue), extra, draw_state["active"], screen)
+        mouse_param["origin"] = (0, 0, canvas.shape[0] / TILE)  # zoom sits at the top-left
         cv2.imshow(window, canvas)
         kx = cv2.waitKeyEx(30)  # waitKeyEx: arrow keys on Windows are 2424832 (left) and 2555904 (right)
         key = {2424832: 2, 2555904: 3, 65361: 2, 65363: 3}.get(kx, kx & 0xFF if kx >= 0 else 255)
