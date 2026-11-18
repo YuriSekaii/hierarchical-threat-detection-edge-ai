@@ -24,6 +24,7 @@ Env:
     DEV=n              cache mode: cuda device (default 0)
     GT_DIR             override Ground_Truth_Dataset_v2 dir
     LAB_DIR            override lab_stage1_gt dir
+    EXTRA_DETS         name=weights;name2=weights: extra detectors (cache: added to the existing cache; sweep: swept too)
 """
 
 import os
@@ -53,6 +54,9 @@ DETECTORS = {
     "student": "weights/stage1_repro846_labv2_p50.pt",
     "kd": "weights/stage1_repro846_kd.pt",
 }
+# EXTRA_DETS="name=weights/x.pt;name2=weights/y.pt": more detectors; cache mode adds only these to an existing cache
+EXTRA_DETS = dict(kv.split("=", 1) for kv in os.environ.get("EXTRA_DETS", "").split(";") if kv)
+DETECTORS.update(EXTRA_DETS)
 CLASSIFIER = "weights/stage1_cropcls2.pt"
 POSE = "weights/yolo26s-pose.pt"
 
@@ -301,8 +305,26 @@ def take_category(stem):
     return re.sub(r"_f\d+$", "", stem)
 
 
+def add_to_cache(cache_set_name):
+    path = os.path.join(RULES_DIR, "cache_%s.json" % cache_set_name)
+    records = json.load(open(path))
+    dets = {name: Detector(name, rel) for name, rel in EXTRA_DETS.items()}
+    for i, rec in enumerate(records):
+        img = cv2.imread(rec["path"])
+        for name, det in dets.items():
+            rec["det"][name] = [{"xyxy": b["xyxy"], "conf": b["conf"], "cls": b["cls"], "name": b["name"]} for b in det.predict(img)]
+        if (i + 1) % 250 == 0:
+            print("  %d/%d" % (i + 1, len(records)), flush=True)
+    with open(path + ".tmp", "w", encoding="utf-8") as f:
+        json.dump(records, f)
+    os.replace(path + ".tmp", path)
+    print("added %s to %d records of %s" % (sorted(dets), len(records), path), flush=True)
+
+
 def cache_set(cache_set_name, limit=None):
     os.makedirs(RULES_DIR, exist_ok=True)
+    if EXTRA_DETS and os.path.exists(os.path.join(RULES_DIR, "cache_%s.json" % cache_set_name)):
+        return add_to_cache(cache_set_name)
     if cache_set_name == "gtv2":
         image_files = list_gtv2()
         img_dir = GT_DIR
