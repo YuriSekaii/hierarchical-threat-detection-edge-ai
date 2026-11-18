@@ -731,11 +731,94 @@ Claude's answers on the 2,425 checked tiles: 1,002 a knife box, 43 knife with no
 
 **Not checked**
 
-- `data/lab_stage1_gt` was not rebuilt from `lab_decisions_final.json`, and the detectors were not re-scored on it; the numbers above still use the 4h labels.
-- No person has reviewed the 1,480 waiting tiles yet.
+- `data/lab_stage1_gt` was not rebuilt from `lab_decisions_final.json`, and the detectors were not re-scored on it; the numbers above still use the 4h labels. (Done in 4i.)
+- No person has reviewed the 1,480 waiting tiles yet. (Done on 2026-11-18, see 4i.)
 - Claude's confidence is self-reported and not calibrated against a person.
 
 **Files:** `results/samples/poc/vote_lab_labels.py`, `label_review_ui.py`; `results/stage1_kd/lab_label/{votes.csv, lab_decisions_final.json, claude_check/}`; Haiku votes in `results/stage1_kd/lab_label/votes/`.
+
+## 4i. Retrained on the person-checked lab labels (2026-11-18)
+
+**Status: new weights `weights/stage1_repro846_labgt_p250_last.pt` (dev PC only). Nothing shipped was changed. Proposed as the next lab-camera student; not yet exported to TensorRT or run in the pipeline.**
+
+### Question
+
+The lab knife labels are final: a person settled all 1,480 tiles that waited after the three-voter check (4h; 810 train tiles, 670 test tiles). Does a student trained on them do better on the lab camera than the same recipe on the old lab labels (`lab_v2`, knives the shipped detector already found)?
+
+### What was run
+
+```bash
+.venv/Scripts/python.exe results/samples/poc/vote_lab_labels.py final          # votes.csv -> lab_decisions_final.json
+.venv/Scripts/python.exe results/samples/poc/label_lab_stage1.py . apply        # -> data/lab_stage1_gt
+.venv/Scripts/python.exe results/samples/poc/label_lab_stage1.py . trainset     # -> data/stage1_negatives/lab_gt
+PATIENCE=250 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . labgt   # new labels
+PATIENCE=250 DEV=1 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . labv2   # control, old labels
+EXTRA_DETS="labgt=weights/stage1_repro846_labgt_p250.pt;labgtL=results/stage1_kd/repro846_labgt_p250/weights/last.pt;..." \
+  DEV=0 .venv/Scripts/python.exe results/samples/poc/sweep_stage1_rules.py . cache lab      # and: cache gtv2
+EXTRA_DETS="labv2p250=x;labv2L=x;labgt=x;labgtL=x" .venv/Scripts/python.exe results/samples/poc/compare_stage1_cached.py \
+  shipped teacher student labv2p250 labv2L labgt labgtL > results/stage1_kd/rules/compare_labgt.log
+```
+
+- **Final labels** (`lab_decisions_final.json`): 6,630 tiles by three agreeing votes, 945 by Claude, 1,480 by the person. Test split: 1,362 frames with a knife (1,376 boxes), 1,480 without, 408 left out. Train split: 1,913 / 1,378 / 427.
+- **`lab_gt` training set:** `lab_v2` with its old lab knife frames (619 Nov 5 + 1,576 Nov 14, boxes from the shipped detector) replaced by 3,159 person-checked train frames (class `knife`). Kept: the 659 `orig_v2` images and 600 phone frames. 132 new frames from the five validation takes are left out, and 18 phone frames that are also in the new set keep only the new copy. Validation is `lab_v2`'s 350 images for both runs. No test take and no Oct 31 take 002 frame is in training (asserted in `trainset`).
+- **Same recipe for both runs:** YOLO26s, Ultralytics 8.4.6, MuSGD lr 0.002, 250 epochs, no early stop. `best.pt` came from epoch 85 (`labgt`) and 49 (`labv2`), chosen on the small validation set. The final epoch (`last.pt`, "last" below) is the fixed-epoch model and is better for both.
+- Scoring: box by box, IoU 0.2, 384x640, as `bench_stage1.py`. "Gate" = the pipeline's hand gate (wrist within 0.5 torso lengths). Re-adding the shipped detector under a new name through `EXTRA_DETS` gave exactly its numbers.
+
+### Lab camera test labels (2,842 frames, 1,376 knife boxes; 1,480 frames have no knife)
+
+| Detector | 0.45: P / R | false boxes | 0.45 + gate: P / R | false boxes | 0.25 + gate: P / R |
+|---|---|---|---|---|---|
+| Shipped | 73.0 / 64.7 | 330 | 89.6 / 63.9 | 102 | 84.3 / 71.7 |
+| Teacher (YOLO26x) | 69.9 / 76.7 | 455 | 89.0 / 75.6 | 129 | 83.9 / 80.7 |
+| Lab student `labv2_p50` (until now) | 79.1 / 70.8 | 257 | 92.3 / 69.9 | 80 | 89.0 / 76.6 |
+| Control: old labels, 250 epochs, last | 73.8 / 77.2 | 378 | 91.2 / 76.2 | 101 | 89.7 / 79.1 |
+| **New labels, 250 epochs, last** | **92.8 / 74.8** | **80** | 92.7 / 73.4 | 79 | 90.8 / 75.9 |
+| New labels, `best.pt` (epoch 85) | 90.3 / 73.7 | 109 | 90.7 / 72.6 | 102 | 86.9 / 76.8 |
+
+Best recall at a precision target (thresholds 0.01–0.8; threshold in brackets):
+
+| Detector | P ≥ 0.90, no gate | P ≥ 0.90, gate | P ≥ 0.92, gate |
+|---|---|---|---|
+| Lab student `labv2_p50` | 67.9 % (0.55) | 73.2 % (0.35) | 69.9 % (0.45) |
+| Control, old labels, last | not reached | **78.2 % (0.30)** | 73.8 % (0.60) |
+| **New labels, last** | **77.3 % (0.25)** | 75.9 % (0.25) | **74.8 % (0.35)** |
+| Teacher | not reached | 71.7 % (0.55) | 64.0 % (0.70) |
+
+Oct 31 take 002 alone (572 frames, 499 boxes), 0.25 + gate: new labels 94.6 / 83.8, control 93.1 / 86.0, `labv2_p50` 93.1 / 81.2.
+
+### Original camera, `Ground_Truth_Dataset_v2` (625 images, 342 boxes)
+
+| Detector | 0.45: P / R | P ≥ 0.90, gate |
+|---|---|---|
+| Teacher | 98.1 / 62.0 | 81.3 % |
+| Lab student `labv2_p50` | 88.5 / 67.8 | 63.7 % |
+| Control, old labels, last | 89.5 / 64.9 | 63.2 % |
+| New labels, last | 89.7 / 66.4 | 65.5 % |
+
+### Findings
+
+- **The new labels teach the student what the hand gate did.** Without any gate it has 92.8 % precision at 0.45 on the lab camera, against 73.8 % for the same recipe on the old labels. False boxes on frames with no knife drop from 351 to 60. It is the only detector that reaches 90 % precision without the gate (77.3 % recall at 0.25). The cart shadow and empty hands are now negatives in training.
+- **Behind the gate the gain is small, and recall is a little lower.** At 90 % gated precision the control finds 78.2 %, the new model 75.9 %; at 92 %, 73.8 % against 74.8 %. At 0.25 with the gate the new model finds 75.9 % against 79.1 %. The gate already removes most of what the new labels fix. The new model helps where the gate fails: a wrist the pose model does not find, or a knife held away from the wrist.
+- **Training the full 250 epochs matters as much as the labels.** The same old labels at 250 epochs find 78.2 % at 90 % gated precision, against 73.2 % for `labv2_p50` (stopped at 95). For both runs the final epoch beats the validation-chosen `best.pt`.
+- **No loss on the original camera:** the new model is level with the control and `labv2_p50` on `Ground_Truth_Dataset_v2`. The teacher stays far ahead there.
+
+### Proposed next steps
+
+1. Try `stage1_repro846_labgt_p250_last.pt` as the lab-camera student at 0.25 with the hand gate (or about 0.10 without it: 81.2 % recall at 85 % precision). Export to TensorRT at 384x640 and run the whole pipeline on the Nov 14 test takes and take 002 before shipping it. If recall behind the gate matters most, `stage1_repro846_labv2_p250_last.pt` at 0.30 is the alternative.
+2. Retrain the teacher (YOLO26x) on `lab_gt`: best on the original camera but least precise on the lab camera. About 10 h on one RTX 3090.
+3. Train with no early stop and keep the final epoch from now on (`PATIENCE=250`).
+
+### Not checked
+
+- The test labels come from the same labelling process and rules as the training labels (cart shadow = no knife, blurred swing = cannot tell), so a model trained on them is favoured on this test set. The 408 left-out test frames are the hardest ones; real recall is lower.
+- Validation still holds 116 lab frames with the old labels; only checkpoint choice depends on it.
+- One run per setting. No TensorRT export, no Edge PC timing, no full-pipeline (Stage 2) run, no frame-share holdout benchmark (`bench_stage1_holdout.py`).
+
+### Files
+
+- Scripts: `results/samples/poc/label_lab_stage1.py` (`trainset`), `train_stage1_repro.py` (mode `labgt`), `sweep_stage1_rules.py` (`EXTRA_DETS`), `compare_stage1_cached.py`.
+- In git: `results/stage1_kd/lab_label/{votes.csv, lab_decisions_final.json, lab_labels.json}`, `results/stage1_kd/rules/sweep_lab_final.jsonl`.
+- Dev PC only: `data/lab_stage1_gt`, `data/stage1_negatives/lab_gt`, `results/stage1_kd/rules/compare_labgt.log`, caches `results/stage1_kd/rules/cache_{lab,gtv2}.json`, runs `results/stage1_kd/repro846_{labgt,labv2}_p250/`, weights `weights/stage1_repro846_{labgt,labv2}_p250{,_last}.pt`.
 
 ## 5. Not checked
 
