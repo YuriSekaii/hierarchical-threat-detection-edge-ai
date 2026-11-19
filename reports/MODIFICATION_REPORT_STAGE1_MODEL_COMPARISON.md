@@ -834,7 +834,7 @@ CUDA_VISIBLE_DEVICES=0 TEACHER=weights/stage1_repro846_teachergt_p250_last.pt SU
 EXTRA_DETS="teachergt=...;teachergtL=...;kdgtO=...;kdgtOL=..." DEV=0 .venv/Scripts/python.exe results/samples/poc/sweep_stage1_rules.py . cache lab   # and gtv2
 ```
 
-The teacher took 11.5 h on one RTX 3090; `best.pt` is epoch 132. The old-teacher KD `best.pt` is epoch 143.
+The teacher took 11.5 h on one RTX 3090; `best.pt` is epoch 132. The KD runs took 5.8–7.5 h; `best.pt` is epoch 143 (old teacher) and 65 (new teacher).
 
 Lab camera (2,842 frames, 1,376 boxes):
 
@@ -846,17 +846,25 @@ Lab camera (2,842 frames, 1,376 boxes):
 | Student, new labels, last (`labgtL`) | 92.8 / 74.8 | 80 | 90.8 / 75.9 | 77.3 % (0.25) | 75.9 % (0.25) | 74.8 % (0.35) |
 | Control, old labels, last (`labv2L`) | 73.8 / 77.2 | 378 | 89.7 / 79.1 | not reached | 78.2 % (0.30) | 73.8 % (0.60) |
 | KD from old teacher, last | 70.1 / 63.5 | 373 | 84.4 / 76.1 | not reached | 69.4 % (0.35) | 66.6 % (0.40) |
+| **KD from new teacher, last** | 92.0 / **78.2** | 94 | 83.0 / 80.7 | 79.1 % (0.40) | 77.7 % (0.40) | **75.7 % (0.50)** |
+| KD from new teacher, `best.pt` (epoch 65) | 89.9 / 76.4 | 118 | 76.4 / 81.5 | 74.5 % (0.50) | 73.3 % (0.50) | 67.3 % (0.60) |
 
-`Ground_Truth_Dataset_v2` (625 images, 342 boxes), best recall at P ≥ 0.90 with the gate: old teacher 81.3 %, new teacher `best.pt` 74.9 %, last 72.5 %, `labgtL` 65.5 %, KD from old teacher 62.3 %.
+`Ground_Truth_Dataset_v2` (625 images, 342 boxes), best recall at P ≥ 0.90 with the gate: old teacher 81.3 %, new teacher `best.pt` 74.9 %, last 72.5 %, **KD from new teacher, last 69.6 %** (`best.pt` 67.8 %), `labgtL` 65.5 %, KD from old teacher 62.3 %.
+
+Oct 31 take 002 alone (499 boxes) at 0.45: KD from new teacher, last 93.1 / 84.4, `labgtL` 95.3 / 81.2, new teacher 95.0 / 80.0.
 
 **Findings:**
 
 - **The new labels fix the teacher too.** On the lab camera its precision without the gate goes from 69.9 % to 92.0 % at 0.45 (false boxes 455 to 93), and it is now the best lab detector: 79.6 % recall at 90 % precision without the gate, 2.3 points above `labgtL`.
 - **It loses some of the old teacher's lead on the original camera** (81.3 % to 72.5–74.9 % at 90 % gated precision), but stays well above every YOLO26s.
 - **Distilling the old teacher hurts on the lab camera.** The student copies the old teacher's lab false boxes: 70 % precision without the gate, against 92.8 % for `labgtL` trained on the same data without a teacher. On the original camera it is no better than `labgtL` at 90 % precision. Distill only from a teacher trained on the lab labels.
-- KD from the new teacher: training (7.5 h); results go here.
+- **Distilling the new teacher gives the best YOLO26s.** On the lab camera it is close to the teacher: 79.1 % recall at 90 % precision without the gate (`labgtL` 77.3 %, teacher 79.6 %), 77.7 % with the gate (`labgtL` 75.9 %). On the original camera it gains about 4 points over `labgtL` at 90 % gated precision (69.6 % against 65.5 %).
+- **Its threshold is higher.** Its scores are less sharp than `labgtL`'s: at 0.25 it has 228 gated false boxes (`labgtL` 106), so its working point is about 0.40, where it has 79 % lab recall at 90 % precision with or without the gate. The final epoch again beats `best.pt` (chosen at epoch 65), by 4–8 points.
+- **Proposed lab-camera student:** `weights/stage1_repro846_kdgt_p250_newteacher_last.pt` at conf 0.40, with the hand gate kept for safety (it changes little for this model). Not yet exported to TensorRT or run in the pipeline.
 
-Logs (dev PC only, gitignored): `results/stage1_kd/rules/compare_{kdgtO,teachergt}.log`. Weights (dev PC only): `weights/stage1_repro846_teachergt_p250{,_last}.pt`, `weights/stage1_repro846_kdgt_p250_oldteacher{,_last}.pt`.
+Logs (dev PC only, gitignored): `results/stage1_kd/rules/compare_{kdgtO,teachergt,kdgtN}.log`. Weights (dev PC only): `weights/stage1_repro846_teachergt_p250{,_last}.pt`, `weights/stage1_repro846_kdgt_p250_{oldteacher,newteacher}{,_last}.pt`.
+
+Not checked: one run per setting; no TensorRT export or Edge PC timing; no full-pipeline run; the KD student's threshold was chosen on the same test set it is scored on.
 
 ## 5. Not checked
 
