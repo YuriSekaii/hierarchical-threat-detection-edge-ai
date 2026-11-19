@@ -13,6 +13,8 @@ means MuSGD(lr 0.002, muon 0.5, sgd 0.5). 8.4.9 (in .venv) picks AdamW(0.002) or
   EPOCHS=250 PATIENCE=250 python train_stage1_repro.py <REPO> teachergt   # YOLO26x teacher on lab_gt, 250 epochs like the students
   TEACHER=weights/x.pt SUFFIX=_x PATIENCE=250 python train_stage1_repro.py <REPO> kdgt   # lab_gt + distillation from TEACHER
   PATIENCE=250 python train_stage1_repro.py <REPO> labgt   # as lab, on lab_gt = person-checked lab frames (label_lab_stage1.py trainset) + orig_v2
+  PATIENCE=250 python train_stage1_repro.py <REPO> labgtaug   # as labgt, on lab_gt_aug = lab_gt + motion-blurred / darkened knife frames
+  TEACHER=weights/x.pt SUFFIX=_x PATIENCE=250 python train_stage1_repro.py <REPO> kdgtaug   # lab_gt_aug + distillation from TEACHER
 """
 import os, shutil, sys
 
@@ -49,7 +51,7 @@ if __name__ == "__main__":
             q.requires_grad = False
         model.add_callback("on_train_start", lambda t: setattr(t.model, "criterion", KD(t.model.init_criterion(), teacher, 1.0)))
     r = model.train(
-        data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "teachergt": "lab_gt", "kdgt": "lab_gt"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
+        data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "labgtaug": "lab_gt_aug", "teachergt": "lab_gt", "kdgt": "lab_gt", "kdgtaug": "lab_gt_aug"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
         workers=4, device=int(os.environ.get("DEV", 0)), degrees=15.0, mosaic=1.0, mixup=0.1, plots=False, exist_ok=True,
         project=os.path.join(REPO, "results", "stage1_kd"), name=f"repro846_{TAG}", **size, **extra)
     shutil.copy2(os.path.join(str(r.save_dir), "weights", "best.pt"), out)
