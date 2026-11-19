@@ -117,6 +117,73 @@ With the 3 s hold the worst takes are overhand stab 83.1 %, thrust chest 027 84.
 2. For the swing takes: add blurred and dark knife frames to training. Motion-blur augmentation of knife crops is cheap; more recordings with swings against the dark chair and clothes are better.
 3. If recall must rise further, try the 2x wrist-crop pass only on wrists whose full-frame box is between 0.05 and 0.40 (the `low_score` group). This costs far less than cropping every wrist, but the Edge PC timing must be checked first.
 
+## Follow-up: blur and dark augmentation (2026-11-19)
+
+**Question:** step 2 above, without new recordings. Does adding blurred and darkened copies of the lab knife frames raise recall on fast and dark knives, and does it cost confidence on sharp knives?
+
+**Data.** `results/samples/poc/augment_stage1_blur_dark.py` builds `data/stage1_negatives/lab_gt_aug` from `lab_gt`:
+- **What is copied.** Every lab training frame with a knife box gets one copy: 1,840 copies, added to the 4,418 originals, which are all kept (6,258 images).
+- **Blur.** A motion blur in a random direction, applied in a feathered region around the knife: 1,571 copies.
+- **Darkening.** Lower brightness and contrast in a softly feathered region: 898 copies.
+- **Both.** 629 copies get the blur and the darkening.
+- **What stays out.** No test frames (Oct 31 take 002, `_test_` takes) and no val images go into train; the script asserts this.
+
+The blur length is 0.3–1.2 box sides. Longer blurs erased the knife on the contact sheet `results/stage1_kd/aug_samples.jpg`.
+
+**What was run.** The `labgtL` recipe (YOLO26s, Ultralytics 8.4.6, MuSGD lr 0.002, 250 epochs, no early stop) on the new set:
+
+```bash
+CUDA_VISIBLE_DEVICES=1 PATIENCE=250 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . labgtaug
+CUDA_VISIBLE_DEVICES=1 DEV=0 EXTRA_DETS="labgtaug=weights/stage1_repro846_labgtaug_p250.pt;labgtaugL=weights/stage1_repro846_labgtaug_p250_last.pt" \
+  .venv/Scripts/python.exe results/samples/poc/sweep_stage1_rules.py . cache lab      # and gtv2
+EXTRA_DETS="..." .venv/Scripts/python.exe results/samples/poc/compare_stage1_cached.py labgtL teachergtL kdgtNL labgtaug labgtaugL
+DET=labgtaugL T=0.25 .venv/Scripts/python.exe results/samples/poc/analyze_stage1_misses.py   # and DET=labgtL
+DETS=labgtL,labgtaugL T=0.25 .venv/Scripts/python.exe results/samples/poc/held_recall_stage1.py
+```
+
+Training took 11.3 h on one RTX 3090, with the other GPU training the YOLO26x teacher.
+
+**Best recall at a precision target (conf).** `labgtL` is the same recipe without augmentation; `kdgtNL` is the current best student.
+
+| Detector | Lab, P ≥ 0.90 | Lab, P ≥ 0.90, gate | Lab, P ≥ 0.92, gate | GTv2, P ≥ 0.90 | GTv2, P ≥ 0.90, gate |
+|---|---|---|---|---|---|
+| `labgtL` | 77.3 % (0.25) | 75.9 % (0.25) | **74.8 %** (0.35) | 65.2 % (0.50) | 65.5 % (0.40) |
+| **`labgtaugL`** (augmented, last) | 78.7 % (0.25) | 77.3 % (0.25) | 72.0 % (0.55) | 63.5 % (0.60) | **73.1 %** (0.25) |
+| `labgtaug` (augmented, `best.pt`) | 71.9 % (0.50) | 70.9 % (0.50) | 61.3 % (0.70) | 68.1 % (0.45) | 72.2 % (0.35) |
+| `kdgtNL` | 79.1 % (0.40) | **77.7 %** (0.40) | 75.7 % (0.50) | **70.2 %** (0.45) | 69.6 % (0.40) |
+| `teachergtL` (YOLO26x) | **79.6 %** (0.25) | 78.3 % (0.25) | 75.5 % (0.50) | **71.3 %** (0.25) | 72.5 % (0.10) |
+
+At conf 0.25 the lab precision is about equal: 90.6 % with 112 false boxes for `labgtaugL`, 90.9 % with 107 for `labgtL`. On GTv2 without the gate, `labgtaugL` has more false boxes: 41 against 26 at 0.45. With the gate they drop to 14 against 19.
+
+**Lab recall at conf 0.25, `labgtL` → `labgtaugL`:**
+
+| Group | Boxes | `labgtL` | `labgtaugL` |
+|---|---|---|---|
+| All | 1,376 | 77.6 % | 79.0 % |
+| Slow knife (shift < 0.5 box sides) | 261 | 87.7 % | **91.2 %** |
+| Shift 0.5–1 | 328 | 86.3 % | 87.5 % |
+| Shift 1–2 | 367 | 82.3 % | 79.8 % |
+| Shift 2–4 | 222 | 66.2 % | 68.5 % |
+| Fast knife (shift ≥ 4) | 88 | 45.5 % | **55.7 %** |
+| Dark crop (grey mean 60–100) | 200 | 58.5 % | 61.0 % |
+| Slash take 034 | 94 | 59.6 % | 66.0 % |
+| Overhand stab 032 | 65 | 60.0 % | 69.2 % |
+| Normal mixed 036 | 246 | 61.8 % | 65.4 % |
+| Thrust low 030 | 71 | 84.5 % | 77.5 % |
+| With 3 s hold | 1,376 | 93.7 % | 94.3 % |
+
+Misses by cause: `low_score` 136 → 116, `unseen` 156 → 156, `bad_box` 16 → 17.
+
+**Findings:**
+
+- **Sharp knives did not lose confidence.** Recall on slow knives rose from 87.7 % to 91.2 %. The originals are all still in training, and the copies add to them.
+- **The gain on the lab camera is small: +1.4 points at 90 % precision**, about the same as distilling from the new teacher (`kdgtNL`, 77.7 % gated against 77.3 %). It is largest where it was aimed: fast knives (+10 points), overhand stab and slash (+6 to +9). Dark knives gain only 2.5 points.
+- **The unseen knives stay unseen** (156 both times). The augmentation turned `low_score` knives into hits, not invisible ones. The blur reaches 1.2 box sides, which is much less than the ≥ 4-side swings.
+- **On the original camera it helps more with the gate:** 73.1 % against 65.5 % at 90 % precision, the best YOLO26s so far. Without the gate it has more false boxes than `labgtL`.
+- **Precision at 92 % is worse** (72.0 % against 74.8 % gated). The augmented model is less sure of its top boxes, so a strict threshold costs recall.
+- `best.pt` (chosen on val) is again worse than `last.pt` on the lab test.
+- **Next:** the YOLO26x teacher trained on the same augmented set (GPU 0, at epoch 73 of 250) will be distilled into YOLO26s. Results go here.
+
 ## Not checked
 
 - The causes come from one model at one threshold, on test labels made by the same process as the training labels. The 408 left-out hard test frames are not in the set, so real recall is lower.
@@ -128,3 +195,4 @@ With the 3 s hold the worst takes are overhand stab 83.1 %, thrust chest 027 84.
 
 - Scripts: `results/samples/poc/analyze_stage1_misses.py`, `zoom_stage1_wrists.py`, `held_recall_stage1.py`.
 - In git: `results/stage1_kd/misses/kdgtNL/{summary.md, zoom_summary.md, misses.json}` and the contact sheets `{unseen,low_score,bad_box}_*.jpg`.
+- Augmentation: `results/samples/poc/augment_stage1_blur_dark.py`; contact sheet `results/stage1_kd/aug_samples.jpg`; miss summaries `results/stage1_kd/misses/{labgtaugL,labgtL}/summary.md` (in git). Data `data/stage1_negatives/lab_gt_aug` and weights `weights/stage1_repro846_labgtaug_p250{,_last}.pt` are on the dev PC only. Logs (gitignored): `results/stage1_kd/repro846_labgtaug_p250.log`, `results/stage1_kd/rules/compare_labgtaug.log`.
