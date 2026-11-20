@@ -340,6 +340,99 @@ The script makes four checks:
 - The NMS conf thresholds (0.10–0.25) were chosen on the test set.
 - Alarm-level precision, where only boxes away from a knife matter, was not measured. It is what the pipeline actually needs.
 
+### Why the augmentation helps the teacher but not its student (2026-11-20)
+
+**Question:** the blur/dark copies target the misses, and the augmented teacher is the best teacher. Why is its distilled student not better than the student distilled from the teacher without augmentation?
+
+**What was run:**
+
+```bash
+CUDA_VISIBLE_DEVICES=0 GPU=1 DEV=0 .venv/Scripts/python.exe results/samples/poc/investigate_stage1_aug.py
+```
+
+The script scores each model at its own working point: NMS 0.5, then the conf with the best recall at precision ≥ 0.90 on the lab test. It then reads off, per knife, hit or miss, and groups the knives by speed and crop brightness (as `analyze_stage1_misses.py`). It also runs the teachers on 300 blurred/darkened training copies. A contact sheet of knives that no model finds is in `results/stage1_kd/aug_invest/never_found_sample.jpg`.
+
+Model letters:
+
+| Letter | Model | Name in the tables above |
+|---|---|---|
+| A | YOLO26s, `lab_gt` | `labgtL` |
+| C | YOLO26s, `lab_gt_aug` | `labgtaugL` |
+| E | YOLO26x teacher, `lab_gt` | `teachergtL` |
+| F | YOLO26x teacher, `lab_gt_aug` | `teachergtaug` |
+| B | KD from E | `kdgtNL` |
+| H | KD from F | `kdgtaugFL` |
+
+**Working points (lab, NMS 0.5):**
+
+| Model | Conf | P | R | False boxes |
+|---|---|---|---|---|
+| A | 0.20 | 90.8 | 78.3 | 109 |
+| C | 0.20 | 90.3 | 79.5 | 117 |
+| E | 0.15 | 90.0 | 81.1 | 124 |
+| F | 0.20 | 90.4 | 83.0 | 121 |
+| B | 0.10 | 90.3 | **85.0** | 125 |
+| H | 0.15 | 90.4 | 82.5 | 120 |
+
+**Recall at that working point, by knife group:**
+
+| Group | Knives | A | C | E | F | B | H |
+|---|---|---|---|---|---|---|---|
+| Slow (< 0.5 box sides per 10 frames) | 264 | 87.9 % | 91.3 % | 89.8 % | 91.3 % | 93.9 % | 92.0 % |
+| Medium (0.5–2) | 700 | 84.6 % | 83.6 % | 85.7 % | 87.4 % | 89.3 % | 87.9 % |
+| Fast (2–4) | 223 | 67.3 % | 69.5 % | 72.2 % | 74.9 % | 78.5 % | 73.5 % |
+| Very fast (≥ 4) | 92 | 48.9 % | 55.4 % | 56.5 % | 59.8 % | 58.7 % | 53.3 % |
+| Dark (grey < 100) | 207 | 60.9 % | 62.3 % | 68.6 % | 71.5 % | 74.9 % | 69.1 % |
+| Bright (≥ 140) | 634 | 86.1 % | 86.3 % | 88.2 % | 88.8 % | 89.4 % | 88.6 % |
+| Fast and dark | 94 | 50.0 % | 55.3 % | 54.3 % | 63.8 % | 66.0 % | 60.6 % |
+
+**Churn: knives found by one model and not the other:**
+
+| Without → with | Gained | Lost | Net | Median conf of the lost knives: before → after |
+|---|---|---|---|---|
+| A → C (augmentation) | 74 | 58 | +16 | 0.73 → 0.02 |
+| E → F (augmentation) | 74 | 48 | +26 | 0.54 → 0.05 |
+| B → H (augmentation + KD) | 35 | 70 | −35 | 0.58 → 0.03 |
+| E → B (KD) | 95 | 41 | +54 | |
+| F → H (KD) | 58 | 65 | −7 | |
+
+**Teacher score on 300 training copies (302 knives).** The second column says whether the teacher was trained on these copies.
+
+| Teacher | Trained on the copies | Median score, unchanged frame | Median score, copy | Copies < 0.5 |
+|---|---|---|---|---|
+| E | no | 0.96 | 0.06 | 63 % |
+| F (`best.pt`) | yes | 0.94 | 0.95 | 1 % |
+| G (F, `last.pt`) | yes | 0.95 | 0.96 | 0 % |
+
+**Lab training data.** 3,159 lab frames with 1,856 knife boxes in `lab_gt`. Every swing type of the test takes is in training:
+- slash, about 200 boxes;
+- overhand stab, about 230;
+- cut down, about 180;
+- thrust low, about 160.
+
+**Findings:**
+
+- **The augmentation does what it was meant to, without distillation.** It raises recall on fast and dark knives:
+  - fast-and-dark: A → C +5 points, E → F +10 points;
+  - very fast: A → C +6.5 points.
+
+  Sharp, slow knives did not lose confidence. They rose for both: A → C 87.9 % to 91.3 %, E → F 89.8 % to 91.3 %. The copies did not teach "a knife must look blurred".
+- **Each retrain changes 100–130 knives, much more than the net gain.** A → C gains 74 knives and loses 58. The lost ones were not borderline: A had them at a median conf of 0.73, and C has them at 0.02. That means single runs differ by about ±2–3 points on this test set (1,376 knives) from training noise alone. The B (85.0 %) vs H (82.5 %) gap is 35 knives, inside that range. No recipe here was trained twice, so the noise was not measured directly.
+- **The teacher's signal on the copies is not the problem.** F scores the copies as confidently as the originals (0.95), so distillation pushes the student toward the label there, not against it. Without augmentation, E gives most copies a score below 0.06: the copies are hard examples, as intended.
+- **Training data covers the swings.** The test misses are not motions missing from training.
+- **About half the knives no model finds are not blurred.** 117 test knives are missed by all six models:
+  - 57 are fast (≥ 2 box sides), 31 are dark;
+  - the rest are slow knives hidden in the hand, held at the side against dark trousers or the chair, or pointing at the camera;
+  - on several of them no knife is visible in the frame, and the label comes from the frames around it.
+
+  Augmentation cannot teach those, and a sharper or softer blur will not change them.
+- **Where distillation from F loses** (B → H): the knives it loses are mostly in slash (10 lost, 1 gained), normal mixed (16 lost, 7 gained) and Oct 31 take 002 (24 lost, 10 gained). Their conf in H is near 0, not just under the threshold.
+- **The B-vs-H gap has two possible causes:** the training noise above, or teacher F being `best.pt` from epoch 153 while E was `last.pt` from epoch 250. These cannot be told apart without repeat runs.
+
+**Not checked:**
+- No recipe was trained twice with a different seed, so the noise level is inferred from churn, not measured.
+- The working points were chosen on the test set.
+
 Weights (dev PC only): `weights/stage1_repro846_kdgtaug_p250_augteacherbest{,_last}.pt`. Logs (gitignored): `results/stage1_kd/repro846_kdgtaug_p250_augteacherbest.log`, `results/stage1_kd/rules/compare_kdgtaugF.log`.
 
 ## Not checked

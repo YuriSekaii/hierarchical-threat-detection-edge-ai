@@ -1,0 +1,1289 @@
+[
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f00780.jpg",
+"g": [
+0.608985,
+0.2917365,
+0.6167969999999999,
+0.3238195
+],
+"speed": 6.633132903308599,
+"mean": 78.55434782608695
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f01790.jpg",
+"g": [
+0.216601,
+0.2631945,
+0.24277300000000002,
+0.31701349999999995
+],
+"speed": 0.2895888544542592,
+"mean": 121.39232409381663
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f02320.jpg",
+"g": [
+0.453125,
+0.359028,
+0.479687,
+0.40798599999999996
+],
+"speed": 0.8895098198171385,
+"mean": 130.7720682302772
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f02740.jpg",
+"g": [
+0.5096879999999999,
+0.0663195,
+0.537188,
+0.1076385
+],
+"speed": 6.236460367942791,
+"mean": 123.39341131534972
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03050.jpg",
+"g": [
+0.5089845,
+0.395833,
+0.5359375,
+0.447569
+],
+"speed": 0.376844947377341,
+"mean": 117.21391304347826
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03080.jpg",
+"g": [
+0.497266,
+0.363056,
+0.51918,
+0.398056
+],
+"speed": 1.73052945522938,
+"mean": 87.03991596638656
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03300.jpg",
+"g": [
+0.365234,
+0.14875,
+0.391406,
+0.207986
+],
+"speed": 4.56054711835696,
+"mean": 117.98173836698858
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03420.jpg",
+"g": [
+0.632422,
+0.27375,
+0.673438,
+0.34270799999999996
+],
+"speed": 3.318683742013722,
+"mean": 192.61933621933622
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03620.jpg",
+"g": [
+0.40621050000000003,
+0.025486,
+0.4309375,
+0.060486000000000005
+],
+"speed": 9.145808349078317,
+"mean": 161.51133578431373
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03630.jpg",
+"g": [
+0.40703100000000003,
+0.6475690000000001,
+0.455859,
+0.714583
+],
+"speed": 1.4414299804837332,
+"mean": 80.48541666666667
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03730.jpg",
+"g": [
+0.357227,
+0.543056,
+0.375469,
+0.583542
+],
+"speed": 1.024227256964229,
+"mean": 155.85399853264857
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f03880.jpg",
+"g": [
+0.18624549999999998,
+0.327946,
+0.2294745,
+0.369276
+],
+"speed": 3.5221108323569585,
+"mean": 149.61765154985494
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04010.jpg",
+"g": [
+0.19386899999999999,
+0.585248,
+0.228291,
+0.7004840000000001
+],
+"speed": 1.3532281676116116,
+"mean": 75.2290525739321
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04070.jpg",
+"g": [
+0.3508645,
+0.1544195,
+0.41544749999999997,
+0.1983585
+],
+"speed": null,
+"mean": 124.37556517556517
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04210.jpg",
+"g": [
+0.3989845,
+0.480833,
+0.4201175,
+0.509375
+],
+"speed": 1.5970802341829338,
+"mean": 160.01174345076785
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04230.jpg",
+"g": [
+0.345952,
+0.124558,
+0.397704,
+0.262942
+],
+"speed": 2.350785493328074,
+"mean": 134.8026221332225
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04270.jpg",
+"g": [
+0.388116,
+0.2987795,
+0.411648,
+0.4300085
+],
+"speed": 2.974493903587582,
+"mean": 95.31040564373897
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04300.jpg",
+"g": [
+0.4402345,
+0.5225695,
+0.5058595,
+0.6076385000000001
+],
+"speed": 2.143640096149983,
+"mean": 167.3316256830601
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04320.jpg",
+"g": [
+0.3012105,
+0.548889,
+0.32441349999999997,
+0.5816669999999999
+],
+"speed": 2.2759122333743944,
+"mean": 94.83736025964659
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04380.jpg",
+"g": [
+0.487383,
+0.3512495,
+0.514727,
+0.38965249999999996
+],
+"speed": 2.7319880213060586,
+"mean": 159.19948979591837
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04450.jpg",
+"g": [
+0.19941399999999998,
+0.47569449999999996,
+0.23457,
+0.5590275
+],
+"speed": 1.2996101216607563,
+"mean": 100.96722689075631
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f04580.jpg",
+"g": [
+0.5434765,
+0.387778,
+0.5607814999999999,
+0.42305600000000004
+],
+"speed": 2.6348328607880336,
+"mean": 149.50935828877004
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f05050.jpg",
+"g": [
+0.5347654999999999,
+0.38555500000000004,
+0.5519925,
+0.419097
+],
+"speed": 6.607208067816348,
+"mean": 169.82361111111112
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f05170.jpg",
+"g": [
+0.5104685,
+0.2848615,
+0.5346875,
+0.31250049999999996
+],
+"speed": 1.8159254512052012,
+"mean": 118.525
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f05210.jpg",
+"g": [
+0.3851175,
+0.2695835,
+0.4097265,
+0.3045145
+],
+"speed": 6.260268823626224,
+"mean": 113.89809523809524
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f05320.jpg",
+"g": [
+0.6457025,
+0.39340300000000006,
+0.6761715,
+0.495139
+],
+"speed": 0.884107864850561,
+"mean": 195.3232164660736
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f05510.jpg",
+"g": [
+0.36102,
+0.349958,
+0.38692000000000004,
+0.44330800000000004
+],
+"speed": 1.5909282614389721,
+"mean": 94.52457912457912
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f06140.jpg",
+"g": [
+0.344336,
+0.603125,
+0.391992,
+0.6736110000000001
+],
+"speed": 3.1800011584704193,
+"mean": 95.99561759454635
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-10-31_002_checkerboard_142846_f06470.jpg",
+"g": [
+0.39296949999999997,
+0.506597,
+0.4226565,
+0.556597
+],
+"speed": 4.915548722380557,
+"mean": 73.86951754385964
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_025_test_thrust_chest_112732_f00060.jpg",
+"g": [
+0.0515785,
+0.2677605,
+0.08737349999999999,
+0.3163295
+],
+"speed": 0.9730065860281029,
+"mean": 98.50546218487395
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_025_test_thrust_chest_112732_f00580.jpg",
+"g": [
+0.17625,
+0.417986,
+0.242656,
+0.47625
+],
+"speed": null,
+"mean": 172.64088863892013
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_025_test_thrust_chest_112732_f00750.jpg",
+"g": [
+0.313646,
+0.4023605,
+0.340156,
+0.42777750000000003
+],
+"speed": 1.112572526689269,
+"mean": 106.82461873638344
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_027_test_thrust_chest_112832_f00000.jpg",
+"g": [
+0.0537495,
+0.301667,
+0.09661449999999999,
+0.33187500000000003
+],
+"speed": 0.7231080766154918,
+"mean": 109.31650595575724
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_030_test_thrust_low_125734_f00460.jpg",
+"g": [
+0.24499949999999998,
+0.41763849999999997,
+0.3017705,
+0.4837495
+],
+"speed": null,
+"mean": 125.19449541284403
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_031_test_thrust_low_125824_f00410.jpg",
+"g": [
+0.10963599999999998,
+0.3545145,
+0.173698,
+0.4433335
+],
+"speed": 0.3145780555271347,
+"mean": 70.73024644308943
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_031_test_thrust_low_125824_f00420.jpg",
+"g": [
+0.1002085,
+0.37562450000000003,
+0.1546875,
+0.4602775
+],
+"speed": 0.34941847938677295,
+"mean": 60.62154566744731
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_031_test_thrust_low_125824_f00430.jpg",
+"g": [
+0.27416650000000004,
+0.377916,
+0.3149475,
+0.485972
+],
+"speed": 3.3602099541364794,
+"mean": 96.78089330024814
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_031_test_thrust_low_125824_f00540.jpg",
+"g": [
+0.26026,
+0.30048600000000003,
+0.303958,
+0.384792
+],
+"speed": 0.44895926364095445,
+"mean": 105.65115144418424
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_031_test_thrust_low_125824_f00550.jpg",
+"g": [
+0.277604,
+0.31361150000000004,
+0.325416,
+0.3945145
+],
+"speed": 0.4381433159936409,
+"mean": 135.17066146413973
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_031_test_thrust_low_125824_f00850.jpg",
+"g": [
+0.297396,
+0.38159750000000003,
+0.32244799999999996,
+0.4139585
+],
+"speed": 1.7337601760846237,
+"mean": 90.37012411347517
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_031_test_thrust_low_125824_f00920.jpg",
+"g": [
+0.0926565,
+0.2349995,
+0.1433335,
+0.3066665
+],
+"speed": 3.1311680401843494,
+"mean": 170.00564691896176
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00240.jpg",
+"g": [
+0.0040104999999999984,
+0.562639,
+0.0335935,
+0.5996530000000001
+],
+"speed": 17.022885161970585,
+"mean": 131.0132406487918
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00400.jpg",
+"g": [
+0.534167,
+0.21743,
+0.664063,
+0.32569400000000004
+],
+"speed": 2.57488020984162,
+"mean": 175.63011612903225
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00500.jpg",
+"g": [
+0.2090745,
+0.12508350000000001,
+0.23533749999999998,
+0.1994105
+],
+"speed": 11.288990999394688,
+"mean": 143.0033644859813
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00540.jpg",
+"g": [
+0.15953150000000002,
+0.0922915,
+0.2336465,
+0.1756245
+],
+"speed": 2.2837356569743523,
+"mean": 169.14113849765258
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00550.jpg",
+"g": [
+0.31180599999999997,
+0.09210850000000001,
+0.350442,
+0.1601215
+],
+"speed": 3.501187369700295,
+"mean": 129.09528405956976
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00790.jpg",
+"g": [
+0.2588025,
+0.20374949999999997,
+0.3518235,
+0.3076385
+],
+"speed": 1.713034239853883,
+"mean": 102.79273368077688
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00830.jpg",
+"g": [
+0.1600855,
+0.24806400000000003,
+0.2113485,
+0.32020200000000004
+],
+"speed": 5.524313860122314,
+"mean": 141.8311420722135
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f00990.jpg",
+"g": [
+0.060833000000000005,
+0.1930555,
+0.152239,
+0.30840249999999997
+],
+"speed": 2.2517369566871723,
+"mean": 184.05402830702232
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f01030.jpg",
+"g": [
+0.424062,
+0.2846525,
+0.47874999999999995,
+0.3772915
+],
+"speed": 6.641994189130185,
+"mean": 145.76041222459133
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f01090.jpg",
+"g": [
+0.3326865,
+0.2061025,
+0.40168950000000003,
+0.2584595
+],
+"speed": 2.2781783460531044,
+"mean": 120.53383458646617
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f01160.jpg",
+"g": [
+0.3589065,
+0.670556,
+0.4592195,
+0.765
+],
+"speed": 4.093439932381137,
+"mean": 86.83168658088235
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_032_test_overhand_stab_125921_f01180.jpg",
+"g": [
+0.39937449999999997,
+0.2110415,
+0.4360935,
+0.24736049999999998
+],
+"speed": 10.513810144358688,
+"mean": 124.46877491363274
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_033_test_cut_down_130017_f00300.jpg",
+"g": [
+0.344479,
+0.5501385,
+0.395729,
+0.6263195
+],
+"speed": 4.003489942572611,
+"mean": 153.36051301254446
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_033_test_cut_down_130017_f00320.jpg",
+"g": [
+0.250417,
+0.8678475,
+0.28796900000000003,
+0.9106945000000001
+],
+"speed": 2.3098764308989734,
+"mean": 142.1926523297491
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_033_test_cut_down_130017_f00410.jpg",
+"g": [
+0.307136,
+0.323403,
+0.36109399999999997,
+0.406875
+],
+"speed": 3.0352513968496826,
+"mean": 150.8806891025641
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_033_test_cut_down_130017_f00720.jpg",
+"g": [
+0.3569275,
+0.342153,
+0.4250525,
+0.457709
+],
+"speed": 3.2345918612039752,
+"mean": 144.69698770398136
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00240.jpg",
+"g": [
+0.22065949999999998,
+0.12702000000000002,
+0.2481845,
+0.200926
+],
+"speed": 1.2765102711074265,
+"mean": 138.69035443484395
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00250.jpg",
+"g": [
+0.251326,
+0.1975375,
+0.276642,
+0.24231850000000002
+],
+"speed": 1.7099499111970473,
+"mean": 126.35172193877551
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00320.jpg",
+"g": [
+0.1420835,
+0.1747915,
+0.1779685,
+0.2366665
+],
+"speed": null,
+"mean": 195.97687673017424
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00520.jpg",
+"g": [
+0.057239,
+0.30000000000000004,
+0.10213499999999999,
+0.338542
+],
+"speed": 1.3091262842154425,
+"mean": 163.36907001044932
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00560.jpg",
+"g": [
+0.25145850000000003,
+0.2750695,
+0.2971355,
+0.3329865
+],
+"speed": 1.6095279901356228,
+"mean": 144.52834063526834
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00720.jpg",
+"g": [
+0.407448,
+0.06722249999999999,
+0.453594,
+0.1347915
+],
+"speed": null,
+"mean": 85.98678107606679
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00740.jpg",
+"g": [
+0.34791649999999996,
+0.249861,
+0.3720835,
+0.281111
+],
+"speed": 3.048318562192293,
+"mean": 89.78156028368794
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f00820.jpg",
+"g": [
+0.24474,
+0.4316665,
+0.30349,
+0.5032635
+],
+"speed": null,
+"mean": 65.77472291433972
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f01520.jpg",
+"g": [
+0.190208,
+0.1268055,
+0.253906,
+0.2364585
+],
+"speed": null,
+"mean": 148.42705955592447
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f01620.jpg",
+"g": [
+0.34010450000000003,
+0.0865975,
+0.4133335,
+0.16826449999999998
+],
+"speed": null,
+"mean": 90.16138014527846
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f01740.jpg",
+"g": [
+0.4737505,
+0.3829165,
+0.4932815,
+0.41624950000000005
+],
+"speed": 10.239179461680818,
+"mean": 96.81414473684211
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f01800.jpg",
+"g": [
+0.4450515,
+0.1463885,
+0.4880205,
+0.2295135
+],
+"speed": null,
+"mean": 107.98729674796748
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f01830.jpg",
+"g": [
+0.19359349999999997,
+0.1189585,
+0.2493745,
+0.19562549999999998
+],
+"speed": null,
+"mean": 132.48521665250638
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f02060.jpg",
+"g": [
+0.468489,
+0.065556,
+0.49588499999999996,
+0.11152799999999999
+],
+"speed": 4.748125310269411,
+"mean": 116.41423670668954
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f02080.jpg",
+"g": [
+0.42904,
+0.3341965,
+0.450252,
+0.3848695
+],
+"speed": 3.572816406999377,
+"mean": 131.4550618108921
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f02210.jpg",
+"g": [
+0.48396500000000003,
+0.2071125,
+0.503283,
+0.2624155
+],
+"speed": null,
+"mean": 130.94423537461512
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_034_test_slash_135927_f02250.jpg",
+"g": [
+0.4821875,
+0.036735500000000004,
+0.5278125,
+0.10340250000000001
+],
+"speed": null,
+"mean": 132.5184659090909
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_035_test_walking_thrust_140104_f00420.jpg",
+"g": [
+0.449688,
+0.37632,
+0.48854200000000003,
+0.42055600000000004
+],
+"speed": 1.020537517811413,
+"mean": 119.821875
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_035_test_walking_thrust_140104_f00430.jpg",
+"g": [
+0.47627800000000003,
+0.34257150000000003,
+0.499384,
+0.3631945
+],
+"speed": 1.9381905084515445,
+"mean": 114.72121212121212
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_035_test_walking_thrust_140104_f00680.jpg",
+"g": [
+0.47109399999999996,
+0.225139,
+0.497604,
+0.25833300000000003
+],
+"speed": 2.5665345180265273,
+"mean": 77.61618690029204
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_035_test_walking_thrust_140104_f00890.jpg",
+"g": [
+0.127136,
+0.328264,
+0.15354199999999998,
+0.359306
+],
+"speed": 5.87250462439758,
+"mean": 204.41555555555556
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f04730.jpg",
+"g": [
+0.279531,
+0.36034700000000003,
+0.321041,
+0.439097
+],
+"speed": 0.536824918751261,
+"mean": 118.61535087719298
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f04830.jpg",
+"g": [
+0.2922825,
+0.6758624999999999,
+0.3458175,
+0.7117215
+],
+"speed": 5.157568464640293,
+"mean": 102.68127643214149
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f04890.jpg",
+"g": [
+0.11197900000000001,
+0.488611,
+0.18088500000000002,
+0.573889
+],
+"speed": 0.40708717359438035,
+"mean": 102.599853291766
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f04900.jpg",
+"g": [
+0.135625,
+0.46583349999999996,
+0.19578099999999998,
+0.5494445
+],
+"speed": 0.4400107205442091,
+"mean": 98.10801293568092
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f04910.jpg",
+"g": [
+0.15260400000000002,
+0.6477784999999999,
+0.206042,
+0.7115975
+],
+"speed": 1.206457991424464,
+"mean": 103.09107218235542
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05000.jpg",
+"g": [
+0.1540625,
+0.530903,
+0.2372915,
+0.572917
+],
+"speed": 3.5952552666190876,
+"mean": 97.21803278688525
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05040.jpg",
+"g": [
+0.2480115,
+0.6174665,
+0.3559665,
+0.6976855000000001
+],
+"speed": 2.246612098044392,
+"mean": 127.1442134005461
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05140.jpg",
+"g": [
+0.3933335,
+0.5323614999999999,
+0.4230205,
+0.5634725
+],
+"speed": 1.3502958543955559,
+"mean": 125.02846003898635
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05210.jpg",
+"g": [
+0.328594,
+0.430347,
+0.41843800000000003,
+0.517569
+],
+"speed": 0.7049654219084301,
+"mean": 124.43003945316084
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05300.jpg",
+"g": [
+0.266615,
+0.27020849999999996,
+0.330313,
+0.3815275
+],
+"speed": 1.1137024817132393,
+"mean": 114.42911585365853
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05370.jpg",
+"g": [
+0.362552,
+0.539028,
+0.442396,
+0.639306
+],
+"speed": 2.160927647012866,
+"mean": 103.95638162672476
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05590.jpg",
+"g": [
+0.36731400000000003,
+0.37197,
+0.446102,
+0.466078
+],
+"speed": 1.34464993621987,
+"mean": 96.12758083365797
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05690.jpg",
+"g": [
+0.6264585,
+0.3977775,
+0.7031255000000001,
+0.5361105
+],
+"speed": 0.8894634443095306,
+"mean": 182.9084272714926
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05730.jpg",
+"g": [
+0.5297919999999999,
+0.328125,
+0.599584,
+0.47006899999999996
+],
+"speed": 1.0977394536203997,
+"mean": 160.8460637986538
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05810.jpg",
+"g": [
+0.1589585,
+0.19729149999999998,
+0.23317749999999998,
+0.3456945
+],
+"speed": null,
+"mean": 143.16388943992595
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f05830.jpg",
+"g": [
+0.369492,
+0.3084595,
+0.42170199999999997,
+0.39844250000000003
+],
+"speed": 4.644358047790247,
+"mean": 88.85263565891474
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f06140.jpg",
+"g": [
+0.5220170000000001,
+0.621991,
+0.557181,
+0.7372270000000001
+],
+"speed": 3.6486508496814567,
+"mean": 97.07570580830786
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f06190.jpg",
+"g": [
+0.1751045,
+0.460833,
+0.2043235,
+0.49854099999999996
+],
+"speed": 8.479194002778893,
+"mean": 142.90046296296296
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f06210.jpg",
+"g": [
+0.40479149999999997,
+0.4449995,
+0.4831765,
+0.5231245
+],
+"speed": 1.6729846686936054,
+"mean": 95.55610619469027
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f06280.jpg",
+"g": [
+0.2153125,
+0.6401385,
+0.2461455,
+0.6793055
+],
+"speed": 3.027343503541766,
+"mean": 133.0225988700565
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f06760.jpg",
+"g": [
+0.030781000000000003,
+0.34375049999999996,
+0.078333,
+0.4088195
+],
+"speed": 2.4620134980347923,
+"mean": 86.14781992201347
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f06950.jpg",
+"g": [
+0.42286399999999996,
+0.42124999999999996,
+0.483906,
+0.518542
+],
+"speed": 3.4431682082051505,
+"mean": 68.73498789346247
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07150.jpg",
+"g": [
+0.28734350000000003,
+0.510069,
+0.3554685,
+0.593125
+],
+"speed": 0.40777667186931943,
+"mean": 131.15101781170483
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07200.jpg",
+"g": [
+0.32625,
+0.722014,
+0.358906,
+0.753264
+],
+"speed": 2.5913653856579573,
+"mean": 101.90194003527337
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07630.jpg",
+"g": [
+0.48649000000000003,
+0.13055499999999998,
+0.5434340000000001,
+0.168939
+],
+"speed": null,
+"mean": 113.9074377457405
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07880.jpg",
+"g": [
+0.0526045,
+0.537083,
+0.1259895,
+0.6672910000000001
+],
+"speed": null,
+"mean": 178.00454545454545
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07920.jpg",
+"g": [
+0.0001559999999999999,
+0.44756949999999995,
+0.01875,
+0.5644445
+],
+"speed": 0.8763143647382947,
+"mean": 142.8166335978836
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07930.jpg",
+"g": [
+0.523906,
+0.265625,
+0.568854,
+0.337569
+],
+"speed": 12.87472457403668,
+"mean": 147.8672634836428
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07970.jpg",
+"g": [
+0.18984399999999998,
+0.5657635,
+0.26489599999999996,
+0.6836105
+],
+"speed": 3.29991599708919,
+"mean": 168.2184232026144
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f07990.jpg",
+"g": [
+0.42625,
+0.367153,
+0.495104,
+0.441389
+],
+"speed": 1.5655433343872596,
+"mean": 92.20185499858397
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08000.jpg",
+"g": [
+0.43359400000000003,
+0.2037505,
+0.488282,
+0.3063195
+],
+"speed": 1.4944551341324004,
+"mean": 126.81628056628057
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08020.jpg",
+"g": [
+0.00010450000000000043,
+0.2174305,
+0.0259895,
+0.31881950000000003
+],
+"speed": 2.54123963627981,
+"mean": 111.98825831702544
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08030.jpg",
+"g": [
+0.4046555,
+0.414099,
+0.4926605,
+0.45256700000000005
+],
+"speed": 10.207003209602947,
+"mean": 93.29445938676707
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08060.jpg",
+"g": [
+0.1282815,
+0.333958,
+0.18906250000000002,
+0.41798599999999997
+],
+"speed": 1.4435614212601733,
+"mean": 183.89863671681854
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08070.jpg",
+"g": [
+0.5224475,
+0.598958,
+0.6191145,
+0.681666
+],
+"speed": 6.5329886026874675,
+"mean": 157.54258460140812
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08070.jpg",
+"g": [
+0.595208,
+0.45152749999999997,
+0.6640619999999999,
+0.5481945
+],
+"speed": 7.780811058984045,
+"mean": 156.6841617614999
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08120.jpg",
+"g": [
+0.11682300000000001,
+0.11868050000000001,
+0.176771,
+0.2163195
+],
+"speed": null,
+"mean": 181.19969164353992
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08140.jpg",
+"g": [
+0.4396465,
+0.199663,
+0.5086495,
+0.259175
+],
+"speed": null,
+"mean": 142.26823467230443
+},
+{
+"path": "D:\\Intern AI Project\\hierarchical-threat-detection-edge-ai\\data/lab_stage1_gt/images/2026-11-14_036_test_normal_mixed_140220_f08360.jpg",
+"g": [
+0.1533335,
+0.12416650000000001,
+0.2265625,
+0.2285415
+],
+"speed": 2.7919470070369607,
+"mean": 148.51937438354233
+}
+]
