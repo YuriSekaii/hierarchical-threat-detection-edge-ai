@@ -182,7 +182,47 @@ Misses by cause: `low_score` 136 → 116, `unseen` 156 → 156, `bad_box` 16 →
 - **On the original camera it helps more with the gate:** 73.1 % against 65.5 % at 90 % precision, the best YOLO26s so far. Without the gate it has more false boxes than `labgtL`.
 - **Precision at 92 % is worse** (72.0 % against 74.8 % gated). The augmented model is less sure of its top boxes, so a strict threshold costs recall.
 - `best.pt` (chosen on val) is again worse than `last.pt` on the lab test.
-- **Next:** the YOLO26x teacher trained on the same augmented set (GPU 0, at epoch 73 of 250) will be distilled into YOLO26s. Results go here.
+### YOLO26x teacher on the augmented set (2026-11-20)
+
+**What was run:** the `teachergt` recipe (YOLO26x, batch 12, nbs 64, 250 epochs, no early stop) on `lab_gt_aug`, then cached and compared as above.
+
+```bash
+CUDA_VISIBLE_DEVICES=0 EPOCHS=250 PATIENCE=250 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . teachergtaug
+```
+
+**Training time: 22.5 h.** The first 80 epochs took about 540 s each, while the plain student trained on the other GPU. The two runs share the CPU that loads the images. Alone, an epoch took 227 s. `best.pt` is epoch 153.
+
+**Best recall at a precision target (conf).** `teachergtL` is the teacher trained without augmentation.
+
+| Detector | Lab, P ≥ 0.90 | Lab, P ≥ 0.90, gate | Lab, P ≥ 0.92, gate | GTv2, P ≥ 0.90 | GTv2, P ≥ 0.90, gate |
+|---|---|---|---|---|---|
+| `teachergtL` | 79.6 % (0.25) | 78.3 % (0.25) | 75.5 % (0.50) | 71.3 % (0.25) | 72.5 % (0.10) |
+| **`teachergtaug`** (`best.pt`) | **82.6 %** (0.25) | **81.2 %** (0.25) | 76.7 % (0.50) | **74.3 %** (0.25) | **74.3 %** (0.15) |
+| `teachergtaugL` (last) | 81.5 % (0.10) | 80.1 % (0.10) | **77.9 %** (0.20) | 63.2 % (0.30) | 67.3 % (0.10) |
+| Old teacher (`orig_v2`) | not reached | 71.7 % (0.55) | 64.0 % (0.70) | 81.9 % (0.12) | 81.3 % (0.10) |
+
+At conf 0.45 on the lab camera:
+- `teachergtaug`: 91.9 % precision, 78.8 % recall, 96 false boxes.
+- `teachergtaugL`: 94.6 / 75.1, 59 false boxes.
+- `teachergtL`: 92.0 / 77.4, 93 false boxes.
+
+**Findings:**
+
+- **The augmented teacher (`best.pt`) is the best lab detector so far: 82.6 % recall at 90 % precision**, 3.0 points above the teacher without augmentation. It is also better on the original camera (74.3 % against 71.3 %).
+- **Here `last.pt` is worse than `best.pt`.** It scores lower overall: fewer false boxes, but it needs conf 0.10 for its best recall, and it loses 11 points on the original camera. This is the reverse of every earlier run, where `last.pt` won.
+- `last.pt` at conf 0.25 on the lab camera:
+  - slow knives 90.0 %, fast knives 55.7 %, dark crops 63.5 %;
+  - with the 3 s hold, 94.4 %, against 94.7 % for `teachergtL`.
+  
+  The miss analysis was not run for `best.pt` or for `teachergtL`.
+- **The distillation uses `best.pt` as the teacher** (`SUFFIX=_augteacherbest`, GPU 0, about 9–10 h). A run from `last.pt` was stopped at epoch 3.
+
+```bash
+CUDA_VISIBLE_DEVICES=0 TEACHER=weights/stage1_repro846_teachergtaug_p250.pt SUFFIX=_augteacherbest PATIENCE=250 DEV=0 \
+  .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . kdgtaug
+```
+
+Choosing `best.pt` over `last.pt` was based on these test numbers, so it is not a clean choice.
 
 ## Not checked
 
