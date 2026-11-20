@@ -224,6 +224,52 @@ CUDA_VISIBLE_DEVICES=0 TEACHER=weights/stage1_repro846_teachergtaug_p250.pt SUFF
 
 Choosing `best.pt` over `last.pt` was based on these test numbers, so it is not a clean choice.
 
+### YOLO26s distilled from the augmented teacher (2026-11-20): negative
+
+**What was run:** the command above (250 epochs, 8.2 h on one RTX 3090, the other GPU idle), then cached as `kdgtaugF` (`best.pt`) and `kdgtaugFL` (`last.pt`) and compared:
+
+```bash
+EXTRA_DETS="..." .venv/Scripts/python.exe results/samples/poc/compare_stage1_cached.py kdgtNL labgtaugL teachergtaug kdgtaugF kdgtaugFL
+DET=kdgtaugFL T=0.45 REF=teachergtaug .venv/Scripts/python.exe results/samples/poc/analyze_stage1_misses.py
+```
+
+**Best recall at a precision target (conf):**
+
+| Detector | Lab, P ≥ 0.90 | Lab, P ≥ 0.90, gate | GTv2, P ≥ 0.90 | GTv2, P ≥ 0.90, gate | Lab, 3 s hold (conf) |
+|---|---|---|---|---|---|
+| `kdgtNL` (KD from `teachergtL`, no augmentation) | **79.1 %** (0.40) | **77.7 %** (0.40) | **70.2 %** (0.45) | 69.6 % (0.40) | **94.6 %** (0.40) |
+| `labgtaugL` (augmented, no teacher) | 78.7 % (0.25) | 77.3 % (0.25) | 63.5 % (0.60) | **73.1 %** (0.25) | 94.3 % (0.25) |
+| `kdgtaugFL` (KD from `teachergtaug`, last) | 75.1 % (0.45) | 73.9 % (0.45) | 67.5 % (0.40) | 69.0 % (0.35) | 92.3 % (0.45) |
+| `kdgtaugF` (KD from `teachergtaug`, `best.pt`) | 70.8 % (0.50) | 72.7 % (0.45) | 61.7 % (0.50) | 68.4 % (0.40) | – |
+| `teachergtaug` (YOLO26x) | 82.6 % (0.25) | 81.2 % (0.25) | 74.3 % (0.25) | 74.3 % (0.15) | – |
+
+At conf 0.25 the distilled student has many lab false boxes: 257 for `kdgtaugFL`, against 112 for `labgtaugL` and 232 for `kdgtNL`.
+
+**Miss causes for `kdgtaugFL` at 0.45:**
+
+| Cause | Boxes |
+|---|---|
+| `low_score` | 199 |
+| `unseen` | 125 |
+| `bad_box` | 15 |
+
+**Recall by group:**
+
+| Group | Recall |
+|---|---|
+| Slow knives | 85.8 % |
+| Fast knives | 44.3 % |
+| Dark crops | 60.5 % |
+
+**Findings:**
+
+- **Distilling the best teacher made the student worse:** 4 points below `kdgtNL` and 3.6 below `labgtaugL` (no teacher) at 90 % lab precision. Its fast-knife recall is back to the level without augmentation.
+- **It sees more knives but scores them low.** It has the fewest `unseen` knives of any student (125), but 199 are `low_score`. Its scores spread out, so the false boxes rise before the recall does.
+- **The cause is not known.** One guess: the teacher is `best.pt` from epoch 153, while the learning rate was still high, so its outputs may be less sharp than a final-epoch teacher's. Another: the KD loss on the blurred copies, where the teacher itself is unsure, may teach the student to be unsure. Neither was tested.
+- **For the Edge PC the best YOLO26s is still `kdgtNL`** on the lab camera, and `labgtaugL` is level with it there. With the gate, `labgtaugL` is better on the original camera (73.1 % against 69.6 %).
+
+Weights (dev PC only): `weights/stage1_repro846_kdgtaug_p250_augteacherbest{,_last}.pt`. Logs (gitignored): `results/stage1_kd/repro846_kdgtaug_p250_augteacherbest.log`, `results/stage1_kd/rules/compare_kdgtaugF.log`.
+
 ## Not checked
 
 - The causes come from one model at one threshold, on test labels made by the same process as the training labels. The 408 left-out hard test frames are not in the set, so real recall is lower.
