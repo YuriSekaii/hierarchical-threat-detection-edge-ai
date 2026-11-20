@@ -268,6 +268,78 @@ At conf 0.25 the distilled student has many lab false boxes: 257 for `kdgtaugFL`
 - **The cause is not known.** One guess: the teacher is `best.pt` from epoch 153, while the learning rate was still high, so its outputs may be less sharp than a final-epoch teacher's. Another: the KD loss on the blurred copies, where the teacher itself is unsure, may teach the student to be unsure. Neither was tested.
 - **For the Edge PC the best YOLO26s is still `kdgtNL`** on the lab camera, and `labgtaugL` is level with it there. With the gate, `labgtaugL` is better on the original camera (73.1 % against 69.6 %).
 
+### Is the distillation correct? (2026-11-20)
+
+**Question:** the augmented teacher is the best detector, yet its student is worse than a student trained without a teacher. Is the distillation broken?
+
+**What was run:**
+
+```bash
+CUDA_VISIBLE_DEVICES=0 TEACHER=weights/stage1_repro846_teachergtaug_p250.pt DEV=0 .venv/Scripts/python.exe results/samples/poc/check_stage1_kd.py
+```
+
+The script makes four checks:
+
+1. **The right teacher in the right form.**
+   - The KD run's teacher file has the same SHA-1 as the teacher run's `best.pt`.
+   - Loaded the way `train_stage1_repro.py` loads it (`YOLO(pt).model`, eval), on 48 lab frames letterboxed to 640x640, its one2one knife score matches `model.predict()` on the same image: mean difference 0.001, largest 0.026 (fp16).
+   - In eval mode the YOLO26 head returns the raw logits and box distances the training loss uses (`ultralytics/nn/modules/head.py`, `Detect.forward` returns `(y, preds)`), so the KD loss compares like with like.
+   - **The wiring is correct.**
+2. **The student copies the teacher**, but only a little more than a student trained without one:
+   - A distilled student finds 93–95 % of the knives its teacher finds at 0.25; one trained without a teacher finds 90–91 %.
+   - The correlation of their confs on the test knives is about 0.72–0.74 in both cases.
+3. **The false boxes away from knives are the same.** Count only boxes at ≥ 0.25 that touch no test knife:
+
+   | Student | Teacher | Boxes away from knives |
+   |---|---|---|
+   | `kdgtNL` | `teachergtL` | 105 |
+   | `labgtL` | `teachergtL` | 100 |
+   | `kdgtaugFL` | `teachergtaug` | 114 |
+   | `labgtaugL` | `teachergtaug` | 105 |
+
+   About 60 % of each student's boxes away from knives are also false boxes of its teacher.
+4. **The extra "false boxes" of the distilled students are duplicates.** The scoring counts a second box on an already matched knife as a false box. YOLO26 has no NMS: its one2one head is meant to put one box on each object. The distilled students break that.
+
+**Lab test, false boxes at conf 0.25 (duplicates on a found knife in brackets), and best recall at P ≥ 0.90: R (conf, P):**
+
+| Detector | 0.25: P / R, false boxes (duplicates) | P ≥ 0.90, as scored before | P ≥ 0.90, with NMS 0.5 |
+|---|---|---|---|
+| `labgtL` | 90.9 / 77.3, 107 (7) | 77.3 % (0.25, P 90.9) | 78.3 % (0.20, P 90.8) |
+| **`kdgtNL`** | 83.0 / 82.1, 232 (**127**) | 79.1 % (0.40, P 90.5) | **85.0 %** (0.10, P 90.3) |
+| `labgtaugL` | 90.6 / 78.7, 112 (7) | 78.7 % (0.25, P 90.6) | 79.5 % (0.20, P 90.3) |
+| `kdgtaugFL` | 81.2 / 80.7, 257 (**143**) | 75.1 % (0.45, P 91.6) | 82.5 % (0.15, P 90.4) |
+| `kdgtaugF` | 78.9 / 79.9, 295 (167) | 70.8 % (0.50, P 91.5) | 79.9 % (0.25, P 90.5) |
+| `teachergtL` | 90.5 / 79.6, 115 (7) | 79.6 % (0.25, P 90.5) | 81.1 % (0.15, P 90.0) |
+| `teachergtaug` | 90.0 / 82.6, 126 (14) | 82.6 % (0.25, P 90.0) | 83.0 % (0.20, P 90.4) |
+
+**GTv2, the same columns:**
+
+| Detector | 0.25: P / R, false boxes (duplicates) | P ≥ 0.90, as scored before | P ≥ 0.90, with NMS 0.5 |
+|---|---|---|---|
+| `labgtL` | 80.8 / 72.5, 59 (3) | 65.2 % (0.50, P 91.8) | 66.4 % (0.45, P 90.1) |
+| `kdgtNL` | 77.2 / 75.1, 76 (38) | 70.2 % (0.45, P 92.0) | 71.1 % (0.40, P 91.4) |
+| `labgtaugL` | 72.6 / 75.1, 97 (1) | 63.5 % (0.60, P 91.9) | 63.5 % (0.60, P 91.9) |
+| `kdgtaugFL` | 77.7 / 74.6, 73 (30) | 67.5 % (0.40, P 90.9) | 70.8 % (0.35, P 91.3) |
+| `teachergtL` | 90.4 / 71.3, 26 (3) | 71.3 % (0.25, P 90.4) | 73.4 % (0.15, P 90.3) |
+| `teachergtaug` | 91.0 / 74.3, 25 (3) | 74.3 % (0.25, P 91.0) | 75.4 % (0.20, P 90.2) |
+
+**Findings:**
+
+- **The distillation runs as written, but the KD loss has a flaw.** It also distills the one2one head, and the students come out with two boxes on many knives. A duplicate box on a real knife cannot raise a false alarm. But the box scoring counted it as a false box, so every distilled student's precision was understated, and its working point was pushed up to 0.40–0.50.
+- **With duplicates removed, distillation helps on the lab camera.** `kdgtNL` reaches 85.0 % recall at 90 % precision, above its own teacher (81.1 %) and above every model without NMS. On GTv2 it gains less: 71.1 % against 70.2 %.
+- **The augmented teacher's student is still not better** with NMS: 82.5 % lab and 70.8 % GTv2, against 85.0 % and 71.1 % for `kdgtNL`. The teacher's gain from the blur/dark copies does not reach its student. Why was not tested.
+- **The pipeline is NMS-free too** (`src/stage1_detector.py`). Box-level precision there has the same duplicates.
+
+**Possible fixes:**
+
+- **Add NMS in the pipeline.** No retraining, about 0.1 ms for a few boxes.
+- **Distill only the one2many head.** This keeps the one-box-per-object head trained only on the labels. It needs a retrain, about 8 h per student.
+
+**Not checked:**
+
+- The NMS conf thresholds (0.10–0.25) were chosen on the test set.
+- Alarm-level precision, where only boxes away from a knife matter, was not measured. It is what the pipeline actually needs.
+
 Weights (dev PC only): `weights/stage1_repro846_kdgtaug_p250_augteacherbest{,_last}.pt`. Logs (gitignored): `results/stage1_kd/repro846_kdgtaug_p250_augteacherbest.log`, `results/stage1_kd/rules/compare_kdgtaugF.log`.
 
 ## Not checked
