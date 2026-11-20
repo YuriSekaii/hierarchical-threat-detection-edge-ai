@@ -520,7 +520,7 @@ At a fixed conf of 0.25 (NMS, lab), P / R / false boxes:
 - `best.pt` of the new runs scores lower than `last.pt` on the lab test (C1 75.7 %, L 74.9 %), as for C before.
 - No TensorRT export or Edge timing.
 
-Weights (dev PC only): `weights/stage1_repro846_labgtaug_p250_seed1{,_last}.pt`, `weights/stage1_repro846_labgtaugl_p250{,_last}.pt`. Data (dev PC only): `data/stage1_negatives/lab_gt_aug_light`. Contact sheet of the half-length copies: `results/stage1_kd/aug_samples_lab_gt_aug_light.jpg`. Output: `results/stage1_kd/aug_invest/invest_seed1_light.log`. Training logs (gitignored): `results/stage1_kd/repro846_labgtaug_p250_seed1.log`, `results/stage1_kd/repro846_labgtaugl_p250.log`.
+Weights (dev PC only): `weights/stage1_repro846_labgtaug_p250_seed1{,_last}.pt`, `weights/stage1_repro846_labgtaugl_p250{,_last}.pt`. Data (dev PC only): `data/stage1_negatives/lab_gt_aug_light`. Contact sheet of the half-length copies: `results/stage1_kd/aug_samples_lab_gt_aug_light.jpg`. With C1 and L added, 108 lab knives are missed by all eight models (53 fast, 29 dark); `results/stage1_kd/aug_invest/never_found.json` now holds these 108. Output (gitignored): `results/stage1_kd/aug_invest/invest_seed1_light.log`. Training logs (gitignored): `results/stage1_kd/repro846_labgtaug_p250_seed1.log`, `results/stage1_kd/repro846_labgtaugl_p250.log`.
 
 ## Not checked
 
