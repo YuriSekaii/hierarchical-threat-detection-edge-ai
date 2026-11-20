@@ -18,9 +18,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sweep_stage1_rules as S
 
 MODELS = {"A labgtL": "labgtL", "C labgtaugL": "labgtaugL", "E teachergtL": "teachergtL", "F teachergtaug": "teachergtaug",
-          "B kdgtNL": "kdgtNL", "H kdgtaugFL": "kdgtaugFL"}
+          "B kdgtNL": "kdgtNL", "H kdgtaugFL": "kdgtaugFL",
+          "C1 labgtaugS1L": "labgtaugS1L", "L labgtaugltL": "labgtaugltL"}  # C1 = C with seed 1 (noise), L = half-length blur
 PAIRS = (("A labgtL", "C labgtaugL"), ("E teachergtL", "F teachergtaug"), ("B kdgtNL", "H kdgtaugFL"),
-         ("F teachergtaug", "H kdgtaugFL"), ("E teachergtL", "B kdgtNL"))
+         ("F teachergtaug", "H kdgtaugFL"), ("E teachergtL", "B kdgtNL"),
+         ("C labgtaugL", "C1 labgtaugS1L"), ("A labgtL", "C1 labgtaugS1L"), ("A labgtL", "L labgtaugltL"), ("C labgtaugL", "L labgtaugltL"))
 TS = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
 
 

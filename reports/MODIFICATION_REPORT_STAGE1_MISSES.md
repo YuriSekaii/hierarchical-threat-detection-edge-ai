@@ -430,10 +430,97 @@ Model letters:
 - **The B-vs-H gap has two possible causes:** the training noise above, or teacher F being `best.pt` from epoch 153 while E was `last.pt` from epoch 250. These cannot be told apart without repeat runs.
 
 **Not checked:**
-- No recipe was trained twice with a different seed, so the noise level is inferred from churn, not measured.
+- No recipe was trained twice with a different seed, so the noise level is inferred from churn, not measured. (Measured in the next section: about 3 points.)
 - The working points were chosen on the test set.
 
 Weights (dev PC only): `weights/stage1_repro846_kdgtaug_p250_augteacherbest{,_last}.pt`. Logs (gitignored): `results/stage1_kd/repro846_kdgtaug_p250_augteacherbest.log`, `results/stage1_kd/rules/compare_kdgtaugF.log`.
+
+### Run-to-run noise and half-length blur (2026-11-21)
+
+**Questions:**
+1. How much does the same recipe move between two training runs?
+2. Does a weaker blur keep the gain on fast swings while keeping the student confident on sharp knives?
+
+**What was run.** Two YOLO26s runs in parallel, 250 epochs each, same recipe as C (MuSGD, Ultralytics 8.4.6):
+- **C1** (GPU 0): C repeated with seed 1 instead of 0. Data `lab_gt_aug`.
+- **L** (GPU 1): C with half the blur length, 0.15–0.6 box sides instead of 0.3–1.2. Same 1,840 frames, same seed 0, same blur/dark choices. Data `lab_gt_aug_light`.
+
+```bash
+AUG_NAME=lab_gt_aug_light BLUR_RANGE=0.15,0.6 .venv/Scripts/python.exe results/samples/poc/augment_stage1_blur_dark.py
+CUDA_VISIBLE_DEVICES=0 SEED=1 SUFFIX=_seed1 PATIENCE=250 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . labgtaug
+CUDA_VISIBLE_DEVICES=1 PATIENCE=250 DEV=0 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . labgtaugl
+EXTRA_DETS="labgtaugS1=...;labgtaugS1L=...;labgtauglt=...;labgtaugltL=..." .venv/Scripts/python.exe results/samples/poc/sweep_stage1_rules.py . cache lab   # and cache gtv2
+.venv/Scripts/python.exe results/samples/poc/investigate_stage1_aug.py
+```
+
+Both runs went the full 250 epochs and took 7.3 h each. Scoring is the same as the section above: NMS 0.5, then each model's best recall at precision ≥ 0.90. `last.pt` is used, as for A and C.
+
+**Working points (NMS 0.5, best recall at P ≥ 0.90):**
+
+| Model | Lab: conf | Lab: P | Lab: R | Lab: false boxes | gtv2: conf | gtv2: P | gtv2: R |
+|---|---|---|---|---|---|---|---|
+| A, no augmentation | 0.20 | 90.8 | 78.3 | 109 | 0.45 | 90.1 | 66.4 |
+| C, blur/dark, seed 0 | 0.20 | 90.3 | 79.5 | 117 | 0.60 | 91.9 | 63.5 |
+| **C1, blur/dark, seed 1** | 0.10 | 91.2 | **82.3** | 109 | 0.55 | 90.4 | 66.4 |
+| **L, half-length blur** | 0.40 | 90.2 | **75.3** | 113 | 0.55 | 90.9 | 64.3 |
+| B, KD from E (best student) | 0.10 | 90.3 | 85.0 | 125 | 0.40 | 91.4 | 71.1 |
+
+At a fixed conf of 0.25 (NMS, lab), P / R / false boxes:
+- C: 91.2 / 78.7 / 104
+- C1: 92.9 / 78.3 / 82
+- L: 89.3 / 78.4 / 129
+
+**Lab recall by knife group, at each model's working point:**
+
+| Group | Knives | A | C | C1 | L | B |
+|---|---|---|---|---|---|---|
+| Slow (< 0.5) | 264 | 87.9 % | 91.3 % | 92.4 % | 87.1 % | 93.9 % |
+| Medium (0.5–2) | 700 | 84.6 % | 83.6 % | 87.1 % | 80.3 % | 89.3 % |
+| Fast (2–4) | 223 | 67.3 % | 69.5 % | 73.1 % | 64.6 % | 78.5 % |
+| Very fast (≥ 4) | 92 | 48.9 % | 55.4 % | 52.2 % | 47.8 % | 58.7 % |
+| Dark (grey < 100) | 207 | 60.9 % | 62.3 % | 68.6 % | 58.0 % | 74.9 % |
+| Bright (≥ 140) | 634 | 86.1 % | 86.3 % | 87.9 % | 84.4 % | 89.4 % |
+| Fast and dark | 94 | 50.0 % | 55.3 % | 63.8 % | 51.1 % | 66.0 % |
+
+**Churn on the lab test:**
+
+| From → to | Gained | Lost | Net |
+|---|---|---|---|
+| C → C1 (only the seed changes) | 80 | 41 | +39 |
+| A → C1 | 95 | 40 | +55 |
+| A → L | 47 | 89 | −42 |
+| C → L | 38 | 96 | −58 |
+
+**Findings:**
+- **The noise is now measured, and it is as large as feared.**
+  - The same recipe with another seed moves lab recall by 2.8 points (79.5 → 82.3) and gtv2 recall by 2.9 points (63.5 → 66.4).
+  - It changes 121 lab knives.
+  - Any single-run difference under about 3 points is not a result. That includes C vs A in the earlier sections, and H vs B.
+- **Blur/dark augmentation helps the plain student.**
+  - Averaged over two seeds, C and C1 reach 80.9 % lab recall against 78.3 % for A (one run).
+  - Fast-and-dark recall is 55.3 % and 63.8 % against 50.0 %.
+  - Both seeds beat A on slow knives as well (91.3 % and 92.4 % vs 87.9 %).
+  - On gtv2 the two seeds bracket A (63.5 and 66.4 vs 66.4), so the augmentation does not cost recall on the old test set.
+- **Half-length blur is worse, not better.**
+  - L is the weakest student on the lab test: 75.3 %. That is 4.2 points under C, 7.0 under C1 and 3.0 under A.
+  - It is lower in every group, including slow knives (87.1 %) and bright knives.
+  - At conf 0.25 it has the most false boxes (129). To reach P 0.90 it needs conf 0.40, and recall falls there.
+  - On gtv2 it is inside the noise (64.3 %).
+  - The idea was that a weaker blur keeps the student confident on sharp knives. The data does not support it. With the full blur, slow-knife recall was already higher than without augmentation, so there was no lost confidence to win back.
+  - With one run of L, part of the 4–7 point gap may still be noise. It is larger than the seed gap, though, and it points the same way in every group.
+- **The plain augmented student comes close to the distilled one.**
+  - C1 (82.3 %) is 2.7 points under B (85.0 %), inside the noise.
+  - B is still the best single run.
+
+**Next.** One more seed of B (KD from E) would tell whether distillation really adds about 3 points over the augmented student. Alternatively, KD from E on `lab_gt_aug` puts both gains into one model. Neither was run.
+
+**Not checked:**
+- Only two seeds of C and one run of L and of B. The spread of a recipe from two runs is a rough estimate.
+- Working points are chosen on the test set.
+- `best.pt` of the new runs scores lower than `last.pt` on the lab test (C1 75.7 %, L 74.9 %), as for C before.
+- No TensorRT export or Edge timing.
+
+Weights (dev PC only): `weights/stage1_repro846_labgtaug_p250_seed1{,_last}.pt`, `weights/stage1_repro846_labgtaugl_p250{,_last}.pt`. Data (dev PC only): `data/stage1_negatives/lab_gt_aug_light`. Contact sheet of the half-length copies: `results/stage1_kd/aug_samples_lab_gt_aug_light.jpg`. Output: `results/stage1_kd/aug_invest/invest_seed1_light.log`. Training logs (gitignored): `results/stage1_kd/repro846_labgtaug_p250_seed1.log`, `results/stage1_kd/repro846_labgtaugl_p250.log`.
 
 ## Not checked
 
