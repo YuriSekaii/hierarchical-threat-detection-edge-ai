@@ -1,6 +1,7 @@
 """Offline motion-blur / darkening augmentation for the Stage 1 lab_gt set.
 
   .venv/Scripts/python.exe results/samples/poc/augment_stage1_blur_dark.py
+  AUG_NAME=lab_gt_aug_light BLUR_RANGE=0.15,0.6 .venv/Scripts/python.exe results/samples/poc/augment_stage1_blur_dark.py   # half-length blur
 
 Reads data/stage1_negatives/lab_gt, writes one augmented copy of every lab knife frame to
 data/stage1_negatives/lab_gt_aug (train.txt = lab_gt train lines + the copies) and a contact sheet
@@ -16,9 +17,12 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 SRC = os.path.join(REPO, "data", "stage1_negatives", "lab_gt")
-DST = os.path.join(REPO, "data", "stage1_negatives", "lab_gt_aug")
+AUG_NAME = os.environ.get("AUG_NAME", "lab_gt_aug")  # lab_gt_aug_light for the half-length blur run
+DST = os.path.join(REPO, "data", "stage1_negatives", AUG_NAME)
 LAB_IMAGES = os.path.join(REPO, "data", "lab_stage1_gt", "images")
-SHEET = os.path.join(REPO, "results", "stage1_kd", "aug_samples.jpg")
+SHEET = os.path.join(REPO, "results", "stage1_kd", "aug_samples.jpg" if AUG_NAME == "lab_gt_aug" else f"aug_samples_{AUG_NAME}.jpg")
+# blur length as a share of the knife box's longer side; same seed, so a different range changes only the blur length
+BLUR_RANGE = tuple(float(v) for v in os.environ.get("BLUR_RANGE", "0.3,1.2").split(","))
 SEED = 0
 BLUR_P, DARK_P = 0.7, 0.5
 REGION_SCALE = 2.5
@@ -57,7 +61,7 @@ def motion_kernel(angle, length):
 
 def kernel_length(box, rng):
     longer = max(box[2] - box[0], box[3] - box[1])
-    return max(5, int(round(rng.uniform(0.3, 1.2) * longer)))
+    return max(5, int(round(rng.uniform(*BLUR_RANGE) * longer)))
 
 
 def expand_box(box, length, angle, w, h):

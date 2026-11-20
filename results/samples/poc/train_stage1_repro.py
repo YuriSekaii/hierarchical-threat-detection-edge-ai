@@ -16,6 +16,8 @@ means MuSGD(lr 0.002, muon 0.5, sgd 0.5). 8.4.9 (in .venv) picks AdamW(0.002) or
   EPOCHS=250 PATIENCE=250 python train_stage1_repro.py <REPO> teachergtaug   # YOLO26x teacher on lab_gt_aug
   PATIENCE=250 python train_stage1_repro.py <REPO> labgtaug   # as labgt, on lab_gt_aug = lab_gt + motion-blurred / darkened knife frames
   TEACHER=weights/x.pt SUFFIX=_x PATIENCE=250 python train_stage1_repro.py <REPO> kdgtaug   # lab_gt_aug + distillation from TEACHER
+  PATIENCE=250 python train_stage1_repro.py <REPO> labgtaugl   # as labgtaug, on lab_gt_aug_light (half-length blur)
+  SEED=1 SUFFIX=_seed1 PATIENCE=250 python train_stage1_repro.py <REPO> labgtaug   # same recipe, another seed (noise check)
 """
 import os, shutil, sys
 
@@ -43,6 +45,8 @@ if __name__ == "__main__":
         size["patience"] = int(PAT)
     if os.environ.get("EPOCHS"):  # the teacher recipe is 200; EPOCHS=250 matches the students
         size["epochs"] = int(os.environ["EPOCHS"])
+    if os.environ.get("SEED"):  # Ultralytics default is 0; another seed repeats a recipe to measure run-to-run noise
+        size["seed"] = int(os.environ["SEED"])
     model = YOLO(r"D:/Backup/yolo26x.pt" if MODE.startswith("teacher") else r"D:/Backup/yolo26s.pt")
     if MODE.startswith("kd"):
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -52,7 +56,7 @@ if __name__ == "__main__":
             q.requires_grad = False
         model.add_callback("on_train_start", lambda t: setattr(t.model, "criterion", KD(t.model.init_criterion(), teacher, 1.0)))
     r = model.train(
-        data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "labgtaug": "lab_gt_aug", "teachergt": "lab_gt", "teachergtaug": "lab_gt_aug", "kdgt": "lab_gt", "kdgtaug": "lab_gt_aug"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
+        data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "labgtaug": "lab_gt_aug", "teachergt": "lab_gt", "teachergtaug": "lab_gt_aug", "kdgt": "lab_gt", "kdgtaug": "lab_gt_aug", "labgtaugl": "lab_gt_aug_light"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
         workers=4, device=int(os.environ.get("DEV", 0)), degrees=15.0, mosaic=1.0, mixup=0.1, plots=False, exist_ok=True,
         project=os.path.join(REPO, "results", "stage1_kd"), name=f"repro846_{TAG}", **size, **extra)
     shutil.copy2(os.path.join(str(r.save_dir), "weights", "best.pt"), out)
