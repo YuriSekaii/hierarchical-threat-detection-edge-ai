@@ -108,7 +108,7 @@ def sheets():
 
 def load():
     vd = os.path.join(OUT, "votes")
-    voters = sorted(f[:-5] for f in os.listdir(vd) if f.endswith(".json") and f != "claude.json")
+    voters = sorted(f[:-5] for f in os.listdir(vd) if f.endswith(".json") and f not in ("claude.json", "claude_recheck.json"))
     votes = {v: json.load(open(os.path.join(vd, v + ".json"))) for v in voters}
     cp = os.path.join(vd, "claude.json")
     return voters, votes, json.load(open(cp)) if os.path.exists(cp) else {}
@@ -140,6 +140,8 @@ def final():
     A result that differs from an earlier human visibility answer goes back to the human ('?', human_conflict)."""
     items = json.load(open(os.path.join(OUT, "items.json")))
     voters, votes, claude = load()
+    rp = os.path.join(OUT, "votes", "claude_recheck.json")  # Claude's look at unanimous votes and the human's "cannot tell"
+    re = json.load(open(rp)) if os.path.exists(rp) else {}
     boxes = {}
     new = human(os.path.join(OUT, "human", "votes.csv"), boxes)
     old = human(os.path.join(VIS_DIR, "human", "votes.csv"))
@@ -152,14 +154,16 @@ def final():
             out[i] = ("d", "duplicate")
         elif new.get(i) in ("c", "w", "m", "b", "h", "x"):
             out[i] = ({"w": "c", "m": "h"}.get(new[i], new[i]), "human_box") if i in boxes else (new[i], "human")
-        elif new.get(i) == "u":
-            out[i] = ("?", "human_unsure")
+        elif new.get(i) == "u":  # Claude's second look settles it only when sure
+            out[i] = (re[i]["label"], "claude_after_human_unsure") if re.get(i, {}).get("sure") else ("?", "human_unsure")
         else:
             lab, src = decide([votes[v].get(i) for v in voters], claude.get(i))
             if old.get(i) in ("c", "b", "h", "x") and lab == "?":
                 lab, src = old[i], "human_earlier"  # Claude unsure: the human's earlier answer stands
             elif old.get(i) in ("c", "b", "h", "x") and lab not in (None, old[i]):
                 lab, src = "?", "human_conflict"
+            if src == "vote" and i in re and re[i]["label"] != lab:
+                lab, src = "?", "claude_recheck"  # Claude's second look at a unanimous vote differs: to the human
             out[i] = (lab, src)
     return items, out, boxes
 
@@ -190,6 +194,9 @@ def tally():
     print(f"needs Claude: {len(need)}; boxes drawn by the human: {len(boxes)}")
 
 
+RECHECK_TEXT = {"h": "hidden", "b": "blurred", "w": "box covers only part of the knife (draw it: d)", "?": "not sure"}
+
+
 def review():
     """Claude-unsure knives and conflicts with an earlier human answer -> miss_check/human/{items.json, votes.csv}
     for review_misses.bat (label_review_ui.py --vis --misses)."""
@@ -197,6 +204,8 @@ def review():
     items = {it["id"]: it for it in items_l}
     voters, votes, claude = load()
     prev = human(os.path.join(VIS_DIR, "human", "votes.csv"))
+    rp = os.path.join(OUT, "votes", "claude_recheck.json")
+    re_ = json.load(open(rp)) if os.path.exists(rp) else {}
     d = os.path.join(OUT, "human")
     os.makedirs(d, exist_ok=True)
     path = os.path.join(d, "votes.csv")
@@ -204,9 +213,7 @@ def review():
     out, rows = [], []
     for i in sorted(fin, key=int):
         src = fin[i][1]
-        if src not in ("claude_unsure", "human_conflict", "human", "human_unsure"):
-            continue
-        if src in ("human", "human_unsure") and i not in old:
+        if src not in ("claude_unsure", "human_conflict", "claude_recheck") and i not in old:  # keep every row already in the review
             continue
         c = claude.get(i, {"label": ""})
         it = items[int(i)]
@@ -218,8 +225,9 @@ def review():
         o = old.get(i, {})
         rows.append(dict(tile_id=i, img=it["img"], split="test", take=take, frame=int(f), kind="miss",
                          **{v: votes[v].get(i, "") for v in voters}, claude_label=c["label"], claude_conf=0.5,
-                         flag_reason=f"your earlier answer: {prev[i]}" if src == "human_conflict" else "",
-                         human_label=o.get("human_label", ""), final_label=o.get("final_label", ""),
+                         flag_reason=f"your earlier answer: {prev[i]}" if src == "human_conflict" else
+                         f"voters: c, Claude: {RECHECK_TEXT.get(re_[i]['label'], re_[i]['label'])}" if src == "claude_recheck" else "",
+                         human_label=o.get("human_label", ""), human_box=o.get("human_box", ""), final_label=o.get("final_label", ""),
                          final_source=o.get("final_source", "") or "needs_human", last_update=o.get("last_update", "")))
     json.dump(out, open(os.path.join(d, "items.json"), "w"), indent=0)
     fields = ["tile_id", "img", "split", "take", "frame", "kind"] + voters + ["n_votes", "agree", "flag_reason", "claude_label",

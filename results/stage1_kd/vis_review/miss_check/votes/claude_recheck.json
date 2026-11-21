@@ -1,0 +1,103 @@
+{
+"230": {
+"label": "h",
+"sure": true
+},
+"577": {
+"label": "h",
+"sure": true
+},
+"901": {
+"label": "h",
+"sure": true
+},
+"921": {
+"label": "h",
+"sure": true
+},
+"999": {
+"label": "h",
+"sure": true
+},
+"1007": {
+"label": "h",
+"sure": true
+},
+"1011": {
+"label": "h",
+"sure": true
+},
+"1082": {
+"label": "h",
+"sure": true
+},
+"1273": {
+"label": "h",
+"sure": true
+},
+"368": {
+"label": "b",
+"sure": true
+},
+"691": {
+"label": "b",
+"sure": true
+},
+"697": {
+"label": "b",
+"sure": true
+},
+"888": {
+"label": "b",
+"sure": true
+},
+"1320": {
+"label": "b",
+"sure": true
+},
+"1368": {
+"label": "b",
+"sure": true
+},
+"1482": {
+"label": "b",
+"sure": true
+},
+"373": {
+"label": "w",
+"sure": true,
+"note": "label box covers the blade only, not the handle"
+},
+"253": {
+"label": "?",
+"sure": false
+},
+"1084": {
+"label": "?",
+"sure": false
+},
+"700": {
+"label": "h",
+"sure": true
+},
+"997": {
+"label": "h",
+"sure": true
+},
+"1220": {
+"label": "h",
+"sure": true
+},
+"442": {
+"label": "?",
+"sure": false
+},
+"633": {
+"label": "h",
+"sure": false
+},
+"834": {
+"label": "h",
+"sure": false
+}
+}

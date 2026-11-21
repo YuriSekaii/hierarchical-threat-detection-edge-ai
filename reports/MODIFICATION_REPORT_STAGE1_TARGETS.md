@@ -197,6 +197,28 @@ The missed knives are as large as the found ones (median long side 122 px agains
 - **Most misses are a knife the model does not see at all** (56 of 80), not a threshold problem. Lowering the conf gains at most the 20 "right box, low conf" knives.
 - **Slash (034) is the weak take** at 76 % clear recall; stabs and cut-down are at 83–86 %. Thrust-chest and walking takes are near 100 %.
 
+### Claude's look at the unanimous votes and the human's "cannot tell" (2026-11-21)
+
+The 61 missed knives that all four voters called clear, and the 6 the human could not tell, had never been looked at by Claude. Claude looked at all 67 (400-px crops). The result is in `miss_check/votes/claude_recheck.json`.
+- **Of the 61, Claude agrees on 42.**
+  - It sees a hidden knife in 9 (230, 577, 901, 921, 999, 1007, 1011, 1082, 1273) and a blurred knife in 7 (368, 691, 697, 888, 1320, 1368, 1482).
+  - In 373 the label box covers the blade but not the handle. 253 and 1084 Claude could not settle.
+- **Claude is one voice against four,** and the human kept 19 of the 33 earlier "hidden/blurred" calls as clear. So these 19 are not overruled: they go to `review_misses.bat` with the note "voters: c, Claude: …". They count as unsure until answered.
+- **Of the human's 6 "cannot tell",** Claude is sure that 700, 997 and 1220 show a hidden knife (a dark shape in the hand against the black chair or trousers), and they are now labelled hidden. 442, 633 and 834 stay unsure.
+
+`check_stage1_misses.py` changes:
+- `final()` reads `claude_recheck.json`. A unanimous vote that Claude's look differs from becomes `?` (`claude_recheck`). A human "cannot tell" takes Claude's label when Claude is sure.
+- `review()` keeps every row already in the review, the drawn boxes included.
+
+**Lab test while the 19 wait:** 911 clear, 290 hidden, 28 unsure.
+
+| Model | Clear R now | Clear R if all 19 are clear | Fast-hand P @0.20 |
+|---|---|---|---|
+| B KD from E @0.20 | 92.9 | 91.4 | 95.8 (16); 98.1 (7) with `MATCH=cover` |
+| F teacher blur/dark @0.10 | 95.0 | 93.9 | 94.9 (20) at 0.20 |
+
+B finds 4 of the 19 at 0.20 and F finds 8 at 0.10. Either way B stays above 90 % at conf 0.20.
+
 ## Results with the human's visibility answers (before the label fixes)
 
 `eval_stage1_targets.py` after `tally` with `vis_review/human/votes.csv` (991 clear, 208 blurred, 272 hidden). P with false boxes in brackets; precision does not depend on the visibility labels and is unchanged.
@@ -281,8 +303,9 @@ First run (816 clear knives):
 
 ## Not checked
 
-- 6 knives the human could not tell in `review_misses.bat` stay "unsure" (12 unsure in all).
-- The 61 knives the four voters called clear without disagreement were not looked at by Claude or the human, per the rule.
+- 19 knives wait in `review_misses.bat` (Claude differs from the four voters). After they are answered, re-run `check_stage1_misses.py tally`, `label_stage1_visibility.py tally` and `eval_stage1_targets.py`.
+- The 42 missed knives that Claude and all four voters call clear were not seen by the human.
+- Only the missed clear knives were looked at this closely; found clear knives were not re-checked, so the clear group may still hold hidden knives the models happen to find.
 - Only the missed clear knives were checked for label errors. The knives the models find, and the blurred and hidden ones, were not re-checked. Duplicates were checked in every frame.
 - The duplicate list is Claude's call alone, by eye, without the four voters: one knife per take makes it a geometric check.
 - `MATCH=cover` is looser than the IoU 0.2 rule used in every earlier report. It is shown next to the standard numbers, not instead of them.
