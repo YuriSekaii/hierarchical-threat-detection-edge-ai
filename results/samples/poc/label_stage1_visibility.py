@@ -149,6 +149,18 @@ def tally():
             need.append(it["id"])
         vis.setdefault(os.path.basename(it["img"]), {})[str(it["gt"])] = lab
         count[(lab, src)] = count.get((lab, src), 0) + 1
+    # check_stage1_misses.py (ids = items.json ids): d = second label on an already labelled knife, w = box misses the knife
+    byid = {str(it["id"]): it for it in items}
+    over = dict(json.load(open(os.path.join(OUT, "miss_check", "result.json")))) if os.path.exists(os.path.join(OUT, "miss_check", "result.json")) else {}
+    if os.path.exists(os.path.join(OUT, "miss_check", "duplicates.json")):
+        over.update({str(i): "d" for i in json.load(open(os.path.join(OUT, "miss_check", "duplicates.json")))["ids"]})
+    for i, lab in over.items():
+        if lab:
+            it = byid[i]
+            old = vis[os.path.basename(it["img"])][str(it["gt"])]
+            vis[os.path.basename(it["img"])][str(it["gt"])] = lab
+            if old != lab:
+                count[(lab, "miss_check")] = count.get((lab, "miss_check"), 0) + 1
     json.dump(vis, open(os.path.join(OUT, "visibility.json"), "w"), indent=0)
     json.dump(need, open(os.path.join(OUT, "needs_claude.json"), "w"))
     for k in sorted(count, key=str):

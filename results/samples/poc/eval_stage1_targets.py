@@ -38,12 +38,22 @@ def nms(bs, thr=0.5):
     return out
 
 
+COVER = os.environ.get("MATCH") == "cover"  # also a hit: the box holds >= half of the knife label (hand + knife boxes)
+
+
+def overlap(b, g):
+    if not COVER:
+        return S.calculate_iou(b, g)
+    iw, ih = max(0, min(b[2], g[2]) - max(b[0], g[0])), max(0, min(b[3], g[3]) - max(b[1], g[1]))
+    return max(S.calculate_iou(b, g), S.IOU_THRESH if iw * ih >= 0.5 * (g[2] - g[0]) * (g[3] - g[1]) else 0.0)
+
+
 def match(rec, d, t):
     """Greedy match as evaluate_matches, after NMS: (hit per gt, [(box, is_tp)])."""
     bs = nms([tuple(b["xyxy"]) + (b["conf"],) for b in rec["det"][d] if b["conf"] >= t])
     got, out = [False] * len(rec["gt"]), []
     for b in bs:
-        cand = [(S.calculate_iou(b[:4], g), i) for i, g in enumerate(rec["gt"]) if not got[i]]
+        cand = [(overlap(b[:4], g), i) for i, g in enumerate(rec["gt"]) if not got[i]]
         v, i = max(cand, default=(0.0, -1))
         tp = v >= S.IOU_THRESH
         if tp:
@@ -57,7 +67,16 @@ def wrists(rec):
 
 
 recs = S.load_cache("lab")
-frame = {(r["category"], int(os.path.splitext(r["path"])[0].rsplit("_f", 1)[1])): r for r in recs}
+dropped = {"d": 0, "x": 0}
+for r in recs:  # d = second label on an already labelled knife, x = no knife (check_stage1_misses.py): not knives to find
+    v = VIS.get(os.path.basename(r["path"]), {})
+    keep = [j for j in range(len(r["gt"])) if v.get(str(j)) not in dropped]
+    for j in range(len(r["gt"])):
+        if v.get(str(j)) in dropped:
+            dropped[v[str(j)]] += 1
+    r["vis"] = [v.get(str(j)) or "?" for j in keep]
+    r["gt"] = [r["gt"][j] for j in keep]
+frame ={(r["category"], int(os.path.splitext(r["path"])[0].rsplit("_f", 1)[1])): r for r in recs}
 for (take, f), r in frame.items():
     ws = wrists(r)
     speed = []
@@ -75,11 +94,13 @@ def hand_speed(rec, box):
     return min(near, key=lambda v: v[0])[1] if near else "away"
 
 
-vis = [VIS.get(os.path.basename(r["path"]), {}).get(str(j)) or "?" for r in recs for j in range(len(r["gt"]))]
+vis = [v for r in recs for v in r["vis"]]
 n = len(vis)
-groups = {g: [i for i, v in enumerate(vis) if v == g] for g in ("c", "b", "h", "?", "x")}
-print(f"Lab test, {n} knives (with the by-eye fixes): clear {len(groups['c'])}, blurred {len(groups['b'])}, "
-      f"hidden {len(groups['h'])}, unsure {len(groups['?'])}, no knife {len(groups['x'])}. Fast hand = speed >= {FAST} torso / 10 frames.\n")
+groups = {g: [i for i, v in enumerate(vis) if v == g] for g in ("c", "b", "h", "?", "w")}
+print(f"Lab test, {n} knives (with the by-eye fixes; dropped {dropped['d']} duplicate and {dropped['x']} no-knife labels): "
+      f"clear {len(groups['c'])}, blurred {len(groups['b'])}, hidden {len(groups['h'])}, unsure {len(groups['?'])}, "
+      f"box misses the knife {len(groups['w'])}. Fast hand = speed >= {FAST} torso / 10 frames."
+      f"{' MATCH=cover: a box holding >= half the knife label is a hit.' if COVER else ''}\n")
 
 # how well does wrist speed separate the blurred knives from the clear ones?
 sp = [hand_speed(r, g) for r in recs for g in r["gt"]]

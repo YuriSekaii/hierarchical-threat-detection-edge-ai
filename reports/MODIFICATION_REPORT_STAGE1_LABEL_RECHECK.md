@@ -124,6 +124,10 @@ The `b` key does nothing on these tiles (they have box `a` only). The 20 "b" ans
 
 Overall recall mixes knives no one can see with clear ones. `MODIFICATION_REPORT_STAGE1_TARGETS.md` scores them apart.
 
+**Correction (later on 2026-11-21).** 34 of the 113 added test knives are a second box on a knife that was already labelled. A detector box over the hand and the knife overlaps a knife-only label by less than IoU 0.2, so `collect` counted it as an unlabelled spot. They are dropped through `results/stage1_kd/vis_review/miss_check/duplicates.json` (`MODIFICATION_REPORT_STAGE1_TARGETS.md`, "Label errors among the missed clear knives").
+- The 51 knives added on training frames and the 61 new knife frames in `lab_gt_aug_hn` were not checked for the same problem.
+- `collect` should test overlap with "box holds half the label" as well as IoU before a spot is called unlabelled.
+
 ## Not checked
 
 - 6 test and 11 training/new-frame items stay "cannot tell" and are left out.

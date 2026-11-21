@@ -59,7 +59,85 @@ The four voters agreed on 810 of 1,489 knives. Claude looked at the other 679 an
 
 Hand speed separates blurred from clear knives, but not cleanly: a third of clear knives are at a fast hand.
 
-## Results with the human's visibility answers (final)
+## Label errors among the missed clear knives (2026-11-21, current numbers)
+
+**Question:** are the clear knives the models miss labelled right?
+
+**What was run** (`results/samples/poc/check_stage1_misses.py`):
+
+```bash
+.venv/Scripts/python.exe results/samples/poc/check_stage1_misses.py sheets   # 163 knives, 14 sheets
+# voters -> vis_review/miss_check/votes/haiku{1,2,3,4}.json; Claude -> votes/claude.json, duplicates.json
+.venv/Scripts/python.exe results/samples/poc/check_stage1_misses.py tally
+.venv/Scripts/python.exe results/samples/poc/check_stage1_misses.py review    # -> review_misses.bat
+.venv/Scripts/python.exe results/samples/poc/label_stage1_visibility.py tally  # folds result.json + duplicates.json in
+.venv/Scripts/python.exe results/samples/poc/eval_stage1_targets.py            # MATCH=cover for the second table
+```
+
+- **Items:** every clear knife that B misses at conf 0.20 or F misses at conf 0.10 (151), plus the 12 knives labelled "no knife". Each cell shows the label box (green) and B's best box near it (yellow, with conf).
+- **Votes:** the by-eye rule, with labels c / w (knife there, box misses it) / b / h / x.
+  - cheapag could not vote: its current model cannot open images. Its first answer copied the labels from `items.json`, and a second try answered "cannot see images". A fourth Haiku agent voted in its place.
+  - The four voters agreed on 98 of 163. Claude settled 48 and was unsure of 17.
+  - A result that differs from an earlier human answer goes back to the human. Where Claude is unsure, the human's earlier answer stands.
+
+**Finding 1: duplicate labels.** 51 test frames have two or three knife labels, and every lab take has one knife. Claude checked all 51 by eye (`miss_check/dup_sheets/`):
+- 43 labels are a second box on a knife that is already labelled. Only one of the two can be matched, so the other always counted as a miss.
+- 34 of the 43 come from the 113 test knives added by `review_stage1_candidates.py`.
+  - Cause: the candidate step picked up detector boxes that matched no label at IoU 0.2. A box over the hand and the knife overlaps a knife-only label by less than 0.2, so the knife was added again.
+- Fix: one label per knife. The original box is kept, unless it misses the knife (588, 1345); the duplicates are listed in `miss_check/duplicates.json`. Seven frames with boxes on two different hands were left as they are.
+
+**Finding 2: other label errors.**
+
+| Result on the 163 | Knives |
+|---|---|
+| label right, clear | 86 |
+| hidden, not clear | 12 |
+| blurred, not clear | 1 |
+| no knife (dropped from the labels) | 6 (943 on a face, plus the human's earlier "no knife" kept where Claude was unsure) |
+| duplicate (dropped) | 17 here, 43 in all |
+| back to the human (`review_misses.bat`) | 41 |
+
+The 41 for the human:
+- 28 knives the human called clear but the voters and Claude call hidden or blurred;
+- 8 of the human's 11 "no knife" answers. In 6 of them (612, 623, 631, 633, 641, 649) all voters see a clear knife. Those answers were given 10 in 28 seconds and look like a key slip;
+- 5 that Claude could not settle.
+
+Until they are answered, these 41 are scored as "unsure".
+
+**Lab test after the fixes.** 1,440 knives: 909 clear, 201 blurred, 283 hidden, 47 unsure; 43 duplicate and 6 no-knife labels dropped. P with false boxes in brackets.
+
+| Model | Clear R @0.10 | Clear R @0.20 | Clear R @0.30 | Fast-hand P @0.20 | All P @0.20 |
+|---|---|---|---|---|---|
+| Shipped detector | 87.9 | 84.8 | | 90.8 (34) | 66.3 (534) |
+| A YOLO26s `lab_gt` | 90.6 | 88.1 | | 94.9 (18) | 94.3 (68) |
+| C1 blur/dark, seed 1 | 91.4 | 89.7 | | 95.3 (17) | 96.1 (46) |
+| **B KD from E** | 93.4 | **92.6** | 90.9 | 95.8 (16) | 95.8 (52) |
+| F teacher blur/dark | 94.6 | 93.1 | | 94.7 (21) | 94.5 (70) |
+
+Dropping the duplicates turns some hand-plus-knife boxes back into false boxes: B's fast-hand false boxes at 0.20 go from 7 to 16. With `MATCH=cover`, a box that holds at least half of the knife label also counts as a hit (one hit per knife):
+
+| Model (`MATCH=cover`) | Highest conf with clear R ≥ 90 % | Clear R | Blurred R | Fast-hand P | All P |
+|---|---|---|---|---|---|
+| A YOLO26s `lab_gt` | 0.10 | 90.9 | 59.2 | 95.7 (16) | 93.1 (87) |
+| C blur/dark | 0.10 | 91.4 | 66.2 | 97.7 (9) | 94.2 (73) |
+| C1 blur/dark, seed 1 | 0.10 | 91.6 | 65.7 | 95.8 (16) | 96.0 (50) |
+| L half blur | 0.10 | 91.6 | 68.2 | 95.0 (20) | 92.7 (94) |
+| **B KD from E** | **0.30** | **91.1** | 63.7 | **98.4 (6)** | **97.7 (28)** |
+| H KD from F | 0.30 | 90.1 | 59.2 | 97.8 (8) | 96.2 (46) |
+| E teacher | 0.25 | 90.2 | 58.2 | 97.5 (9) | 96.0 (48) |
+| F teacher blur/dark | 0.40 | 90.6 | 56.2 | 97.8 (8) | 96.7 (39) |
+
+B at conf 0.20 with `MATCH=cover`: clear R 92.8 %, fast-hand P 98.1 (7), all P 96.9 (39). Shipped detector: best 88.1 %.
+
+**What this shows:**
+- **Both targets are met by B on the fixed labels.** Clear-knife recall is 92.6 % at conf 0.20, inside the 90–95 % target. Fast-hand precision is 95.8 %, or 98.1 % when a hand-plus-knife box counts.
+- Most of the earlier "stops at 88 %" was the test labels:
+  - each duplicate box was a miss no model could avoid;
+  - the extra knives added by the review were often the same knife boxed again.
+- Every retrained student now reaches 90 % on clear knives. The shipped detector still does not.
+- **The 41 knives with the human can move this.** They are found 38–51 % of the time. If all of them end up clear, B's clear recall at 0.20 is 90.0 %; if none do, 92.6 %.
+
+## Results with the human's visibility answers (before the label fixes)
 
 `eval_stage1_targets.py` after `tally` with `vis_review/human/votes.csv` (991 clear, 208 blurred, 272 hidden). P with false boxes in brackets; precision does not depend on the visibility labels and is unchanged.
 
@@ -138,8 +216,10 @@ First run (816 clear knives):
 
 ## Not checked
 
-- The human answered all 232; 6 stay "cannot tell". The 12 "no knife" knives are not removed from the labels yet.
-- The clear knives the models miss were not yet checked for label errors (wrong box, not really clear).
+- 41 knives from the miss check wait in `review_misses.bat`. When they are answered, re-run `check_stage1_misses.py tally`, `label_stage1_visibility.py tally` and `eval_stage1_targets.py`.
+- Only the missed clear knives were checked for label errors. The knives the models find, and the blurred and hidden ones, were not re-checked. Duplicates were checked in every frame.
+- The duplicate list is Claude's call alone, by eye, without the four voters: one knife per take makes it a geometric check.
+- `MATCH=cover` is looser than the IoU 0.2 rule used in every earlier report. It is shown next to the standard numbers, not instead of them.
 - The visibility labels are from crops. A few "clear" knives may be partly hidden in the full frame.
 - Hand speed comes from pose 10 frames apart. A swing that starts and stops between two labelled frames looks slow. Boxes with no wrist found are not in the fast or slow groups.
 - Conf points are chosen on the test set.
@@ -151,5 +231,7 @@ First run (816 clear knives):
   - scripts `results/samples/poc/label_stage1_visibility.py`, `results/samples/poc/eval_stage1_targets.py`;
   - `review_visibility.bat`; `label_review_ui.py` gained `--vis` (keys c / b / h / x / u);
   - `results/stage1_kd/vis_review/{items.json, visibility.json, votes/*.json, claude_notes/, human/votes.csv, voter_prompt.md, clear_missed_B.jpg}`.
-- Gitignored: `results/stage1_kd/vis_review/eval_targets.log`.
+  - miss check: `results/samples/poc/check_stage1_misses.py`, `review_misses.bat`, `results/stage1_kd/vis_review/miss_check/{items.json, voter_prompt.md, votes/, duplicates.json, result.json, human/, sheets/, dup_sheets/}`;
+  - `label_review_ui.py --vis` gained the `w` key and shows the human's earlier answer.
+- Gitignored: `results/stage1_kd/vis_review/eval_targets.log`, `eval_targets_cover.log`.
 - Dev PC only: the sheets `results/stage1_kd/vis_review/{sheets, claude_sheets}/`.
