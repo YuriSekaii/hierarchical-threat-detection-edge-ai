@@ -12,7 +12,7 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")
 LAB_LABEL = os.path.join(REPO, "results", "stage1_kd", "lab_label")
 TILE = 330
 COLORS = ((0, 255, 0), (255, 255, 0), (255, 0, 255))
-VIS = False  # --vis: how visible is the labelled knife (label_stage1_visibility.py, check_stage1_misses.py), keys c / b / h / x / u / w
+VIS = False  # --vis: how visible is the labelled knife (label_stage1_visibility.py, check_stage1_misses.py), keys c / b / h / x / u / w / m
 
 CSV_COLS_BASE = ["tile_id", "img", "split", "take", "frame", "kind"]
 CSV_COLS_TAIL = ["n_votes", "agree", "flag_reason", "claude_label", "claude_conf",
@@ -180,6 +180,7 @@ def render(img, it, row, vcols, pos, total, extra_box=None, draw_mode=False, scr
         put("c  clear: you can tell it is a knife     b  blurred by motion", (255, 255, 0), 0.5)
         put("h  hidden / barely visible     x  no knife     u  cannot tell", (255, 255, 0), 0.5)
         put("w  knife clearly there, but the green box misses it", (255, 255, 0), 0.5)
+        put("m  knife hidden / barely visible, and the green box misses it", (255, 255, 0), 0.5)
         if row.get("flag_reason"):
             put(row["flag_reason"], (0, 165, 255), 0.5)
     else:
@@ -338,7 +339,7 @@ def run_ui(lab_label=LAB_LABEL, repo=REPO, all_flagged=False):
             draw_state["active"] = True
             draw_state["start"] = None
             draw_state["box"] = None
-        elif VIS and key in (ord('c'), ord('b'), ord('h'), ord('x'), ord('u'), ord('w')):
+        elif VIS and key in (ord('c'), ord('b'), ord('h'), ord('x'), ord('u'), ord('w'), ord('m')):
             save_answer(tid, chr(key), None)
             idx = min(len(queue) - 1, idx + 1)
         elif VIS:

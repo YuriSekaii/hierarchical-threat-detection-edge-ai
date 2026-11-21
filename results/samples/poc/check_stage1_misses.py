@@ -5,7 +5,8 @@ misses at conf 0.10, plus the knives labelled "no knife" (x). Each cell shows th
 near it at conf >= 0.05 (yellow, with its conf), if any.
 
 Labels: c = label right (clear knife, green box fits it), w = a knife is clearly there but the green box does not fit it,
-b = blurred by motion, h = hidden / barely visible, x = no knife.
+b = blurred by motion, h = hidden / barely visible, x = no knife,
+m = (human only) a knife is there but hidden / barely visible, and the green box misses it.
 
   .venv/Scripts/python.exe results/samples/poc/check_stage1_misses.py sheets   # miss_check/{items.json, sheets/}
   # voters write miss_check/votes/<voter>.json {id: letter}; Claude writes votes/claude.json {id: {"label", "sure"}}
@@ -129,7 +130,7 @@ def final():
         i = str(it["id"])
         if i in dup:
             out[i] = ("d", "duplicate")
-        elif new.get(i) in ("c", "w", "b", "h", "x"):
+        elif new.get(i) in ("c", "w", "m", "b", "h", "x"):
             out[i] = (new[i], "human")
         elif new.get(i) == "u":
             out[i] = ("?", "human_unsure")

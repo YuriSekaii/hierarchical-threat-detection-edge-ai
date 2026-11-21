@@ -74,7 +74,7 @@ for r in recs:  # d = second label on an already labelled knife, x = no knife (c
     for j in range(len(r["gt"])):
         if v.get(str(j)) in dropped:
             dropped[v[str(j)]] += 1
-    r["vis"] = [v.get(str(j)) or "?" for j in keep]
+    r["vis"] = [{"m": "w"}.get(v.get(str(j)), v.get(str(j))) or "?" for j in keep]  # m = hidden and box misses: scored with w
     r["gt"] = [r["gt"][j] for j in keep]
 frame ={(r["category"], int(os.path.splitext(r["path"])[0].rsplit("_f", 1)[1])): r for r in recs}
 for (take, f), r in frame.items():
