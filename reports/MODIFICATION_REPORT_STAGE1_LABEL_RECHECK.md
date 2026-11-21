@@ -89,9 +89,44 @@ What the confirmed "no knife" spots are:
 
   Validation is unchanged, and train.txt has 6,318 lines.
 
+## After the human review (2026-11-21)
+
+The human answered all 199 items in `review_candidates.bat`:
+- test: 69 knives (plus 4 drawn boxes), 23 no knife, 6 cannot tell;
+- train: 23 knives (plus 16 drawn boxes), 33 no knife, 10 cannot tell;
+- new frames: 13 knives, 1 no knife, 1 cannot tell.
+
+The `b` key does nothing on these tiles (they have box `a` only). The 20 "b" answers are boxes the human drew.
+
+`apply` then gives:
+- test: **113 knives added** in 111 frames, 135 spots confirmed empty, 6 undecided (cannot tell, left out);
+- training set `lab_gt_aug_hn`:
+  - 51 knives added on training frames;
+  - 72 new frames: 61 with a knife, 11 with an empty hand;
+  - train.txt has 6,330 lines.
+
+**Lab test with all 113 added knives.** NMS 0.5; best recall at P ≥ 0.90; P / R / false boxes at conf 0.25:
+
+| Model | Best R at P ≥ 0.90 (conf, P) | At conf 0.25 |
+|---|---|---|
+| A `labgtL` | 81.8 (0.05, 91.6) | 96.1 / 75.2 / 45 |
+| C `labgtaugL` | 82.2 (0.05, 92.5) | 96.5 / 76.9 / 42 |
+| C1 `labgtaugS1L` | 83.0 (0.05, 94.2) | 97.8 / 76.2 / 25 |
+| L `labgtaugltL` | 82.9 (0.05, 90.9) | 95.1 / 77.2 / 59 |
+| B `kdgtNL` | 84.9 (0.05, 93.1) | 97.4 / 80.2 / 32 |
+| H `kdgtaugFL` | 83.2 (0.05, 91.8) | 96.1 / 78.5 / 47 |
+| E `teachergtL` | 82.4 (0.05, 92.7) | 96.3 / 77.8 / 45 |
+| F `teachergtaug` | 85.2 (0.05, 91.5) | 95.9 / 80.5 / 51 |
+
+**What this shows:**
+- At conf 0.25 every model is now at 95–98 % precision. The old 90 % rule is reached at the lowest conf tried (0.05) for all of them, so it no longer separates the models.
+- All students sit at 81.8–85.2 %, inside the 3-point training noise.
+
+Overall recall mixes knives no one can see with clear ones. `MODIFICATION_REPORT_STAGE1_TARGETS.md` scores them apart.
+
 ## Not checked
 
-- 199 items wait for the human (102 test, 82 train, 15 new frames). The numbers above use only what is settled.
+- 6 test and 11 training/new-frame items stay "cannot tell" and are left out.
 - Spots no detector boxed are not in the review, so knives that every model misses stay unlabelled.
 - Whether the training frames labelled "no knife" next to the new knife frames really hold no knife.
 - No model was trained on `lab_gt_aug_hn` yet.

@@ -12,6 +12,7 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")
 LAB_LABEL = os.path.join(REPO, "results", "stage1_kd", "lab_label")
 TILE = 330
 COLORS = ((0, 255, 0), (255, 255, 0), (255, 0, 255))
+VIS = False  # --vis: how visible is the labelled knife (label_stage1_visibility.py), keys c / b / h / x / u
 
 CSV_COLS_BASE = ["tile_id", "img", "split", "take", "frame", "kind"]
 CSV_COLS_TAIL = ["n_votes", "agree", "flag_reason", "claude_label", "claude_conf",
@@ -173,12 +174,18 @@ def render(img, it, row, vcols, pos, total, extra_box=None, draw_mode=False, scr
     put(f"Claude: {row.get('claude_label', '') or '-'}  (conf {row.get('claude_conf', '') or '-'})")
     if row.get("human_label"):
         put(f"Your answer: {row['human_label']}", (80, 255, 80))
-    for p, col in zip(it.get("props", []), COLORS):
-        sc = max(p.get("src", {}).values(), default=0)
-        put(f"box {p.get('letter')}: best detector score {sc:.2f}", col, 0.5)
-    y += 6
-    put("a / b / c  this box has the knife     k  knife, no box fits", (255, 255, 0), 0.5)
-    put("n  no knife     u  cannot tell     d  draw a box (drag on zoom)", (255, 255, 0), 0.5)
+    if VIS:
+        y += 6
+        put("How well can you see the knife in the green box?", (255, 255, 0), 0.5)
+        put("c  clear: you can tell it is a knife     b  blurred by motion", (255, 255, 0), 0.5)
+        put("h  hidden / barely visible     x  no knife     u  cannot tell", (255, 255, 0), 0.5)
+    else:
+        for p, col in zip(it.get("props", []), COLORS):
+            sc = max(p.get("src", {}).values(), default=0)
+            put(f"box {p.get('letter')}: best detector score {sc:.2f}", col, 0.5)
+        y += 6
+        put("a / b / c  this box has the knife     k  knife, no box fits", (255, 255, 0), 0.5)
+        put("n  no knife     u  cannot tell     d  draw a box (drag on zoom)", (255, 255, 0), 0.5)
     put("space / right  next     p / left  back     z  undo     q  quit", (255, 255, 0), 0.5)
     if draw_mode:
         label(canvas, "DRAW MODE: drag a box on the zoom", (12, z - 16), (0, 0, 255), 0.8, 2)
@@ -328,6 +335,11 @@ def run_ui(lab_label=LAB_LABEL, repo=REPO, all_flagged=False):
             draw_state["active"] = True
             draw_state["start"] = None
             draw_state["box"] = None
+        elif VIS and key in (ord('c'), ord('b'), ord('h'), ord('x'), ord('u')):
+            save_answer(tid, chr(key), None)
+            idx = min(len(queue) - 1, idx + 1)
+        elif VIS:
+            pass  # box keys mean nothing in the visibility review
         elif key in (ord('a'), ord('b'), ord('c')) and chr(key) not in [p.get("letter") for p in it.get("props", [])]:
             pass  # no suggestion with that letter on this tile
         elif key in (ord('a'), ord('b'), ord('c'), ord('k'), ord('n'), ord('u')):
@@ -424,8 +436,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--all-flagged", action="store_true")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--vis", action="store_true", help="visibility review: keys c / b / h / x / u")
     ap.add_argument("--dir", default=LAB_LABEL, help="folder with votes.csv and lab_items.json or items.json")
     args = ap.parse_args()
+    VIS = args.vis
     if args.selftest:
         selftest()
     else:
