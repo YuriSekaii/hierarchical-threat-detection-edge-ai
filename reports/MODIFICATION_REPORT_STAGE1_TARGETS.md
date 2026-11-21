@@ -219,6 +219,34 @@ The 61 missed knives that all four voters called clear, and the 6 the human coul
 
 B finds 4 of the 19 at 0.20 and F finds 8 at 0.10. Either way B stays above 90 % at conf 0.20.
 
+### After the human's answers on the 19 (2026-11-21, final numbers)
+
+**The human's answers:** 14 clear (373 with the box as it is), 4 hidden (230, 368, 697, 1082), 1 blurred (1482). Claude's "hidden/blurred" call held on 5 of 17, as in the earlier round.
+
+**Lab test:** 1,437 knives: 925 clear, 209 blurred, 294 hidden, 9 unsure; 45 duplicate and 7 no-knife labels dropped.
+
+| Model | Clear R @0.10 | Clear R @0.20 | Clear R @0.30 | Fast-hand P @0.20 | All P @0.20 |
+|---|---|---|---|---|---|
+| Shipped detector | 87.0 | 84.1 | 81.3 | 91.1 (33) | 66.2 (535) |
+| **B KD from E** | 93.0 | **91.9** | 90.2 | 95.8 (16) | 95.7 (53) |
+| F teacher blur/dark | 94.3 | 92.8 | 91.9 | 94.9 (20) | 94.5 (69) |
+
+With `MATCH=cover`, B at 0.20: clear R 92.3 %, fast-hand P 98.1 (7), all P 96.8 (40). Every retrained model reaches 90 % clear recall at conf 0.10 or above (A 90.3, C 90.7, C1 91.0, L 90.5, H 90.8 at 0.20, E 91.6, B 90.2 at 0.30, F 91.9 at 0.30). The shipped detector does not (best 87.0 %).
+
+**What B still misses at 0.20:** 75 of 925 clear knives, all checked by eye. Causes: no box near the knife 51, right box but conf too low 20, box over hand and knife (IoU < 0.2) 4. Claude sorted the 75 by what the crop shows:
+
+| What the crop shows | Missed |
+|---|---|
+| Knife against something dark: black chair, trousers, shirt, black box | 34 |
+| Arm out, knife against the bright floor, wall or window | 21 |
+| Knife raised by or over the head | 11 |
+| Next to the cart frame, a yellow box or a sandal | 6 |
+| Model boxes the hand and the knife together (255, 373, 689; conf 0.82–0.91) | 3 |
+
+Many misses are runs of frames 10 apart from the same moment, for example 1001–1006 (one arm stretched out by the cart), so the 75 hold fewer distinct situations. By take, slash 034 (77.5 %) and the mixed take 036 (87.7 %) lose the most.
+
+One label still looks doubtful to Claude: 1420 (take 036, f07200, the hand at the sandal). Claude sees no knife in the crop, but the human called it clear twice, so it stays.
+
 ## Results with the human's visibility answers (before the label fixes)
 
 `eval_stage1_targets.py` after `tally` with `vis_review/human/votes.csv` (991 clear, 208 blurred, 272 hidden). P with false boxes in brackets; precision does not depend on the visibility labels and is unchanged.
@@ -303,7 +331,6 @@ First run (816 clear knives):
 
 ## Not checked
 
-- 19 knives wait in `review_misses.bat` (Claude differs from the four voters). After they are answered, re-run `check_stage1_misses.py tally`, `label_stage1_visibility.py tally` and `eval_stage1_targets.py`.
 - The 42 missed knives that Claude and all four voters call clear were not seen by the human.
 - Only the missed clear knives were looked at this closely; found clear knives were not re-checked, so the clear group may still hold hidden knives the models happen to find.
 - Only the missed clear knives were checked for label errors. The knives the models find, and the blurred and hidden ones, were not re-checked. Duplicates were checked in every frame.
