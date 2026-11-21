@@ -59,7 +59,7 @@ The four voters agreed on 810 of 1,489 knives. Claude looked at the other 679 an
 
 Hand speed separates blurred from clear knives, but not cleanly: a third of clear knives are at a fast hand.
 
-## Label errors among the missed clear knives (2026-11-21, current numbers)
+## Label errors among the missed clear knives (2026-11-21, first round)
 
 **Question:** are the clear knives the models miss labelled right?
 
@@ -137,6 +137,66 @@ B at conf 0.20 with `MATCH=cover`: clear R 92.8 %, fast-hand P 98.1 (7), all P 9
 - Every retrained student now reaches 90 % on clear knives. The shipped detector still does not.
 - **The 41 knives with the human can move this.** They are found 38–51 % of the time. If all of them end up clear, B's clear recall at 0.20 is 90.0 %; if none do, 92.6 %.
 
+## After the human's 41 answers, and a second look at the misses (2026-11-21, final numbers)
+
+**The human's answers in `review_misses.bat`:** 23 clear, 7 blurred, 3 hidden, 1 hidden with a redrawn box (316, key `m`), 1 no knife (649), 6 cannot tell.
+- Of the 8 earlier "no knife" answers sent back: 612, 623, 625, 631 are now clear, 641 hidden, 442 and 633 cannot tell; 649 stays "no knife".
+- Of the 33 knives labelled clear that were sent back: 19 clear, 7 blurred, 2 hidden, 1 hidden with a redrawn box, 4 cannot tell.
+
+**Second miss check.** `MISS_OUT=miss_check2 check_stage1_misses.py sheets` collects the clear knives still missed that the first round did not check. It found none: every clear knife B misses at 0.20 (80) and F misses at 0.10 (59) was already checked by eye. A scan of all frames with more than one knife label found one more duplicate: frame f07200 of take 036 holds three overlapping labels on one hand (1420, 1421, 1422; label 1420 lies 85 % inside 1421). The original label 1420 is kept; 1421 and 1422, added by the candidate review, are dropped (`duplicates.json`). The other 7 multi-label frames hold two hands 190–710 px apart and stay.
+
+**Lab test, final labels:** 1,437 knives: 930 clear, 208 blurred, 287 hidden, 12 unsure; 45 duplicate and 7 no-knife labels dropped. P with false boxes in brackets.
+
+| Model | Clear R @0.10 | Clear R @0.20 | Clear R @0.30 | Fast-hand P @0.20 | All P @0.20 |
+|---|---|---|---|---|---|
+| Shipped detector | 86.9 | 83.9 | 81.1 | 91.1 (33) | 66.2 (535) |
+| **B KD from E** | 92.5 | **91.4** | 89.7 | 95.8 (16) | 95.7 (53) |
+| F teacher blur/dark | 93.9 | 92.4 | 91.5 | 94.9 (20) | 94.5 (69) |
+
+Highest listed conf with clear R ≥ 90 %:
+
+| Model | IoU 0.2: conf, clear R, fast-hand P | `MATCH=cover`: conf, clear R, fast-hand P, all P |
+|---|---|---|
+| Shipped detector | never (best 86.9) | never (best 87.1) |
+| A YOLO26s `lab_gt` | never (best 89.8) | 0.10, 90.2, 95.7 (16), 93.1 (87) |
+| C blur/dark | 0.10, 90.3, 95.6 (17) | 0.10, 90.9, 97.4 (10), 94.2 (74) |
+| C1 blur/dark, seed 1 | 0.10, 90.8, 94.5 (21) | 0.10, 91.0, 95.8 (16), 96.0 (50) |
+| L half blur | 0.10, 90.2, 93.0 (28) | 0.10, 90.9, 95.0 (20), 92.7 (94) |
+| **B KD from E** | **0.25, 90.4, 95.7 (16)** | **0.30, 90.1, 98.4 (6), 97.6 (29)** |
+| H KD from F | 0.20, 90.5, 96.0 (15) | 0.25, 90.1, 97.6 (9), 96.0 (49) |
+| E teacher | 0.10, 91.1, 94.5 (21) | 0.10, 91.6, 96.6 (13), 94.2 (74) |
+| F teacher blur/dark | 0.30, 91.5, 95.6 (17) | 0.30, 91.8, 97.1 (11), 96.1 (48) |
+
+B at conf 0.20 with `MATCH=cover`: clear R 91.8 %, fast-hand P 98.1 (7), all P 96.8 (40).
+
+**Why B still misses 80 clear knives at 0.20** (every one confirmed clear by eye):
+
+| Cause | B @0.20 | F @0.10 |
+|---|---|---|
+| no box at all near the knife (conf ≥ 0.05) | 56 | 47 |
+| right box, conf below the threshold | 20 | 7 |
+| box above the threshold, IoU 0.05–0.2 | 4 | 5 |
+
+The missed knives are as large as the found ones (median long side 122 px against 128 px). They are spread unevenly over takes:
+
+| Take | Clear | B missed | Clear R |
+|---|---|---|---|
+| 034 slash | 72 | 17 | 76.4 |
+| 032 overhand stab | 42 | 7 | 83.3 |
+| 028 thrust chest | 34 | 5 | 85.3 |
+| 033 cut down | 29 | 4 | 86.2 |
+| 036 normal mixed | 147 | 19 | 87.1 |
+| 030 thrust low | 57 | 7 | 87.7 |
+| 031 thrust low | 32 | 2 | 93.8 |
+| 002 checkerboard (Oct 31) | 304 | 17 | 94.4 |
+| 025, 026, 027, 029, 035 | 213 | 2 | 99.1 |
+
+**What this shows:**
+- **Both targets are still met by B, with less room.** Clear recall 91.4 % at conf 0.20 (90.4 % at 0.25); fast-hand precision 95.8 %, 98.1 % with `MATCH=cover`. The human's answers turned 23 knives the models miss back into clear knives, which costs 1.2 points.
+- **The labels of the missed clear knives are now all checked by eye.** No new label errors were found except one triple label. What is left are model misses, not label errors.
+- **Most misses are a knife the model does not see at all** (56 of 80), not a threshold problem. Lowering the conf gains at most the 20 "right box, low conf" knives.
+- **Slash (034) is the weak take** at 76 % clear recall; stabs and cut-down are at 83–86 %. Thrust-chest and walking takes are near 100 %.
+
 ## Results with the human's visibility answers (before the label fixes)
 
 `eval_stage1_targets.py` after `tally` with `vis_review/human/votes.csv` (991 clear, 208 blurred, 272 hidden). P with false boxes in brackets; precision does not depend on the visibility labels and is unchanged.
@@ -196,7 +256,12 @@ Their box size is about the same as other clear knives (median 101 px against 11
 
 ## Findings
 
-With the human's answers (final numbers above):
+Final labels (section "After the human's 41 answers"):
+- **Clear-knife recall: met by B**, 91.4 % at conf 0.20, 90.4 % at 0.25. Every retrained model except A reaches 90 %; the shipped detector does not (best 86.9 %).
+- **Fast-swing precision: met**, 95.8 % for B at 0.20 (98.1 % when a hand-plus-knife box counts).
+- The remaining misses are checked by eye and are model misses, mostly with no box at all, worst on the slash take.
+
+With the human's visibility answers, before the label fixes:
 - **Fast-swing precision: met.** Unchanged, 96–98 % for every retrained model.
 - **Clear-knife recall: not met.** Best student B is at 87–88.5 %, best model F at 90.1 % (conf 0.10). The gap to 95 % is about 65 clear knives for B.
 - B is still the best student on both targets.
@@ -216,7 +281,8 @@ First run (816 clear knives):
 
 ## Not checked
 
-- 41 knives from the miss check wait in `review_misses.bat`. When they are answered, re-run `check_stage1_misses.py tally`, `label_stage1_visibility.py tally` and `eval_stage1_targets.py`.
+- 6 knives the human could not tell in `review_misses.bat` stay "unsure" (12 unsure in all).
+- The 61 knives the four voters called clear without disagreement were not looked at by Claude or the human, per the rule.
 - Only the missed clear knives were checked for label errors. The knives the models find, and the blurred and hidden ones, were not re-checked. Duplicates were checked in every frame.
 - The duplicate list is Claude's call alone, by eye, without the four voters: one knife per take makes it a geometric check.
 - `MATCH=cover` is looser than the IoU 0.2 rule used in every earlier report. It is shown next to the standard numbers, not instead of them.

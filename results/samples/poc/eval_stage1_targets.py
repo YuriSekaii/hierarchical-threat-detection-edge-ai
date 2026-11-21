@@ -79,7 +79,7 @@ for r in recs:
         if v.get(str(j)) in dropped:
             dropped[v[str(j)]] += 1
     r["vis"] = [{"m": "w"}.get(v.get(str(j)), v.get(str(j))) or "?" for j in keep]  # m = hidden and box misses: scored with w
-    r["gt"] = [r["gt"][j] for j in keep]
+    r["gt"], r["gi"] = [r["gt"][j] for j in keep], keep  # gi: index in the original label list
 frame ={(r["category"], int(os.path.splitext(r["path"])[0].rsplit("_f", 1)[1])): r for r in recs}
 for (take, f), r in frame.items():
     ws = wrists(r)

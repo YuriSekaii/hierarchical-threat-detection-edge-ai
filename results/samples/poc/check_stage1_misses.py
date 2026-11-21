@@ -25,7 +25,7 @@ sys.argv = sys.argv[:1]
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 VIS_DIR = os.path.join(REPO, "results", "stage1_kd", "vis_review")
-OUT = os.path.join(VIS_DIR, "miss_check")
+OUT = os.path.join(VIS_DIR, os.environ.get("MISS_OUT", "miss_check"))  # MISS_OUT=miss_check2: a second round
 CELL = 320
 sys.path.insert(0, HERE)
 from label_stage1_visibility import decide
@@ -47,12 +47,15 @@ def collect():
     hitB = E.rows[("B KD from E", 0.20)][0]
     hitF = E.rows[("F teacher blur/dark", 0.10)][0]
     students = [n for n in E.MODELS if n not in ("shipped",)]
+    first = os.path.join(VIS_DIR, "miss_check", "items.json")  # a later round skips knives an earlier round checked
+    seen = {(os.path.basename(it["img"]), it["gt"]) for it in json.load(open(first))} if OUT != os.path.dirname(first) else set()
     out, k = [], 0
     for r in E.recs:
         name = os.path.basename(r["path"])
-        for j, g in enumerate(r["gt"]):
+        for j0, g in enumerate(r["gt"]):
+            j = r["gi"][j0]
             v = E.VIS.get(name, {}).get(str(j))
-            if (v == "c" and not (hitB[k] and hitF[k])) or v == "x":
+            if ((v == "c" and not (hitB[k] and hitF[k])) or (v == "x" and not seen)) and (name, j) not in seen:
                 it = dict(vis_items[(name, j)])
                 cx, cy, diag = (g[0] + g[2]) / 2, (g[1] + g[3]) / 2, max(g[2] - g[0], g[3] - g[1])
                 near = [b for b in r["det"]["kdgtNL"] if b["conf"] >= 0.05
