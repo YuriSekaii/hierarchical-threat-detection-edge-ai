@@ -67,8 +67,12 @@ def wrists(rec):
 
 
 recs = S.load_cache("lab")
+BOXFIX = os.path.join(REPO, "results", "stage1_kd", "vis_review", "miss_check", "box_fix.json")
+BOXFIX = json.load(open(BOXFIX)) if os.path.exists(BOXFIX) else {}  # boxes the human redrew in review_misses.bat
 dropped = {"d": 0, "x": 0}
-for r in recs:  # d = second label on an already labelled knife, x = no knife (check_stage1_misses.py): not knives to find
+for r in recs:
+    for j, b in BOXFIX.get(os.path.basename(r["path"]), {}).items():
+        r["gt"][int(j)] = b  # d = second label on an already labelled knife, x = no knife (check_stage1_misses.py): not knives to find
     v = VIS.get(os.path.basename(r["path"]), {})
     keep = [j for j in range(len(r["gt"])) if v.get(str(j)) not in dropped]
     for j in range(len(r["gt"])):

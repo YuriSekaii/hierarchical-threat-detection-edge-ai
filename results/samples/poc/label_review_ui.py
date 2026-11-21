@@ -181,6 +181,7 @@ def render(img, it, row, vcols, pos, total, extra_box=None, draw_mode=False, scr
         put("h  hidden / barely visible     x  no knife     u  cannot tell", (255, 255, 0), 0.5)
         put("w  knife clearly there, but the green box misses it", (255, 255, 0), 0.5)
         put("m  knife hidden / barely visible, and the green box misses it", (255, 255, 0), 0.5)
+        put("d  draw the right box, then press c / b / h for the knife in YOUR box", (255, 255, 0), 0.5)
         if row.get("flag_reason"):
             put(row["flag_reason"], (0, 165, 255), 0.5)
     else:
@@ -340,7 +341,10 @@ def run_ui(lab_label=LAB_LABEL, repo=REPO, all_flagged=False):
             draw_state["start"] = None
             draw_state["box"] = None
         elif VIS and key in (ord('c'), ord('b'), ord('h'), ord('x'), ord('u'), ord('w'), ord('m')):
-            save_answer(tid, chr(key), None)
+            b = draw_state.get("box") if draw_state.get("start") is None else None
+            box = [round(float(v), 1) for v in b] if b and b[2] - b[0] > 2 and b[3] - b[1] > 2 else None
+            save_answer(tid, chr(key), box if chr(key) not in ("x", "u") else None)  # a drawn box replaces the green one
+            draw_state.update(active=False, start=None, box=None)
             idx = min(len(queue) - 1, idx + 1)
         elif VIS:
             pass  # box keys mean nothing in the visibility review

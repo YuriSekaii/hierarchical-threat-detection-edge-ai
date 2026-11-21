@@ -4,7 +4,9 @@ rem or where the new result differs from your earlier answer in review_visibilit
 rem Each answer is saved to results\stage1_kd\vis_review\miss_check\human\votes.csv right away; reopening resumes.
 rem Keys: c = clear knife in the green box   b = blurred by motion   h = hidden or barely visible
 rem       x = no knife   w = knife clearly there, but the green box misses it   u = cannot tell
+
 rem       m = knife hidden / barely visible, and the green box misses it
+rem       d = draw the right box (drag on the zoom), then press c / b / h for the knife in your box
 rem       space/right = next, p/left = back, z = undo, q = quit.
 cd /d "%~dp0"
 ".venv\Scripts\python.exe" results\samples\poc\label_review_ui.py --vis --dir results\stage1_kd\vis_review\miss_check\human %*

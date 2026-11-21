@@ -7,6 +7,8 @@ near it at conf >= 0.05 (yellow, with its conf), if any.
 Labels: c = label right (clear knife, green box fits it), w = a knife is clearly there but the green box does not fit it,
 b = blurred by motion, h = hidden / barely visible, x = no knife,
 m = (human only) a knife is there but hidden / barely visible, and the green box misses it.
+A box the human draws in review_misses.bat replaces the label box (miss_check/box_fix.json); with a box,
+the answer is how well the knife shows in that box (w -> c, m -> h).
 
   .venv/Scripts/python.exe results/samples/poc/check_stage1_misses.py sheets   # miss_check/{items.json, sheets/}
   # voters write miss_check/votes/<voter>.json {id: letter}; Claude writes votes/claude.json {id: {"label", "sure"}}
@@ -109,11 +111,25 @@ def load():
     return voters, votes, json.load(open(cp)) if os.path.exists(cp) else {}
 
 
-def human(path):
-    """{id: answer} from a review .bat's votes.csv; only real answers (u = cannot tell is kept as 'u')."""
+def human(path, boxes=None):
+    """{id: answer} from a review .bat's votes.csv; only real answers (u = cannot tell is kept as 'u').
+    boxes: dict to fill with {id: drawn box in 330-px tile coords}."""
     if not os.path.exists(path):
         return {}
-    return {r["tile_id"]: r["human_label"] for r in csv.DictReader(open(path, encoding="utf-8")) if r.get("human_label")}
+    rows = [r for r in csv.DictReader(open(path, encoding="utf-8")) if r.get("human_label")]
+    if boxes is not None:
+        boxes.update({r["tile_id"]: json.loads(r["human_box"]) for r in rows if r.get("human_box")})
+    return {r["tile_id"]: r["human_label"] for r in rows}
+
+
+def tile_to_norm(it, v, tile=330):
+    """Drawn box (label_review_ui.py tile coords) -> normalized xyxy in the full frame."""
+    s = it["crop"] / tile
+    return [round((it["x0"] + v[0] * s) / it["w"], 6), round((it["y0"] + v[1] * s) / it["h"], 6),
+            round((it["x0"] + v[2] * s) / it["w"], 6), round((it["y0"] + v[3] * s) / it["h"], 6)]
+
+
+assert tile_to_norm(dict(crop=660, x0=100, y0=50, w=1000, h=500), [0, 0, 330, 165]) == [0.1, 0.1, 0.76, 0.76]
 
 
 def final():
@@ -121,7 +137,8 @@ def final():
     A result that differs from an earlier human visibility answer goes back to the human ('?', human_conflict)."""
     items = json.load(open(os.path.join(OUT, "items.json")))
     voters, votes, claude = load()
-    new = human(os.path.join(OUT, "human", "votes.csv"))
+    boxes = {}
+    new = human(os.path.join(OUT, "human", "votes.csv"), boxes)
     old = human(os.path.join(VIS_DIR, "human", "votes.csv"))
     dp = os.path.join(OUT, "duplicates.json")
     dup = set(map(str, json.load(open(dp))["ids"])) if os.path.exists(dp) else set()
@@ -131,7 +148,7 @@ def final():
         if i in dup:
             out[i] = ("d", "duplicate")
         elif new.get(i) in ("c", "w", "m", "b", "h", "x"):
-            out[i] = (new[i], "human")
+            out[i] = ({"w": "c", "m": "h"}.get(new[i], new[i]), "human_box") if i in boxes else (new[i], "human")
         elif new.get(i) == "u":
             out[i] = ("?", "human_unsure")
         else:
@@ -141,14 +158,21 @@ def final():
             elif old.get(i) in ("c", "b", "h", "x") and lab not in (None, old[i]):
                 lab, src = "?", "human_conflict"
             out[i] = (lab, src)
-    return items, out
+    return items, out, boxes
 
 
 assert decide(["c", "c", "c", "c"]) == ("c", "vote")
 
 
 def tally():
-    items, fin = final()
+    items, fin, boxes = final()
+    hi = {str(it["id"]): it for it in json.load(open(os.path.join(OUT, "human", "items.json")))} if boxes else {}
+    fix = {}
+    byid = {str(x["id"]): x for x in items}
+    for i, v in boxes.items():  # {image name: {gt index: normalized box}}, read by eval_stage1_targets.py
+        it = {**byid[i], **hi[i]}  # w, h, gt from the miss items; x0, y0, crop from the review tile
+        fix.setdefault(os.path.basename(it["img"]), {})[str(it["gt"])] = tile_to_norm(it, v)
+    json.dump(fix, open(os.path.join(OUT, "box_fix.json"), "w"), indent=0)
     res, need, count = {}, [], {}
     for it in items:
         lab, src = fin[str(it["id"])]
@@ -160,13 +184,13 @@ def tally():
     json.dump(need, open(os.path.join(OUT, "needs_claude.json"), "w"))
     for k in sorted(count, key=str):
         print(f"  was {k[0]}  now {k[1]!s:4} {k[2]:13} {count[k]}")
-    print(f"needs Claude: {len(need)}")
+    print(f"needs Claude: {len(need)}; boxes drawn by the human: {len(boxes)}")
 
 
 def review():
     """Claude-unsure knives and conflicts with an earlier human answer -> miss_check/human/{items.json, votes.csv}
     for review_misses.bat (label_review_ui.py --vis --misses)."""
-    items_l, fin = final()
+    items_l, fin, _ = final()
     items = {it["id"]: it for it in items_l}
     voters, votes, claude = load()
     prev = human(os.path.join(VIS_DIR, "human", "votes.csv"))
