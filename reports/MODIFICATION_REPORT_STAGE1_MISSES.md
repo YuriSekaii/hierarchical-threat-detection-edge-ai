@@ -520,6 +520,90 @@ At a fixed conf of 0.25 (NMS, lab), P / R / false boxes:
 - `best.pt` of the new runs scores lower than `last.pt` on the lab test (C1 75.7 %, L 74.9 %), as for C before.
 - No TensorRT export or Edge timing.
 
+#### Why the recall moves: false boxes, not missed knives (2026-11-21)
+
+**Question:** why does L lose knives that A and C find, and why does blur/dark not lift recall more?
+
+**What was run** (no GPU, lab and gtv2 caches):
+
+```bash
+.venv/Scripts/python.exe results/samples/poc/investigate_stage1_light.py
+```
+
+**How confident each student is on the real test knives.** "Best conf" is the highest-scoring box at IoU ≥ 0.2 with the knife, before NMS.
+
+| Model | Median conf, all knives | Median conf, slow knives | Knives ≥ 0.40 | Knives ≥ 0.20 | Knives < 0.05 |
+|---|---|---|---|---|---|
+| A, no augmentation | 0.913 | 0.928 | 75.8 % | 78.7 % | 16.4 % |
+| C, blur/dark | 0.905 | 0.921 | 76.5 % | 79.8 % | 15.9 % |
+| C1, blur/dark, seed 1 | 0.906 | 0.925 | 76.8 % | 80.1 % | 15.0 % |
+| L, half blur | 0.911 | 0.928 | 75.6 % | 79.4 % | 15.6 % |
+
+**The same students at the same conf (lab, NMS):**
+
+| Conf | Model | P | R | False boxes |
+|---|---|---|---|---|
+| 0.20 | A | 90.8 | 78.3 | 109 |
+| 0.20 | C | 90.3 | 79.5 | 117 |
+| 0.20 | C1 | 92.3 | 79.7 | 92 |
+| 0.20 | L | 88.7 | 79.1 | 138 |
+| 0.40 | A | 92.6 | 75.5 | 83 |
+| 0.40 | C | 91.9 | 76.2 | 92 |
+| 0.40 | C1 | 93.6 | 76.5 | 72 |
+| 0.40 | L | 90.2 | 75.3 | 113 |
+
+**The 96 knives that C finds and L misses**, split by L's own best conf on each:
+
+| L's best conf on the knife | Knives | Fast | Dark |
+|---|---|---|---|
+| < 0.05 (not seen) | 34 | 12 | 6 |
+| 0.05–0.40 (seen, but under L's threshold of 0.40) | 62 | 19 | 15 |
+
+For the 89 knives that A finds and L misses, the split is 31 and 58.
+
+**False boxes (NMS, conf 0.25):**
+
+| Model | Lab false boxes | Near a wrist | Median conf | Overlaps a labelled knife, IoU < 0.2 | Labelled knife within ±20 frames | Nothing labelled near | gtv2 false boxes | gtv2 in "OOD" |
+|---|---|---|---|---|---|---|---|---|
+| A | 100 | 94 | 0.71 | 16 | 20 | 64 | 54 | – |
+| C | 104 | 100 | 0.82 | 16 | 20 | 68 | 95 | 67 |
+| C1 | 82 | 78 | 0.80 | 11 | 21 | 50 | 85 | – |
+| L | 129 | 124 | 0.83 | 22 | 24 | 83 | 75 | 57 |
+
+Where L's lab false boxes are: 52 in `11-14_036_test_normal_mixed`, 26 in Oct 31 take 002.
+
+**Findings:**
+- **Blur/dark does not change how well the student sees the test knives.**
+  - All four students score the real knives the same: median 0.91, and 78.7–80.1 % of knives at conf ≥ 0.20.
+  - At the same conf, recall differs by at most 1.4 points: 78.3 / 79.5 / 79.7 / 79.1 % at 0.20.
+  - About 15–16 % of knives get under 0.05 from every student, with or without augmentation. These are the never-found knives from the section above: hidden, held against dark clothes, or not visible in the frame. Blurred training copies do not reach them.
+- **The recall at P ≥ 0.90 is set by false boxes.** Each model's threshold goes as low as its false boxes allow:
+  - C1 has the fewest (82), so it can run at 0.10 and reaches 82.3 %;
+  - L has the most (129), so it must run at 0.40. That loses the 62 knives it scores 0.05–0.40, and recall drops to 75.3 %.
+
+  L does not see knives worse. It sees more knives where there are none.
+- **The false boxes sit at a hand and score high.**
+  - 124 of L's 129 are within half a torso of a wrist, with a median conf of 0.83.
+  - About a third are on a knife: 22 overlap a labelled knife but the box is too far off to count, and 24 have a labelled knife at that spot 10–20 frames away.
+  - In the `false_L.jpg` sheet, about a quarter of the sampled crops show a knife in the hand. Some are probably knives missing from the test labels; that was not checked by hand.
+  - The rest are a hand against dark trousers, a dark chair seat, or a hand on an orange box.
+  - A blurred, darkened knife in training looks like these dark smudges at a hand. That fits L having the most false boxes. But L's lead over C (+25) is about the same as the seed gap between C and C1 (22), so it may be noise.
+- **On gtv2, blur/dark nearly doubles the false boxes** (A 54 → C 95). Most are on the OOD images (67 of C's 95), away from a hand (18 near a wrist). That is why the augmented students must run at conf 0.55–0.60 on gtv2 and lose recall there.
+
+**What this means:**
+- More blur/dark tuning will not raise recall. Recall at the working point is limited by false boxes at a hand, plus the 15 % of knives no student sees.
+- The levers are cutting hand false boxes and checking the test labels under them:
+  - the crop classifier of `stage1-phone-second-look`, applied to knives;
+  - hard negatives of empty hands against dark clothes and chairs;
+  - a hand check of the "false" boxes that sit on a knife.
+
+**Not checked:**
+- Only 48 false-box crops were looked at, by eye.
+- "Labelled knife within ±20 frames" suggests a missing label but does not prove it.
+- "OOD" is the gtv2 category name; those images were not looked at.
+
+Files: `results/samples/poc/investigate_stage1_light.py`; contact sheets `results/stage1_kd/light_invest/{lost_C_to_L,false_L}.jpg` (in git); per-knife table `results/stage1_kd/light_invest/knives.json`; output (gitignored) `results/stage1_kd/light_invest/invest.log`.
+
 Weights (dev PC only): `weights/stage1_repro846_labgtaug_p250_seed1{,_last}.pt`, `weights/stage1_repro846_labgtaugl_p250{,_last}.pt`. Data (dev PC only): `data/stage1_negatives/lab_gt_aug_light`. Contact sheet of the half-length copies: `results/stage1_kd/aug_samples_lab_gt_aug_light.jpg`. With C1 and L added, 108 lab knives are missed by all eight models (53 fast, 29 dark); `results/stage1_kd/aug_invest/never_found.json` now holds these 108. Output (gitignored): `results/stage1_kd/aug_invest/invest_seed1_light.log`. Training logs (gitignored): `results/stage1_kd/repro846_labgtaug_p250_seed1.log`, `results/stage1_kd/repro846_labgtaugl_p250.log`.
 
 ## Not checked
