@@ -602,6 +602,22 @@ Where L's lab false boxes are: 52 in `11-14_036_test_normal_mixed`, 26 in Oct 31
 - "Labelled knife within ±20 frames" suggests a missing label but does not prove it.
 - "OOD" is the gtv2 category name; those images were not looked at.
 
+**Where the false boxes sit in the label review (2026-11-21).** The lab test labels come from one 400-px tile per frame around the knife hand. Each tile got three votes (`results/stage1_kd/lab_label/votes.csv`). Only tiles where the votes disagreed, or disagreed with the detectors of that time, went to Claude (407 test tiles) or to the human (670 test tiles).
+
+Of L's 128 lab false boxes at conf 0.25:
+- **28 lie outside the tile.** No one ever saw that spot: the other hand, or far from the wrist.
+- **100 lie inside it.**
+  - 67 are in tiles all three voters called "no knife", with no second look.
+  - 10 are in tiles Claude called "no knife", and 2 in tiles the human did.
+  - The rest are in tiles that hold a labelled knife, where the false box is a second box.
+
+16 of the 67 unanimous "no knife" tiles with a box at conf ≥ 0.40 were looked at by eye, at 320 px:
+- 6 show an empty hand (label right);
+- 3–4 show a dark knife held down against dark trousers (label wrong);
+- about 6 cannot be told: a blurred hand, or something at the chair.
+
+So part of the "false boxes" are knives missing from the test labels, and precision on the lab test is understated. The training labels were made the same way, so they very likely have the same gap; that was not checked. Script (scratch, not kept): false boxes matched to `lab_items.json` tiles and `votes.csv`.
+
 Files: `results/samples/poc/investigate_stage1_light.py`; contact sheets `results/stage1_kd/light_invest/{lost_C_to_L,false_L}.jpg` (in git); per-knife table `results/stage1_kd/light_invest/knives.json`; output (gitignored) `results/stage1_kd/light_invest/invest.log`.
 
 Weights (dev PC only): `weights/stage1_repro846_labgtaug_p250_seed1{,_last}.pt`, `weights/stage1_repro846_labgtaugl_p250{,_last}.pt`. Data (dev PC only): `data/stage1_negatives/lab_gt_aug_light`. Contact sheet of the half-length copies: `results/stage1_kd/aug_samples_lab_gt_aug_light.jpg`. With C1 and L added, 108 lab knives are missed by all eight models (53 fast, 29 dark); `results/stage1_kd/aug_invest/never_found.json` now holds these 108. Output (gitignored): `results/stage1_kd/aug_invest/invest_seed1_light.log`. Training logs (gitignored): `results/stage1_kd/repro846_labgtaug_p250_seed1.log`, `results/stage1_kd/repro846_labgtaugl_p250.log`.
