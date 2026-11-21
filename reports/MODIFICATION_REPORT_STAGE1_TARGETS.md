@@ -25,15 +25,15 @@ The labelling followed the by-eye rule: four voters (three Haiku agents at high 
 .venv/Scripts/python.exe results/samples/poc/label_stage1_visibility.py review     # unsure ones -> review_visibility.bat
 ```
 
-| Label | Knives | By vote | By Claude |
-|---|---|---|---|
-| clear | 816 | 658 | 158 |
-| blurred | 190 | 63 | 127 |
-| hidden | 250 | 88 | 162 |
-| no knife | 1 | 1 | |
-| unsure (waits for the human) | 232 | | |
+| Label | Knives | By vote | By Claude | By the human (`review_visibility.bat`) |
+|---|---|---|---|---|
+| clear | 991 | 658 | 158 | 175 |
+| blurred | 208 | 63 | 127 | 18 |
+| hidden | 272 | 88 | 162 | 22 |
+| no knife | 12 | 1 | | 11 |
+| unsure (human: cannot tell) | 6 | | | |
 
-The four voters agreed on 810 of 1,489 knives. Claude looked at the other 679 and was sure of 447.
+The four voters agreed on 810 of 1,489 knives. Claude looked at the other 679 and was sure of 447; the human answered the other 232. Of Claude's 232 unsure guesses the human called 175 clear, including 42 that Claude had guessed "hidden" and 17 "blurred".
 
 **Step 2: scoring** (`results/samples/poc/eval_stage1_targets.py`, lab cache, no GPU):
 
@@ -53,13 +53,35 @@ The four voters agreed on 810 of 1,489 knives. Claude looked at the other 679 an
 
 | Knife label | Median hand speed | Share at a fast hand |
 |---|---|---|
-| clear | 0.36 | 30 % |
-| blurred | 0.70 | 72 % |
-| hidden | 0.27 | 22 % |
+| clear | 0.38 | 33 % |
+| blurred | 0.68 | 68 % |
+| hidden | 0.27 | 23 % |
 
-Hand speed separates blurred from clear knives, but not cleanly: 30 % of clear knives are at a fast hand.
+Hand speed separates blurred from clear knives, but not cleanly: a third of clear knives are at a fast hand.
 
-## Results
+## Results with the human's visibility answers (final)
+
+`eval_stage1_targets.py` after `tally` with `vis_review/human/votes.csv` (991 clear, 208 blurred, 272 hidden). P with false boxes in brackets; precision does not depend on the visibility labels and is unchanged.
+
+| Model | Clear R @0.10 | Clear R @0.20 | Clear R @0.25 | Blurred R @0.20 | Fast-hand P @0.20 | All P @0.20 |
+|---|---|---|---|---|---|---|
+| Shipped detector | 83.7 | 80.5 | 79.1 | 51.4 | 91.9 (30) | 66.9 (525) |
+| A YOLO26s `lab_gt` | 86.4 | 83.2 | 82.3 | 52.4 | 97.4 (9) | 95.6 (52) |
+| C YOLO26s blur/dark | 86.6 | 84.6 | 83.8 | 56.7 | 97.8 (8) | 95.7 (52) |
+| C1 same, seed 1 | 86.7 | 84.8 | 83.6 | 57.2 | 97.5 (9) | 97.3 (32) |
+| L half blur | 86.3 | 84.5 | 83.8 | 57.7 | 97.3 (10) | 94.6 (66) |
+| **B KD from E** | **88.5** | **87.1** | **86.1** | 61.1 | **98.1 (7)** | **97.0 (38)** |
+| H KD from F | 87.9 | 86.7 | 85.5 | 58.2 | 97.9 (8) | 95.9 (51) |
+| E teacher YOLO26x | 87.4 | 85.5 | 85.0 | 55.3 | 97.3 (10) | 95.6 (53) |
+| F teacher YOLO26x blur/dark | **90.1** | 88.4 | 88.0 | 57.7 | 96.7 (13) | 95.5 (57) |
+
+- **Only teacher F reaches 90 % clear recall, and only at conf 0.10** (fast-hand P 95.2 with 20 false boxes). No student reaches 90 % at any listed conf; the best is B, 88.5 % at 0.10 and 87.1 % at 0.20.
+- Clear recall fell 2–4 points against the first run. The reason: the 175 knives the human called clear are hard ones. B finds 71 % of them at 0.20, against 90.4 % of the 816 clear knives labelled before. F finds 76 %.
+- **11 test knives are "no knife" by the human's eye** (12 with the voters' one). The detectors still box 55–64 % of them. They sit in "all R" and their boxes count as correct; they are left in the labels until checked.
+
+## First results, before the human's answers
+
+The 232 knives Claude was unsure of were scored as their own group here, so the clear group was the 816 easier knives.
 
 **At each model's highest conf that still gives ≥ 90 % recall on clear knives** (lab test; P with false boxes in brackets):
 
@@ -96,6 +118,12 @@ Their box size is about the same as other clear knives (median 101 px against 11
 
 ## Findings
 
+With the human's answers (final numbers above):
+- **Fast-swing precision: met.** Unchanged, 96–98 % for every retrained model.
+- **Clear-knife recall: not met.** Best student B is at 87–88.5 %, best model F at 90.1 % (conf 0.10). The gap to 95 % is about 65 clear knives for B.
+- B is still the best student on both targets.
+
+First run (816 clear knives):
 - **Fast-swing precision is already met.** At fast hands every retrained model is at 95–98 % precision with 7–17 false boxes on the whole lab test. That is as high as or higher than at slow hands. The retrained models do not box random blur.
 - **Clear-knife recall stops at about 90 %.** Each retrained student reaches 90–91 % only at conf 0.10–0.20. The best single number is 92.5 % (teacher F, 0.10). The gap to 95 % is about 40 clear knives, and the models do not see most of them at all.
 - **B, the student distilled from E, is the best trade-off:** 90.4 % clear recall at conf 0.20 with 97 % precision and 7 fast-hand false boxes. The differences between students are 1–2 points, inside the 3-point training noise measured earlier.
@@ -110,7 +138,8 @@ Their box size is about the same as other clear knives (median 101 px against 11
 
 ## Not checked
 
-- 232 test knives still wait for the human's visibility label; they are scored as their own "unsure" group. When they are answered, re-run `tally` and `eval_stage1_targets.py`.
+- The human answered all 232; 6 stay "cannot tell". The 12 "no knife" knives are not removed from the labels yet.
+- The clear knives the models miss were not yet checked for label errors (wrong box, not really clear).
 - The visibility labels are from crops. A few "clear" knives may be partly hidden in the full frame.
 - Hand speed comes from pose 10 frames apart. A swing that starts and stops between two labelled frames looks slow. Boxes with no wrist found are not in the fast or slow groups.
 - Conf points are chosen on the test set.
