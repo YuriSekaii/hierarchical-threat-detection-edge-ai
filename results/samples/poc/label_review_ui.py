@@ -201,6 +201,8 @@ def run_ui(lab_label=LAB_LABEL, repo=REPO, all_flagged=False):
         print("no votes.csv; run tally first")
         return
     items_path = os.path.join(lab_label, "lab_items.json")
+    if not os.path.exists(items_path):  # review_stage1_candidates.py writes items.json
+        items_path = os.path.join(lab_label, "items.json")
     items = {it["id"]: it for it in json.load(open(items_path, encoding="utf-8"))}
 
     vcols = voter_columns(fields)
@@ -422,8 +424,9 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--all-flagged", action="store_true")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--dir", default=LAB_LABEL, help="folder with votes.csv and lab_items.json or items.json")
     args = ap.parse_args()
     if args.selftest:
         selftest()
     else:
-        run_ui(all_flagged=args.all_flagged)
+        run_ui(lab_label=os.path.abspath(args.dir), all_flagged=args.all_flagged)

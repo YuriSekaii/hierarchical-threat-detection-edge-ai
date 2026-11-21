@@ -414,6 +414,10 @@ def load_cache(cache_set_name):
         records = [r for r in records if os.path.basename(r["path"]) in keep]
         for r in records:
             r["gt"] = gt_boxes_for(r["path"], LAB_DIR)
+        if os.environ.get("LAB_FIX"):  # knives added by review_stage1_candidates.py apply: {image name: [[x1,y1,x2,y2] normalized]}
+            fix = json.load(open(os.environ["LAB_FIX"]))
+            for r in records:
+                r["gt"] += fix.get(os.path.basename(r["path"]), [])
     if os.environ.get("DROP_STATIC"):  # DROP_STATIC=<json [[x1,y1,x2,y2] px]>: stand-in for the pipeline's static filter
         static = json.load(open(os.environ["DROP_STATIC"]))
         for r in records:

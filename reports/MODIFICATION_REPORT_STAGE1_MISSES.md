@@ -593,7 +593,6 @@ Where L's lab false boxes are: 52 in `11-14_036_test_normal_mixed`, 26 in Oct 31
 **What this means:**
 - More blur/dark tuning will not raise recall. Recall at the working point is limited by false boxes at a hand, plus the 15 % of knives no student sees.
 - The levers are cutting hand false boxes and checking the test labels under them:
-  - the crop classifier of `stage1-phone-second-look`, applied to knives;
   - hard negatives of empty hands against dark clothes and chairs;
   - a hand check of the "false" boxes that sit on a knife.
 
@@ -616,7 +615,7 @@ Of L's 128 lab false boxes at conf 0.25:
 - 3–4 show a dark knife held down against dark trousers (label wrong);
 - about 6 cannot be told: a blurred hand, or something at the chair.
 
-So part of the "false boxes" are knives missing from the test labels, and precision on the lab test is understated. The training labels were made the same way, so they very likely have the same gap; that was not checked. Script (scratch, not kept): false boxes matched to `lab_items.json` tiles and `votes.csv`.
+So part of the "false boxes" are knives missing from the test labels, and precision on the lab test is understated. All of them were re-checked by eye in `MODIFICATION_REPORT_STAGE1_LABEL_RECHECK.md`: 40 test knives were missing, and with them the half-blur student is no longer behind (80.2 % against 81.6 % for C). The training labels were made the same way, so they very likely have the same gap; that was not checked. Script (scratch, not kept): false boxes matched to `lab_items.json` tiles and `votes.csv`.
 
 Files: `results/samples/poc/investigate_stage1_light.py`; contact sheets `results/stage1_kd/light_invest/{lost_C_to_L,false_L}.jpg` (in git); per-knife table `results/stage1_kd/light_invest/knives.json`; output (gitignored) `results/stage1_kd/light_invest/invest.log`.
 
