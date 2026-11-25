@@ -1,0 +1,434 @@
+{
+  "total": 4418,
+  "safe": 3589,
+  "suspect": 829,
+  "suspect_pos": 323,
+  "suspect_neg": 506,
+  "by_source": {
+    "phone": {
+      "safe_neg": 301,
+      "suspect_neg": 112
+    },
+    "other": {
+      "safe_neg": 172,
+      "suspect_neg": 15
+    },
+    "lab_gt": {
+      "safe_pos": 1581,
+      "safe_neg": 954,
+      "suspect_neg": 365,
+      "suspect_pos": 259
+    },
+    "orig_v2": {
+      "safe_pos": 466,
+      "suspect_pos": 64,
+      "safe_neg": 115,
+      "suspect_neg": 14
+    }
+  },
+  "flag_counts": {
+    "phone_unseen_hi_loss": 127,
+    "neg_det_hit": 250,
+    "neg_high_oof_loss": 145,
+    "neg_temporal_sandwich": 170,
+    "neg_cropcls_hi": 281,
+    "pos_unseen_oof_v2": 128,
+    "pos_high_oof_loss": 172,
+    "pos_feat_outlier": 83,
+    "pos_cropcls_low": 44,
+    "pos_far_from_wrist": 83,
+    "pos_multibox": 16,
+    "pos_neg_goal_grad": 191,
+    "pos_temporal_spike": 32,
+    "neg_neg_goal_grad": 27
+  },
+  "multi_dups": [
+    {
+      "idx": 422,
+      "img": "2026-11-05_003_thrust_chest_left_162544_f01420.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    },
+    {
+      "idx": 458,
+      "img": "2026-11-05_004_thrust_chest_back_162648_f00620.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    },
+    {
+      "idx": 644,
+      "img": "2026-11-05_011_overhand_stab_left_164932_f01020.jpg",
+      "n": 2,
+      "max_iou": 0.201,
+      "max_cov": 1.0
+    },
+    {
+      "idx": 1482,
+      "img": "2026-11-14_011_reach_110821_f00540.jpg",
+      "n": 2,
+      "max_iou": 0.23,
+      "max_cov": 1.0
+    },
+    {
+      "idx": 1555,
+      "img": "2026-11-14_015_hand_to_head_111553_f00000.jpg",
+      "n": 2,
+      "max_iou": 0.199,
+      "max_cov": 1.0
+    },
+    {
+      "idx": 1577,
+      "img": "2026-11-14_015_hand_to_head_111553_f00990.jpg",
+      "n": 2,
+      "max_iou": 0.236,
+      "max_cov": 1.0
+    },
+    {
+      "idx": 1850,
+      "img": "2026-11-14_044_sit_stand_141724_f01440.jpg",
+      "n": 2,
+      "max_iou": 0.176,
+      "max_cov": 1.0
+    },
+    {
+      "idx": 2786,
+      "img": "2026-11-05_015_cut_down_left_171030_f00680.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    },
+    {
+      "idx": 3301,
+      "img": "2026-11-05_024_walking_thrust_back_171913_f01500.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    },
+    {
+      "idx": 3376,
+      "img": "2026-11-05_027_thrust_chest_lefthand_172215_f00900.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    },
+    {
+      "idx": 3587,
+      "img": "2026-11-14_001_walking_thrust_lefthand_105208_f02400.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    },
+    {
+      "idx": 3697,
+      "img": "2026-11-14_013_stretch_111421_f00000.jpg",
+      "n": 2,
+      "max_iou": 0.21,
+      "max_cov": 1.0
+    },
+    {
+      "idx": 3742,
+      "img": "2026-11-14_017_point_111724_f00315.jpg",
+      "n": 2,
+      "max_iou": 0.202,
+      "max_cov": 0.42
+    },
+    {
+      "idx": 3788,
+      "img": "2026-11-14_019_inspect_knife_111905_f00270.jpg",
+      "n": 2,
+      "max_iou": 0.06,
+      "max_cov": 0.195
+    },
+    {
+      "idx": 3837,
+      "img": "2026-11-14_039_thrust_low_knife_left_141032_f00420.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    },
+    {
+      "idx": 3894,
+      "img": "2026-11-14_040_thrust_low_knife_back_141110_f00620.jpg",
+      "n": 2,
+      "max_iou": 0.0,
+      "max_cov": 0.0
+    }
+  ],
+  "hn_dups": [
+    {
+      "img": "2026-11-05_002_thrust_chest_front_162411_f00600.jpg",
+      "n": 2,
+      "max_iou": 0.574,
+      "max_cov": 0.949
+    },
+    {
+      "img": "2026-11-05_002_thrust_chest_front_162411_f00680.jpg",
+      "n": 2,
+      "max_iou": 0.128,
+      "max_cov": 0.887
+    },
+    {
+      "img": "2026-11-05_003_thrust_chest_left_162544_f00460.jpg",
+      "n": 2,
+      "max_iou": 0.345,
+      "max_cov": 0.721
+    },
+    {
+      "img": "2026-11-05_003_thrust_chest_left_162544_f01520.jpg",
+      "n": 2,
+      "max_iou": 0.698,
+      "max_cov": 0.873
+    },
+    {
+      "img": "2026-11-05_012_overhand_stab_back_165015_f00520.jpg",
+      "n": 2,
+      "max_iou": 0.163,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_025_walking_thrust_right_172028_f00980.jpg",
+      "n": 2,
+      "max_iou": 0.168,
+      "max_cov": 0.875
+    },
+    {
+      "img": "2026-11-05_025_walking_thrust_right_172028_f01160.jpg",
+      "n": 2,
+      "max_iou": 0.161,
+      "max_cov": 0.902
+    },
+    {
+      "img": "2026-11-05_027_thrust_chest_lefthand_172215_f01820.jpg",
+      "n": 2,
+      "max_iou": 0.164,
+      "max_cov": 0.343
+    },
+    {
+      "img": "2026-11-05_029_overhand_stab_lefthand_172441_f00580.jpg",
+      "n": 2,
+      "max_iou": 0.189,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_030_cut_down_lefthand_172533_f00860.jpg",
+      "n": 2,
+      "max_iou": 0.197,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_031_slash_lefthand_172614_f00240.jpg",
+      "n": 2,
+      "max_iou": 0.569,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_031_slash_lefthand_172614_f01220.jpg",
+      "n": 2,
+      "max_iou": 0.299,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-14_007_gesture_110417_f00990.jpg",
+      "n": 2,
+      "max_iou": 0.327,
+      "max_cov": 0.996
+    },
+    {
+      "img": "2026-11-14_011_reach_110821_f00045.jpg",
+      "n": 2,
+      "max_iou": 0.731,
+      "max_cov": 0.954
+    },
+    {
+      "img": "2026-11-14_012_reach_110935_f00000.jpg",
+      "n": 2,
+      "max_iou": 0.167,
+      "max_cov": 0.643
+    },
+    {
+      "img": "2026-11-14_017_point_111724_f00045.jpg",
+      "n": 2,
+      "max_iou": 0.595,
+      "max_cov": 0.812
+    },
+    {
+      "img": "2026-11-14_019_inspect_knife_111905_f00855.jpg",
+      "n": 2,
+      "max_iou": 0.174,
+      "max_cov": 0.608
+    },
+    {
+      "img": "2026-11-14_022_fidget_112113_f00135.jpg",
+      "n": 2,
+      "max_iou": 0.169,
+      "max_cov": 0.532
+    },
+    {
+      "img": "2026-11-14_024_hurry_112652_f00135.jpg",
+      "n": 2,
+      "max_iou": 0.632,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-14_039_thrust_low_knife_left_141032_f00680.jpg",
+      "n": 2,
+      "max_iou": 0.498,
+      "max_cov": 0.952
+    },
+    {
+      "img": "2026-11-14_042_put_down_table_141355_f00495.jpg",
+      "n": 2,
+      "max_iou": 0.551,
+      "max_cov": 0.754
+    },
+    {
+      "img": "2026-11-14_045_idle_141903_f00945.jpg",
+      "n": 2,
+      "max_iou": 0.189,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_002_thrust_chest_front_162411_f00600_aug.jpg",
+      "n": 2,
+      "max_iou": 0.495,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_002_thrust_chest_front_162411_f00680_aug.jpg",
+      "n": 2,
+      "max_iou": 0.185,
+      "max_cov": 0.878
+    },
+    {
+      "img": "2026-11-05_003_thrust_chest_left_162544_f00460_aug.jpg",
+      "n": 2,
+      "max_iou": 0.316,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_003_thrust_chest_left_162544_f01520_aug.jpg",
+      "n": 2,
+      "max_iou": 0.609,
+      "max_cov": 0.924
+    },
+    {
+      "img": "2026-11-05_012_overhand_stab_back_165015_f00520_aug.jpg",
+      "n": 2,
+      "max_iou": 0.214,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_025_walking_thrust_right_172028_f00980_aug.jpg",
+      "n": 2,
+      "max_iou": 0.228,
+      "max_cov": 0.785
+    },
+    {
+      "img": "2026-11-05_025_walking_thrust_right_172028_f01160_aug.jpg",
+      "n": 2,
+      "max_iou": 0.239,
+      "max_cov": 0.789
+    },
+    {
+      "img": "2026-11-05_027_thrust_chest_lefthand_172215_f01820_aug.jpg",
+      "n": 2,
+      "max_iou": 0.199,
+      "max_cov": 0.562
+    },
+    {
+      "img": "2026-11-05_029_overhand_stab_lefthand_172441_f00580_aug.jpg",
+      "n": 2,
+      "max_iou": 0.259,
+      "max_cov": 0.958
+    },
+    {
+      "img": "2026-11-05_030_cut_down_lefthand_172533_f00860_aug.jpg",
+      "n": 2,
+      "max_iou": 0.248,
+      "max_cov": 0.939
+    },
+    {
+      "img": "2026-11-05_031_slash_lefthand_172614_f00240_aug.jpg",
+      "n": 2,
+      "max_iou": 0.299,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-05_031_slash_lefthand_172614_f01220_aug.jpg",
+      "n": 2,
+      "max_iou": 0.151,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-14_007_gesture_110417_f00990_aug.jpg",
+      "n": 2,
+      "max_iou": 0.173,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-14_011_reach_110821_f00045_aug.jpg",
+      "n": 2,
+      "max_iou": 0.475,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-14_012_reach_110935_f00000_aug.jpg",
+      "n": 2,
+      "max_iou": 0.146,
+      "max_cov": 0.729
+    },
+    {
+      "img": "2026-11-14_017_point_111724_f00045_aug.jpg",
+      "n": 2,
+      "max_iou": 0.407,
+      "max_cov": 0.987
+    },
+    {
+      "img": "2026-11-14_019_inspect_knife_111905_f00855_aug.jpg",
+      "n": 2,
+      "max_iou": 0.174,
+      "max_cov": 0.608
+    },
+    {
+      "img": "2026-11-14_022_fidget_112113_f00135_aug.jpg",
+      "n": 2,
+      "max_iou": 0.203,
+      "max_cov": 0.498
+    },
+    {
+      "img": "2026-11-14_024_hurry_112652_f00135_aug.jpg",
+      "n": 2,
+      "max_iou": 0.326,
+      "max_cov": 1.0
+    },
+    {
+      "img": "2026-11-14_039_thrust_low_knife_left_141032_f00680_aug.jpg",
+      "n": 2,
+      "max_iou": 0.349,
+      "max_cov": 0.994
+    },
+    {
+      "img": "2026-11-14_042_put_down_table_141355_f00495_aug.jpg",
+      "n": 2,
+      "max_iou": 0.56,
+      "max_cov": 0.846
+    },
+    {
+      "img": "2026-11-14_045_idle_141903_f00945_aug.jpg",
+      "n": 2,
+      "max_iou": 0.243,
+      "max_cov": 0.97
+    },
+    {
+      "img": "2026-11-14_013_stretch_111421_f00472.jpg",
+      "n": 2,
+      "max_iou": 0.292,
+      "max_cov": 0.452
+    }
+  ],
+  "n_sheets": 70,
+  "pos_loss_hi": 3.533,
+  "neg_loss_hi": 0.139
+}
