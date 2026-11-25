@@ -1,4 +1,4 @@
-# Project rules for Claude
+# Project rules
 
 ## Reports
 
