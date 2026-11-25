@@ -1,0 +1,4643 @@
+[
+ {
+  "id": 0,
+  "orig_suspect_id": 2,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_004_thrust_chest_back_162648_f00620.jpg",
+  "split": "train",
+  "take": "lab_004_thrust_chest_back_162648",
+  "frame": 620,
+  "x0": 1181,
+  "y0": 551,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1355.0,
+     730.0,
+     1408.6,
+     772.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     1131.5,
+     280.5,
+     1212.6,
+     368.3
+    ],
+    "src": {
+     "det": 0.234
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     1072.0,
+     318.2,
+     1153.0,
+     392.5
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 1,
+  "orig_suspect_id": 4,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_039_thrust_low_knife_left_141032_f00840.jpg",
+  "split": "train",
+  "take": "lab_039_thrust_low_knife_left_141032",
+  "frame": 840,
+  "x0": 182,
+  "y0": 344,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     350.1,
+     519.1,
+     414.2,
+     569.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     311.8,
+     603.9,
+     403.4,
+     668.1
+    ],
+    "src": {
+     "det": 0.518
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 2,
+  "orig_suspect_id": 24,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_018_point_111809_f00585.jpg",
+  "split": "train",
+  "take": "lab_018_point_111809",
+  "frame": 585,
+  "x0": 390,
+  "y0": 590,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     527.3,
+     726.6,
+     654.4,
+     855.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 3,
+  "orig_suspect_id": 25,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_029_overhand_stab_lefthand_172441_f00240.jpg",
+  "split": "train",
+  "take": "lab_029_overhand_stab_lefthand_172441",
+  "frame": 240,
+  "x0": 0,
+  "y0": 117,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     103.7,
+     291.8,
+     162.8,
+     343.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 4,
+  "orig_suspect_id": 26,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_039_thrust_low_knife_left_141032_f00360.jpg",
+  "split": "train",
+  "take": "lab_039_thrust_low_knife_left_141032",
+  "frame": 360,
+  "x0": 393,
+  "y0": 201,
+  "crop": 445,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     554.1,
+     350.2,
+     677.8,
+     498.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 5,
+  "orig_suspect_id": 158,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_043_hand_to_hand_141558_f01575.jpg",
+  "split": "train",
+  "take": "lab_043_hand_to_hand_141558",
+  "frame": 1575,
+  "x0": 253,
+  "y0": 508,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     396.1,
+     645.9,
+     510.9,
+     772.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 6,
+  "orig_suspect_id": 167,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_039_thrust_low_knife_left_141032_f00780.jpg",
+  "split": "train",
+  "take": "lab_039_thrust_low_knife_left_141032",
+  "frame": 780,
+  "x0": 328,
+  "y0": 284,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     504.0,
+     453.1,
+     552.6,
+     515.1
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     422.5,
+     408.9,
+     544.2,
+     535.1
+    ],
+    "src": {
+     "det": 0.633
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 7,
+  "orig_suspect_id": 242,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_009_thrust_low_right_164655_f00600.jpg",
+  "split": "train",
+  "take": "lab_009_thrust_low_right_164655",
+  "frame": 600,
+  "x0": 805,
+  "y0": 452,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     968.0,
+     603.0,
+     1043.0,
+     703.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 8,
+  "orig_suspect_id": 266,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_009_thrust_low_right_164655_f02320.jpg",
+  "split": "train",
+  "take": "lab_009_thrust_low_right_164655",
+  "frame": 2320,
+  "x0": 833,
+  "y0": 618,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     995.0,
+     757.5,
+     1071.0,
+     880.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 9,
+  "orig_suspect_id": 285,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_010_overhand_stab_front_164840_f00700.jpg",
+  "split": "train",
+  "take": "lab_010_overhand_stab_front_164840",
+  "frame": 700,
+  "x0": 608,
+  "y0": 971,
+  "crop": 405,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     776.0,
+     1106.0,
+     846.0,
+     1241.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 10,
+  "orig_suspect_id": 635,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_003_thrust_chest_left_162544_f01420.jpg",
+  "split": "train",
+  "take": "lab_003_thrust_chest_left_162544",
+  "frame": 1420,
+  "x0": 966,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1006.0,
+     787.1,
+     1042.8,
+     822.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     993.5,
+     760.8,
+     1061.4,
+     837.7
+    ],
+    "src": {
+     "det": 0.373
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     1118.0,
+     44.3,
+     1215.0,
+     100.4
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 11,
+  "orig_suspect_id": 643,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_024_walking_thrust_back_171913_f01500.jpg",
+  "split": "train",
+  "take": "lab_024_walking_thrust_back_171913",
+  "frame": 1500,
+  "x0": 758,
+  "y0": 308,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     912.8,
+     858.2,
+     985.8,
+     909.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     851.0,
+     839.0,
+     991.6,
+     965.5
+    ],
+    "src": {
+     "det": 0.901
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     899.5,
+     462.7,
+     1017.2,
+     554.5
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 12,
+  "orig_suspect_id": 645,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_013_stretch_111421_f00585.jpg",
+  "split": "train",
+  "take": "lab_013_stretch_111421",
+  "frame": 585,
+  "x0": 115,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     289.5,
+     -0.0,
+     341.1,
+     41.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 13,
+  "orig_suspect_id": 660,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_017_cut_down_right_171159_f00340.jpg",
+  "split": "train",
+  "take": "lab_017_cut_down_right_171159",
+  "frame": 340,
+  "x0": 176,
+  "y0": 385,
+  "crop": 507,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     365.6,
+     554.1,
+     494.1,
+     723.3
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     407.3,
+     547.5,
+     503.3,
+     672.3
+    ],
+    "src": {
+     "det": 0.141
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 14,
+  "orig_suspect_id": 662,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_019_slash_left_171349_f00560.jpg",
+  "split": "train",
+  "take": "lab_019_slash_left_171349",
+  "frame": 560,
+  "x0": 357,
+  "y0": 292,
+  "crop": 433,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     542.5,
+     436.6,
+     605.2,
+     581.2
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 15,
+  "orig_suspect_id": 666,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_023_walking_thrust_left_171807_f00840.jpg",
+  "split": "train",
+  "take": "lab_023_walking_thrust_left_171807",
+  "frame": 840,
+  "x0": 859,
+  "y0": 436,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1021.8,
+     616.1,
+     1096.4,
+     656.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 16,
+  "orig_suspect_id": 668,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_002_walk_105425_f03420.jpg",
+  "split": "train",
+  "take": "lab_002_walk_105425",
+  "frame": 3420,
+  "x0": 638,
+  "y0": 162,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     798.7,
+     317.3,
+     877.5,
+     408.3
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     915.2,
+     338.1,
+     1024.8,
+     485.4
+    ],
+    "src": {
+     "det": 0.166
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 17,
+  "orig_suspect_id": 672,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_004_thrust_chest_back_162648_f00640.jpg",
+  "split": "train",
+  "take": "lab_004_thrust_chest_back_162648",
+  "frame": 640,
+  "x0": 869,
+  "y0": 525,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1046.6,
+     705.7,
+     1093.2,
+     745.8
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 18,
+  "orig_suspect_id": 674,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_018_point_111809_f01080.jpg",
+  "split": "train",
+  "take": "lab_018_point_111809",
+  "frame": 1080,
+  "x0": 0,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1.2,
+     65.7,
+     57.7,
+     131.3
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 19,
+  "orig_suspect_id": 700,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_027_thrust_chest_lefthand_172215_f00460.jpg",
+  "split": "train",
+  "take": "lab_027_thrust_chest_lefthand_172215",
+  "frame": 460,
+  "x0": 0,
+  "y0": 340,
+  "crop": 411,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     56.1,
+     500.6,
+     193.4,
+     591.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 20,
+  "orig_suspect_id": 701,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_003_walk_105653_f02835.jpg",
+  "split": "train",
+  "take": "lab_003_walk_105653",
+  "frame": 2835,
+  "x0": 145,
+  "y0": 398,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     297.7,
+     550.8,
+     393.5,
+     645.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 21,
+  "orig_suspect_id": 723,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_001_walking_thrust_lefthand_105208_f00560.jpg",
+  "split": "train",
+  "take": "lab_001_walking_thrust_lefthand_105208",
+  "frame": 560,
+  "x0": 600,
+  "y0": 671,
+  "crop": 461,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     754.2,
+     845.2,
+     908.0,
+     959.1
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 22,
+  "orig_suspect_id": 743,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_046_arms_out_143822_f01260.jpg",
+  "split": "train",
+  "take": "lab_046_arms_out_143822",
+  "frame": 1260,
+  "x0": 583,
+  "y0": 425,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     761.3,
+     572.6,
+     805.0,
+     678.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 23,
+  "orig_suspect_id": 766,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_023_hurry_112619_f00090.jpg",
+  "split": "train",
+  "take": "lab_023_hurry_112619",
+  "frame": 90,
+  "x0": 0,
+  "y0": 889,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     0.0,
+     1031.2,
+     40.3,
+     1148.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     0.4,
+     1006.3,
+     53.3,
+     1132.4
+    ],
+    "src": {
+     "det": 0.197
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 24,
+  "orig_suspect_id": 819,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_039_thrust_low_knife_left_141032_f00420.jpg",
+  "split": "train",
+  "take": "lab_039_thrust_low_knife_left_141032",
+  "frame": 420,
+  "x0": 537,
+  "y0": 496,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     313.1,
+     576.1,
+     484.7,
+     698.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     682.5,
+     638.4,
+     785.6,
+     748.4
+    ],
+    "src": {
+     "det": 0.518
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     693.7,
+     648.3,
+     781.9,
+     744.8
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 25,
+  "orig_suspect_id": 7,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_006_turn_110210_f00630.jpg",
+  "split": "train",
+  "take": "lab_006_turn_110210",
+  "frame": 630,
+  "x0": 221,
+  "y0": 520,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     377.7,
+     677.8,
+     464.6,
+     764.1
+    ],
+    "src": {
+     "det": 0.885
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 26,
+  "orig_suspect_id": 9,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_045_idle_141903_f00900.jpg",
+  "split": "train",
+  "take": "lab_045_idle_141903",
+  "frame": 900,
+  "x0": 576,
+  "y0": 582,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     738.4,
+     736.9,
+     813.7,
+     829.0
+    ],
+    "src": {
+     "det": 0.888
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     445.4,
+     662.7,
+     524.6,
+     759.5
+    ],
+    "src": {
+     "det": 0.4
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 27,
+  "orig_suspect_id": 12,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_007_gesture_110417_f01530.jpg",
+  "split": "train",
+  "take": "lab_007_gesture_110417",
+  "frame": 1530,
+  "x0": 316,
+  "y0": 408,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     459.2,
+     553.5,
+     573.0,
+     663.3
+    ],
+    "src": {
+     "det": 0.421
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 28,
+  "orig_suspect_id": 13,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_014_cut_down_front_170928_f00360.jpg",
+  "split": "train",
+  "take": "lab_014_cut_down_front_170928",
+  "frame": 360,
+  "x0": 269,
+  "y0": 545,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     437.6,
+     699.3,
+     501.2,
+     791.9
+    ],
+    "src": {
+     "det": 0.546
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 29,
+  "orig_suspect_id": 20,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_008_gesture_110515_f00135.jpg",
+  "split": "train",
+  "take": "lab_008_gesture_110515",
+  "frame": 135,
+  "x0": 681,
+  "y0": 497,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     820.8,
+     647.7,
+     942.4,
+     748.2
+    ],
+    "src": {
+     "det": 0.881
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 30,
+  "orig_suspect_id": 64,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_044_sit_stand_141724_f00270.jpg",
+  "split": "train",
+  "take": "lab_044_sit_stand_141724",
+  "frame": 270,
+  "x0": 255,
+  "y0": 566,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     398.4,
+     717.7,
+     513.5,
+     814.9
+    ],
+    "src": {
+     "det": 0.926
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 31,
+  "orig_suspect_id": 65,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f01200.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 1200,
+  "x0": 600,
+  "y0": 502,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     757.9,
+     637.4,
+     844.0,
+     767.9
+    ],
+    "src": {
+     "det": 0.895
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 32,
+  "orig_suspect_id": 66,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_023_hurry_112619_f00765.jpg",
+  "split": "train",
+  "take": "lab_023_hurry_112619",
+  "frame": 765,
+  "x0": 304,
+  "y0": 173,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     458.1,
+     329.9,
+     551.4,
+     417.6
+    ],
+    "src": {
+     "det": 0.929
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     335.8,
+     256.5,
+     410.9,
+     324.6
+    ],
+    "src": {
+     "det": 0.184
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 33,
+  "orig_suspect_id": 70,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_008_gesture_110515_f01485.jpg",
+  "split": "train",
+  "take": "lab_008_gesture_110515",
+  "frame": 1485,
+  "x0": 215,
+  "y0": 329,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     370.7,
+     479.5,
+     460.5,
+     579.3
+    ],
+    "src": {
+     "det": 0.855
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 34,
+  "orig_suspect_id": 71,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_006_turn_110210_f00225.jpg",
+  "split": "train",
+  "take": "lab_006_turn_110210",
+  "frame": 225,
+  "x0": 157,
+  "y0": 498,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     320.1,
+     657.5,
+     394.9,
+     740.1
+    ],
+    "src": {
+     "det": 0.77
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     710.1,
+     739.7,
+     796.2,
+     835.3
+    ],
+    "src": {
+     "det": 0.255
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 35,
+  "orig_suspect_id": 74,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_045_idle_141903_f00405.jpg",
+  "split": "train",
+  "take": "lab_045_idle_141903",
+  "frame": 405,
+  "x0": 253,
+  "y0": 534,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     413.3,
+     681.2,
+     493.3,
+     788.5
+    ],
+    "src": {
+     "det": 0.831
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 36,
+  "orig_suspect_id": 97,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_011_reach_110821_f00225.jpg",
+  "split": "train",
+  "take": "lab_011_reach_110821",
+  "frame": 225,
+  "x0": 372,
+  "y0": 649,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     524.7,
+     793.0,
+     620.6,
+     905.3
+    ],
+    "src": {
+     "det": 0.606
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 37,
+  "orig_suspect_id": 137,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_012_reach_110935_f00315.jpg",
+  "split": "train",
+  "take": "lab_012_reach_110935",
+  "frame": 315,
+  "x0": 286,
+  "y0": 538,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     422.8,
+     702.3,
+     551.0,
+     774.1
+    ],
+    "src": {
+     "det": 0.785
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 38,
+  "orig_suspect_id": 237,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_025_walking_thrust_right_172028_f00240.jpg",
+  "split": "train",
+  "take": "lab_025_walking_thrust_right_172028",
+  "frame": 240,
+  "x0": 0,
+  "y0": 468,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     14.9,
+     603.5,
+     143.6,
+     733.6
+    ],
+    "src": {
+     "det": 0.795
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 39,
+  "orig_suspect_id": 241,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_004_thrust_chest_back_162648_f00000.jpg",
+  "split": "train",
+  "take": "lab_004_thrust_chest_back_162648",
+  "frame": 0,
+  "x0": 439,
+  "y0": 306,
+  "crop": 414,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     584.1,
+     444.8,
+     708.0,
+     583.0
+    ],
+    "src": {
+     "det": 0.662
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     252.9,
+     229.6,
+     339.7,
+     320.7
+    ],
+    "src": {
+     "det": 0.227
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 40,
+  "orig_suspect_id": 359,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00000.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 0,
+  "x0": 114,
+  "y0": 62,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     264.4,
+     211.2,
+     364.3,
+     314.8
+    ],
+    "src": {
+     "det": 0.5
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     282.4,
+     175.7,
+     378.6,
+     221.0
+    ],
+    "src": {
+     "det": 0.075
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 41,
+  "orig_suspect_id": 381,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_007_gesture_110417_f01395.jpg",
+  "split": "train",
+  "take": "lab_007_gesture_110417",
+  "frame": 1395,
+  "x0": 694,
+  "y0": 0,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     836.7,
+     37.1,
+     953.0,
+     152.5
+    ],
+    "src": {
+     "det": 0.337
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 42,
+  "orig_suspect_id": 676,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f01340.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 1340,
+  "x0": 603,
+  "y0": 234,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     770.3,
+     391.9,
+     835.9,
+     477.7
+    ],
+    "src": {
+     "det": 0.876
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 43,
+  "orig_suspect_id": 678,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_011_reach_110821_f01395.jpg",
+  "split": "train",
+  "take": "lab_011_reach_110821",
+  "frame": 1395,
+  "x0": 1137,
+  "y0": 441,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1303.4,
+     579.7,
+     1370.8,
+     702.9
+    ],
+    "src": {
+     "det": 0.888
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     733.3,
+     616.4,
+     848.9,
+     728.4
+    ],
+    "src": {
+     "det": 0.663
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 44,
+  "orig_suspect_id": 682,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00640.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 640,
+  "x0": 556,
+  "y0": 499,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     722.3,
+     647.9,
+     791.6,
+     750.2
+    ],
+    "src": {
+     "det": 0.867
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 45,
+  "orig_suspect_id": 683,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_042_put_down_table_141355_f03060.jpg",
+  "split": "train",
+  "take": "lab_042_put_down_table_141355",
+  "frame": 3060,
+  "x0": 10,
+  "y0": 969,
+  "crop": 471,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     178.8,
+     1255.4,
+     312.9,
+     1412.6
+    ],
+    "src": {
+     "det": 0.748
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 46,
+  "orig_suspect_id": 684,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00660.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 660,
+  "x0": 554,
+  "y0": 319,
+  "crop": 413,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     721.7,
+     456.8,
+     800.3,
+     594.8
+    ],
+    "src": {
+     "det": 0.889
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 47,
+  "orig_suspect_id": 748,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00720.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 720,
+  "x0": 564,
+  "y0": 472,
+  "crop": 407,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     725.8,
+     608.0,
+     810.7,
+     743.9
+    ],
+    "src": {
+     "det": 0.908
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 48,
+  "orig_suspect_id": 749,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00480.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 480,
+  "x0": 556,
+  "y0": 357,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     713.4,
+     496.0,
+     800.4,
+     618.0
+    ],
+    "src": {
+     "det": 0.86
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 49,
+  "orig_suspect_id": 750,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f01580.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 1580,
+  "x0": 535,
+  "y0": 140,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     700.9,
+     288.8,
+     769.7,
+     391.3
+    ],
+    "src": {
+     "det": 0.445
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     743.6,
+     311.0,
+     812.4,
+     422.5
+    ],
+    "src": {
+     "det": 0.29
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 50,
+  "orig_suspect_id": 753,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00700.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 700,
+  "x0": 657,
+  "y0": 280,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     815.8,
+     432.4,
+     898.7,
+     529.3
+    ],
+    "src": {
+     "det": 0.82
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     842.8,
+     383.4,
+     917.8,
+     493.4
+    ],
+    "src": {
+     "det": 0.514
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 51,
+  "orig_suspect_id": 757,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00760.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 760,
+  "x0": 505,
+  "y0": 343,
+  "crop": 403,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     667.3,
+     477.7,
+     745.9,
+     612.1
+    ],
+    "src": {
+     "det": 0.854
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 52,
+  "orig_suspect_id": 760,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00600.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 600,
+  "x0": 586,
+  "y0": 289,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     739.1,
+     437.7,
+     833.5,
+     542.0
+    ],
+    "src": {
+     "det": 0.735
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 53,
+  "orig_suspect_id": 763,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f01620.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 1620,
+  "x0": 263,
+  "y0": 139,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     424.5,
+     306.2,
+     502.1,
+     372.4
+    ],
+    "src": {
+     "det": 0.691
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     288.7,
+     177.8,
+     391.1,
+     226.9
+    ],
+    "src": {
+     "det": 0.236
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 54,
+  "orig_suspect_id": 765,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00800.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 800,
+  "x0": 599,
+  "y0": 326,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     762.3,
+     474.6,
+     836.4,
+     577.6
+    ],
+    "src": {
+     "det": 0.186
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     766.5,
+     426.8,
+     855.3,
+     561.7
+    ],
+    "src": {
+     "det": 0.12
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 55,
+  "orig_suspect_id": 1,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_013_stretch_111421_f00000.jpg",
+  "split": "train",
+  "take": "lab_013_stretch_111421",
+  "frame": 0,
+  "x0": 144,
+  "y0": 185,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     280.3,
+     334.2,
+     409.0,
+     435.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     281.4,
+     381.1,
+     335.3,
+     432.0
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 56,
+  "orig_suspect_id": 52,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_031_slash_lefthand_172614_f01020.jpg",
+  "split": "train",
+  "take": "lab_031_slash_lefthand_172614",
+  "frame": 1020,
+  "x0": 568,
+  "y0": 534,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     737.8,
+     712.7,
+     799.2,
+     755.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     707.7,
+     733.3,
+     902.3,
+     885.0
+    ],
+    "src": {
+     "det": 0.078
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 57,
+  "orig_suspect_id": 61,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_011_overhand_stab_left_164932_f01020.jpg",
+  "split": "train",
+  "take": "lab_011_overhand_stab_left_164932",
+  "frame": 1020,
+  "x0": 1042,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1209.5,
+     57.5,
+     1276.4,
+     135.8
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     1178.2,
+     1.6,
+     1304.6,
+     188.7
+    ],
+    "src": {
+     "det": 0.85
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     1171.0,
+     -0.0,
+     1308.0,
+     189.9
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 58,
+  "orig_suspect_id": 172,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_017_cut_down_right_171159_f00940.jpg",
+  "split": "train",
+  "take": "lab_017_cut_down_right_171159",
+  "frame": 940,
+  "x0": 779,
+  "y0": 295,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     941.6,
+     471.8,
+     1017.3,
+     518.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     941.7,
+     466.8,
+     1047.7,
+     647.1
+    ],
+    "src": {
+     "det": 0.896
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 59,
+  "orig_suspect_id": 184,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_014_cut_down_front_170928_f00600.jpg",
+  "split": "train",
+  "take": "lab_014_cut_down_front_170928",
+  "frame": 600,
+  "x0": 344,
+  "y0": 475,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     509.0,
+     651.5,
+     580.7,
+     699.8
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 60,
+  "orig_suspect_id": 187,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_023_walking_thrust_left_171807_f01420.jpg",
+  "split": "train",
+  "take": "lab_023_walking_thrust_left_171807",
+  "frame": 1420,
+  "x0": 0,
+  "y0": 128,
+  "crop": 439,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     0.0,
+     283.4,
+     146.5,
+     412.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 61,
+  "orig_suspect_id": 190,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_021_slash_right_171549_f00940.jpg",
+  "split": "train",
+  "take": "lab_021_slash_right_171549",
+  "frame": 940,
+  "x0": 469,
+  "y0": 298,
+  "crop": 465,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     634.2,
+     453.3,
+     769.2,
+     608.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 62,
+  "orig_suspect_id": 207,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_028_thrust_low_lefthand_172335_f00720.jpg",
+  "split": "train",
+  "take": "lab_028_thrust_low_lefthand_172335",
+  "frame": 720,
+  "x0": 339,
+  "y0": 562,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     501.2,
+     741.2,
+     578.7,
+     784.3
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     490.0,
+     704.2,
+     614.3,
+     806.0
+    ],
+    "src": {
+     "det": 0.486
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 63,
+  "orig_suspect_id": 210,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_029_overhand_stab_lefthand_172441_f01000.jpg",
+  "split": "train",
+  "take": "lab_029_overhand_stab_lefthand_172441",
+  "frame": 1000,
+  "x0": 629,
+  "y0": 585,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     796.0,
+     762.9,
+     863.2,
+     808.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     787.2,
+     714.4,
+     889.9,
+     821.9
+    ],
+    "src": {
+     "det": 0.913
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 64,
+  "orig_suspect_id": 227,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 12-16-13_frame_0070.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 12-16-13",
+  "frame": 0,
+  "x0": 84,
+  "y0": 374,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     220.0,
+     546.0,
+     349.0,
+     602.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 65,
+  "orig_suspect_id": 233,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f01320.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 1320,
+  "x0": 656,
+  "y0": 500,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     815.5,
+     647.5,
+     897.0,
+     753.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 66,
+  "orig_suspect_id": 235,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_015_hand_to_head_111553_f00990.jpg",
+  "split": "train",
+  "take": "lab_015_hand_to_head_111553",
+  "frame": 990,
+  "x0": 126,
+  "y0": 681,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     294.4,
+     858.0,
+     358.0,
+     904.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     290.8,
+     849.1,
+     405.5,
+     932.5
+    ],
+    "src": {
+     "det": 0.844
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     285.7,
+     842.3,
+     411.3,
+     940.8
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 67,
+  "orig_suspect_id": 236,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_027_thrust_chest_lefthand_172215_f00900.jpg",
+  "split": "train",
+  "take": "lab_027_thrust_chest_lefthand_172215",
+  "frame": 900,
+  "x0": 416,
+  "y0": 364,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     831.1,
+     711.1,
+     919.2,
+     811.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     579.3,
+     522.4,
+     647.4,
+     612.7
+    ],
+    "src": {
+     "det": 0.401
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     582.7,
+     516.6,
+     650.2,
+     611.7
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 68,
+  "orig_suspect_id": 259,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_040_thrust_low_knife_back_141110_f00620.jpg",
+  "split": "train",
+  "take": "lab_040_thrust_low_knife_back_141110",
+  "frame": 620,
+  "x0": 698,
+  "y0": 689,
+  "crop": 438,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     844.7,
+     844.7,
+     990.9,
+     972.2
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     889.5,
+     254.8,
+     990.6,
+     368.0
+    ],
+    "src": {
+     "det": 0.794
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     873.3,
+     246.1,
+     994.7,
+     365.2
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 69,
+  "orig_suspect_id": 305,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_008_gesture_110515_f00180.jpg",
+  "split": "train",
+  "take": "lab_008_gesture_110515",
+  "frame": 180,
+  "x0": 396,
+  "y0": 488,
+  "crop": 457,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     566.2,
+     641.2,
+     683.0,
+     793.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 70,
+  "orig_suspect_id": 313,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 12-18-47_frame_0030.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 12-18-47",
+  "frame": 0,
+  "x0": 156,
+  "y0": 256,
+  "crop": 442,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     335.2,
+     403.4,
+     419.0,
+     551.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 71,
+  "orig_suspect_id": 592,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_011_reach_110821_f00540.jpg",
+  "split": "train",
+  "take": "lab_011_reach_110821",
+  "frame": 540,
+  "x0": 603,
+  "y0": 567,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     766.2,
+     741.0,
+     841.1,
+     794.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     753.7,
+     698.9,
+     864.9,
+     824.2
+    ],
+    "src": {
+     "det": 0.782
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     748.1,
+     686.2,
+     870.9,
+     826.9
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 72,
+  "orig_suspect_id": 639,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_017_point_111724_f00315.jpg",
+  "split": "train",
+  "take": "lab_017_point_111724",
+  "frame": 315,
+  "x0": 371,
+  "y0": 346,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     525.7,
+     499.6,
+     618.2,
+     593.8
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     483.7,
+     538.6,
+     592.0,
+     659.1
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 73,
+  "orig_suspect_id": 647,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_015_hand_to_head_111553_f00000.jpg",
+  "split": "train",
+  "take": "lab_015_hand_to_head_111553",
+  "frame": 0,
+  "x0": 114,
+  "y0": 246,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     273.0,
+     387.0,
+     356.7,
+     505.3
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     0.0,
+     206.7,
+     45.4,
+     325.4
+    ],
+    "src": {
+     "det": 0.275
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     302.2,
+     387.6,
+     347.8,
+     430.8
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 74,
+  "orig_suspect_id": 661,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_001_walking_thrust_lefthand_105208_f02400.jpg",
+  "split": "train",
+  "take": "lab_001_walking_thrust_lefthand_105208",
+  "frame": 2400,
+  "x0": 408,
+  "y0": 488,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     773.9,
+     714.8,
+     854.5,
+     814.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     788.7,
+     735.2,
+     841.7,
+     789.8
+    ],
+    "src": {
+     "det": 0.084
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     561.6,
+     638.9,
+     655.8,
+     737.3
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 75,
+  "orig_suspect_id": 675,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_044_sit_stand_141724_f01440.jpg",
+  "split": "train",
+  "take": "lab_044_sit_stand_141724",
+  "frame": 1440,
+  "x0": 812,
+  "y0": 819,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     945.9,
+     968.4,
+     1079.1,
+     1070.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     995.5,
+     993.1,
+     1078.3,
+     1063.8
+    ],
+    "src": {
+     "det": 0.065
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     1023.3,
+     1007.8,
+     1075.2,
+     1053.9
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 76,
+  "orig_suspect_id": 708,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_019_inspect_knife_111905_f00270.jpg",
+  "split": "train",
+  "take": "lab_019_inspect_knife_111905",
+  "frame": 270,
+  "x0": 315,
+  "y0": 323,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     459.1,
+     468.5,
+     572.8,
+     578.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     388.8,
+     410.2,
+     533.7,
+     545.0
+    ],
+    "src": {
+     "det": 0.51
+    }
+   },
+   {
+    "letter": "c",
+    "box": [
+     400.8,
+     441.4,
+     501.6,
+     491.8
+    ],
+    "src": {
+     "gt2": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 77,
+  "orig_suspect_id": 0,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f01240.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 1240,
+  "x0": 596,
+  "y0": 510,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     759.0,
+     665.0,
+     834.5,
+     755.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 78,
+  "orig_suspect_id": 10,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_022_fidget_112113_f00045.jpg",
+  "split": "train",
+  "take": "lab_022_fidget_112113",
+  "frame": 45,
+  "x0": 163,
+  "y0": 263,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     330.7,
+     423.3,
+     395.3,
+     502.7
+    ],
+    "src": {
+     "det": 0.623
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 79,
+  "orig_suspect_id": 18,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_008_gesture_110515_f00315.jpg",
+  "split": "train",
+  "take": "lab_008_gesture_110515",
+  "frame": 315,
+  "x0": 222,
+  "y0": 53,
+  "crop": 441,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     374.5,
+     200.0,
+     511.2,
+     347.1
+    ],
+    "src": {
+     "det": 0.727
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     403.5,
+     251.9,
+     498.3,
+     371.0
+    ],
+    "src": {
+     "det": 0.473
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 80,
+  "orig_suspect_id": 35,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 11-54-44_frame_0030.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 11-54-44",
+  "frame": 0,
+  "x0": 1004,
+  "y0": 470,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1181.0,
+     654.0,
+     1228.0,
+     686.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     1115.0,
+     943.6,
+     1192.7,
+     1021.3
+    ],
+    "src": {
+     "det": 0.089
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 81,
+  "orig_suspect_id": 39,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_040_thrust_low_knife_back_141110_f00440.jpg",
+  "split": "train",
+  "take": "lab_040_thrust_low_knife_back_141110",
+  "frame": 440,
+  "x0": 735,
+  "y0": 681,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     885.9,
+     817.5,
+     985.3,
+     945.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 82,
+  "orig_suspect_id": 51,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_013_overhand_stab_right_165108_f00420.jpg",
+  "split": "train",
+  "take": "lab_013_overhand_stab_right_165108",
+  "frame": 420,
+  "x0": 594,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     743.0,
+     0.0,
+     845.5,
+     65.2
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 83,
+  "orig_suspect_id": 78,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_017_point_111724_f01215.jpg",
+  "split": "train",
+  "take": "lab_017_point_111724",
+  "frame": 1215,
+  "x0": 0,
+  "y0": 512,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     132.7,
+     656.4,
+     231.1,
+     768.5
+    ],
+    "src": {
+     "det": 0.703
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     483.7,
+     602.9,
+     547.1,
+     691.9
+    ],
+    "src": {
+     "det": 0.36
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 84,
+  "orig_suspect_id": 81,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_046_arms_out_143822_f00405.jpg",
+  "split": "train",
+  "take": "lab_046_arms_out_143822",
+  "frame": 405,
+  "x0": 364,
+  "y0": 299,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     509.4,
+     434.4,
+     620.3,
+     564.4
+    ],
+    "src": {
+     "det": 0.873
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 85,
+  "orig_suspect_id": 85,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_047_hand_to_face_143929_f00315.jpg",
+  "split": "train",
+  "take": "lab_047_hand_to_face_143929",
+  "frame": 315,
+  "x0": 488,
+  "y0": 428,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     634.1,
+     578.5,
+     743.2,
+     678.3
+    ],
+    "src": {
+     "det": 0.828
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 86,
+  "orig_suspect_id": 91,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 12-15-35_frame_0000.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 12-15-35",
+  "frame": 0,
+  "x0": 1098,
+  "y0": 249,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1272.6,
+     422.9,
+     1324.9,
+     476.6
+    ],
+    "src": {
+     "det": 0.344
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 87,
+  "orig_suspect_id": 92,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_024_hurry_112652_f00225.jpg",
+  "split": "train",
+  "take": "lab_024_hurry_112652",
+  "frame": 225,
+  "x0": 773,
+  "y0": 694,
+  "crop": 441,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     920.3,
+     844.6,
+     1067.6,
+     985.1
+    ],
+    "src": {
+     "det": 0.652
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     747.4,
+     649.2,
+     821.1,
+     699.2
+    ],
+    "src": {
+     "det": 0.122
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 88,
+  "orig_suspect_id": 99,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_042_put_down_table_141355_f02880.jpg",
+  "split": "train",
+  "take": "lab_042_put_down_table_141355",
+  "frame": 2880,
+  "x0": 0,
+  "y0": 456,
+  "crop": 406,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     0.0,
+     592.1,
+     55.5,
+     727.7
+    ],
+    "src": {
+     "det": 0.572
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 89,
+  "orig_suspect_id": 106,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_031_slash_lefthand_172614_f00740.jpg",
+  "split": "train",
+  "take": "lab_031_slash_lefthand_172614",
+  "frame": 740,
+  "x0": 168,
+  "y0": 369,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     330.2,
+     535.3,
+     406.4,
+     604.2
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 90,
+  "orig_suspect_id": 118,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 11-55-00_frame_0000.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 11-55-00",
+  "frame": 0,
+  "x0": 1191,
+  "y0": 636,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1366.5,
+     820.5,
+     1416.4,
+     851.9
+    ],
+    "src": {
+     "det": 0.32
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 91,
+  "orig_suspect_id": 119,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_043_hand_to_hand_141558_f00540.jpg",
+  "split": "train",
+  "take": "lab_043_hand_to_hand_141558",
+  "frame": 540,
+  "x0": 579,
+  "y0": 360,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     728.5,
+     509.0,
+     830.1,
+     611.7
+    ],
+    "src": {
+     "det": 0.175
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 92,
+  "orig_suspect_id": 129,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_021_fidget_112039_f00405.jpg",
+  "split": "train",
+  "take": "lab_021_fidget_112039",
+  "frame": 405,
+  "x0": 90,
+  "y0": 660,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     249.0,
+     809.4,
+     332.1,
+     912.3
+    ],
+    "src": {
+     "det": 0.778
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     579.6,
+     875.3,
+     676.2,
+     999.2
+    ],
+    "src": {
+     "det": 0.509
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 93,
+  "orig_suspect_id": 188,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 12-17-02_frame_0020.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 12-17-02",
+  "frame": 0,
+  "x0": 152,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     312.8,
+     151.8,
+     393.2,
+     237.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     312.5,
+     147.8,
+     432.9,
+     254.6
+    ],
+    "src": {
+     "det": 0.768
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 94,
+  "orig_suspect_id": 238,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_025_walking_thrust_right_172028_f00380.jpg",
+  "split": "train",
+  "take": "lab_025_walking_thrust_right_172028",
+  "frame": 380,
+  "x0": 60,
+  "y0": 361,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     232.8,
+     526.1,
+     288.2,
+     596.6
+    ],
+    "src": {
+     "det": 0.837
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 95,
+  "orig_suspect_id": 243,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 11-55-55_frame_0010.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 11-55-55",
+  "frame": 0,
+  "x0": 26,
+  "y0": 574,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     204.0,
+     736.0,
+     249.0,
+     812.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     186.9,
+     719.8,
+     257.2,
+     817.0
+    ],
+    "src": {
+     "det": 0.662
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 96,
+  "orig_suspect_id": 263,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 12-13-54_frame_0050.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 12-13-54",
+  "frame": 0,
+  "x0": 1078,
+  "y0": 785,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1243.8,
+     955.2,
+     1313.5,
+     1015.1
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 97,
+  "orig_suspect_id": 277,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 12-18-16_frame_0070.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 12-18-16",
+  "frame": 0,
+  "x0": 1024,
+  "y0": 439,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1203.1,
+     610.9,
+     1245.8,
+     667.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 98,
+  "orig_suspect_id": 287,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_004_thrust_chest_back_162648_f00720.jpg",
+  "split": "train",
+  "take": "lab_004_thrust_chest_back_162648",
+  "frame": 720,
+  "x0": 1105,
+  "y0": 642,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1282.0,
+     810.5,
+     1329.0,
+     874.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 99,
+  "orig_suspect_id": 289,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_010_overhand_stab_front_164840_f00960.jpg",
+  "split": "train",
+  "take": "lab_010_overhand_stab_front_164840",
+  "frame": 960,
+  "x0": 632,
+  "y0": 744,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     793.5,
+     901.0,
+     872.0,
+     988.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     794.5,
+     913.4,
+     859.3,
+     974.1
+    ],
+    "src": {
+     "det": 0.073
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 100,
+  "orig_suspect_id": 293,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 11-51-26_frame_0080.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 11-51-26",
+  "frame": 0,
+  "x0": 1174,
+  "y0": 747,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1344.7,
+     915.1,
+     1404.7,
+     979.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 101,
+  "orig_suspect_id": 299,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_028_thrust_low_lefthand_172335_f00940.jpg",
+  "split": "train",
+  "take": "lab_028_thrust_low_lefthand_172335",
+  "frame": 940,
+  "x0": 343,
+  "y0": 538,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     499.5,
+     692.0,
+     586.9,
+     785.4
+    ],
+    "src": {
+     "det": 0.221
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 102,
+  "orig_suspect_id": 360,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_003_walk_105653_f02880.jpg",
+  "split": "train",
+  "take": "lab_003_walk_105653",
+  "frame": 2880,
+  "x0": 6,
+  "y0": 200,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     148.3,
+     345.9,
+     263.9,
+     454.3
+    ],
+    "src": {
+     "det": 0.157
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     0.1,
+     275.9,
+     66.8,
+     393.8
+    ],
+    "src": {
+     "det": 0.117
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 103,
+  "orig_suspect_id": 362,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_014_stretch_111505_f00945.jpg",
+  "split": "train",
+  "take": "lab_014_stretch_111505",
+  "frame": 945,
+  "x0": 0,
+  "y0": 258,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     78.8,
+     404.3,
+     201.0,
+     513.5
+    ],
+    "src": {
+     "det": 0.309
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 104,
+  "orig_suspect_id": 366,
+  "img": "data/stage1_negatives/lab_v2/images/train/2025-09-27 11-52-11_frame_0090.jpg",
+  "split": "train",
+  "take": "orig_2025-09-27 11-52-11",
+  "frame": 0,
+  "x0": 676,
+  "y0": 548,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     850.9,
+     718.0,
+     902.5,
+     778.5
+    ],
+    "src": {
+     "det": 0.24
+    }
+   }
+  ],
+  "source": "orig_v2"
+ },
+ {
+  "id": 105,
+  "orig_suspect_id": 644,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_002_walk_105425_f02610.jpg",
+  "split": "train",
+  "take": "lab_002_walk_105425",
+  "frame": 2610,
+  "x0": 0,
+  "y0": 169,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     50.0,
+     323.2,
+     146.6,
+     416.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 106,
+  "orig_suspect_id": 646,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_009_bend_pick_up_110611_f00990.jpg",
+  "split": "train",
+  "take": "lab_009_bend_pick_up_110611",
+  "frame": 990,
+  "x0": 229,
+  "y0": 927,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     399.1,
+     1080.9,
+     460.5,
+     1173.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 107,
+  "orig_suspect_id": 649,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_003_thrust_chest_left_162544_f01020.jpg",
+  "split": "train",
+  "take": "lab_003_thrust_chest_left_162544",
+  "frame": 1020,
+  "x0": 457,
+  "y0": 264,
+  "crop": 464,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     634.5,
+     419.2,
+     744.9,
+     574.1
+    ],
+    "src": {
+     "det": 0.927
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 108,
+  "orig_suspect_id": 650,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_003_thrust_chest_left_162544_f01460.jpg",
+  "split": "train",
+  "take": "lab_003_thrust_chest_left_162544",
+  "frame": 1460,
+  "x0": 435,
+  "y0": 258,
+  "crop": 464,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     613.4,
+     413.4,
+     721.1,
+     568.1
+    ],
+    "src": {
+     "det": 0.86
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 109,
+  "orig_suspect_id": 653,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_017_point_111724_f00270.jpg",
+  "split": "train",
+  "take": "lab_017_point_111724",
+  "frame": 270,
+  "x0": 254,
+  "y0": 29,
+  "crop": 460,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     407.8,
+     184.3,
+     561.4,
+     334.4
+    ],
+    "src": {
+     "det": 0.402
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 110,
+  "orig_suspect_id": 663,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_009_bend_pick_up_110611_f00090.jpg",
+  "split": "train",
+  "take": "lab_009_bend_pick_up_110611",
+  "frame": 90,
+  "x0": 417,
+  "y0": 735,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     594.1,
+     904.4,
+     641.0,
+     967.1
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     606.2,
+     891.9,
+     696.2,
+     990.0
+    ],
+    "src": {
+     "det": 0.87
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 111,
+  "orig_suspect_id": 665,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_024_walking_thrust_back_171913_f01160.jpg",
+  "split": "train",
+  "take": "lab_024_walking_thrust_back_171913",
+  "frame": 1160,
+  "x0": 778,
+  "y0": 1040,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     932.8,
+     1395.0,
+     1023.7,
+     1440.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 112,
+  "orig_suspect_id": 667,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_008_gesture_110515_f01035.jpg",
+  "split": "train",
+  "take": "lab_008_gesture_110515",
+  "frame": 1035,
+  "x0": 655,
+  "y0": 282,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     812.8,
+     428.7,
+     898.5,
+     535.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 113,
+  "orig_suspect_id": 673,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_001_walking_thrust_lefthand_105208_f01280.jpg",
+  "split": "train",
+  "take": "lab_001_walking_thrust_lefthand_105208",
+  "frame": 1280,
+  "x0": 131,
+  "y0": 589,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     300.6,
+     757.6,
+     362.6,
+     821.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     677.7,
+     768.7,
+     754.5,
+     856.7
+    ],
+    "src": {
+     "det": 0.89
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 114,
+  "orig_suspect_id": 679,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_011_overhand_stab_left_164932_f00220.jpg",
+  "split": "train",
+  "take": "lab_011_overhand_stab_left_164932",
+  "frame": 220,
+  "x0": 554,
+  "y0": 458,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     731.9,
+     638.9,
+     777.0,
+     678.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 115,
+  "orig_suspect_id": 680,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_018_slash_front_171258_f00840.jpg",
+  "split": "train",
+  "take": "lab_018_slash_front_171258",
+  "frame": 840,
+  "x0": 44,
+  "y0": 506,
+  "crop": 477,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     203.0,
+     676.9,
+     362.3,
+     813.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 116,
+  "orig_suspect_id": 685,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_028_thrust_low_lefthand_172335_f00800.jpg",
+  "split": "train",
+  "take": "lab_028_thrust_low_lefthand_172335",
+  "frame": 800,
+  "x0": 268,
+  "y0": 211,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     421.7,
+     367.2,
+     516.0,
+     456.3
+    ],
+    "src": {
+     "det": 0.777
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     422.9,
+     380.4,
+     486.5,
+     431.7
+    ],
+    "src": {
+     "det": 0.069
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 117,
+  "orig_suspect_id": 686,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00740.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 740,
+  "x0": 592,
+  "y0": 511,
+  "crop": 409,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     754.5,
+     648.3,
+     838.7,
+     784.6
+    ],
+    "src": {
+     "det": 0.771
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 118,
+  "orig_suspect_id": 689,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00420.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 420,
+  "x0": 481,
+  "y0": 336,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     644.5,
+     496.8,
+     719.2,
+     576.4
+    ],
+    "src": {
+     "det": 0.617
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 119,
+  "orig_suspect_id": 702,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_031_slash_lefthand_172614_f01240.jpg",
+  "split": "train",
+  "take": "lab_031_slash_lefthand_172614",
+  "frame": 1240,
+  "x0": 165,
+  "y0": 203,
+  "crop": 462,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     329.2,
+     357.2,
+     464.3,
+     511.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 120,
+  "orig_suspect_id": 711,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_031_slash_lefthand_172614_f00280.jpg",
+  "split": "train",
+  "take": "lab_031_slash_lefthand_172614",
+  "frame": 280,
+  "x0": 350,
+  "y0": 399,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     488.1,
+     546.5,
+     612.7,
+     653.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 121,
+  "orig_suspect_id": 716,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_013_stretch_111421_f00180.jpg",
+  "split": "train",
+  "take": "lab_013_stretch_111421",
+  "frame": 180,
+  "x0": 144,
+  "y0": 438,
+  "crop": 416,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     293.9,
+     577.5,
+     410.2,
+     716.2
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 122,
+  "orig_suspect_id": 718,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_019_slash_left_171349_f00980.jpg",
+  "split": "train",
+  "take": "lab_019_slash_left_171349",
+  "frame": 980,
+  "x0": 711,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     884.5,
+     148.3,
+     938.1,
+     201.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 123,
+  "orig_suspect_id": 720,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_007_gesture_110417_f01170.jpg",
+  "split": "train",
+  "take": "lab_007_gesture_110417",
+  "frame": 1170,
+  "x0": 654,
+  "y0": 462,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     811.4,
+     624.4,
+     896.7,
+     700.8
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 124,
+  "orig_suspect_id": 721,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_045_idle_141903_f01350.jpg",
+  "split": "train",
+  "take": "lab_045_idle_141903",
+  "frame": 1350,
+  "x0": 5,
+  "y0": 483,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     176.2,
+     653.9,
+     234.4,
+     713.0
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 125,
+  "orig_suspect_id": 722,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_017_point_111724_f00000.jpg",
+  "split": "train",
+  "take": "lab_017_point_111724",
+  "frame": 0,
+  "x0": 0,
+  "y0": 42,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     1.3,
+     195.9,
+     89.8,
+     289.9
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 126,
+  "orig_suspect_id": 726,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_008_gesture_110515_f00270.jpg",
+  "split": "train",
+  "take": "lab_008_gesture_110515",
+  "frame": 270,
+  "x0": 741,
+  "y0": 401,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     893.9,
+     553.1,
+     989.1,
+     649.2
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 127,
+  "orig_suspect_id": 729,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_031_slash_lefthand_172614_f01300.jpg",
+  "split": "train",
+  "take": "lab_031_slash_lefthand_172614",
+  "frame": 1300,
+  "x0": 489,
+  "y0": 318,
+  "crop": 562,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     703.6,
+     505.3,
+     837.2,
+     692.8
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 128,
+  "orig_suspect_id": 730,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_019_inspect_knife_111905_f01170.jpg",
+  "split": "train",
+  "take": "lab_019_inspect_knife_111905",
+  "frame": 1170,
+  "x0": 141,
+  "y0": 171,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     320.1,
+     347.5,
+     363.3,
+     394.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     54.1,
+     0.0,
+     131.8,
+     68.6
+    ],
+    "src": {
+     "det": 0.52
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 129,
+  "orig_suspect_id": 735,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_001_walking_thrust_lefthand_105208_f01200.jpg",
+  "split": "train",
+  "take": "lab_001_walking_thrust_lefthand_105208",
+  "frame": 1200,
+  "x0": 173,
+  "y0": 630,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     344.0,
+     801.4,
+     402.5,
+     860.3
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     714.8,
+     790.0,
+     791.9,
+     870.2
+    ],
+    "src": {
+     "det": 0.194
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 130,
+  "orig_suspect_id": 736,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_037_overhand_bending_front_140817_f01380.jpg",
+  "split": "train",
+  "take": "lab_037_overhand_bending_front_140817",
+  "frame": 1380,
+  "x0": 0,
+  "y0": 290,
+  "crop": 697,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     0.0,
+     523.1,
+     78.5,
+     755.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 131,
+  "orig_suspect_id": 738,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_001_walking_thrust_lefthand_105208_f01460.jpg",
+  "split": "train",
+  "take": "lab_001_walking_thrust_lefthand_105208",
+  "frame": 1460,
+  "x0": 190,
+  "y0": 468,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     356.5,
+     629.5,
+     424.1,
+     706.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     670.8,
+     753.6,
+     753.5,
+     850.1
+    ],
+    "src": {
+     "det": 0.636
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 132,
+  "orig_suspect_id": 744,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_011_overhand_stab_left_164932_f00200.jpg",
+  "split": "train",
+  "take": "lab_011_overhand_stab_left_164932",
+  "frame": 200,
+  "x0": 550,
+  "y0": 457,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     732.7,
+     639.7,
+     768.3,
+     674.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 133,
+  "orig_suspect_id": 745,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_011_overhand_stab_left_164932_f00140.jpg",
+  "split": "train",
+  "take": "lab_011_overhand_stab_left_164932",
+  "frame": 140,
+  "x0": 532,
+  "y0": 508,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     706.5,
+     679.5,
+     759.0,
+     738.5
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 134,
+  "orig_suspect_id": 746,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_031_slash_lefthand_172614_f00700.jpg",
+  "split": "train",
+  "take": "lab_031_slash_lefthand_172614",
+  "frame": 700,
+  "x0": 106,
+  "y0": 0,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     241.6,
+     -0.0,
+     370.5,
+     70.1
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 135,
+  "orig_suspect_id": 747,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_031_slash_lefthand_172614_f01360.jpg",
+  "split": "train",
+  "take": "lab_031_slash_lefthand_172614",
+  "frame": 1360,
+  "x0": 120,
+  "y0": 14,
+  "crop": 442,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     280.8,
+     162.0,
+     402.2,
+     309.4
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 136,
+  "orig_suspect_id": 751,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_021_slash_right_171549_f00900.jpg",
+  "split": "train",
+  "take": "lab_021_slash_right_171549",
+  "frame": 900,
+  "x0": 244,
+  "y0": 662,
+  "crop": 400,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     379.2,
+     807.2,
+     510.0,
+     918.7
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 137,
+  "orig_suspect_id": 756,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f01180.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 1180,
+  "x0": 576,
+  "y0": 444,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     733.5,
+     594.0,
+     818.8,
+     694.8
+    ],
+    "src": {
+     "det": 0.758
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     1015.9,
+     658.8,
+     1080.1,
+     745.0
+    ],
+    "src": {
+     "det": 0.146
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 138,
+  "orig_suspect_id": 758,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_021_slash_right_171549_f01320.jpg",
+  "split": "train",
+  "take": "lab_021_slash_right_171549",
+  "frame": 1320,
+  "x0": 98,
+  "y0": 41,
+  "crop": 563,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     294.4,
+     229.5,
+     465.2,
+     417.2
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     317.4,
+     298.1,
+     460.4,
+     427.2
+    ],
+    "src": {
+     "det": 0.143
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 139,
+  "orig_suspect_id": 759,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_021_slash_right_171549_f01600.jpg",
+  "split": "train",
+  "take": "lab_021_slash_right_171549",
+  "frame": 1600,
+  "x0": 480,
+  "y0": 402,
+  "crop": 462,
+  "kind": "pos",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     635.2,
+     556.4,
+     787.5,
+     710.6
+    ],
+    "src": {
+     "gt": 1.0
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 140,
+  "orig_suspect_id": 773,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00280.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 280,
+  "x0": 523,
+  "y0": 473,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     688.9,
+     620.6,
+     758.1,
+     726.6
+    ],
+    "src": {
+     "det": 0.745
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 141,
+  "orig_suspect_id": 779,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00400.jpg",
+  "split": "train",
+  "take": "lab_006_thrust_low_front_164412",
+  "frame": 400,
+  "x0": 569,
+  "y0": 286,
+  "crop": 400,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     732.6,
+     445.2,
+     805.7,
+     527.0
+    ],
+    "src": {
+     "det": 0.475
+    }
+   },
+   {
+    "letter": "b",
+    "box": [
+     717.4,
+     514.6,
+     791.9,
+     583.5
+    ],
+    "src": {
+     "det": 0.159
+    }
+   }
+  ],
+  "source": "lab_gt"
+ },
+ {
+  "id": 142,
+  "orig_suspect_id": 799,
+  "img": "data/stage1_negatives/lab_gt/images/train/2026-11-14_013_stretch_111421_f00720.jpg",
+  "split": "train",
+  "take": "lab_013_stretch_111421",
+  "frame": 720,
+  "x0": 235,
+  "y0": 40,
+  "crop": 415,
+  "kind": "neg",
+  "props": [
+   {
+    "letter": "a",
+    "box": [
+     382.6,
+     178.4,
+     504.0,
+     316.7
+    ],
+    "src": {
+     "det": 0.704
+    }
+   }
+  ],
+  "source": "lab_gt"
+ }
+]

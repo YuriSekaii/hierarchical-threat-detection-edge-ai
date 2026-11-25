@@ -847,6 +847,81 @@ def tally_eye():
     print("Saved ->", os.path.join(OUT, "eye_audit.json"))
 
 
+def build_review():
+    """Export non-ok lab_gt + orig_v2 audit items to results/stage1_kd/train_audit/human_review for label_review_ui.py."""
+    eye = json.load(open(os.path.join(OUT, "eye_audit.json"), encoding="utf-8"))
+    by_id = {s["id"]: s for s in json.load(open(os.path.join(OUT, "suspect_items.json"), encoding="utf-8"))}
+    rdir = os.path.join(OUT, "human_review")
+    os.makedirs(rdir, exist_ok=True)
+
+    # Order: confirmed corruptions first (wrong_pos, missed_knife, bad_box), then unclear; exclude phone/other takes
+    order = {"wrong_pos": 0, "missed_knife": 1, "bad_box": 2, "unclear": 3}
+    chosen = [x for x in eye["non_ok"] if x["source"] in ("lab_gt", "orig_v2") and x["verdict"] in order]
+    chosen.sort(key=lambda x: (order[x["verdict"]], x["id"]))
+
+    items, rows = [], []
+    fields = [
+        "tile_id", "img", "split", "take", "frame", "kind",
+        "swarm", "audit_flags", "n_votes", "agree", "flag_reason",
+        "claude_label", "claude_conf", "human_label", "human_box",
+        "final_label", "final_source", "last_update",
+    ]
+    for new_id, x in enumerate(chosen):
+        s = by_id[x["id"]]
+        img_path = os.path.join(REPO, s["img"])
+        img = cv2.imread(img_path)
+        assert img is not None, img_path
+        h, w = img.shape[:2]
+        cm = s["crop_meta"]
+
+        # Build up to 3 box suggestions: a = GT knife (or best OOF if NEG), b = best non-matching OOF/v2 box
+        props = []
+        if s["gt_knives"]:
+            gb = s["gt_knives"][0]
+            props.append({"letter": "a", "box": [round(gb[0] * w, 1), round(gb[1] * h, 1), round(gb[2] * w, 1), round(gb[3] * h, 1)], "src": {"gt": 1.0}})
+            for cand in sorted(s["oof_boxes"] + s["v2_boxes"], key=lambda b: -b["conf"]):
+                if box_iou(cand["xyxy"], gb) < 0.6 and len(props) < 3:
+                    let = "b" if len(props) == 1 else "c"
+                    cb = cand["xyxy"]
+                    props.append({"letter": let, "box": [round(cb[0] * w, 1), round(cb[1] * h, 1), round(cb[2] * w, 1), round(cb[3] * h, 1)], "src": {"det": round(cand["conf"], 3)}})
+                    break
+            if len(s["gt_knives"]) > 1 and len(props) < 3:
+                gb2 = s["gt_knives"][1]
+                let = "b" if len(props) == 1 else "c"
+                props.append({"letter": let, "box": [round(gb2[0] * w, 1), round(gb2[1] * h, 1), round(gb2[2] * w, 1), round(gb2[3] * h, 1)], "src": {"gt2": 1.0}})
+        else:
+            cands = sorted(s["oof_boxes"] + s["v2_boxes"], key=lambda b: -b["conf"])
+            for cand in cands:
+                if all(box_iou(cand["xyxy"], [p["box"][0] / w, p["box"][1] / h, p["box"][2] / w, p["box"][3] / h]) < 0.5 for p in props):
+                    let = "abc"[len(props)]
+                    cb = cand["xyxy"]
+                    props.append({"letter": let, "box": [round(cb[0] * w, 1), round(cb[1] * h, 1), round(cb[2] * w, 1), round(cb[3] * h, 1)], "src": {"det": round(cand["conf"], 3)}})
+                    if len(props) >= 2:
+                        break
+
+        fn = frame_num(s["img"]) or 0
+        items.append({
+            "id": new_id, "orig_suspect_id": x["id"], "img": s["img"], "split": "train",
+            "take": s["take"], "frame": fn, "x0": cm["x0"], "y0": cm["y0"], "crop": cm["side"],
+            "kind": s["kind"], "props": props, "source": s["source"],
+        })
+        rows.append({
+            "tile_id": str(new_id), "img": s["img"], "split": "train", "take": s["take"],
+            "frame": str(fn), "kind": s["kind"], "swarm": x["verdict"],
+            "audit_flags": ",".join(f.replace("pos_", "").replace("neg_", "") for f in s["flags"][:2]),
+            "n_votes": "1", "agree": "0", "flag_reason": x["note"][:80],
+            "claude_label": x["verdict"], "claude_conf": "0.5",
+            "human_label": "", "human_box": "", "final_label": "", "final_source": "needs_human", "last_update": "",
+        })
+
+    json.dump(items, open(os.path.join(rdir, "items.json"), "w", encoding="utf-8"), indent=1)
+    with open(os.path.join(rdir, "votes.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(rows)
+    print(f"Prepared {len(items)} items for human review -> {rdir}", Counter(x["verdict"] for x in chosen))
+
+
 def selftest():
     assert take_group("D:/x/ft_phonecls/images/train/006_thrust_low_front_164412_f00006.jpg") == "lab_006_thrust_low_front_164412"
     assert take_group("D:/x/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00100.jpg") == "lab_006_thrust_low_front_164412"
@@ -870,5 +945,7 @@ if __name__ == "__main__":
         triage()
     elif cmd == ["tally_eye"]:
         tally_eye()
+    elif cmd == ["review"]:
+        build_review()
     else:
         print(__doc__)
