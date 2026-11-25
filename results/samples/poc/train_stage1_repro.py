@@ -56,7 +56,10 @@ if __name__ == "__main__":
             q.requires_grad = False
         model.add_callback("on_train_start", lambda t: setattr(t.model, "criterion", KD(t.model.init_criterion(), teacher, 1.0)))
     r = model.train(
-        data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "labgtaug": "lab_gt_aug", "teachergt": "lab_gt", "teachergtaug": "lab_gt_aug", "kdgt": "lab_gt", "kdgtaug": "lab_gt_aug", "labgtaugl": "lab_gt_aug_light"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
-        workers=4, device=int(os.environ.get("DEV", 0)), degrees=15.0, mosaic=1.0, mixup=0.1, plots=False, exist_ok=True,
+        data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "labgtaug": "lab_gt_aug", "teachergt": "lab_gt", "teachergtaug": "lab_gt_aug", "kdgt": "lab_gt", "kdgtaug": "lab_gt_aug", "labgtaugl": "lab_gt_aug_light", "labgtclean": "lab_gt_clean", "teachergtclean": "lab_gt_clean", "kdgtclean": "lab_gt_clean"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
+        workers=int(os.environ.get("WORKERS", 4)), device=int(os.environ.get("DEV", 0)), degrees=15.0, mosaic=1.0, mixup=0.1, plots=False, exist_ok=True,
         project=os.path.join(REPO, "results", "stage1_kd"), name=f"repro846_{TAG}", **size, **extra)
     shutil.copy2(os.path.join(str(r.save_dir), "weights", "best.pt"), out)
+    last_src = os.path.join(str(r.save_dir), "weights", "last.pt")
+    if os.path.exists(last_src):
+        shutil.copy2(last_src, out.replace(".pt", "_last.pt"))

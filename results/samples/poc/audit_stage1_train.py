@@ -922,6 +922,114 @@ def build_review():
     print(f"Prepared {len(items)} items for human review -> {rdir}", Counter(x["verdict"] for x in chosen))
 
 
+def build_clean():
+    """Build data/stage1_negatives/lab_gt_clean from lab_gt + human_review/votes.csv + verified 006-009 phone fix."""
+    import shutil
+    rdir = os.path.join(OUT, "human_review")
+    rows = list(csv.DictReader(open(os.path.join(rdir, "votes.csv"), encoding="utf-8")))
+    items = {it["id"]: it for it in json.load(open(os.path.join(rdir, "items.json"), encoding="utf-8"))}
+    rev_by_img = {}
+    for r in rows:
+        tid = int(r["tile_id"])
+        rev_by_img[os.path.basename(r["img"])] = (r["human_label"], r["human_box"], items[tid])
+
+    dst = os.path.join(REPO, "data", "stage1_negatives", "lab_gt_clean")
+    img_dir = os.path.join(dst, "images", "train")
+    lbl_dir = os.path.join(dst, "labels", "train")
+    os.makedirs(img_dir, exist_ok=True)
+    os.makedirs(lbl_dir, exist_ok=True)
+
+    lines = [norm_path(l) for l in open(os.path.join(LAB_GT, "train.txt"), encoding="utf-8") if l.strip()]
+    out_paths = []
+    counts = Counter()
+
+    for p in lines:
+        bn = os.path.basename(p)
+        lbls = read_labels(p)
+        img = cv2.imread(p)
+        assert img is not None, p
+        h, w = img.shape[:2]
+
+        # 1. Apply human review decision if present
+        if bn in rev_by_img:
+            hl, hb_str, it = rev_by_img[bn]
+            if hl == "u":
+                counts["dropped_unclear"] += 1
+                continue
+            non_knife = [x for x in lbls if x[0] != 1]
+            if hl == "n":
+                lbls = non_knife
+                counts["human_set_neg"] += 1
+            else:
+                if hl == "box" and hb_str:
+                    v = json.loads(hb_str)
+                    s = it["crop"] / 330.0
+                    box_px = [it["x0"] + v[0] * s, it["y0"] + v[1] * s, it["x0"] + v[2] * s, it["y0"] + v[3] * s]
+                else:
+                    box_px = next(pr["box"] for pr in it["props"] if pr["letter"] == hl)
+                xc = max(0.0, min(1.0, (box_px[0] + box_px[2]) / 2.0 / w))
+                yc = max(0.0, min(1.0, (box_px[1] + box_px[3]) / 2.0 / h))
+                bw = max(0.001, min(1.0, (box_px[2] - box_px[0]) / w))
+                bh = max(0.001, min(1.0, (box_px[3] - box_px[1]) / h))
+                lbls = non_knife + [(1, xc, yc, bw, bh)]
+                counts["human_fixed_box"] += 1
+
+        # 2. Verified phone-take override (2026-11-05 takes 006, 007, 008, 009; NOT 028 which has a real knife)
+        if any(tk in bn for tk in ("2026-11-05_006_", "2026-11-05_007_", "2026-11-05_008_")):
+            new_lbls = []
+            for cls_id, xc, yc, bw, bh in lbls:
+                if cls_id == 1:
+                    new_lbls.append((2, xc, yc, bw, bh))
+                    counts["phone_take_to_cls2"] += 1
+                else:
+                    new_lbls.append((cls_id, xc, yc, bw, bh))
+            lbls = new_lbls
+        elif "2026-11-05_009_" in bn:
+            new_lbls = []
+            for cls_id, xc, yc, bw, bh in lbls:
+                if cls_id == 1 and not (xc < 0.25 and yc < 0.25):  # keep desk knife at ~(0.13, 0.14); convert hand phone
+                    new_lbls.append((2, xc, yc, bw, bh))
+                    counts["phone_take_to_cls2"] += 1
+                else:
+                    new_lbls.append((cls_id, xc, yc, bw, bh))
+            lbls = new_lbls
+
+        # 3. Link/copy image (handle distinct prefixes cleanly if basename collides across ft_phonecls vs lab_gt)
+        dst_name = ("ph_" + bn) if "/ft_phonecls/" in p else bn
+        dst_img = os.path.join(img_dir, dst_name)
+        dst_lbl = os.path.join(lbl_dir, os.path.splitext(dst_name)[0] + ".txt")
+        if not os.path.exists(dst_img):
+            try:
+                os.link(p, dst_img)
+            except OSError:
+                shutil.copy2(p, dst_img)
+        with open(dst_lbl, "w", encoding="utf-8") as f:
+            for cls_id, xc, yc, bw, bh in lbls:
+                f.write(f"{cls_id} {xc:.6f} {yc:.6f} {bw:.6f} {bh:.6f}\n")
+        out_paths.append(dst_img.replace("\\", "/"))
+        counts["kept_pos" if any(x[0] == 1 for x in lbls) else "kept_neg"] += 1
+
+    # Invariant checks: no test leaks, no knife labels on 006/007/008, no multibox knife duplicates
+    assert not any("_test_" in x or "2026-10-31" in x or "Ground_Truth_Dataset" in x for x in out_paths)
+    for x in out_paths:
+        knives = [xywhn2xyxy(*r[1:]) for r in read_labels(x) if r[0] == 1]
+        if any(tk in os.path.basename(x) for tk in ("2026-11-05_006_", "2026-11-05_007_", "2026-11-05_008_")):
+            assert len(knives) == 0, x
+        if len(knives) > 1:
+            for i in range(len(knives)):
+                for j in range(i + 1, len(knives)):
+                    assert box_iou(knives[i], knives[j]) < 0.2 and box_cover(knives[i], knives[j]) < 0.5, (x, knives)
+
+    val_src = os.path.join(LAB_GT, "val.txt")
+    shutil.copy2(val_src, os.path.join(dst, "val.txt"))
+    with open(os.path.join(dst, "train.txt"), "w", encoding="utf-8") as f:
+        f.write("\n".join(out_paths) + "\n")
+    with open(os.path.join(dst, "data.yaml"), "w", encoding="utf-8") as f:
+        d = dst.replace("\\", "/")
+        f.write(f"path: {d}\ntrain: train.txt\nval: val.txt\nnames:\n  0: hand_grip_knife\n  1: knife\n  2: phone\n")
+    print(f"Built lab_gt_clean: {len(out_paths)} train imgs -> {dst}", dict(counts))
+
+
 def selftest():
     assert take_group("D:/x/ft_phonecls/images/train/006_thrust_low_front_164412_f00006.jpg") == "lab_006_thrust_low_front_164412"
     assert take_group("D:/x/lab_gt/images/train/2026-11-05_006_thrust_low_front_164412_f00100.jpg") == "lab_006_thrust_low_front_164412"
@@ -947,5 +1055,7 @@ if __name__ == "__main__":
         tally_eye()
     elif cmd == ["review"]:
         build_review()
+    elif cmd == ["build_clean"]:
+        build_clean()
     else:
         print(__doc__)
