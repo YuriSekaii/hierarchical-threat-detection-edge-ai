@@ -109,7 +109,7 @@ Checking `data/stage1_negatives/lab_gt_aug_hn/train.txt` (`fix/` and `neg/` addi
 
 ## Human review + `lab_gt_clean` retraining (2026-11-25 to 2026-11-26)
 
-**Status: new clean dataset `data/stage1_negatives/lab_gt_clean` and retrained weights `weights/stage1_repro846_*clean*.pt` (dev PC only). Shipped weights are unchanged.**
+**Status: new clean dataset `data/stage1_negatives/lab_gt_clean` and retrained weights `weights/stage1_repro846_*clean*.pt` (dev PC only). `kdgtclean @0.20` (`weights/stage1_repro846_kdgtclean_p250.pt`, NMS 0.5) is the new Stage 1 baseline for future work; shipped weights are unchanged until TensorRT export and full-pipeline testing.**
 
 ### 1. Human double-check (`review_train_audit.bat`)
 
