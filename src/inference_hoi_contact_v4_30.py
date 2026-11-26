@@ -34,7 +34,12 @@ from transformers import AutoImageProcessor, AutoModel
 
 
 REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DEFAULT_WEAPON_WEIGHTS = os.path.join(REPO_DIR, "weights", "yolo_weapon_distilled.pt")
+if REPO_DIR not in sys.path:
+    sys.path.insert(0, REPO_DIR)
+
+from src.stage1_detector import STAGE1_DEFAULT_STEM, STAGE1_NMS_IOU, filter_knife_boxes
+
+DEFAULT_WEAPON_WEIGHTS = os.path.join(REPO_DIR, "weights", f"{STAGE1_DEFAULT_STEM}.pt")
 DEFAULT_POSE_WEIGHTS = os.path.join(REPO_DIR, "weights", "yolo26s-pose.pt")
 DEFAULT_REFERENCE_WEIGHTS = os.path.join(REPO_DIR, "weights", "reference_data_hoi_contact_v4_30.pt")
 DEFAULT_DINOV2_MODEL_ID = "facebook/dinov2-small"
@@ -228,11 +233,8 @@ class HOIContactDetector:
         # Stream 1: Candidate Weapon Proposals (Distilled YOLO)
         # -------------------------------------------------------------
         weapon_results = self.weapon_model(img_bgr, conf=w_conf, verbose=False)[0]
-        raw_proposals = []
-        for b in weapon_results.boxes:
-            box_coords = b.xyxy[0].cpu().numpy().tolist() # [x1, y1, x2, y2]
-            conf = float(b.conf[0])
-            raw_proposals.append((box_coords, conf))
+        boxes_list, scores_list = filter_knife_boxes(weapon_results, nms_iou=STAGE1_NMS_IOU)
+        raw_proposals = list(zip(boxes_list, scores_list))
 
         # -------------------------------------------------------------
         # Stream 2: Kinematic Pose & Hand Localization

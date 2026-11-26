@@ -182,7 +182,7 @@ class ProductionHierarchicalPipeline:
         self,
         weapon_weights: Optional[str] = None,
         pose_weights: Optional[str] = None,
-        conf_threshold: float = 0.45,
+        conf_threshold: float = 0.20,
         buffer_size: int = 1200,
         jpeg_quality: int = 85,
         device: Optional[str] = None,
@@ -1303,8 +1303,8 @@ if __name__ == "__main__":
                         help="Video source: camera index (0) or path to video file (default: 0)")
     parser.add_argument("--webcam", type=str, default=None,
                         help="Webcam index alias for --source (e.g. 0)")
-    parser.add_argument("--conf", type=float, default=0.45,
-                        help="Stage 1 weapon detection confidence threshold (default: 0.45)")
+    parser.add_argument("--conf", type=float, default=0.20,
+                        help="Stage 1 weapon detection confidence threshold (default: 0.20)")
     parser.add_argument("--quality", type=int, default=85,
                         help="In-memory TurboJPEG compression quality 1-100 (default: 85)")
     parser.add_argument("--backend", type=str, choices=["tensorrt", "pytorch"], default="tensorrt",

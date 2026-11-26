@@ -45,8 +45,8 @@ def export_all():
     print("=" * 80)
 
     # 1. Stage 1 Weapon Detector
-    yolo_pt = os.path.join(weights_dir, "yolo_weapon_distilled.pt")
-    yolo_onnx = os.path.join(weights_dir, "yolo_weapon_distilled.onnx")
+    yolo_pt = os.path.join(weights_dir, "stage1_repro846_kdgtclean_p250.pt")
+    yolo_onnx = os.path.join(weights_dir, "stage1_repro846_kdgtclean_p250.onnx")
     print(f"\n[1/5] Exporting Stage 1 Weapon Detector ({os.path.basename(yolo_pt)})...")
     model_yolo = YOLO(yolo_pt)
     model_yolo.export(format="onnx", imgsz=[384, 640], half=True, dynamic=False, opset=17)

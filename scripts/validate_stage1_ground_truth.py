@@ -16,6 +16,11 @@ import torch
 from ultralytics import YOLO
 
 REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if REPO_DIR not in sys.path:
+    sys.path.insert(0, REPO_DIR)
+
+from src.stage1_detector import STAGE1_DEFAULT_CONF, STAGE1_DEFAULT_STEM, STAGE1_NMS_IOU, filter_knife_boxes
+
 GT_DATASET_DIR = os.path.join(REPO_DIR, "data", "Ground_Truth_Dataset")
 OUTPUT_ROOT = os.path.join(REPO_DIR, "results", "ground_truth_benchmark")
 
@@ -83,7 +88,7 @@ def calculate_metrics(tp, fp, fn, tn):
     return precision, recall, f1, specificity, accuracy
 
 
-def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20, imgsz=(384, 640)):
+def validate_yolo_model(model_path, image_files, conf=STAGE1_DEFAULT_CONF, iou_thresh=0.20, imgsz=(384, 640)):
     model = YOLO(model_path, task="detect")
     stats = defaultdict(lambda: {"TP": 0, "FP": 0, "FN": 0, "TN": 0, "total_images": 0, "inference_time": 0.0})
 
@@ -103,10 +108,7 @@ def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20, img
         stats["Overall"]["inference_time"] += inf_time
         stats["Overall"]["total_images"] += 1
 
-        pred_boxes = []
-        for box in results[0].boxes:
-            x, y, w, h = box.xywhn[0].tolist()
-            pred_boxes.append(xywhn2xyxy(x, y, w, h))
+        pred_boxes, _ = filter_knife_boxes(results[0], nms_iou=STAGE1_NMS_IOU, normalized=True)
 
         matched_gt = set()
         matched_pred = set()
@@ -146,9 +148,9 @@ def validate_yolo_model(model_path, image_files, conf=0.45, iou_thresh=0.20, img
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Stage 1 Ground Truth Evaluator")
-    parser.add_argument("--weights", type=str, default=os.path.join(REPO_DIR, "weights", "yolo_weapon_distilled.engine"),
+    parser.add_argument("--weights", type=str, default=os.path.join(REPO_DIR, "weights", f"{STAGE1_DEFAULT_STEM}.engine"),
                         help="Path to YOLO weights (.engine or .pt)")
-    parser.add_argument("--conf", type=float, default=0.45, help="Confidence threshold (default: 0.45)")
+    parser.add_argument("--conf", type=float, default=STAGE1_DEFAULT_CONF, help=f"Confidence threshold (default: {STAGE1_DEFAULT_CONF})")
     parser.add_argument("--imgsz", type=int, nargs="+", default=[384, 640], help="Inference resolution [H, W] (default: [384, 640])")
     args = parser.parse_args()
 

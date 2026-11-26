@@ -2,9 +2,9 @@
 src/stage1_detector.py
 
 Component 2: Stage 1 Real-Time Handheld Weapon Detector (TensorRT / ONNX Accelerated).
-Runs Knowledge-Distilled YOLO26s with One-to-One Hungarian Bipartite Matching (NMS-Free).
+Runs Knowledge-Distilled YOLO26s (stage1_repro846_kdgtclean_p250) with knife class filtering and NMS IoU = 0.50.
 Auto-compiles and loads native NVIDIA TensorRT .engine binary compiled from universal .onnx blueprint.
-Operating point: Conf = 0.45, 3.27 ms latency on RTX 3090, 86.88% F1.
+Default operating point: Conf = 0.20, 384x640 input.
 Strict GPU enforcement (No CPU fallback).
 """
 
@@ -15,6 +15,7 @@ import time
 from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
+from torchvision.ops import nms as tv_nms
 from ultralytics import YOLO
 
 REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -22,6 +23,40 @@ if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
 
 from src.engine_builder import ensure_engine, get_hardware_precision
+
+STAGE1_DEFAULT_STEM = "stage1_repro846_kdgtclean_p250"
+STAGE1_DEFAULT_CONF = 0.20
+STAGE1_NMS_IOU = 0.50
+_WEAPON_CLASS_NAMES = {"knife", "weapon"}
+
+
+def filter_knife_boxes(res, nms_iou: float = STAGE1_NMS_IOU, normalized: bool = False) -> Tuple[List[List[float]], List[float]]:
+    """Keep only weapon/knife class boxes (ignoring phone/hand_grip_knife) and apply NMS."""
+    if res.boxes is None or len(res.boxes) == 0:
+        return [], []
+    names = res.names if isinstance(res.names, dict) else dict(enumerate(res.names or ()))
+    keep_ids = {int(k) for k, v in names.items() if str(v).lower() in _WEAPON_CLASS_NAMES}
+    cls_t = res.boxes.cls
+    if keep_ids:
+        mask = torch.zeros_like(cls_t, dtype=torch.bool)
+        for cid in keep_ids:
+            mask |= (cls_t.long() == cid)
+    else:
+        mask = torch.ones_like(cls_t, dtype=torch.bool)
+    if not mask.any():
+        return [], []
+
+    coords = (res.boxes.xyxyn if normalized else res.boxes.xyxy)[mask].float()
+    scores = res.boxes.conf[mask].float()
+    if nms_iou is not None and coords.shape[0] > 1:
+        # Run NMS in pixel space so aspect ratio never skews IoU.
+        xyxy_px = res.boxes.xyxy[mask].float()
+        keep = tv_nms(xyxy_px, scores, nms_iou)
+        coords, scores = coords[keep], scores[keep]
+    else:
+        order = torch.argsort(scores, descending=True)
+        coords, scores = coords[order], scores[order]
+    return coords.cpu().numpy().tolist(), scores.cpu().numpy().tolist()
 
 
 def calculate_rectangular_imgsz(frame_h: int, frame_w: int, base_dim: int = 640) -> Tuple[int, int]:
@@ -51,10 +86,11 @@ class Stage1WeaponDetector:
     def __init__(
         self,
         weights_path: Optional[str] = None,
-        conf_threshold: float = 0.45,
+        conf_threshold: float = STAGE1_DEFAULT_CONF,
         device: Optional[str] = None,
         imgsz: Optional[Union[int, Tuple[int, int]]] = (384, 640),
         backend: str = "tensorrt",
+        nms_iou: float = STAGE1_NMS_IOU,
     ):
         self.backend = backend.lower()
         if self.backend == "tensorrt":
@@ -74,12 +110,13 @@ class Stage1WeaponDetector:
 
         self.conf_threshold = conf_threshold
         self.imgsz = imgsz
+        self.nms_iou = nms_iou
 
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         weights_dir = os.path.join(repo_dir, "weights")
 
         if self.backend == "pytorch":
-            self.weights_path = weights_path or os.path.join(weights_dir, "yolo_weapon_distilled.pt")
+            self.weights_path = weights_path or os.path.join(weights_dir, f"{STAGE1_DEFAULT_STEM}.pt")
             if not os.path.exists(self.weights_path):
                 raise FileNotFoundError(f"[STAGE 1] PyTorch weights not found at: {self.weights_path}")
             print(f"[STAGE 1] Loading Distilled YOLO26s (PyTorch Eager) from {os.path.basename(self.weights_path)} on {self.device}...")
@@ -91,16 +128,16 @@ class Stage1WeaponDetector:
                     last_module = self.model.model.model[-1]
                     if hasattr(last_module, "end2end"):
                         last_module.end2end = True
-            print(f"          -> Stage 1 Initialized (Conf={self.conf_threshold:.2f}, NMS-Free=True, PyTorch Eager)")
+            print(f"          -> Stage 1 Initialized (Conf={self.conf_threshold:.2f}, NMS={self.nms_iou:.2f}, PyTorch Eager)")
         else:
             # Determine engine & onnx paths
-            onnx_path = os.path.join(weights_dir, "yolo_weapon_distilled.onnx")
-            engine_path = weights_path or os.path.join(weights_dir, "yolo_weapon_distilled.engine")
+            onnx_path = os.path.join(weights_dir, f"{STAGE1_DEFAULT_STEM}.onnx")
+            engine_path = weights_path or os.path.join(weights_dir, f"{STAGE1_DEFAULT_STEM}.engine")
 
             metadata = {
-                "description": "Distilled YOLO26s Weapon Detector",
+                "description": "Distilled YOLO26s Weapon Detector (kdgtclean)",
                 "author": "Ultralytics",
-                "date": "2026-09-19",
+                "date": "2026-11-26",
                 "version": "8.4.9",
                 "license": "AGPL-3.0",
                 "docs": "https://docs.ultralytics.com",
@@ -108,7 +145,7 @@ class Stage1WeaponDetector:
                 "task": "detect",
                 "batch": 1,
                 "imgsz": [384, 640],
-                "names": {0: "weapon"},
+                "names": {0: "hand_grip_knife", 1: "knife", 2: "phone"},
                 "end2end": True,
             }
 
@@ -134,7 +171,7 @@ class Stage1WeaponDetector:
                     workspace_gb=1.0,
                 )
                 self.model = YOLO(self.engine_path, task="detect")
-            print(f"          -> Stage 1 Initialized (Conf={self.conf_threshold:.2f}, NMS-Free=True, Engine={os.path.basename(self.engine_path)})")
+            print(f"          -> Stage 1 Initialized (Conf={self.conf_threshold:.2f}, NMS={self.nms_iou:.2f}, Engine={os.path.basename(self.engine_path)})")
 
     def predict(self, frame: np.ndarray, custom_conf: Optional[float] = None, imgsz: Optional[Union[int, Tuple[int, int]]] = None) -> Dict:
         """
@@ -161,16 +198,8 @@ class Stage1WeaponDetector:
         )
         latency_ms = (time.perf_counter() - t0) * 1000.0
 
-        boxes_list = []
-        scores_list = []
-        best_box = None
-
-        if len(results) > 0 and len(results[0].boxes) > 0:
-            res_boxes = results[0].boxes
-            boxes_list = res_boxes.xyxy.cpu().numpy().tolist()
-            scores_list = res_boxes.conf.cpu().numpy().tolist()
-            if len(boxes_list) > 0:
-                best_box = boxes_list[0]
+        boxes_list, scores_list = filter_knife_boxes(results[0], nms_iou=self.nms_iou) if len(results) > 0 else ([], [])
+        best_box = boxes_list[0] if boxes_list else None
 
         return {
             "has_threat": len(boxes_list) > 0,

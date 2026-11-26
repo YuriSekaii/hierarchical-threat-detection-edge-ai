@@ -30,6 +30,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.stgcn import STGCNModel
 from src.ood_metrics import compute_knn_distance
+from src.stage1_detector import STAGE1_DEFAULT_CONF, STAGE1_DEFAULT_STEM, STAGE1_NMS_IOU, filter_knife_boxes
 
 from src.skeleton_utils import (
     interpolate_missing_joints,
@@ -168,13 +169,13 @@ class HierarchicalThreatDetector:
 
             if frame_copy is not None:
                 imgsz = self.rect_imgsz if self.rect_imgsz is not None else 640
-                results = self.weapon_model(frame_copy, imgsz=imgsz, conf=0.45, verbose=False)
-                has_weapon = len(results[0].boxes) > 0
+                results = self.weapon_model(frame_copy, imgsz=imgsz, conf=STAGE1_DEFAULT_CONF, verbose=False)
+                boxes_list, _ = filter_knife_boxes(results[0], nms_iou=STAGE1_NMS_IOU) if len(results) > 0 else ([], [])
+                has_weapon = len(boxes_list) > 0
 
                 if has_weapon:
                     self.weapon_active_until = time.time() + 3.0
-                    best_box = results[0].boxes.xyxy[0].cpu().numpy()
-                    self.last_weapon_bbox = best_box
+                    self.last_weapon_bbox = np.array(boxes_list[0], dtype=np.float32)
                     if not self.is_violent_alert:
                         self.status_text = "WEAPON DETECTED"
                         self.status_color = (0, 165, 255)
@@ -511,7 +512,7 @@ if __name__ == '__main__':
     custom_imgsz = parse_imgsz(args.imgsz)
 
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    weapon_weights = os.path.join(base_dir, 'weights', 'yolo_weapon_distilled.pt')
+    weapon_weights = os.path.join(base_dir, 'weights', f'{STAGE1_DEFAULT_STEM}.pt')
     pose_weights = os.path.join(base_dir, 'weights', 'yolo26s-pose.pt')
     action_weights = os.path.join(base_dir, 'weights', 'stgcn_violence_v1.02.pth')
     ref_weights = os.path.join(base_dir, 'weights', 'reference_data_knn_v1.02.pt')

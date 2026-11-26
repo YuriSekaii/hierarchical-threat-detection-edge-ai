@@ -180,7 +180,7 @@ def main():
     dummy_kpts = np.random.randn(50, 17, 2).astype(np.float32) * 50.0 + 300.0
 
     # A. Stage 1: Distilled YOLO26s Weapon Detector
-    weapon_weights = os.path.join(REPO_DIR, "weights", "yolo_weapon_distilled.pt")
+    weapon_weights = os.path.join(REPO_DIR, "weights", "stage1_repro846_kdgtclean_p250.pt")
     weapon_model = YOLO(weapon_weights)
 
     # Warmup GPU

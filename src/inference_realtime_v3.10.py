@@ -32,6 +32,7 @@ if REPO_DIR not in sys.path:
 
 from models.ensemble_dual_tier import DualTierSurveillanceSystem
 from src.skeleton_utils import interpolate_missing_joints, smooth_kinematics, normalize_skeleton_clip
+from src.stage1_detector import STAGE1_DEFAULT_CONF, STAGE1_DEFAULT_STEM, STAGE1_NMS_IOU, filter_knife_boxes
 
 
 class FrameItem:
@@ -68,7 +69,7 @@ class HierarchicalThreatPipelineV310:
     """
     def __init__(
         self,
-        yolo_weapon_weights="weights/yolo_weapon_distilled.pt",
+        yolo_weapon_weights=f"weights/{STAGE1_DEFAULT_STEM}.pt",
         yolo_pose_weights="weights/yolo26s-pose.pt",
         reference_weights="weights/reference_data_dual_tier_v3.10.pt",
         mode="hierarchical_dual_tier",
@@ -153,7 +154,7 @@ class HierarchicalThreatPipelineV310:
         t0 = time.perf_counter()
         results = self.weapon_model.predict(
             source=frame,
-            conf=0.25,
+            conf=STAGE1_DEFAULT_CONF,
             device=self.device,
             imgsz=self.imgsz,
             verbose=False
@@ -163,12 +164,9 @@ class HierarchicalThreatPipelineV310:
 
         detections = []
         if results and len(results) > 0:
-            boxes = results[0].boxes
-            for b in boxes:
-                xyxy = b.xyxy[0].cpu().numpy().tolist()
-                conf = float(b.conf[0].cpu().item())
-                cls_id = int(b.cls[0].cpu().item())
-                detections.append({"bbox": xyxy, "conf": conf, "cls": cls_id})
+            boxes, scores = filter_knife_boxes(results[0], nms_iou=STAGE1_NMS_IOU)
+            for xyxy, conf in zip(boxes, scores):
+                detections.append({"bbox": xyxy, "conf": conf, "cls": 1})
         return detections
 
     def run_stage2_threat_analysis(self):

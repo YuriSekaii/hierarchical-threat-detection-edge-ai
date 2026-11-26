@@ -11,11 +11,18 @@ Empirically isolates and evaluates:
 """
 
 import os
+import sys
 import time
 from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 from ultralytics import YOLO, RTDETR
+
+REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if REPO_DIR not in sys.path:
+    sys.path.insert(0, REPO_DIR)
+
+from src.stage1_detector import STAGE1_DEFAULT_CONF, STAGE1_DEFAULT_STEM, STAGE1_NMS_IOU, filter_knife_boxes
 
 
 class NMSFreeWeaponDetector:
@@ -29,13 +36,13 @@ class NMSFreeWeaponDetector:
         self,
         weights_path: Optional[str] = None,
         default_mode: str = "one2one",
-        default_conf: float = 0.45,
-        default_iou_nms: float = 0.45,
+        default_conf: float = STAGE1_DEFAULT_CONF,
+        default_iou_nms: float = STAGE1_NMS_IOU,
         device: Optional[str] = None,
     ):
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         if weights_path is None:
-            weights_path = os.path.join(repo_dir, "weights", "yolo_weapon_distilled.pt")
+            weights_path = os.path.join(repo_dir, "weights", f"{STAGE1_DEFAULT_STEM}.pt")
 
         if not os.path.exists(weights_path):
             raise FileNotFoundError(f"Model weights not found at: {weights_path}")
@@ -95,15 +102,8 @@ class NMSFreeWeaponDetector:
         )
         t_total_ms = (time.perf_counter() - t0) * 1000.0
 
-        boxes_list = []
-        norm_boxes_list = []
-        scores_list = []
-
-        if len(results) > 0 and len(results[0].boxes) > 0:
-            res_boxes = results[0].boxes
-            boxes_list = res_boxes.xyxy.cpu().numpy().tolist()
-            norm_boxes_list = res_boxes.xyxyn.cpu().numpy().tolist()
-            scores_list = res_boxes.conf.cpu().numpy().tolist()
+        boxes_list, scores_list = filter_knife_boxes(results[0], nms_iou=iou_val) if len(results) > 0 else ([], [])
+        norm_boxes_list, _ = filter_knife_boxes(results[0], nms_iou=iou_val, normalized=True) if len(results) > 0 else ([], [])
 
         has_threat = len(boxes_list) > 0
         alert_status = "CRITICAL_WEAPON_CONFIRMED" if has_threat else "NORMAL_CLEARED"
@@ -159,15 +159,8 @@ class ZeroShotEdgeDETRDetector:
         )
         t_total_ms = (time.perf_counter() - t0) * 1000.0
 
-        boxes_list = []
-        norm_boxes_list = []
-        scores_list = []
-
-        if len(results) > 0 and len(results[0].boxes) > 0:
-            res_boxes = results[0].boxes
-            boxes_list = res_boxes.xyxy.cpu().numpy().tolist()
-            norm_boxes_list = res_boxes.xyxyn.cpu().numpy().tolist()
-            scores_list = res_boxes.conf.cpu().numpy().tolist()
+        boxes_list, scores_list = filter_knife_boxes(results[0], nms_iou=iou_val) if len(results) > 0 else ([], [])
+        norm_boxes_list, _ = filter_knife_boxes(results[0], nms_iou=iou_val, normalized=True) if len(results) > 0 else ([], [])
 
         has_threat = len(boxes_list) > 0
         internal_inf_ms = results[0].speed.get("inference", t_total_ms) if len(results) > 0 else t_total_ms

@@ -188,16 +188,39 @@ At `0.30` on `GTv2`, `kdgtclean` reaches `83.1 % P / 77.5 % R (54)`, higher reca
 - **Distilled `kdgtclean` (`best.pt`) is the new strongest student on recall:** at `0.20` it lifts lab clear recall to **92.4 %** (vs `91.9 %` for `B`), hidden-knife recall to **78.2 %** (`+6.1`), overall lab recall to **84.7 %** (`+1.7`), and `GTv2` recall to **81.6 %** (`+5.0`), while matching `B`'s **95.8 %** fast-hand precision. At `0.25` it holds **91.7 %** clear recall with **96.0 %** fast-hand precision (`97.7 %` with `cover`, `0` away-from-hand FP).
 - **Phone / remote confusers stay low (`2–3 %`)** without phone-negative collapse.
 
+### 5. Production integration, 384x640 TensorRT export, and validation
+
+All active inference, export, and validation code (`src/stage1_detector.py`, `src/inference_production_pipeline.py`, `src/inference_realtime_v1.04.py`, `src/inference_realtime_v3.10.py`, `src/inference_nms_free_v4_50.py`, `src/inference_hoi_contact_v4_30.py`, `scripts/export_onnx_models.py`, `scripts/validate_stage1_ground_truth.py`, `scripts/benchmark_super_ensemble.py`, `scripts/benchmark_unified_fair_comparison.py`, `run_webcam_pytorch.bat`, `run_webcam_tensorrt.bat`) now default to `stage1_repro846_kdgtclean_p250` (`STAGE1_DEFAULT_CONF = 0.20`, `STAGE1_NMS_IOU = 0.50`). Because `kdgtclean` outputs 3 classes (`0: hand_grip_knife`, `1: knife`, `2: phone`), active detectors route predictions through `filter_knife_boxes()` in `src/stage1_detector.py` to keep only `knife` boxes and apply `torchvision.ops.nms(..., 0.50)` while leaving legacy weights (`weights/yolo_weapon_distilled.*`) and `results/samples/poc/` untouched.
+
+- **Exported ONNX & TensorRT (`384x640`, FP16 on RTX 3090):**
+  - `YOLO('weights/stage1_repro846_kdgtclean_p250.pt').export(format='onnx', imgsz=[384, 640], half=True, dynamic=False, opset=17)` -> `weights/stage1_repro846_kdgtclean_p250.onnx` (`19,121,525` bytes / `18.2 MB`).
+  - `Stage1WeaponDetector(backend='tensorrt')` auto-compiled `weights/stage1_repro846_kdgtclean_p250.engine` (`65,950,539` bytes / `62.90 MB`, `161.20 s`), verified `engine_input_size == (384, 640)` and `shared_input_size(..., 'weights/yolo26s-pose.engine') == (384, 640)`.
+- **715-image `data/Ground_Truth_Dataset` (`scripts/validate_stage1_ground_truth.py`, `Conf=0.20`, `IoU=0.20`, `Imgsz=(384, 640)`, NMS `0.50`):**
+
+| Backend | Split | Acc | Precision | Recall | F1 | Spec | Lat | TP / FP / FN / TN |
+|---|---|---|---|---|---|---|---|---|
+| TensorRT (`.engine`) | `OOD` | 58.06% | 0.00% | 0.00% | 0.00% | 58.06% | 2.72 ms | 0 / 52 / 0 / 72 |
+| TensorRT (`.engine`) | `With_Coat` | 79.11% | 70.43% | 86.75% | 77.74% | 73.56% | 10.51 ms | 131 / 55 / 20 / 153 |
+| TensorRT (`.engine`) | `Without_Coat` | 74.40% | 58.74% | 94.38% | 72.41% | 63.35% | 13.74 ms | 84 / 59 / 5 / 102 |
+| **TensorRT (`.engine`)** | **Overall** | **73.94%** | **56.43%** | **89.58%** | **69.24%** | **66.33%** | **10.32 ms** | **215 / 166 / 25 / 327** |
+| PyTorch (`.pt`) | `OOD` | 56.45% | 0.00% | 0.00% | 0.00% | 56.45% | 11.10 ms | 0 / 54 / 0 / 70 |
+| PyTorch (`.pt`) | `With_Coat` | 79.11% | 70.43% | 86.75% | 77.74% | 73.56% | 11.68 ms | 131 / 55 / 20 / 153 |
+| PyTorch (`.pt`) | `Without_Coat` | 74.40% | 58.74% | 94.38% | 72.41% | 63.35% | 12.78 ms | 84 / 59 / 5 / 102 |
+| **PyTorch (`.pt`)** | **Overall** | **73.67%** | **56.14%** | **89.58%** | **69.02%** | **65.92%** | **11.96 ms** | **215 / 168 / 25 / 325** |
+
+- **Integration checks:** `py_compile` passed on all 10 edited Python files; `filter_knife_boxes` unit test passed; PyTorch and TensorRT both returned `has_threat=False` on `ph_006_thrust_low_front_164412_f00006.jpg`; `src/inference_production_pipeline.py --dry-run` passed on both `--backend tensorrt` and `--backend pytorch` (120 frames); `scripts/test_modular_validation_suite.py --feed-raw-video` ran end-to-end on `Without_Coat\Stab\Stab_12.mp4` (`Tier 1 Alarm`, clean shutdown); 77-video Stage 2 modular suite achieved `1.0000` F1; `tests/test_worker_guard.py` passed (`ok`, `ok`).
+
 ## Not checked
 
 - The `3,589` `Safe` frames were not inspected by eye (except the `006–009` and `028` take checks).
 - The `45` `hn_dups` in `lab_gt_aug_hn` were detected geometrically (`IoU`/`cover`) but not yet folded into a `lab_gt_clean_aug_hn` set.
-- `kdgtclean` was not exported to TensorRT (`384x640`), run on the Edge PC, or run through Stage 2; `Ground_Truth_Dataset` (715 raw images) was not re-scored separately from `Ground_Truth_Dataset_v2`.
+- `kdgtclean` has not yet been compiled or run on the Edge PC, and the `run_webcam_*.bat` live webcam UI launch and `inference_realtime_*.py` / `benchmark_*.py` full CLI loops were syntax-checked rather than executed end-to-end.
 - Only one seed per clean model was trained; `labgtclean` resumed from epoch 203 with `WORKERS=0` after a Windows DataLoader `MemoryError`.
 
 ## Files
 
-- Scripts (in git): `results/samples/poc/audit_stage1_train.py` (`build_clean`), `results/samples/poc/train_stage1_repro.py` (`labgtclean`, `teachergtclean`, `kdgtclean`, `RESUME`, `WORKERS`), `results/samples/poc/eval_stage1_targets.py` (`EXTRA_MODELS`).
+- Production & benchmark updates (in git): `src/stage1_detector.py` (`STAGE1_DEFAULT_STEM`, `STAGE1_DEFAULT_CONF`, `STAGE1_NMS_IOU`, `filter_knife_boxes`), `src/inference_production_pipeline.py`, `src/inference_realtime_v1.04.py`, `src/inference_realtime_v3.10.py`, `src/inference_nms_free_v4_50.py`, `src/inference_hoi_contact_v4_30.py`, `scripts/export_onnx_models.py`, `scripts/validate_stage1_ground_truth.py`, `scripts/benchmark_super_ensemble.py`, `scripts/benchmark_unified_fair_comparison.py`, `run_webcam_pytorch.bat`, `run_webcam_tensorrt.bat`.
+- Audit & training scripts (in git): `results/samples/poc/audit_stage1_train.py` (`build_clean`), `results/samples/poc/train_stage1_repro.py` (`labgtclean`, `teachergtclean`, `kdgtclean`, `RESUME`, `WORKERS`), `results/samples/poc/eval_stage1_targets.py` (`EXTRA_MODELS`).
 - Report (in git): `reports/MODIFICATION_REPORT_STAGE1_TRAIN_AUDIT.md`.
 - Audit summaries & human votes (in git): `results/stage1_kd/train_audit/{fold_meta.json,triage_summary.json,eye_audit.json}`, `results/stage1_kd/train_audit/eye_votes/shard_*.json`, `results/stage1_kd/train_audit/human_review/{items.json,votes.csv}`, `review_train_audit.bat`, `results/stage1_kd/holdout.jsonl`.
-- Weights & logs (dev PC only, not committed): `weights/stage1_repro846_{labgtclean,teachergtclean,kdgtclean}_p250{,_last}.pt`, `data/stage1_negatives/lab_gt_clean/`, `results/stage1_kd/train_audit/{audit_scores.json,suspect_items.json,fold_a,fold_b,run_fold_a,run_fold_b,sheets,eval_targets_clean*.log}`.
+- Weights, engines & logs (dev PC only, not committed): `weights/stage1_repro846_{labgtclean,teachergtclean,kdgtclean}_p250{,_last}.pt`, `weights/stage1_repro846_kdgtclean_p250.{onnx,engine}`, `data/stage1_negatives/lab_gt_clean/`, `results/stage1_kd/train_audit/{audit_scores.json,suspect_items.json,fold_a,fold_b,run_fold_a,run_fold_b,sheets,eval_targets_clean*.log}`.
