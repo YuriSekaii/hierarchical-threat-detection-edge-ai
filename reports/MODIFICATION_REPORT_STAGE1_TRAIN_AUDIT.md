@@ -74,7 +74,7 @@ Nov 5 takes `006`, `007`, `008`, `009`, and `028` (`thrust_low`) were recorded w
 | `2026-11-05_028_thrust_low_lefthand` | 76 | **40** | 0 | 5 |
 | **Total** | **307** | **88** | **8** | **23** |
 
-Because phone takes appeared mislabeled as `knife` in **both** Fold A (`006, 007`) and Fold B (`009, 028`), both OOF fold models learned to treat an edge-on phone as a knife, letting **65 of the 88** pass into the `Safe` bucket. Take-level provenance check is essential alongside OOF scoring.
+Because phone takes appeared mislabeled as `knife` in **both** Fold A (`006, 007`) and Fold B (`009, 028`), both OOF fold models learned to treat an edge-on phone as a knife, letting **65 of the 88** pass into the `Safe` bucket. Take-level provenance check is essential alongside OOF scoring. *(Correction from eye verification below: take `028` actually holds a real knife and 6 boxes in `009` sit on a desk knife, leaving **42** true phone-as-knife boxes across `006`, `007`, and `009`.)*
 
 ### 4. `lab_gt_aug_hn` multi-box duplicates
 
@@ -107,15 +107,97 @@ Checking `data/stage1_negatives/lab_gt_aug_hn/train.txt` (`fix/` and `neg/` addi
   2. Drop or fix the **77** confirmed `wrong_pos` / `bad_box` / `missed_knife` frames and **68** `unclear` frames (and propagate fixes to `lab_gt_aug` / `lab_gt_aug_hn` + clean its **45** `hn_dups`).
 - **Limitation of OOF + feature space:** systematic errors repeated across both folds (`006/007` vs `009/028`) look consistent to OOF models and k-NN; take-level metadata checks are still required. Also, wrist-crop feature k-NN was dropped from negative flagging because pooling a `30%×30%` wrist box vs `5%×8%` blade box encoded box scale rather than object identity.
 
+## Human review + `lab_gt_clean` retraining (2026-11-25 to 2026-11-26)
+
+**Status: new clean dataset `data/stage1_negatives/lab_gt_clean` and retrained weights `weights/stage1_repro846_*clean*.pt` (dev PC only). Shipped weights are unchanged.**
+
+### 1. Human double-check (`review_train_audit.bat`)
+
+All `143` non-`ok` items from `lab_gt` and `orig_v2` (`66 unclear`, `30 missed_knife`, `25 wrong_pos`, `22 bad_box`) were reviewed by the user in `label_review_ui.py` (`results/stage1_kd/train_audit/human_review/votes.csv`): `71 a`, `9 b`, `1 c`, `5 box` (drawn), `34 n`, `23 u`.
+
+**Eye check of takes `006–009` and `028` before building `lab_gt_clean` (`check_028.jpg`, `check_2026-11-05_006..009.jpg`):**
+- **`2026-11-05_028_thrust_low_lefthand` has a real knife** (shiny blade and handle clearly visible in `f00240`, `f00320`, `f00340`), contradicting the earlier note in `MODIFICATION_REPORT_LAB_SEGMENTS.md`. All `40` `knife` labels in `028` were kept.
+- **`2026-11-05_006`, `007`, `009`** are phone takes (`008` has no `lab_gt` frames): `35` (`006`) + `1` (`007`) + `6` (`009` hand-held phone) = `42` `knife` boxes (1 already set `n` by human -> `41` converted) were moved to `class 2 (phone)`. Six frames in `009` (`f00480`, `f00860`, `f00880`, `f00900`, `f01320`, `f02360`) box the real knife lying on the desk (`xc < 0.25, yc < 0.25`) and stay `class 1 (knife)`.
+
+**Dataset built (`audit_stage1_train.py build_clean`):** `4,395` train images (`2,328` positive, `2,067` negative; `23` `u` dropped, `86` boxes fixed/recovered, `34` set negative, `41` phone-take `knife` boxes moved to `phone`, zero duplicate multi-box frames). Validation (`350` images) is unchanged.
+
+### 2. Clean retraining (`train_stage1_repro.py`, 250 epochs, MuSGD, Ultralytics 8.4.6)
+
+```bash
+.venv/Scripts/python.exe results/samples/poc/audit_stage1_train.py build_clean
+# GPU 1: plain YOLO26s (resumed from epoch 203 with WORKERS=0 after transient DataLoader worker MemoryError at epoch 204)
+DEV=1 EPOCHS=250 PATIENCE=250 WORKERS=2 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . labgtclean
+# GPU 0: Teacher YOLO26x (12.09 h) -> KD Student B YOLO26s (6.07 h)
+CUDA_VISIBLE_DEVICES=0 DEV=0 EPOCHS=250 PATIENCE=250 WORKERS=2 .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . teachergtclean
+CUDA_VISIBLE_DEVICES=0 DEV=0 EPOCHS=250 PATIENCE=250 WORKERS=2 TEACHER=weights/stage1_repro846_teachergtclean_p250_last.pt .venv/Scripts/python.exe results/samples/poc/train_stage1_repro.py . kdgtclean
+```
+
+Caching and scoring (`DEV=0/1`): `sweep_stage1_rules.py . cache lab|gtv2`, `eval_stage1_targets.py` (IoU 0.2 and `MATCH=cover`), and `bench_stage1_holdout.py`.
+
+### 3. Benchmark results
+
+**Lab test targets (`eval_stage1_targets.py`, 1,437 knives: 925 clear, 209 blurred, 294 hidden, 9 unsure; NMS 0.5, IoU 0.2):**
+
+| Model | Conf | Clear R | Blurred R | Hidden R | All R | All P (FP) | Fast-hand P (FP) |
+|---|---|---|---|---|---|---|---|
+| `A labgt` (old `lab_gt`) | 0.10 | 90.3 | 55.0 | 70.7 | 80.8 | 92.1 (99) | 93.9 (23) |
+| `A labgt` (old `lab_gt`) | 0.20 | 87.7 | 52.2 | 67.3 | 77.9 | 94.4 (67) | 95.1 (17) |
+| **`labgtcleanL`** (plain, last) | 0.10 | **90.7** | **59.3** | **72.1** | **81.9** | **94.4 (70)** | 93.5 (25) |
+| **`labgtcleanL`** (plain, last) | 0.20 | **88.5** | **56.9** | **68.0** | **79.3** | **95.6 (53)** | 94.2 (21) |
+| `E teacher` (old `lab_gt`) | 0.25 | 89.5 | 54.1 | 67.3 | 79.5 | 94.9 (61) | 95.3 (17) |
+| **`teachergtcleanL`** (teacher, last) | 0.25 | **90.3** | 53.6 | **68.7** | **80.2** | **95.7 (52)** | 93.8 (23) |
+| `B KD from E` (old `lab_gt`) | 0.10 | 93.0 | 64.1 | 75.9 | 85.0 | 94.4 (73) | 94.2 (23) |
+| `B KD from E` (old `lab_gt`) | 0.20 | 91.9 | 60.8 | 72.1 | 83.0 | **95.7 (53)** | **95.8 (16)** |
+| `B KD from E` (old `lab_gt`) | 0.25 | 90.9 | 59.3 | 71.4 | 82.0 | **96.2 (47)** | 95.7 (16) |
+| **`kdgtclean`** (clean KD, `best.pt`) | 0.10 | **93.8** | **67.0** | **80.3** | **86.9** | 93.7 (84) | **94.8 (22)** |
+| **`kdgtclean`** (clean KD, `best.pt`) | 0.20 | **92.4** | **60.8** | **78.2** | **84.7** | 94.9 (65) | **95.8 (17)** |
+| **`kdgtclean`** (clean KD, `best.pt`) | 0.25 | **91.7** | **59.8** | **76.9** | **83.8** | 95.7 (54) | **96.0 (16)** |
+| **`kdgtclean`** (clean KD, `best.pt`) | 0.30 | **90.7** | 58.4 | **75.5** | **82.6** | 96.0 (50) | **96.1 (15)** |
+| `kdgtcleanL` (clean KD, last) | 0.20 | 91.8 | 56.9 | 74.1 | 82.7 | 95.3 (58) | 95.2 (19) |
+| `kdgtcleanL` (clean KD, last) | 0.25 | 91.5 | 56.0 | 73.5 | 82.3 | 95.8 (52) | 95.2 (19) |
+
+With `MATCH=cover`: `kdgtclean` at `0.25` reaches **92.0 % clear R**, **97.7 % fast-hand P (9)**, **96.7 % all P (42)**, and **100.0 % away-from-hand P (0)**; at `0.30`: **91.0 % clear R**, **97.9 % fast-hand P (8)**, **96.9 % all P (38)**.
+
+**Original camera (`Ground_Truth_Dataset_v2`, 625 images) and lab cache (`LAB_FIX`, NMS 0.5, IoU 0.2):**
+
+| Model | GTv2 @0.20 P / R (FP) | GTv2 @0.25 P / R (FP) | Lab @0.10 P / R (FP) | Lab @0.20 P / R (FP) |
+|---|---|---|---|---|
+| `labgtL` | 80.3 / 74.0 (62) | 82.1 / 72.5 (54) | 93.7 / 79.2 (80) | 95.6 / 76.2 (52) |
+| `labgtcleanL` | **80.8 / 74.9 (61)** | **84.8 / 73.7 (45)** | **95.7 / 80.1 (54)** | **96.8 / 77.6 (38)** |
+| `teachergtL` | 90.8 / 71.9 (25) | 91.4 / 71.3 (23) | 94.5 / 80.6 (70) | 95.6 / 78.2 (53) |
+| `teachergtcleanL` | **93.8** / 71.1 (**16**) | **94.8** / 69.3 (**13**) | **95.0** / 80.1 (**63**) | **96.5 / 78.8 (43)** |
+| `kdgtNL` (old B) | **85.6** / 76.6 (**44**) | **87.7** / 74.9 (**36**) | **95.6** / 83.1 (**57**) | **97.0** / 81.1 (**38**) |
+| **`kdgtclean`** (`best.pt`) | 78.2 / **81.6** (78) | 80.8 / **79.8** (65) | 94.8 / **84.9** (69) | 96.0 / **82.7** (51) |
+| `kdgtcleanL` (`last.pt`) | 76.9 / 77.8 (80) | 78.0 / 76.9 (74) | 95.3 / 82.1 (60) | 96.4 / 80.7 (45) |
+
+At `0.30` on `GTv2`, `kdgtclean` reaches `83.1 % P / 77.5 % R (54)`, higher recall than `kdgtNL` at `0.20` (`76.6 %`).
+
+**Holdout takes (`bench_stage1_holdout.py` at conf `0.20`, NMS-free):**
+
+| Model (@0.20) | Nov 14 test frames (mean / worst) | Windows (mean / worst) | Oct 31 take 002 | Second phone 050 | Remote 056 |
+|---|---|---|---|---|---|
+| `kdgtNL` (old B) | 41 % / 8 % | 57 % / 12 % | 73 % | 2 % | 2 % |
+| **`kdgtclean`** (`best.pt`) | **43 % / 9 %** | **59 % / 12 %** | **77 %** | 3 % | 3 % |
+| `kdgtcleanL` (`last.pt`) | 42 % / 9 % | 58 % / 12 % | 74 % | 2 % | 4 % |
+| `labgtcleanL` | 41 % / 9 % | 57 % / 13 % | 70 % | 3 % | 4 % |
+| `teachergtcleanL` | 42 % / 9 % | 58 % / 13 % | 67 % | **1 %** | **2 %** |
+
+### 4. Findings from retraining on `lab_gt_clean`
+
+- **Data cleaning improved every plain model directly:** `labgtcleanL` beats `labgtL` on both lab (`95.7/80.1` vs `93.7/79.2` at `0.10`, `-26` FP; blurred R `+4.3` to `+4.7`) and `GTv2` (`84.8/73.7` vs `82.1/72.5` at `0.25`). `teachergtcleanL` also gained `+1` to `+3.4` precision points with fewer false boxes on both sets.
+- **Distilled `kdgtclean` (`best.pt`) is the new strongest student on recall:** at `0.20` it lifts lab clear recall to **92.4 %** (vs `91.9 %` for `B`), hidden-knife recall to **78.2 %** (`+6.1`), overall lab recall to **84.7 %** (`+1.7`), and `GTv2` recall to **81.6 %** (`+5.0`), while matching `B`'s **95.8 %** fast-hand precision. At `0.25` it holds **91.7 %** clear recall with **96.0 %** fast-hand precision (`97.7 %` with `cover`, `0` away-from-hand FP).
+- **Phone / remote confusers stay low (`2–3 %`)** without phone-negative collapse.
+
 ## Not checked
 
-- The `3,589` `Safe` frames were not inspected by eye (except the known `65` phone-take frames `006/007/009/028` uncovered by take metadata).
-- The `45` `hn_dups` in `lab_gt_aug_hn` were detected geometrically (`IoU`/`cover`) but not yet rendered/reviewed by eye.
-- No cleaned dataset (`lab_gt_clean`) was built or used to retrain Student B yet.
+- The `3,589` `Safe` frames were not inspected by eye (except the `006–009` and `028` take checks).
+- The `45` `hn_dups` in `lab_gt_aug_hn` were detected geometrically (`IoU`/`cover`) but not yet folded into a `lab_gt_clean_aug_hn` set.
+- `kdgtclean` was not exported to TensorRT (`384x640`), run on the Edge PC, or run through Stage 2; `Ground_Truth_Dataset` (715 raw images) was not re-scored separately from `Ground_Truth_Dataset_v2`.
+- Only one seed per clean model was trained; `labgtclean` resumed from epoch 203 with `WORKERS=0` after a Windows DataLoader `MemoryError`.
 
 ## Files
 
-- Script (in git): `results/samples/poc/audit_stage1_train.py`.
+- Scripts (in git): `results/samples/poc/audit_stage1_train.py` (`build_clean`), `results/samples/poc/train_stage1_repro.py` (`labgtclean`, `teachergtclean`, `kdgtclean`, `RESUME`, `WORKERS`), `results/samples/poc/eval_stage1_targets.py` (`EXTRA_MODELS`).
 - Report (in git): `reports/MODIFICATION_REPORT_STAGE1_TRAIN_AUDIT.md`.
-- Audit summaries (in git): `results/stage1_kd/train_audit/{fold_meta.json,triage_summary.json,eye_audit.json}`, `results/stage1_kd/train_audit/eye_votes/shard_*.json`.
-- Large generated files (dev PC only, not committed): `results/stage1_kd/train_audit/{audit_scores.json,suspect_items.json,fold_a,fold_b,run_fold_a,run_fold_b,sheets}`.
+- Audit summaries & human votes (in git): `results/stage1_kd/train_audit/{fold_meta.json,triage_summary.json,eye_audit.json}`, `results/stage1_kd/train_audit/eye_votes/shard_*.json`, `results/stage1_kd/train_audit/human_review/{items.json,votes.csv}`, `review_train_audit.bat`, `results/stage1_kd/holdout.jsonl`.
+- Weights & logs (dev PC only, not committed): `weights/stage1_repro846_{labgtclean,teachergtclean,kdgtclean}_p250{,_last}.pt`, `data/stage1_negatives/lab_gt_clean/`, `results/stage1_kd/train_audit/{audit_scores.json,suspect_items.json,fold_a,fold_b,run_fold_a,run_fold_b,sheets,eval_targets_clean*.log}`.

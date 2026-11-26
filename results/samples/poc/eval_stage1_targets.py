@@ -27,6 +27,8 @@ FAST = float(os.environ.get("FAST", 0.5))
 MODELS = {"shipped": "shipped", "A labgt": "labgtL", "C blur/dark": "labgtaugL", "C1 blur/dark s1": "labgtaugS1L",
           "L half blur": "labgtaugltL", "B KD from E": "kdgtNL", "H KD from F": "kdgtaugFL", "E teacher": "teachergtL",
           "F teacher blur/dark": "teachergtaug"}
+if os.environ.get("EXTRA_MODELS"):
+    MODELS.update(dict(kv.split("=", 1) for kv in os.environ["EXTRA_MODELS"].split(";") if kv))
 CONFS = (0.10, 0.20, 0.25, 0.30, 0.40, 0.50)
 
 

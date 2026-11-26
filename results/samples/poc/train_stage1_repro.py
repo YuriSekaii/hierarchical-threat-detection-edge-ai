@@ -47,18 +47,22 @@ if __name__ == "__main__":
         size["epochs"] = int(os.environ["EPOCHS"])
     if os.environ.get("SEED"):  # Ultralytics default is 0; another seed repeats a recipe to measure run-to-run noise
         size["seed"] = int(os.environ["SEED"])
-    model = YOLO(r"D:/Backup/yolo26x.pt" if MODE.startswith("teacher") else r"D:/Backup/yolo26s.pt")
-    if MODE.startswith("kd"):
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from train_stage1_kd import KD
-        teacher = YOLO(teacher_pt).model.to(f"cuda:{os.environ.get('DEV', 0)}").eval()
-        for q in teacher.parameters():
-            q.requires_grad = False
-        model.add_callback("on_train_start", lambda t: setattr(t.model, "criterion", KD(t.model.init_criterion(), teacher, 1.0)))
-    r = model.train(
-        data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "labgtaug": "lab_gt_aug", "teachergt": "lab_gt", "teachergtaug": "lab_gt_aug", "kdgt": "lab_gt", "kdgtaug": "lab_gt_aug", "labgtaugl": "lab_gt_aug_light", "labgtclean": "lab_gt_clean", "teachergtclean": "lab_gt_clean", "kdgtclean": "lab_gt_clean"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
-        workers=int(os.environ.get("WORKERS", 4)), device=int(os.environ.get("DEV", 0)), degrees=15.0, mosaic=1.0, mixup=0.1, plots=False, exist_ok=True,
-        project=os.path.join(REPO, "results", "stage1_kd"), name=f"repro846_{TAG}", **size, **extra)
+    resume_pt = os.environ.get("RESUME")
+    if resume_pt:
+        r = YOLO(resume_pt).train(resume=True, workers=int(os.environ.get("WORKERS", 0)), device=int(os.environ.get("DEV", 0)))
+    else:
+        model = YOLO(r"D:/Backup/yolo26x.pt" if MODE.startswith("teacher") else r"D:/Backup/yolo26s.pt")
+        if MODE.startswith("kd"):
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            from train_stage1_kd import KD
+            teacher = YOLO(teacher_pt).model.to(f"cuda:{os.environ.get('DEV', 0)}").eval()
+            for q in teacher.parameters():
+                q.requires_grad = False
+            model.add_callback("on_train_start", lambda t: setattr(t.model, "criterion", KD(t.model.init_criterion(), teacher, 1.0)))
+        r = model.train(
+            data=os.path.join(REPO, "data", "stage1_negatives", {"orig": "orig", "clean": "orig_clean", "v2": "orig_v2", "labv2": "lab_v2", "labgt": "lab_gt", "labgtaug": "lab_gt_aug", "teachergt": "lab_gt", "teachergtaug": "lab_gt_aug", "kdgt": "lab_gt", "kdgtaug": "lab_gt_aug", "labgtaugl": "lab_gt_aug_light", "labgtclean": "lab_gt_clean", "teachergtclean": "lab_gt_clean", "kdgtclean": "lab_gt_clean"}.get(MODE, "lab1114"), "data.yaml"), imgsz=640,
+            workers=int(os.environ.get("WORKERS", 4)), device=int(os.environ.get("DEV", 0)), degrees=15.0, mosaic=1.0, mixup=0.1, plots=False, exist_ok=True,
+            project=os.path.join(REPO, "results", "stage1_kd"), name=f"repro846_{TAG}", **size, **extra)
     shutil.copy2(os.path.join(str(r.save_dir), "weights", "best.pt"), out)
     last_src = os.path.join(str(r.save_dir), "weights", "last.pt")
     if os.path.exists(last_src):
