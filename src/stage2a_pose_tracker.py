@@ -26,6 +26,7 @@ from src.skeleton_utils import (
     normalize_skeleton_clip,
 )
 from src.engine_builder import ensure_engine, get_hardware_precision
+from src.gpu_preprocess import letterbox_bgr_to_tensor, unletterbox_boxes, unletterbox_keypoints
 
 
 def compute_iou(box1: List[float], box2: List[float]) -> float:
@@ -61,6 +62,7 @@ class Stage2aPoseTracker:
         device: Optional[str] = None,
         imgsz: Optional[Union[int, Tuple[int, int]]] = (384, 640),
         backend: str = "tensorrt",
+        gpu_preprocess: bool = True,
     ):
         self.backend = backend.lower()
         if self.backend == "tensorrt":
@@ -79,6 +81,7 @@ class Stage2aPoseTracker:
                 self.device = device or "cpu"
 
         self.imgsz = imgsz
+        self.gpu_preprocess = bool(gpu_preprocess and str(self.device).startswith("cuda"))
 
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         weights_dir = os.path.join(repo_dir, "weights")
@@ -164,11 +167,17 @@ class Stage2aPoseTracker:
             - track_id: int or None
         """
         target_imgsz = imgsz or self.imgsz or (384, 640)
+        meta = None
+        if self.gpu_preprocess and isinstance(frame, np.ndarray):
+            inp, meta = letterbox_bgr_to_tensor(frame, imgsz=target_imgsz, device=self.device)
+            source = inp
+        else:
+            source = frame
         # ByteTrack must be named explicitly: the Ultralytics default (tracktrack/BoT-SORT) runs camera-motion
         # compensation over the full-resolution frame, ~20 ms of CPU per call (26 ms vs 6 ms on the RTX 3050
         # Edge PC at 1920x1440) and useless for a fixed camera.
         res = self.pose_model.track(
-            frame,
+            source,
             persist=True,
             imgsz=target_imgsz,
             verbose=False,
@@ -180,6 +189,8 @@ class Stage2aPoseTracker:
             return np.zeros((17, 2), dtype=np.float32), None, None
 
         boxes_xyxy = res[0].boxes.xyxy.cpu().numpy().tolist()
+        if meta is not None:
+            boxes_xyxy = unletterbox_boxes(boxes_xyxy, meta)
         track_ids = None
         if hasattr(res[0].boxes, "id") and res[0].boxes.id is not None:
             track_ids = res[0].boxes.id.cpu().numpy().astype(int).tolist()
@@ -238,6 +249,8 @@ class Stage2aPoseTracker:
             kpts_all = res[0].keypoints.xy.cpu().numpy()
             if len(kpts_all) > selected_idx:
                 raw_kpts = kpts_all[selected_idx]  # shape (17, 2)
+                if meta is not None:
+                    raw_kpts = unletterbox_keypoints(raw_kpts, meta)
             else:
                 raw_kpts = np.zeros((17, 2), dtype=np.float32)
         else:

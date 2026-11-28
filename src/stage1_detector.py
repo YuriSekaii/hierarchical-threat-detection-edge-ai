@@ -23,6 +23,7 @@ if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
 
 from src.engine_builder import ensure_engine, get_hardware_precision
+from src.gpu_preprocess import letterbox_bgr_to_tensor, unletterbox_boxes
 
 STAGE1_DEFAULT_STEM = "stage1_repro846_kdgtclean_p250"
 STAGE1_DEFAULT_CONF = 0.20
@@ -91,6 +92,7 @@ class Stage1WeaponDetector:
         imgsz: Optional[Union[int, Tuple[int, int]]] = (384, 640),
         backend: str = "tensorrt",
         nms_iou: float = STAGE1_NMS_IOU,
+        gpu_preprocess: bool = True,
     ):
         self.backend = backend.lower()
         if self.backend == "tensorrt":
@@ -111,6 +113,7 @@ class Stage1WeaponDetector:
         self.conf_threshold = conf_threshold
         self.imgsz = imgsz
         self.nms_iou = nms_iou
+        self.gpu_preprocess = bool(gpu_preprocess and str(self.device).startswith("cuda"))
 
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         weights_dir = os.path.join(repo_dir, "weights")
@@ -189,8 +192,14 @@ class Stage1WeaponDetector:
         target_imgsz = imgsz or self.imgsz or (384, 640)
 
         t0 = time.perf_counter()
+        meta = None
+        if self.gpu_preprocess and isinstance(frame, np.ndarray):
+            inp, meta = letterbox_bgr_to_tensor(frame, imgsz=target_imgsz, device=self.device)
+            source = inp
+        else:
+            source = frame
         results = self.model.predict(
-            source=frame,
+            source=source,
             conf=conf_val,
             device=self.device,
             imgsz=target_imgsz,
@@ -199,6 +208,8 @@ class Stage1WeaponDetector:
         latency_ms = (time.perf_counter() - t0) * 1000.0
 
         boxes_list, scores_list = filter_knife_boxes(results[0], nms_iou=self.nms_iou) if len(results) > 0 else ([], [])
+        if meta is not None and boxes_list:
+            boxes_list = unletterbox_boxes(boxes_list, meta)
         best_box = boxes_list[0] if boxes_list else None
 
         return {
