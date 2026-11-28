@@ -10,7 +10,7 @@ REPO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
 
-from src.gpu_preprocess import letterbox_bgr_to_tensor, unletterbox_boxes, unletterbox_keypoints
+from src.gpu_preprocess import default_gpu_preprocess, letterbox_bgr_to_tensor, unletterbox_boxes, unletterbox_keypoints
 
 
 class TestGpuPreprocess(unittest.TestCase):
@@ -76,6 +76,13 @@ class TestGpuPreprocess(unittest.TestCase):
         rec_kpts = unletterbox_keypoints(kpts, meta)
         np.testing.assert_allclose(rec_kpts[0], [960.0, 720.0], atol=1e-3)
         np.testing.assert_allclose(rec_kpts[5], [0.0, 0.0], atol=1e-6)
+
+    def test_default_gpu_preprocess(self):
+        self.assertFalse(default_gpu_preprocess("cpu"))
+        if torch.cuda.is_available() and not os.path.exists("/etc/nv_tegra_release"):
+            name = torch.cuda.get_device_name(0).lower()
+            if "orin" not in name and "tegra" not in name:
+                self.assertFalse(default_gpu_preprocess("cuda:0"))
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ from src.skeleton_utils import (
     normalize_skeleton_clip,
 )
 from src.engine_builder import ensure_engine, get_hardware_precision
-from src.gpu_preprocess import letterbox_bgr_to_tensor, unletterbox_boxes, unletterbox_keypoints
+from src.gpu_preprocess import default_gpu_preprocess, letterbox_bgr_to_tensor, unletterbox_boxes, unletterbox_keypoints
 
 
 def compute_iou(box1: List[float], box2: List[float]) -> float:
@@ -62,7 +62,7 @@ class Stage2aPoseTracker:
         device: Optional[str] = None,
         imgsz: Optional[Union[int, Tuple[int, int]]] = (384, 640),
         backend: str = "tensorrt",
-        gpu_preprocess: bool = True,
+        gpu_preprocess: Optional[bool] = None,
     ):
         self.backend = backend.lower()
         if self.backend == "tensorrt":
@@ -81,7 +81,10 @@ class Stage2aPoseTracker:
                 self.device = device or "cpu"
 
         self.imgsz = imgsz
-        self.gpu_preprocess = bool(gpu_preprocess and str(self.device).startswith("cuda"))
+        if gpu_preprocess is None:
+            self.gpu_preprocess = default_gpu_preprocess(self.device)
+        else:
+            self.gpu_preprocess = bool(gpu_preprocess and str(self.device).startswith("cuda"))
 
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         weights_dir = os.path.join(repo_dir, "weights")

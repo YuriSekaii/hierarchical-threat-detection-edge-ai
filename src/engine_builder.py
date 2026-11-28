@@ -141,6 +141,7 @@ def build_engine_from_onnx(
             raise RuntimeError(f"[ENGINE BUILDER] Failed to parse ONNX file {onnx_path}:\n" + "\n".join(error_msgs))
 
     config = builder.create_builder_config()
+    config.profiling_verbosity = trt.ProfilingVerbosity.DETAILED
     workspace_bytes = int(workspace_gb * (1024 ** 3))
     config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, workspace_bytes)
 

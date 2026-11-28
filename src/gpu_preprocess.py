@@ -7,12 +7,26 @@ Uses pure PyTorch CUDA ops (no custom C++/CUDA extensions), portable across
 RTX 3090, RTX 3050, and Jetson Orin Nano.
 """
 
+import os
 from typing import List, Sequence, Tuple, Union
 import numpy as np
 import torch
 import torch.nn.functional as F
 
 LetterboxMeta = Tuple[float, float, float, int, int]  # (ratio, pad_x, pad_y, orig_h, orig_w)
+
+
+def default_gpu_preprocess(device: Union[str, torch.device]) -> bool:
+    """
+    Auto-enable GPU letterbox only on Jetson/Tegra unified-memory devices.
+    On discrete PCIe GPUs, pageable full-res H2D upload is slower than CPU cv2.resize.
+    """
+    if not str(device).startswith("cuda") or not torch.cuda.is_available():
+        return False
+    if os.path.exists("/etc/nv_tegra_release"):
+        return True
+    name = torch.cuda.get_device_name(0).lower()
+    return ("tegra" in name) or ("orin" in name)
 
 
 def _normalize_imgsz(imgsz: Union[int, Tuple[int, int]]) -> Tuple[int, int]:

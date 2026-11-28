@@ -23,7 +23,7 @@ if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
 
 from src.engine_builder import ensure_engine, get_hardware_precision
-from src.gpu_preprocess import letterbox_bgr_to_tensor, unletterbox_boxes
+from src.gpu_preprocess import default_gpu_preprocess, letterbox_bgr_to_tensor, unletterbox_boxes
 
 STAGE1_DEFAULT_STEM = "stage1_repro846_kdgtclean_p250"
 STAGE1_DEFAULT_CONF = 0.20
@@ -92,7 +92,7 @@ class Stage1WeaponDetector:
         imgsz: Optional[Union[int, Tuple[int, int]]] = (384, 640),
         backend: str = "tensorrt",
         nms_iou: float = STAGE1_NMS_IOU,
-        gpu_preprocess: bool = True,
+        gpu_preprocess: Optional[bool] = None,
     ):
         self.backend = backend.lower()
         if self.backend == "tensorrt":
@@ -113,7 +113,10 @@ class Stage1WeaponDetector:
         self.conf_threshold = conf_threshold
         self.imgsz = imgsz
         self.nms_iou = nms_iou
-        self.gpu_preprocess = bool(gpu_preprocess and str(self.device).startswith("cuda"))
+        if gpu_preprocess is None:
+            self.gpu_preprocess = default_gpu_preprocess(self.device)
+        else:
+            self.gpu_preprocess = bool(gpu_preprocess and str(self.device).startswith("cuda"))
 
         repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         weights_dir = os.path.join(repo_dir, "weights")
